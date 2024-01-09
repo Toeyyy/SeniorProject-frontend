@@ -373,7 +373,8 @@ class _AddQuestionState extends State<AddQuestion> {
                       ),
                       ElevatedButton(
                           onPressed: () {
-                            _showModal(context);
+                            // _showModal(context);
+                            postQuestion(context);
                           },
                           child: Text('บันทึก')),
                     ],
