@@ -154,11 +154,11 @@ class ProbListMultiSelectDropDown extends StatelessWidget {
             backgroundColor: Color(0xFF42C2FF), wrapType: WrapType.wrap),
         onOptionSelected: (List<ValueItem> selectedOptions) {
           selectedList = selectedOptions.map((item) {
-            return ProblemObject(id: item.label, name: item.value);
+            return ProblemObject(id: item.value, name: item.label);
           }).toList();
         },
         options: displayList.map<ValueItem<String>>((ProblemObject item) {
-          return ValueItem(label: item.id, value: item.name);
+          return ValueItem(label: item.name, value: item.id);
         }).toList());
   }
 }
@@ -182,11 +182,11 @@ class DiagnosisMultiSelectDropDown extends StatelessWidget {
             backgroundColor: Color(0xFF42C2FF), wrapType: WrapType.wrap),
         onOptionSelected: (List<ValueItem> selectedOptions) {
           selectedList = selectedOptions.map((item) {
-            return DiagnosisObject(id: item.label, name: item.value);
+            return DiagnosisObject(id: item.value, name: item.label);
           }).toList();
         },
         options: displayList.map<ValueItem<String>>((DiagnosisObject item) {
-          return ValueItem(label: item.id, value: item.name);
+          return ValueItem(label: item.name, value: item.id);
         }).toList());
   }
 }

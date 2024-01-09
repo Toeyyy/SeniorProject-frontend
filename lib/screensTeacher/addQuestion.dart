@@ -56,67 +56,6 @@ class _AddQuestionState extends State<AddQuestion> {
     TreatmentContainerProvider treatmentProvider =
         Provider.of<TreatmentContainerProvider>(context, listen: false);
 
-    /////
-    void _showModal(BuildContext context) {
-      showDialog(
-          context: context,
-          builder: (context) {
-            return Center(
-              child: Container(
-                width: MediaQuery.of(context).size.width * 0.3,
-                height: MediaQuery.of(context).size.height * 0.3,
-                padding: EdgeInsets.all(40),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(5),
-                  color: Color(0xFFDFE4E0),
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'ยืนยันการเพิ่มโจทย์หรือไม่?',
-                      style: TextStyle(
-                        fontSize: 30,
-                        color: Color(0xFF000411),
-                        decoration: TextDecoration.none,
-                      ),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          child: Text(
-                            'ยกเลิก',
-                            style: TextStyle(fontSize: 20),
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Color(0xFF8B72BE),
-                            minimumSize: Size(120, 60),
-                          ),
-                        ),
-                        ElevatedButton(
-                          onPressed: () {},
-                          child: Text(
-                            'ยืนยัน',
-                            style: TextStyle(fontSize: 20),
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            minimumSize: Size(120, 60),
-                          ),
-                        ),
-                      ],
-                    )
-                  ],
-                ),
-              ),
-            );
-          });
-    }
-    /////
-
     void postQuestion(BuildContext context) async {
       final dio = Dio();
 
@@ -176,6 +115,66 @@ class _AddQuestionState extends State<AddQuestion> {
         },
       );
     }
+
+    /////
+    void _showModal(BuildContext context) {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return Center(
+              child: Container(
+                width: MediaQuery.of(context).size.width * 0.3,
+                height: MediaQuery.of(context).size.height * 0.3,
+                padding: EdgeInsets.all(40),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5),
+                  color: Color(0xFFDFE4E0),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'ยืนยันการเพิ่มโจทย์หรือไม่?',
+                      style: TextStyle(
+                        fontSize: 30,
+                        color: Color(0xFF000411),
+                        decoration: TextDecoration.none,
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: Text(
+                            'ยกเลิก',
+                            style: TextStyle(fontSize: 20),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Color(0xFF8B72BE),
+                            // minimumSize: Size(120, 60),
+                          ),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            postQuestion(context);
+                          },
+                          child: Text(
+                            'ยืนยัน',
+                            style: TextStyle(fontSize: 20),
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            );
+          });
+    }
+    /////
 
     return Scaffold(
       appBar: AppbarTeacher(),
