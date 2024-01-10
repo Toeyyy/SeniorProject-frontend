@@ -6,6 +6,7 @@ import 'package:frontend/components/questionCard.dart';
 import 'package:frontend/aboutData/dataObject.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:frontend/components/tagSearchBox.dart';
+import 'package:frontend/models/tagObject.dart';
 
 class NisitShowQuestion extends StatefulWidget {
   const NisitShowQuestion({super.key});
@@ -36,6 +37,11 @@ class _NisitShowQuestionState extends State<NisitShowQuestion> {
   @override
   Widget build(BuildContext context) {
     // print('run1: $questionObj');
+    List<TagObject> selectedTags = [];
+
+    void updateTagList(List<TagObject> newList) {
+      selectedTags = newList;
+    }
 
     return Scaffold(
       appBar: AppbarNisit(),
@@ -81,7 +87,9 @@ class _NisitShowQuestionState extends State<NisitShowQuestion> {
                   SizedBox(
                     height: 20,
                   ),
-                  TagSearchBox(initTags: []),
+                  TagSearchBox(
+                      initTags: selectedTags,
+                      updateListCallback: updateTagList),
                   SizedBox(
                     height: 20,
                   ),

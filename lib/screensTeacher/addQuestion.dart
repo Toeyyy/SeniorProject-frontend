@@ -39,6 +39,8 @@ class _AddQuestionState extends State<AddQuestion> {
   List<DiagnosisObject> selectedDiagnosisList = [];
   List<TagObject> selectedTags = [];
 
+  bool _isPosting = false;
+
   /////
 
   @override
@@ -59,12 +61,16 @@ class _AddQuestionState extends State<AddQuestion> {
     void postQuestion(BuildContext context) async {
       final dio = Dio();
 
+      setState(() {
+        _isPosting = true;
+      });
+
       //prob List
       var probList1 = selectedProblemList1.map((item) {
         return {"id": item.id, "name": item.name, "round": 1};
       }).toList();
       var probList2 = selectedProblemList2.map((item) {
-        return {"id": item.id, "name": item.name, "round": 1};
+        return {"id": item.id, "name": item.name, "round": 2};
       }).toList();
       probList1.addAll(probList2);
 
@@ -81,6 +87,7 @@ class _AddQuestionState extends State<AddQuestion> {
       var diagnosis = selectedDiagnosisList.map((item) {
         return {"id": item.id, "name": item.name};
       }).toList();
+      // print('diag list before json = $diagnosis');
 
       //exams
       var exam = examContainers1.map((item) {
@@ -94,6 +101,13 @@ class _AddQuestionState extends State<AddQuestion> {
         };
       }).toList();
 
+      //tags
+      var tag = selectedTags.map((item) {
+        return {"id": item.id, "name": item.name};
+      }).toList();
+
+      // print(selectedTags.map((e) => "id = ${e.id}, name = ${e.name}"));
+
       final response = await dio.post(
         'path',
         data: {
@@ -104,77 +118,78 @@ class _AddQuestionState extends State<AddQuestion> {
           "treatments": json.encode(treatment),
           "diagnostics": json.encode(diagnosis),
           "examinations": json.encode(exam),
-          "tags": json.encode(selectedTags),
+          "tags": json.encode(tag),
           "signalment": {
             "species": signalmentTypeValue,
             "breed": signalmentBreedValue,
             "sterilize": signalmentSterilizeStat,
-            "age": signalmentAgeValue,
-            "weight": signalmentWeightValue,
+            "age": signalmentAgeValue.text,
+            "weight": signalmentWeightValue.text,
           }
         },
       );
+
+      await Future.delayed(Duration(seconds: 5));
+
+      setState(() {
+        _isPosting = false;
+      });
     }
 
-    /////
+    /////modal//////
+
     void _showModal(BuildContext context) {
       showDialog(
           context: context,
           builder: (context) {
             return Center(
               child: Container(
-                width: MediaQuery.of(context).size.width * 0.3,
+                width: MediaQuery.of(context).size.height * 0.3,
                 height: MediaQuery.of(context).size.height * 0.3,
                 padding: EdgeInsets.all(40),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(5),
                   color: Color(0xFFDFE4E0),
                 ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'ยืนยันการเพิ่มโจทย์หรือไม่?',
-                      style: TextStyle(
-                        fontSize: 30,
-                        color: Color(0xFF000411),
-                        decoration: TextDecoration.none,
+                child: !_isPosting
+                    ? CircularProgressIndicator(
+                        color: Color(0xFF42C2FF),
+                      )
+                    : FittedBox(
+                        child: Icon(
+                          Icons.check_circle_outline,
+                          color: Color(0xFF42C2FF),
+                        ),
                       ),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          child: Text(
-                            'ยกเลิก',
-                            style: TextStyle(fontSize: 20),
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Color(0xFF8B72BE),
-                            // minimumSize: Size(120, 60),
-                          ),
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                            postQuestion(context);
-                          },
-                          child: Text(
-                            'ยืนยัน',
-                            style: TextStyle(fontSize: 20),
-                          ),
-                        ),
-                      ],
-                    )
-                  ],
-                ),
               ),
             );
           });
     }
     /////
+
+    void printSTH() {
+      // print(generalResultsController.text);
+      print('isPosting = $_isPosting');
+    }
+
+    ////Update functions/////
+    void updateProbList(List<ProblemObject> newList, String round) {
+      if (round == '1') {
+        selectedProblemList1 = newList;
+      } else {
+        selectedProblemList2 = newList;
+      }
+    }
+
+    void updateDiagList(List<DiagnosisObject> newList) {
+      selectedDiagnosisList = newList;
+    }
+
+    void updateTagList(List<TagObject> newList) {
+      selectedTags = newList;
+    }
+
+    //////////////////
 
     return Scaffold(
       appBar: AppbarTeacher(),
@@ -202,7 +217,9 @@ class _AddQuestionState extends State<AddQuestion> {
                   SizedBox(
                     height: 20,
                   ),
-                  TagSearchBox(initTags: selectedTags),
+                  TagSearchBox(
+                      initTags: selectedTags,
+                      updateListCallback: updateTagList),
                   const H20Sizedbox(),
                   //Signalment
                   Text(
@@ -290,10 +307,13 @@ class _AddQuestionState extends State<AddQuestion> {
                     style: kSubHeaderTextStyle.copyWith(fontSize: 35),
                   ),
                   const H20Sizedbox(),
+                  Text('Problem List ครั้งที่ 1', style: kSubHeaderTextStyle),
                   ProbListMultiSelectDropDown(
                     selectedList: selectedProblemList1,
                     displayList: probObjectList,
                     hintText: "เลือก Problem List ครั้งที่ 1",
+                    round: "1",
+                    updateListCallback: updateProbList,
                   ),
                   const H20Sizedbox(),
                   ExamsButtonAndContainer(
@@ -302,10 +322,13 @@ class _AddQuestionState extends State<AddQuestion> {
                     round: '1',
                   ),
                   DividerWithSpace(),
+                  Text('Problem List ครั้งที่ 1', style: kSubHeaderTextStyle),
                   ProbListMultiSelectDropDown(
                     selectedList: selectedProblemList2,
                     displayList: probObjectList,
                     hintText: "เลือก Problem List ครั้งที่ 2",
+                    round: "2",
+                    updateListCallback: updateProbList,
                   ),
                   const H20Sizedbox(),
                   ExamsButtonAndContainer(
@@ -321,7 +344,8 @@ class _AddQuestionState extends State<AddQuestion> {
                   DiagnosisMultiSelectDropDown(
                       selectedList: selectedDiagnosisList,
                       displayList: diagnosisList,
-                      hintText: 'เลือก Diagnosis'),
+                      hintText: 'เลือก Diagnosis',
+                      updateListCallback: updateDiagList),
                   DividerWithSpace(),
                   Row(
                     children: [
@@ -373,8 +397,10 @@ class _AddQuestionState extends State<AddQuestion> {
                       ),
                       ElevatedButton(
                           onPressed: () {
-                            // _showModal(context);
+                            _showModal(context);
+                            printSTH();
                             postQuestion(context);
+                            printSTH();
                           },
                           child: Text('บันทึก')),
                     ],

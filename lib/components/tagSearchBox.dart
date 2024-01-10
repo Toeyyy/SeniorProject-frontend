@@ -5,8 +5,9 @@ import 'package:frontend/models/tagObject.dart';
 
 class TagSearchBox extends StatelessWidget {
   List<TagObject> initTags;
+  Function(List<TagObject>) updateListCallback;
 
-  TagSearchBox({required this.initTags});
+  TagSearchBox({required this.initTags, required this.updateListCallback});
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +23,7 @@ class TagSearchBox extends StatelessWidget {
       selectedColor: Color(0xFF42C2FF),
       initialValue: initTags,
       onConfirm: (results) {
-        initTags = results;
+        updateListCallback(results);
       },
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(

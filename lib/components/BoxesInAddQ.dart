@@ -137,13 +137,17 @@ class DividerWithSpace extends StatelessWidget {
 
 class ProbListMultiSelectDropDown extends StatelessWidget {
   List<ProblemObject> selectedList;
-  final List<ProblemObject> displayList;
-  String hintText;
+  List<ProblemObject> displayList;
+  String round;
+  final String hintText;
+  Function(List<ProblemObject>, String) updateListCallback;
 
   ProbListMultiSelectDropDown(
       {required this.selectedList,
       required this.displayList,
-      required this.hintText});
+      required this.hintText,
+      required this.round,
+      required this.updateListCallback});
 
   @override
   Widget build(BuildContext context) {
@@ -153,9 +157,11 @@ class ProbListMultiSelectDropDown extends StatelessWidget {
         chipConfig: ChipConfig(
             backgroundColor: Color(0xFF42C2FF), wrapType: WrapType.wrap),
         onOptionSelected: (List<ValueItem> selectedOptions) {
-          selectedList = selectedOptions.map((item) {
-            return ProblemObject(id: item.value, name: item.label);
-          }).toList();
+          updateListCallback(
+              selectedOptions.map((item) {
+                return ProblemObject(id: item.value, name: item.label);
+              }).toList(),
+              round);
         },
         options: displayList.map<ValueItem<String>>((ProblemObject item) {
           return ValueItem(label: item.name, value: item.id);
@@ -167,11 +173,13 @@ class DiagnosisMultiSelectDropDown extends StatelessWidget {
   List<DiagnosisObject> selectedList;
   final List<DiagnosisObject> displayList;
   String hintText;
+  Function(List<DiagnosisObject>) updateListCallback;
 
   DiagnosisMultiSelectDropDown(
       {required this.selectedList,
       required this.displayList,
-      required this.hintText});
+      required this.hintText,
+      required this.updateListCallback});
 
   @override
   Widget build(BuildContext context) {
@@ -181,9 +189,12 @@ class DiagnosisMultiSelectDropDown extends StatelessWidget {
         chipConfig: ChipConfig(
             backgroundColor: Color(0xFF42C2FF), wrapType: WrapType.wrap),
         onOptionSelected: (List<ValueItem> selectedOptions) {
-          selectedList = selectedOptions.map((item) {
+          // selectedList = selectedOptions.map((item) {
+          //   return DiagnosisObject(id: item.value, name: item.label);
+          // }).toList();
+          updateListCallback(selectedOptions.map((item) {
             return DiagnosisObject(id: item.value, name: item.label);
-          }).toList();
+          }).toList());
         },
         options: displayList.map<ValueItem<String>>((DiagnosisObject item) {
           return ValueItem(label: item.name, value: item.id);
