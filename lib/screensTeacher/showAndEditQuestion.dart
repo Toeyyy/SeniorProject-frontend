@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/components/appBar.dart';
 import 'package:frontend/components/examContainer.dart';
-import 'package:frontend/components/treatmentContainer.dart';
 import 'package:frontend/constants.dart';
 import 'package:frontend/models/tagObject.dart';
+import 'package:frontend/screensTeacher/editQuestion.dart';
 import 'package:frontend/tmpQuestion.dart';
 import 'package:frontend/components/tagBox.dart';
 import 'package:frontend/components/splitScreenNisit.dart';
 import 'package:frontend/components/BoxesInAddQ.dart';
-import 'package:frontend/components/tagSearchBox.dart';
+import 'package:frontend/models/examinationObject.dart';
+import 'package:frontend/components/treatmentContainer.dart';
+import 'package:collection/collection.dart';
 
 class ShowAndEditQuestion extends StatefulWidget {
   const ShowAndEditQuestion({super.key});
@@ -18,7 +20,19 @@ class ShowAndEditQuestion extends StatefulWidget {
 }
 
 class _ShowAndEditQuestionState extends State<ShowAndEditQuestion> {
-  // bool _isEditing = false;
+  Map<String, List<ExaminationObject>> splitExams =
+      groupBy(showSelectedExam, (obj) => obj.round);
+
+  List<ShowExamContainer>? accessExamList(String round) {
+    List<ExaminationObject>? list = splitExams[round];
+    return list?.map((item) {
+      return ShowExamContainer(
+          department: item.type,
+          exam: item.name,
+          results: item.textResult,
+          imagePath: item.imgResult);
+    }).toList();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +63,9 @@ class _ShowAndEditQuestionState extends State<ShowAndEditQuestion> {
                         ),
                         SizedBox(width: 15),
                         ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            // Navigator.push(context,MaterialPageRoute(builder: (context) => EditQuestion(quesNum: quesNum)))
+                          },
                           child: Text('แก้ไขโจทย์'),
                         ),
                         SizedBox(width: 15),
@@ -67,29 +83,32 @@ class _ShowAndEditQuestionState extends State<ShowAndEditQuestion> {
                 Container(
                   padding: EdgeInsets.only(left: 10),
                   child: Row(
-                    children: tagList
+                    children: showTagList
                         .map(
-                          (e) => TagBox(e),
+                          (e) => TagBox(text: e.name),
                         )
                         .toList(),
                   ),
                 ),
-                // TagSearchBox(
-                //   initTags:
-                //       tagList.map((item) => TagObject('1', item)).toList(),
-                // ),
                 SizedBox(height: 20),
                 Text(
                   'ข้อมูลทั่วไป',
                   style: kSubHeaderTextStyle,
                 ),
-                Text('ชนิดสัตว์: $type', style: kNormalTextStyle),
-                Text('พันธุ์: $breed', style: kNormalTextStyle),
-                Text('เพศ: $sex', style: kNormalTextStyle),
-                Text(sterilize == 1 ? 'ทำหมันแล้ว' : 'ยังไม่ได้ทำหมัน',
+                Text('ชนิดสัตว์: ${showSignalmentList.species}',
                     style: kNormalTextStyle),
-                Text('อายุ: $age ปี', style: kNormalTextStyle),
-                Text('น้ำหนัก: $weight Kg', style: kNormalTextStyle),
+                Text('พันธุ์: ${showSignalmentList.breed}',
+                    style: kNormalTextStyle),
+                Text('เพศ: ${showSignalmentList.sex}', style: kNormalTextStyle),
+                Text(
+                    showSignalmentList.sterilize
+                        ? 'ทำหมันแล้ว'
+                        : 'ยังไม่ได้ทำหมัน',
+                    style: kNormalTextStyle),
+                Text('อายุ: ${showSignalmentList.age}',
+                    style: kNormalTextStyle),
+                Text('น้ำหนัก: ${showSignalmentList.weight}',
+                    style: kNormalTextStyle),
                 SizedBox(height: 20),
                 //Client Complains
                 Text(
@@ -123,44 +142,57 @@ class _ShowAndEditQuestionState extends State<ShowAndEditQuestion> {
                 //General Results
                 const SizedBox(height: 20),
                 Text('ผลตรวจทั่วไป', style: kSubHeaderTextStyle),
-                DottedListView(showList: generalResult),
+                DottedListView(showList: generalResult.split(',')),
                 const DividerWithSpace(),
                 Text('เฉลย', style: kHeaderTextStyle),
                 const H20Sizedbox(),
                 Text('Problem List ครั้งที่ 1', style: kSubHeaderTextStyle),
-                DottedListView(showList: showSelectedProb1),
+                DottedListView(
+                    showList:
+                        showSelectedProb1.map((item) => item.name).toList()),
                 Text('ผลการส่งตรวจครั้งที่ 1', style: kSubHeaderTextStyle),
                 const H20Sizedbox(),
                 ListView.builder(
                   shrinkWrap: true,
-                  itemCount: showSelectedExamContainer1.length,
+                  itemCount: accessExamList('1')!.length,
                   itemBuilder: (context, index) {
-                    return showSelectedExamContainer1[index];
+                    return accessExamList('1')![index];
                   },
                 ),
                 const DividerWithSpace(),
                 // prob&exam2
                 Text('Problem List ครั้งที่ 2', style: kSubHeaderTextStyle),
-                DottedListView(showList: showSelectedProb2),
+                DottedListView(
+                    showList:
+                        showSelectedProb2.map((item) => item.name).toList()),
                 Text('ผลการส่งตรวจครั้งที่ 2', style: kSubHeaderTextStyle),
                 const H20Sizedbox(),
                 ListView.builder(
                   shrinkWrap: true,
-                  itemCount: showSelectedExamContainer2.length,
+                  itemCount: accessExamList('2')!.length,
                   itemBuilder: (context, index) {
-                    return showSelectedExamContainer2[index];
+                    return accessExamList('2')![index];
                   },
                 ),
                 const DividerWithSpace(),
                 Text('Diagnosis List', style: kSubHeaderTextStyle),
-                DottedListView(showList: showSelectedDiagnosis),
+                DottedListView(
+                    showList: showSelectedDiagnosis
+                        .map((item) => item.name)
+                        .toList()),
                 const DividerWithSpace(),
                 Text('Treatment', style: kSubHeaderTextStyle),
                 ListView.builder(
                     shrinkWrap: true,
-                    itemCount: showSelectedTreatmentContainer.length,
+                    itemCount: showTreatmentList.map((item) {
+                      return ShowTreatmentContainer(
+                          treatmentTopic: item.type, treatment: item.name);
+                    }).length,
                     itemBuilder: (context, index) {
-                      return showSelectedTreatmentContainer[index];
+                      return showTreatmentList.map((item) {
+                        return ShowTreatmentContainer(
+                            treatmentTopic: item.type, treatment: item.name);
+                      }).toList()[index];
                     })
               ],
             ),

@@ -54,9 +54,9 @@ class LeftPartContent extends StatelessWidget {
             Container(
               padding: EdgeInsets.only(left: 10),
               child: Row(
-                children: tagList
+                children: showTagList
                     .map(
-                      (e) => TagBox(e),
+                      (e) => TagBox(text: e.name),
                     )
                     .toList(),
               ),
@@ -108,14 +108,15 @@ class LeftPartContent extends StatelessWidget {
         ),
         Expanded(
           child: ListView.builder(
-            itemCount: generalResult.length,
+            itemCount: generalResult.split(',').length,
             itemBuilder: (context, index) {
               return ListTile(
                 leading: Icon(
                   Icons.circle,
                   size: 15,
                 ),
-                title: Text(generalResult[index]),
+                title:
+                    Text(generalResult.replaceAll(' ', '').split(',')[index]),
               );
             },
           ),

@@ -17,6 +17,7 @@ import 'package:frontend/components/examContainer.dart';
 import 'package:provider/provider.dart';
 import 'package:frontend/components/tagSearchBox.dart';
 import 'package:dio/dio.dart';
+import 'package:http_parser/http_parser.dart';
 
 class AddQuestion extends StatefulWidget {
   const AddQuestion({super.key});
@@ -27,7 +28,8 @@ class AddQuestion extends StatefulWidget {
 
 class _AddQuestionState extends State<AddQuestion> {
   String signalmentTypeValue = Signalment_typeList.first;
-  String signalmentBreedValue = Signalment_dogBreedList.first;
+  String? signalmentBreedValue;
+  String? signalmentSexValue;
   bool signalmentSterilizeStat = false;
   TextEditingController signalmentAgeValue = TextEditingController();
   TextEditingController signalmentWeightValue = TextEditingController();
@@ -42,6 +44,13 @@ class _AddQuestionState extends State<AddQuestion> {
   bool _isPosting = false;
 
   /////
+
+  @override
+  // void initState() {
+  //   super.initState();
+  //   Provider.of<ExamContainerProvider>(context).clearList();
+  //   Provider.of<TreatmentContainerProvider>(context).clearList();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -67,25 +76,21 @@ class _AddQuestionState extends State<AddQuestion> {
 
       //prob List
       var probList1 = selectedProblemList1.map((item) {
-        return {"id": item.id, "name": item.name, "round": 1};
+        return {"id": item.id, "round": 1};
       }).toList();
       var probList2 = selectedProblemList2.map((item) {
-        return {"id": item.id, "name": item.name, "round": 2};
+        return {"id": item.id, "round": 2};
       }).toList();
       probList1.addAll(probList2);
 
       //treatment
       var treatment = treatmentContainer.map((item) {
-        return {
-          "id": item.id,
-          "type": item.selectedTreatmentTopic,
-          "name": item.selectedTreatmentDetail
-        };
+        return {"id": item.id};
       }).toList();
 
       //diagnosis
       var diagnosis = selectedDiagnosisList.map((item) {
-        return {"id": item.id, "name": item.name};
+        return {"id": item.id};
       }).toList();
       // print('diag list before json = $diagnosis');
 
@@ -93,10 +98,13 @@ class _AddQuestionState extends State<AddQuestion> {
       var exam = examContainers1.map((item) {
         return {
           "id": item.id,
-          "type": item.selectedDepartment,
-          "name": item.selectedExamTopic,
+          // "type": item.selectedDepartment,
+          // "name": item.selectedExamTopic,
           "textResult": item.examController.text,
-          "imgResult": item.imageFile,
+          "imgResult": item.imageFile == null
+              ? null
+              : MultipartFile.fromBytes(item.imageFile!.bytes!,
+                  filename: "image", contentType: MediaType("image", "png")),
           "round": item.round
         };
       }).toList();
@@ -108,28 +116,44 @@ class _AddQuestionState extends State<AddQuestion> {
 
       // print(selectedTags.map((e) => "id = ${e.id}, name = ${e.name}"));
 
-      final response = await dio.post(
-        'path',
-        data: {
-          "clientComplains": clientComplainsController.text,
-          "historyTakingInfo": historyTakingController.text,
-          "generalInfo": generalResultsController.text,
-          "problems": json.encode(probList1),
-          "treatments": json.encode(treatment),
-          "diagnostics": json.encode(diagnosis),
-          "examinations": json.encode(exam),
-          "tags": json.encode(tag),
-          "signalment": {
-            "species": signalmentTypeValue,
-            "breed": signalmentBreedValue,
-            "sterilize": signalmentSterilizeStat,
-            "age": signalmentAgeValue.text,
-            "weight": signalmentWeightValue.text,
-          }
-        },
-      );
+      FormData formData = FormData.fromMap({
+        "clientComplains": clientComplainsController.text,
+        "historyTakingInfo": historyTakingController.text,
+        "generalInfo": generalResultsController.text,
+        "problems": probList1,
+        "examinations": exam,
+        "treatments": treatment,
+        "diagnostics": diagnosis,
+        "tags": tag,
+        "signalment": {
+          "species": signalmentTypeValue,
+          "breed": signalmentBreedValue,
+          "sex": signalmentSexValue,
+          "sterilize": signalmentSterilizeStat,
+          "age": signalmentAgeValue.text,
+          "weight": signalmentWeightValue.text,
+        }
+      }, ListFormat.multiCompatible);
+      var index = 0;
+      for (var item in examContainers1) {
+        if (item.imageFile != null) {
+          formData.files.add(
+            MapEntry(
+              "examinations[${index}].imgResult",
+              MultipartFile.fromBytes(
+                item.imageFile!.bytes!,
+                filename: "image1.png",
+                contentType: MediaType("image", "png"),
+              ),
+            ),
+          );
+        }
+        index++;
+      }
 
-      await Future.delayed(Duration(seconds: 5));
+      final response = await dio.post('path', data: formData);
+
+      // await Future.delayed(Duration(seconds: 5));
 
       setState(() {
         _isPosting = false;
@@ -145,7 +169,7 @@ class _AddQuestionState extends State<AddQuestion> {
             return Center(
               child: Container(
                 width: MediaQuery.of(context).size.height * 0.3,
-                height: MediaQuery.of(context).size.height * 0.3,
+                height: MediaQuery.of(context).size.height * 0.35,
                 padding: EdgeInsets.all(40),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(5),
@@ -156,20 +180,86 @@ class _AddQuestionState extends State<AddQuestion> {
                         color: Color(0xFF42C2FF),
                       )
                     : FittedBox(
-                        child: Icon(
-                          Icons.check_circle_outline,
-                          color: Color(0xFF42C2FF),
+                        child: IconButton(
+                          icon: Icon(
+                            Icons.check_circle_outline,
+                            color: Color(0xFF42C2FF),
+                          ),
+                          onPressed: () {
+                            Navigator.popUntil(context,
+                                ModalRoute.withName('/Teacher/addQuesMenu'));
+                          },
                         ),
                       ),
               ),
             );
           });
     }
-    /////
+
+    void _alertModal(BuildContext context) {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return Dialog(
+              child: Container(
+                width: MediaQuery.of(context).size.height * 0.5,
+                height: MediaQuery.of(context).size.height * 0.2,
+                child: Center(
+                  child: Text(
+                    'กรุณากรอกข้อมูลให้ครบ',
+                    style: kSubHeaderTextStyle,
+                  ),
+                ),
+              ),
+            );
+          });
+    }
+
+    /////check if null///////
+
+    bool checkNotEmpty() {
+      bool tmp = clientComplainsController.text.isNotEmpty &&
+          historyTakingController.text.isNotEmpty &&
+          generalResultsController.text.isNotEmpty &&
+          selectedProblemList1.isNotEmpty &&
+          selectedProblemList2.isNotEmpty &&
+          selectedDiagnosisList.isNotEmpty &&
+          selectedTags.isNotEmpty &&
+          signalmentAgeValue.text.isNotEmpty &&
+          signalmentWeightValue.text.isNotEmpty &&
+          examContainers1.isNotEmpty &&
+          examContainers2.isNotEmpty &&
+          (signalmentBreedValue != null) &&
+          (signalmentSexValue != null);
+
+      print('state1 = $tmp');
+
+      for (ExamContainer item in examContainers1) {
+        if (item.examController.text.isEmpty) {
+          tmp = false;
+          break;
+        }
+      }
+      print('state2 = $tmp');
+      for (ExamContainer item in examContainers2) {
+        if (item.examController.text.isEmpty) {
+          tmp = false;
+          break;
+        }
+      }
+      print('state3 = $tmp');
+      for (TreatmentContainer item in treatmentContainer) {
+        if (item.selectedTreatmentDetail == null) {
+          tmp = false;
+          break;
+        }
+      }
+      return tmp;
+    }
 
     void printSTH() {
-      // print(generalResultsController.text);
-      print('isPosting = $_isPosting');
+      print(selectedTags);
+      // print('isPosting = $_isPosting');
     }
 
     ////Update functions/////
@@ -233,11 +323,12 @@ class _AddQuestionState extends State<AddQuestion> {
                       DropDownButtonInAddQ(
                           selectedValue: signalmentTypeValue,
                           list: Signalment_typeList,
+                          hintText: "เลือกประเภทสัตว์",
                           onChanged: (value) {
                             setState(() {
                               signalmentTypeValue = value.toString();
                               signalmentBreedValue =
-                                  filterBreed(signalmentTypeValue).first;
+                                  filterBreed(signalmentTypeValue!).first;
                             });
                           }),
                     ],
@@ -248,10 +339,26 @@ class _AddQuestionState extends State<AddQuestion> {
                       SizedBox(width: 2),
                       DropDownButtonInAddQ(
                           selectedValue: signalmentBreedValue,
-                          list: filterBreed(signalmentTypeValue),
+                          list: filterBreed(signalmentTypeValue!),
+                          hintText: "เลือกสายพันธุ์",
                           onChanged: (value) {
                             setState(() {
                               signalmentBreedValue = value.toString();
+                            });
+                          }),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Text('เพศ'),
+                      SizedBox(width: 2),
+                      DropDownButtonInAddQ(
+                          selectedValue: signalmentSexValue,
+                          list: ['ผู้', 'เมีย'],
+                          hintText: "เลือกเพศสัตว์",
+                          onChanged: (value) {
+                            setState(() {
+                              signalmentSexValue = value!;
                             });
                           }),
                     ],
@@ -285,6 +392,7 @@ class _AddQuestionState extends State<AddQuestion> {
                     boxColor: Color(0xFFDFE4E0),
                   ),
                   const H20Sizedbox(),
+                  //History Taking
                   TextBoxMultiLine(
                     myController: historyTakingController,
                     hintText: "ข้อมูล History Taking",
@@ -357,10 +465,9 @@ class _AddQuestionState extends State<AddQuestion> {
                       ElevatedButton(
                         onPressed: () {
                           final int currentNub = treatmentProvider.nub;
-                          print(currentNub);
                           treatmentProvider.addContainer(
                             TreatmentContainer(
-                              id: currentNub,
+                              id: currentNub.toString(),
                               key: ObjectKey(currentNub),
                               selectedTreatmentTopic: treatmentTopicList.first,
                               selectedTreatmentDetail:
@@ -397,10 +504,13 @@ class _AddQuestionState extends State<AddQuestion> {
                       ),
                       ElevatedButton(
                           onPressed: () {
-                            _showModal(context);
-                            printSTH();
-                            postQuestion(context);
-                            printSTH();
+                            if (!checkNotEmpty()) {
+                              printSTH();
+                              _alertModal(context);
+                            } else {
+                              _showModal(context);
+                              postQuestion(context);
+                            }
                           },
                           child: Text('บันทึก')),
                     ],

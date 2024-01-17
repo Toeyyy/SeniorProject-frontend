@@ -66,10 +66,11 @@ class _RightPart_TreatmentDetailState extends State<RightPart_TreatmentDetail> {
             onChanged: (query) {
               setState(() {
                 _isListViewVisible = true;
-                _displayList = filterList(
-                  _searchController,
-                  getTreatmentList(widget.topic),
-                );
+                //TODO แก้
+                // _displayList = filterProblemList(
+                //   _searchController,
+                //   getTreatmentList(widget.topic),
+                // );
                 _displayList.sort();
               });
               if (query.isEmpty) {

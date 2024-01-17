@@ -1,11 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/tmpQuestion.dart';
+import 'package:frontend/models/problemListObject.dart';
+import 'package:frontend/models/diagnosisObject.dart';
 
-List<String> filterList(
-    TextEditingController searchController, List<String> listForSearch) {
+List<ProblemObject> filterProblemList(
+    TextEditingController searchController, List<ProblemObject> listForSearch) {
+  String query = searchController.text.toLowerCase();
+  if (query == '') {
+    return listForSearch;
+  } else {
+    return listForSearch
+        .where((item) => item.name.toLowerCase().startsWith(query))
+        .toList();
+  }
+}
+
+List<DiagnosisObject> filterDiagnosisList(
+    TextEditingController searchController,
+    List<DiagnosisObject> listForSearch) {
   String query = searchController.text.toLowerCase();
   return listForSearch
-      .where((item) => item.toLowerCase().startsWith(query))
+      .where((item) => item.name.toLowerCase().startsWith(query))
       .toList();
 }
 
@@ -45,18 +60,36 @@ List<String> filterTreatment(String topic) {
   }
 }
 
-List<String> filterEditList(String value) {
+/////predefined//////
+
+List<dynamic> filterEditTopicList(String value) {
   if (value == 'Problem List') {
-    return probListSet;
+    return preDefinedProblem;
   } else if (value == 'Diagnosis List') {
-    return diagnosisList.map((e) => e.name).toList();
+    return preDefinedDiagnosis;
   } else if (value == 'Medical Treatment List') {
-    return medicalTreatmentList;
+    return preDefinedTreatmentAll
+        .where((item) => item.type == 'Medical')
+        .toList();
   } else if (value == 'Surgical Treatment List') {
-    return surgicalTreatmentList;
+    return preDefinedTreatmentAll
+        .where((item) => item.type == 'Surgical')
+        .toList();
   } else if (value == 'Nutrition Support List') {
-    return nutritionSupportList;
+    return preDefinedTreatmentAll
+        .where((item) => item.type == 'Nutritional support')
+        .toList();
   } else {
-    return otherTreatmentList;
+    return preDefinedTreatmentAll
+        .where((item) => item.type == 'Other')
+        .toList();
   }
+}
+
+List<dynamic> filterList(
+    TextEditingController searchController, List<dynamic> listForSearch) {
+  String query = searchController.text.toLowerCase();
+  return listForSearch
+      .where((item) => item.name.toLowerCase().startsWith(query))
+      .toList();
 }

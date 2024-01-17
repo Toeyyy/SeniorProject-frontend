@@ -74,6 +74,7 @@ class _ExamContainerState extends State<ExamContainer> {
               DropDownButtonInAddQ(
                   selectedValue: widget.selectedDepartment,
                   list: departmentList,
+                  hintText: "เลือกแผนกการตรวจ",
                   onChanged: (value) {
                     setState(() {
                       widget.selectedDepartment = value.toString();
@@ -93,6 +94,7 @@ class _ExamContainerState extends State<ExamContainer> {
           DropDownButtonInAddQ(
               selectedValue: widget.selectedExamTopic,
               list: filterExam(widget.selectedDepartment),
+              hintText: "เลือกการตรวจ",
               onChanged: (value) {
                 setState(() {
                   widget.selectedExamTopic = value.toString();
@@ -137,14 +139,10 @@ class _ExamContainerState extends State<ExamContainer> {
 }
 
 class ShowExamContainer extends StatelessWidget {
-  // PlatformFile? imagePath =
-  //     'https://i.natgeofe.com/n/4f5aaece-3300-41a4-b2a8-ed2708a0a27c/domestic-dog_thumb_square.jpg'
-  //         as PlatformFile;
-
   String department;
   String exam;
   String results;
-  String imagePath;
+  String? imagePath;
 
   ShowExamContainer(
       {required this.department,
@@ -197,20 +195,20 @@ class ShowExamContainer extends StatelessWidget {
             margin: EdgeInsets.symmetric(horizontal: 10),
             padding: EdgeInsets.all(10),
             color: Color(0xFFE7F9FF),
-            child: Text(
-              'exam result nafdflksfsjfkljglsjdfg',
-            ),
+            child: Text(results),
           ),
           SizedBox(height: 15),
-          Padding(
-            padding: const EdgeInsets.only(left: 10),
-            child: Image.network(
-              imagePath,
-              height: 200,
-              width: 300,
-              fit: BoxFit.cover,
-            ),
-          ),
+          imagePath != null
+              ? Padding(
+                  padding: const EdgeInsets.only(left: 10),
+                  child: Image.network(
+                    imagePath!,
+                    height: 200,
+                    width: 300,
+                    fit: BoxFit.cover,
+                  ),
+                )
+              : Container(),
         ],
       ),
     );

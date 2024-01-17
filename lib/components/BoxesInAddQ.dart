@@ -10,19 +10,22 @@ import 'package:frontend/models/problemListObject.dart';
 import 'package:frontend/models/diagnosisObject.dart';
 
 class DropDownButtonInAddQ extends StatelessWidget {
-  String selectedValue;
+  String? selectedValue;
   List<String> list;
   void Function(String?) onChanged;
+  String hintText;
 
   DropDownButtonInAddQ(
       {required this.selectedValue,
       required this.list,
+      required this.hintText,
       required this.onChanged});
 
   @override
   Widget build(BuildContext context) {
     return DropdownButton(
       value: selectedValue,
+      hint: Text(hintText),
       icon: Icon(Icons.arrow_drop_down),
       padding: EdgeInsets.all(5),
       isDense: true,
@@ -163,6 +166,9 @@ class ProbListMultiSelectDropDown extends StatelessWidget {
               }).toList(),
               round);
         },
+        selectedOptions: selectedList.map((item) {
+          return ValueItem(label: item.name, value: item.id);
+        }).toList(),
         options: displayList.map<ValueItem<String>>((ProblemObject item) {
           return ValueItem(label: item.name, value: item.id);
         }).toList());
@@ -189,9 +195,6 @@ class DiagnosisMultiSelectDropDown extends StatelessWidget {
         chipConfig: ChipConfig(
             backgroundColor: Color(0xFF42C2FF), wrapType: WrapType.wrap),
         onOptionSelected: (List<ValueItem> selectedOptions) {
-          // selectedList = selectedOptions.map((item) {
-          //   return DiagnosisObject(id: item.value, name: item.label);
-          // }).toList();
           updateListCallback(selectedOptions.map((item) {
             return DiagnosisObject(id: item.value, name: item.label);
           }).toList());

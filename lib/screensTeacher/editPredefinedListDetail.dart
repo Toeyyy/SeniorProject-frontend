@@ -1,8 +1,15 @@
+import 'dart:convert';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/components/appBar.dart';
+import 'package:frontend/models/diagnosisObject.dart';
+import 'package:frontend/models/problemListObject.dart';
+import 'package:frontend/models/treatmentObject.dart';
 import 'package:frontend/tmpQuestion.dart';
 import 'package:frontend/constants.dart';
 import 'package:frontend/components/functions.dart';
+import 'package:http/http.dart' as http;
 
 class EditPredefinedListDetail extends StatefulWidget {
   final String title;
@@ -16,12 +23,87 @@ class EditPredefinedListDetail extends StatefulWidget {
 
 class _EditPredefinedListDetailState extends State<EditPredefinedListDetail> {
   TextEditingController textFieldController = TextEditingController();
-  late List<String> fullList = filterEditList(widget.title);
-  late List<String> displayList = filterEditList(widget.title);
+  late List<dynamic> fullList = filterEditTopicList(widget.title);
+  late List<dynamic> displayList = filterEditTopicList(widget.title);
   int selectedTileIndex = -1;
   bool isEditing = false;
   String? oldItem;
+  String? oldItemID;
   String? newItem;
+  final String apiUrl = "localhost:7901/api";
+
+  Future<void> _PostAddData(String title, String item) async {
+    if (title == 'Problem List') {
+      var data = {"name": item};
+      final http.Response response = await http.post(
+        Uri.parse("$apiUrl/problem/add"),
+        body: jsonEncode(data),
+      );
+    } else if (title == 'Diagnosis List') {
+      var data = {"name": item};
+      final http.Response response = await http.post(
+        Uri.parse("$apiUrl/diagnostic/add"),
+        body: jsonEncode(data),
+      );
+    } else if (title == 'Nutrition Support List') {
+      var data = {"type": "Nutritional support", "name": item};
+      final http.Response response = await http.post(
+        Uri.parse("$apiUrl/treatment/add"),
+        body: jsonEncode(data),
+      );
+    } else {
+      var data = {"type": title.split(' ')[0], "name": item};
+      // print('data = ${title.split(' ')[0]}');
+      final http.Response response = await http.post(
+        Uri.parse("$apiUrl/treatment/add"),
+        body: jsonEncode(data),
+      );
+    }
+  }
+
+  Future<void> _postDeleteData(String title, String id) async {
+    if (title == 'Problem List') {
+      final http.Response response = await http.post(
+        Uri.parse("$apiUrl/problem/delete/$id"),
+      );
+    } else if (title == 'Diagnosis List') {
+      final http.Response response = await http.post(
+        Uri.parse("$apiUrl/diagnostic/delete/$id"),
+      );
+    } else {
+      final http.Response response = await http.post(
+        Uri.parse("$apiUrl/treatment/delete/$id"),
+      );
+    }
+  }
+
+  Future<void> _postEditData(String title, String id, String item) async {
+    if (title == 'Problem List') {
+      var data = {"name": item};
+      final http.Response response = await http.post(
+        Uri.parse("$apiUrl/problem/update/$id"),
+        body: jsonEncode(data),
+      );
+    } else if (title == 'Diagnosis List') {
+      var data = {"name": item};
+      final http.Response response = await http.post(
+        Uri.parse("$apiUrl/diagnostic/update/$id"),
+        body: jsonEncode(data),
+      );
+    } else if (title == 'Nutrition Support List') {
+      var data = {"type": "Nutritional support", "name": item};
+      final http.Response response = await http.post(
+        Uri.parse("$apiUrl/treatment/update/$id"),
+        body: jsonEncode(data),
+      );
+    } else {
+      var data = {"type": title.split(' ')[0], "name": item};
+      final http.Response response = await http.post(
+        Uri.parse("$apiUrl/treatment/update/$id"),
+        body: jsonEncode(data),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +137,26 @@ class _EditPredefinedListDetailState extends State<EditPredefinedListDetail> {
                             icon: Icon(Icons.add),
                             onPressed: () {
                               setState(() {
-                                fullList.add(textFieldController.text);
+                                if (widget.title == 'Problem List') {
+                                  ProblemObject newItem = ProblemObject(
+                                      id: 'X', name: textFieldController.text);
+                                  fullList.add(newItem);
+                                } else if (widget.title == 'Diagnosis List') {
+                                  DiagnosisObject newItem = DiagnosisObject(
+                                      id: 'X', name: textFieldController.text);
+                                  fullList.add(newItem);
+                                } else {
+                                  TreatmentObject newItem = TreatmentObject(
+                                      id: 'X',
+                                      type: (widget.title ==
+                                              'Nutrition Support List')
+                                          ? "Nutritional support"
+                                          : widget.title.split(' ')[0],
+                                      name: textFieldController.text);
+                                  fullList.add(newItem);
+                                }
+                                _PostAddData(widget.title,
+                                    textFieldController.text); //send data
                                 textFieldController.clear();
                                 displayList = fullList;
                               });
@@ -66,12 +167,18 @@ class _EditPredefinedListDetailState extends State<EditPredefinedListDetail> {
                             onPressed: () {
                               setState(() {
                                 newItem = textFieldController.text;
-                                fullList.remove(oldItem);
-                                fullList.add(newItem!);
+                                for (var item in fullList) {
+                                  if (item.id == oldItemID) {
+                                    _postEditData(
+                                        widget.title, item.id, item.name);
+                                    item.name = newItem;
+                                  }
+                                }
                                 isEditing = false;
                                 textFieldController.clear();
                                 selectedTileIndex = -1;
-                                fullList.sort();
+                                fullList
+                                    .sort((a, b) => a.name.compareTo(b.name));
                                 displayList = fullList;
                               });
                             }),
@@ -96,9 +203,50 @@ class _EditPredefinedListDetailState extends State<EditPredefinedListDetail> {
                                 : Color(0xFFE7F9FF),
                             hoverColor: Color(0xFFA0E9FF),
                             trailing: index == selectedTileIndex
-                                ? Icon(Icons.check)
+                                ? Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      IconButton(
+                                        onPressed: () {
+                                          textFieldController.text =
+                                              displayList[selectedTileIndex]
+                                                  .name;
+                                          setState(() {
+                                            oldItem =
+                                                displayList[selectedTileIndex]
+                                                    .name;
+                                            oldItemID =
+                                                displayList[selectedTileIndex]
+                                                    .id;
+                                            isEditing = true;
+                                          });
+                                        },
+                                        icon: Icon(CupertinoIcons.pencil),
+                                      ),
+                                      IconButton(
+                                        onPressed: () {
+                                          setState(() {
+                                            _postDeleteData(
+                                                widget.title,
+                                                displayList[selectedTileIndex]
+                                                    .id);
+                                            fullList.remove(
+                                                displayList[selectedTileIndex]);
+                                            // print('state1 = ${fullList.map((e) => e.name).toList()}');
+                                            fullList.sort((a, b) =>
+                                                a.name.compareTo(b.name));
+                                            displayList = fullList;
+                                            textFieldController.clear();
+                                            selectedTileIndex = -1;
+                                          });
+                                        },
+                                        icon: Icon(CupertinoIcons.delete),
+                                      ),
+                                    ],
+                                  )
                                 : null,
-                            title: Text(displayList[index]),
+                            title: Text(displayList[index].name),
                             onTap: () {
                               setState(() {
                                 if ((selectedTileIndex != -1) &
@@ -117,64 +265,15 @@ class _EditPredefinedListDetailState extends State<EditPredefinedListDetail> {
                     ),
                   ),
                 ),
-                SizedBox(height: 10),
-                Visibility(
-                  visible: selectedTileIndex == -1 ? false : true,
-                  child: Padding(
-                    padding: const EdgeInsets.only(right: 15),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        ElevatedButton(
-                          onPressed: () {
-                            textFieldController.text =
-                                displayList[selectedTileIndex];
-                            setState(() {
-                              oldItem = displayList[selectedTileIndex];
-                              isEditing = true;
-                            });
-                          },
-                          child: Text('แก้ไข'),
-                        ),
-                        SizedBox(width: 15),
-                        ElevatedButton(
-                          onPressed: () {
-                            setState(() {
-                              fullList.remove(displayList[selectedTileIndex]);
-                              // fullList.removeAt(selectedTileIndex);
-                              textFieldController.clear();
-                              selectedTileIndex = -1;
-                              fullList.sort();
-                              displayList = fullList;
-                            });
-                          },
-                          child: Text('ลบ'),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Color(0xFF8B72BE),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
                 const SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: Text('กลับ'),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(0xFF8B72BE),
-                      ),
-                    ),
-                    ElevatedButton(
-                      onPressed: () {},
-                      child: Text('บันทึก'),
-                    ),
-                  ],
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text('กลับ'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color(0xFF8B72BE),
+                  ),
                 ),
               ],
             ),

@@ -3,6 +3,8 @@ import 'package:frontend/components/splitScreenNisit.dart';
 import 'package:frontend/components/appBar.dart';
 import 'package:frontend/constants.dart';
 import 'package:frontend/components/functions.dart';
+import 'package:frontend/models/diagnosisObject.dart';
+import 'package:frontend/tmpQuestion.dart';
 
 class Diagnosis extends StatelessWidget {
   const Diagnosis({super.key});
@@ -28,16 +30,16 @@ class RightPart_Diagnosis extends StatefulWidget {
 
 class _RightPart_DiagnosisState extends State<RightPart_Diagnosis> {
   TextEditingController _searchController = TextEditingController();
-  List<String> diagnosisList = [
-    'kasjdfkhskjdf',
-    'kjdfkadf',
-    'iuyqieyriuiewr',
-    'zcqifuhydhf',
-    'aahcujghskgf',
-    'acajfkdfwuearf',
-  ];
-  List<String> _displayList = [];
-  List<String> _selectedList = [];
+  // List<String> diagnosisList = [
+  //   'kasjdfkhskjdf',
+  //   'kjdfkadf',
+  //   'iuyqieyriuiewr',
+  //   'zcqifuhydhf',
+  //   'aahcujghskgf',
+  //   'acajfkdfwuearf',
+  // ];
+  List<DiagnosisObject> _displayList = [];
+  List<DiagnosisObject> _selectedList = [];
   bool _isListViewVisible = false;
 
   @override
@@ -56,7 +58,8 @@ class _RightPart_DiagnosisState extends State<RightPart_Diagnosis> {
             onChanged: (query) {
               setState(() {
                 _isListViewVisible = true;
-                _displayList = filterList(_searchController, diagnosisList);
+                _displayList =
+                    filterDiagnosisList(_searchController, diagnosisList);
                 _displayList.sort();
               });
               if (query.isEmpty) {
@@ -79,7 +82,7 @@ class _RightPart_DiagnosisState extends State<RightPart_Diagnosis> {
                   return Container(
                     color: Color(0xFFE7F9FF),
                     child: ListTile(
-                        title: Text(_displayList[index]),
+                        title: Text(_displayList[index].name),
                         onTap: () {
                           _selectedList.add(_displayList[index]);
                           _searchController.clear();
@@ -99,7 +102,7 @@ class _RightPart_DiagnosisState extends State<RightPart_Diagnosis> {
               itemCount: _selectedList.length,
               itemBuilder: (context, index) {
                 return ListTile(
-                  title: Text(_selectedList[index]),
+                  title: Text(_selectedList[index].name),
                   trailing: IconButton(
                     icon: Icon(Icons.remove),
                     onPressed: () {

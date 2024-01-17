@@ -8,7 +8,7 @@ import 'package:frontend/constants.dart';
 import 'package:frontend/tmpQuestion.dart';
 
 class TreatmentContainer extends StatefulWidget {
-  final int id;
+  final String id;
   final Key key;
   String selectedTreatmentTopic;
   String selectedTreatmentDetail;
@@ -22,17 +22,6 @@ class TreatmentContainer extends StatefulWidget {
 
   @override
   State<TreatmentContainer> createState() => _TreatmentContainerState();
-
-  // @override
-  // bool operator ==(Object other) =>
-  //     identical(this, other) ||
-  //     other is TreatmentContainer &&
-  //         runtimeType == other.runtimeType &&
-  //         id == other.id &&
-  //         key == other.key;
-  //
-  // @override
-  // int get hashCode => id.hashCode ^ key.hashCode;
 }
 
 class _TreatmentContainerState extends State<TreatmentContainer> {
@@ -59,6 +48,7 @@ class _TreatmentContainerState extends State<TreatmentContainer> {
               DropDownButtonInAddQ(
                   selectedValue: widget.selectedTreatmentTopic,
                   list: treatmentTopicList,
+                  hintText: "เลือกหัวข้อ Treatment",
                   onChanged: (value) {
                     setState(() {
                       widget.selectedTreatmentTopic = value.toString();
@@ -69,7 +59,7 @@ class _TreatmentContainerState extends State<TreatmentContainer> {
               IconButton(
                 onPressed: () {
                   print('this container id = ${widget.id}');
-                  treatmentProvider.deleteContainer(widget.id, widget.key);
+                  treatmentProvider.deleteContainer(widget.key);
                 },
                 icon: Icon(Icons.remove),
               ),
@@ -79,9 +69,10 @@ class _TreatmentContainerState extends State<TreatmentContainer> {
           DropDownButtonInAddQ(
               selectedValue: widget.selectedTreatmentDetail,
               list: filterTreatment(widget.selectedTreatmentTopic),
+              hintText: "เลือกรายละเอียด Treatment",
               onChanged: (value) {
                 setState(() {
-                  widget.selectedTreatmentTopic = value.toString();
+                  widget.selectedTreatmentDetail = value.toString();
                 });
               }),
         ],

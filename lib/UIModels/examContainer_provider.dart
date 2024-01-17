@@ -20,13 +20,13 @@ class ExamContainerProvider extends ChangeNotifier {
       int deleteIndex, List<ExamContainer> containerList, Key key) {
     // print('current delete index = $deleteIndex');
     containerList.removeWhere((item) => item.key == key);
+    notifyListeners();
+  }
 
-    // for (int i = deleteIndex; i < containerList.length; i++) {
-    //   // print('before, i = $i, index = ${_examContainers[i].index}');
-    //   containerList[i].index = i;
-    //   // print('after, i = $i, index = ${_examContainers[i].index}');
-    // }
-    // // nub -= 1;
+  void clearList() {
+    examContainers1.clear();
+    examContainers2.clear();
+    nub = 0;
     notifyListeners();
   }
 }

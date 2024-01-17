@@ -3,7 +3,7 @@ class ExaminationObject {
   String type;
   String name;
   String textResult;
-  String imgResult;
+  String? imgResult;
   String round;
 
   ExaminationObject(

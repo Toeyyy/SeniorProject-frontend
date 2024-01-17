@@ -57,29 +57,34 @@ class _NisitShowQuestionState extends State<NisitShowQuestion> {
                   Padding(
                     padding: const EdgeInsets.only(bottom: 15),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.baseline,
-                      textBaseline: TextBaseline.ideographic,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          'เลือกโจทย์',
-                          style: kHeaderTextStyle,
-                        ),
-                        SizedBox(
-                          width: 20,
-                        ),
-                        SizedBox(
-                          width: 200,
-                          child: TextField(
-                            decoration: InputDecoration(
-                              isDense: true,
-                              border: OutlineInputBorder(),
-                              labelText: 'ค้นหารหัสโจทย์',
-                              labelStyle: TextStyle(fontSize: 20),
+                        Row(
+                          children: [
+                            Text(
+                              'เลือกโจทย์',
+                              style: kHeaderTextStyle,
                             ),
-                          ),
-                        )
+                            SizedBox(
+                              width: 20,
+                            ),
+                            SizedBox(
+                              width: 200,
+                              child: TextField(
+                                decoration: InputDecoration(
+                                  isDense: true,
+                                  border: OutlineInputBorder(),
+                                  labelText: 'ค้นหารหัสโจทย์',
+                                  labelStyle: TextStyle(fontSize: 20),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        ElevatedButton(
+                          onPressed: () {},
+                          child: Text('โจทย์ยอดนิยม'),
+                        ),
                       ],
                     ),
                   ),
@@ -93,24 +98,21 @@ class _NisitShowQuestionState extends State<NisitShowQuestion> {
                   SizedBox(
                     height: 20,
                   ),
-                  SizedBox(
-                    height: 600,
-                    child: questionObj.isNotEmpty
-                        ? GridView.builder(
-                            gridDelegate:
-                                SliverGridDelegateWithMaxCrossAxisExtent(
-                                    maxCrossAxisExtent: 300,
-                                    crossAxisSpacing: 8,
-                                    mainAxisSpacing: 8,
-                                    childAspectRatio: 0.9),
-                            itemCount: questionObj.length,
-                            itemBuilder: (context, index) {
-                              return QuestionCard(
-                                  questionObj: questionObj[index]);
-                            },
-                          )
-                        : Center(child: CircularProgressIndicator()),
-                  ),
+                  questionObj.isNotEmpty
+                      ? GridView.builder(
+                          shrinkWrap: true,
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 2,
+                                  mainAxisSpacing: 8,
+                                  crossAxisSpacing: 8),
+                          itemCount: questionObj.length,
+                          itemBuilder: (context, index) {
+                            return QuestionCard(
+                                questionObj: questionObj[index]);
+                          },
+                        )
+                      : Center(child: CircularProgressIndicator()),
                 ],
               ),
             ),

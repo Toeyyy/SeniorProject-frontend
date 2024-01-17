@@ -11,6 +11,7 @@ import 'package:frontend/screensTeacher/showAndEditQuestion.dart';
 import 'screensNisit/showQuestionNisit.dart';
 import 'screensNisit/problemList1.dart';
 import 'package:provider/provider.dart';
+import 'package:frontend/screensTeacher/editQuestion.dart';
 
 void main() {
   runApp(MultiProvider(
@@ -35,17 +36,19 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: lightTheme,
-      initialRoute: '/Teacher/addQuestion',
-      // initialRoute: '/Teacher/editQuestion',
+      // initialRoute: '/Nisit/showQuestionNisit',
+      initialRoute: '/Teacher/addQuesMenu',
+      // initialRoute: '/Nisit/probListAns1',
       routes: {
-        '/Nisit/showQuestion': (context) => NisitShowQuestion(),
+        '/Nisit/showQuestionNisit': (context) => NisitShowQuestion(),
         '/Nisit/probList1': (context) => ProbList1(),
         '/Nisit/probListAns1': (context) => ProbListAns1(),
         '/Nisit/diagnosis': (context) => Diagnosis(),
         '/Nisit/treatment': (context) => TreatmentTopic(),
         '/Teacher/addQuestion': (context) => AddQuestion(),
         '/Teacher/editPredefined': (context) => EditPredefinedListTopic(),
-        '/Teacher/editQuestion': (context) => ShowAndEditQuestion(),
+        '/Teacher/showAndEditQuestion': (context) => ShowAndEditQuestion(),
+        '/Teacher/editQuestion': (context) => EditQuestion(),
         '/Teacher/addQuesMenu': (context) => AddQuesMenu(),
       },
     );

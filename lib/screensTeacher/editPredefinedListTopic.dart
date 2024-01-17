@@ -25,13 +25,13 @@ class EditPredefinedListTopic extends StatelessWidget {
                 const SizedBox(height: 20),
                 Expanded(
                   child: ListView.separated(
-                    itemCount: editPredefinedList.length,
+                    itemCount: editPredefinedTopicList.length,
                     itemBuilder: (context, index) {
                       return ListTile(
                         tileColor: Color(0xFFA0E9FF),
                         hoverColor: Color(0xFF42C2FF),
                         title: Text(
-                          editPredefinedList[index],
+                          editPredefinedTopicList[index],
                           style: TextStyle(
                               fontWeight: FontWeight.w500, fontSize: 20),
                         ),
@@ -40,7 +40,7 @@ class EditPredefinedListTopic extends StatelessWidget {
                             context,
                             MaterialPageRoute(
                               builder: (context) => EditPredefinedListDetail(
-                                  title: editPredefinedList[index]),
+                                  title: editPredefinedTopicList[index]),
                             ),
                           );
                         },

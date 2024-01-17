@@ -7,6 +7,10 @@ import 'package:frontend/components/functions.dart';
 import 'package:frontend/models/problemListObject.dart';
 
 class ProbList1 extends StatelessWidget {
+  // String round;
+  //
+  // ProbList1({required this.round});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,10 +31,14 @@ class RightPart_ProbList1 extends StatefulWidget {
 }
 
 class _RightPart_ProbList1State extends State<RightPart_ProbList1> {
-  List<bool> selectedItem = List.generate(probListSet.length, (index) => false);
+  List<bool> selectedBool = List.generate(probListSet.length, (index) => false);
   TextEditingController _searchController = TextEditingController();
-  // List<String> probObjectList =
-  //     probListSet.map((prob) => prob.problem).toList();
+  List<ProblemObject> selectedList = [];
+  List<ProblemObject> displayList = probObjectList;
+
+  void updateList(List<ProblemObject> newList, String round) {
+    selectedList = newList;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,6 +55,12 @@ class _RightPart_ProbList1State extends State<RightPart_ProbList1> {
           ),
           TextField(
             controller: _searchController,
+            onChanged: (value) {
+              setState(() {
+                displayList =
+                    filterProblemList(_searchController, probObjectList);
+              });
+            },
             decoration: InputDecoration(
               border: OutlineInputBorder(),
               labelText: 'ค้นหา Problem List',
@@ -54,24 +68,16 @@ class _RightPart_ProbList1State extends State<RightPart_ProbList1> {
           ),
           Expanded(
             child: ListView.builder(
-              itemCount: filterList(_searchController, probListSet).length,
+              itemCount: displayList.length,
               itemBuilder: (context, index) {
-                int originalIndex = probListSet
-                    .indexOf(filterList(_searchController, probListSet)[index]);
+                int oriIndex = probObjectList.indexOf(displayList[index]);
                 return ListTile(
-                  title:
-                      Text(filterList(_searchController, probListSet)[index]),
+                  title: Text(displayList[index].name),
                   leading: Checkbox(
-                    value: selectedItem[originalIndex],
-                    onChanged: (value) {
+                    value: selectedBool[oriIndex],
+                    onChanged: (newValue) {
                       setState(() {
-                        selectedItem[originalIndex] = value!;
-                        if (value) {
-                          String checkedItem = probListSet.removeAt(index);
-                          probListSet.insert(0, checkedItem);
-                          bool selected = selectedItem.removeAt(index);
-                          selectedItem.insert(0, selected);
-                        }
+                        selectedBool[oriIndex] = newValue!;
                       });
                     },
                   ),
@@ -80,7 +86,10 @@ class _RightPart_ProbList1State extends State<RightPart_ProbList1> {
             ),
           ),
           ElevatedButton(
-            onPressed: null,
+            onPressed: () {
+              print(filterProblemList(_searchController, probObjectList));
+              print(displayList);
+            },
             child: Text('ยืนยัน'),
           ),
         ],
