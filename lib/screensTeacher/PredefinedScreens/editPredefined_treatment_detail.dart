@@ -138,22 +138,25 @@ class _EditPredefinedTreatmentDetailState
                         : IconButton(
                             icon: Icon(Icons.save),
                             onPressed: () {
-                              setState(() {
-                                List<String> txt = textFieldController.text
-                                    .split(',')
-                                    .map((e) => e.trim())
-                                    .toList();
-                                _postUpdateData(oldItem!, txt);
-                                oldItem!.name = txt[0];
-                                oldItem!.cost = int.parse(txt[1]);
-                                isEditing = false;
-                                _isFormatCorrect = true;
-                                textFieldController.clear();
-                                selectedTileIndex = -1;
-                                fullList
-                                    .sort((a, b) => a.name.compareTo(b.name));
-                                displayList = fullList;
-                              });
+                              !_isFormatCorrect
+                                  ? null
+                                  : setState(() {
+                                      List<String> txt = textFieldController
+                                          .text
+                                          .split(',')
+                                          .map((e) => e.trim())
+                                          .toList();
+                                      _postUpdateData(oldItem!, txt);
+                                      oldItem!.name = txt[0];
+                                      oldItem!.cost = int.parse(txt[1]);
+                                      isEditing = false;
+                                      _isFormatCorrect = true;
+                                      textFieldController.clear();
+                                      selectedTileIndex = -1;
+                                      fullList.sort(
+                                          (a, b) => a.name.compareTo(b.name));
+                                      displayList = fullList;
+                                    });
                             },
                           ),
                   ),
