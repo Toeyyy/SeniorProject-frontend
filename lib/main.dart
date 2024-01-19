@@ -1,23 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/UIModels/examContainer_provider.dart';
 import 'package:frontend/UIModels/treatmentContainer_provider.dart';
+import 'package:frontend/UIModels/predefinedExam_provider.dart';
 import 'package:frontend/screensNisit/diagnosis.dart';
 import 'package:frontend/screensNisit/probListAns1.dart';
 import 'package:frontend/screensNisit/treatmentTopic.dart';
 import 'package:frontend/screensTeacher/addQuesMenu.dart';
 import 'package:frontend/screensTeacher/addQuestion.dart';
-import 'package:frontend/screensTeacher/editPredefinedListTopic.dart';
+import 'package:frontend/screensTeacher/PredefinedScreens/editPredefinedListTopic.dart';
 import 'package:frontend/screensTeacher/showAndEditQuestion.dart';
 import 'screensNisit/showQuestionNisit.dart';
 import 'screensNisit/problemList1.dart';
 import 'package:provider/provider.dart';
 import 'package:frontend/screensTeacher/editQuestion.dart';
+import 'package:frontend/screensTeacher/PredefinedScreens/editPredefined_exams_topics.dart';
 
 void main() {
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (_) => ExamContainerProvider()),
       ChangeNotifierProvider(create: (_) => TreatmentContainerProvider()),
+      ChangeNotifierProvider(create: (_) => PreDefinedExamProvider()),
     ],
     child: const MyApp(),
   )
@@ -50,6 +53,8 @@ class MyApp extends StatelessWidget {
         '/Teacher/showAndEditQuestion': (context) => ShowAndEditQuestion(),
         '/Teacher/editQuestion': (context) => EditQuestion(),
         '/Teacher/addQuesMenu': (context) => AddQuesMenu(),
+        'Teacher/editPreDefined/exams_lab': (context) =>
+            EditPredefinedExamLab(),
       },
     );
   }

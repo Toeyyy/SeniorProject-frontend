@@ -6,6 +6,7 @@ import 'components/examContainer.dart';
 import 'package:frontend/models/signalmentObject.dart';
 import 'package:frontend/models/examinationObject.dart';
 import 'package:frontend/models/treatmentObject.dart';
+import 'package:frontend/models/examinationPreDefinedObject.dart';
 
 ////////////for show and edit page/////////////
 
@@ -136,9 +137,12 @@ List<ShowTreatmentContainer> showSelectedTreatmentContainer = [
 ];
 
 List<TreatmentObject> showTreatmentList = [
-  TreatmentObject(id: '1', type: 'Medical Treatment', name: 'medical 1'),
-  TreatmentObject(id: '2', type: 'Surgical Treatment', name: 'surgical 2'),
-  TreatmentObject(id: '3', type: 'Nutrition Support', name: 'nutrition 3'),
+  TreatmentObject(
+      id: '1', type: 'Medical Treatment', name: 'medical 1', cost: 100),
+  TreatmentObject(
+      id: '2', type: 'Surgical Treatment', name: 'surgical 2', cost: 100),
+  TreatmentObject(
+      id: '3', type: 'Nutrition Support', name: 'nutrition 3', cost: 100),
 ];
 
 ///////for full list/////////////////
@@ -368,29 +372,155 @@ List<String> otherTreatmentList = [
 List<String> editPredefinedTopicList = [
   'Problem List',
   'Diagnosis List',
-  'Medical Treatment List',
-  'Surgical Treatment List',
-  'Nutrition Support List',
-  'Other Treatment List',
+  'Treatment List',
+  // 'Medical Treatment List',
+  // 'Surgical Treatment List',
+  // 'Nutrition Support List',
+  // 'Other Treatment List',
+  'Examination List',
 ];
 
+List<ExamPreDefinedObject> preDefinedExamAll = [
+  ExamPreDefinedObject(
+      id: '1',
+      lab: 'lab 1',
+      type: 'lab 1 type 1',
+      name: 'type 1 exam 1',
+      cost: 100),
+  ExamPreDefinedObject(
+      id: '2',
+      lab: 'lab 1',
+      type: 'lab 1 type 1',
+      name: 'type 1 exam 2',
+      cost: 100),
+  ExamPreDefinedObject(
+      id: '3',
+      lab: 'lab 1',
+      type: 'lab 1 type 1',
+      name: 'type 1 exam 3',
+      cost: 100),
+  ExamPreDefinedObject(
+      id: '4',
+      lab: 'lab 1',
+      type: 'lab 1 type 2',
+      name: 'type 2 exam 1',
+      cost: 100),
+  ExamPreDefinedObject(
+      id: '5',
+      lab: 'lab 1',
+      type: 'lab 1 type 2',
+      name: 'type 2 exam 2',
+      cost: 100),
+  ExamPreDefinedObject(
+      id: '6',
+      lab: 'lab 1',
+      type: 'lab 1 type 2',
+      name: 'type 2 exam 3',
+      cost: 100),
+  ExamPreDefinedObject(
+      id: '7',
+      lab: 'lab 2',
+      type: 'lab 2 type 1',
+      name: 'type 1 exam 1',
+      cost: 100),
+  ExamPreDefinedObject(
+      id: '8',
+      lab: 'lab 2',
+      type: 'lab 2 type 1',
+      name: 'type 1 exam 2',
+      cost: 100),
+  ExamPreDefinedObject(
+      id: '9',
+      lab: 'lab 2',
+      type: 'lab 2 type 1',
+      name: 'type 1 exam 3',
+      cost: 100),
+  ExamPreDefinedObject(
+      id: '10',
+      lab: 'lab 2',
+      type: 'lab 2 type 2',
+      name: 'type 2 exam 1',
+      cost: 100),
+  ExamPreDefinedObject(
+      id: '11',
+      lab: 'lab 2',
+      type: 'lab 2 type 2',
+      name: 'type 2 exam 2',
+      cost: 100),
+  ExamPreDefinedObject(
+      id: '12',
+      lab: 'lab 2',
+      type: 'lab 2 type 2',
+      name: 'type 2 exam 3',
+      cost: 100),
+  ExamPreDefinedObject(
+      id: '13',
+      lab: 'lab 3',
+      type: 'lab 3 type 1',
+      name: 'type 1 exam 1',
+      cost: 100),
+  ExamPreDefinedObject(
+      id: '14',
+      lab: 'lab 3',
+      type: 'lab 3 type 1',
+      name: 'type 1 exam 2',
+      cost: 100),
+  ExamPreDefinedObject(
+      id: '15',
+      lab: 'lab 3',
+      type: 'lab 3 type 1',
+      name: 'type 1 exam 3',
+      cost: 100),
+  ExamPreDefinedObject(
+      id: '16',
+      lab: 'lab 3',
+      type: 'lab 3 type 2',
+      name: 'type 2 exam 1',
+      cost: 100),
+  ExamPreDefinedObject(
+      id: '17',
+      lab: 'lab 3',
+      type: 'lab 3 type 2',
+      name: 'type 2 exam 2',
+      cost: 100),
+  ExamPreDefinedObject(
+      id: '18',
+      lab: 'lab 3',
+      type: 'lab 3 type 2',
+      name: 'type 2 exam 3',
+      cost: 100),
+];
+
+// List<String> preDefinedExamLabTopic = [
+//   'lab 1',
+//   'lab 2',
+//   'lab 3',
+// ];
+
 List<TreatmentObject> preDefinedTreatmentAll = [
-  TreatmentObject(id: '1', type: 'Medical', name: "medical 1"),
-  TreatmentObject(id: '2', type: 'Medical', name: "medical 2"),
-  TreatmentObject(id: '3', type: 'Surgical', name: "surgical 1"),
-  TreatmentObject(id: '4', type: 'Surgical', name: "surgical 2"),
-  TreatmentObject(id: '5', type: 'Nutritional support', name: "nutrition 1"),
-  TreatmentObject(id: '6', type: 'Nutritional support', name: "nutrition 2"),
-  TreatmentObject(id: '7', type: 'Nutritional support', name: "nutrition 3"),
-  TreatmentObject(id: '8', type: 'Other', name: "other treatment 1"),
-  TreatmentObject(id: '9', type: 'Other', name: "other treatment 2"),
-  TreatmentObject(id: '10', type: 'Other', name: "other treatment 3"),
-  TreatmentObject(id: '11', type: 'Other', name: "other treatment 4"),
-  TreatmentObject(id: '12', type: 'Medical', name: "medical 3"),
-  TreatmentObject(id: '13', type: 'Medical', name: "medical 4"),
-  TreatmentObject(id: '14', type: 'Medical', name: "medical 5"),
-  TreatmentObject(id: '15', type: 'Surgical', name: "surgical 3"),
-  TreatmentObject(id: '16', type: 'Surgical', name: "surgical 4"),
+  TreatmentObject(id: '1', type: 'Medical', name: "medical 1", cost: 100),
+  TreatmentObject(id: '2', type: 'Medical', name: "medical 2", cost: 100),
+  TreatmentObject(id: '3', type: 'Surgical', name: "surgical 1", cost: 100),
+  TreatmentObject(id: '4', type: 'Surgical', name: "surgical 2", cost: 100),
+  TreatmentObject(
+      id: '5', type: 'Nutritional support', name: "nutrition 1", cost: 100),
+  TreatmentObject(
+      id: '6', type: 'Nutritional support', name: "nutrition 2", cost: 100),
+  TreatmentObject(
+      id: '7', type: 'Nutritional support', name: "nutrition 3", cost: 100),
+  TreatmentObject(
+      id: '7', type: 'Nutritional support', name: "nutrition 4", cost: 100),
+  TreatmentObject(id: '8', type: 'Other', name: "other treatment 1", cost: 100),
+  TreatmentObject(id: '9', type: 'Other', name: "other treatment 2", cost: 100),
+  TreatmentObject(
+      id: '10', type: 'Other', name: "other treatment 3", cost: 100),
+  TreatmentObject(
+      id: '11', type: 'Other', name: "other treatment 4", cost: 100),
+  TreatmentObject(id: '12', type: 'Medical', name: "medical 3", cost: 100),
+  TreatmentObject(id: '13', type: 'Medical', name: "medical 4", cost: 100),
+  TreatmentObject(id: '14', type: 'Medical', name: "medical 5", cost: 100),
+  TreatmentObject(id: '15', type: 'Surgical', name: "surgical 3", cost: 100),
+  TreatmentObject(id: '16', type: 'Surgical', name: "surgical 4", cost: 100),
 ];
 
 List<ProblemObject> preDefinedProblem = [

@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:frontend/components/appBar.dart';
 import 'package:frontend/constants.dart';
 import 'package:frontend/tmpQuestion.dart';
-import 'package:frontend/screensTeacher/editPredefinedListDetail.dart';
+import 'package:frontend/screensTeacher/PredefinedScreens/editPredefinedListDetail.dart';
+import 'package:frontend/screensTeacher/PredefinedScreens/editPredefined_treatment_topics.dart';
+import 'package:frontend/components/backButton.dart';
 
 class EditPredefinedListTopic extends StatelessWidget {
   const EditPredefinedListTopic({super.key});
@@ -36,13 +38,28 @@ class EditPredefinedListTopic extends StatelessWidget {
                               fontWeight: FontWeight.w500, fontSize: 20),
                         ),
                         onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => EditPredefinedListDetail(
-                                  title: editPredefinedTopicList[index]),
-                            ),
-                          );
+                          if (editPredefinedTopicList[index] ==
+                              'Examination List') {
+                            Navigator.pushNamed(
+                                context, 'Teacher/editPreDefined/exams_lab');
+                          } else if (editPredefinedTopicList[index] ==
+                              'Treatment List') {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    EditPredefinedTreatmentType(),
+                              ),
+                            );
+                          } else {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => EditPredefinedListDetail(
+                                    title: editPredefinedTopicList[index]),
+                              ),
+                            );
+                          }
                         },
                       );
                     },
@@ -52,17 +69,7 @@ class EditPredefinedListTopic extends StatelessWidget {
                     ),
                   ),
                 ),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: Text(
-                    'ยกเลิก',
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFF8B72BE),
-                  ),
-                ),
+                MyBackButton(myContext: context),
               ],
             ),
           ),

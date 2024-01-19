@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/components/appBar.dart';
 import 'package:frontend/constants.dart';
 import 'package:frontend/screensTeacher/addQuestion.dart';
-import 'package:frontend/screensTeacher/editPredefinedListTopic.dart';
+import 'package:frontend/screensTeacher/PredefinedScreens/editPredefinedListTopic.dart';
 
 class AddQuesMenu extends StatelessWidget {
   const AddQuesMenu({super.key});

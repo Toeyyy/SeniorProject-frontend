@@ -1,18 +1,20 @@
-class TreatmentObject {
+class ExamPreDefinedObject {
   String id;
+  String lab;
   String type;
   String name;
   int cost;
-
-  TreatmentObject(
+  ExamPreDefinedObject(
       {required this.id,
+      required this.lab,
       required this.type,
       required this.name,
       required this.cost});
 
-  factory TreatmentObject.fromJson(Map<String, dynamic> json) {
-    return TreatmentObject(
+  factory ExamPreDefinedObject.fromJson(Map<String, dynamic> json) {
+    return ExamPreDefinedObject(
         id: json['id'] ?? "",
+        lab: json['lab'] ?? "",
         type: json['type'] ?? "",
         name: json['name'] ?? "",
         cost: json['cost'] ?? 0);

@@ -5,11 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:frontend/components/appBar.dart';
 import 'package:frontend/models/diagnosisObject.dart';
 import 'package:frontend/models/problemListObject.dart';
-import 'package:frontend/models/treatmentObject.dart';
 import 'package:frontend/tmpQuestion.dart';
 import 'package:frontend/constants.dart';
 import 'package:frontend/components/functions.dart';
 import 'package:http/http.dart' as http;
+import 'package:frontend/components/backButton.dart';
 
 class EditPredefinedListDetail extends StatefulWidget {
   final String title;
@@ -30,32 +30,21 @@ class _EditPredefinedListDetailState extends State<EditPredefinedListDetail> {
   String? oldItem;
   String? oldItemID;
   String? newItem;
-  final String apiUrl = "localhost:7901/api";
+  final String apiUrl = "localhost:7197/api";
 
-  Future<void> _PostAddData(String title, String item) async {
+  Future<void> _postAddData(String title, String item) async {
     if (title == 'Problem List') {
       var data = {"name": item};
       final http.Response response = await http.post(
         Uri.parse("$apiUrl/problem/add"),
+        headers: {"Content-Type": "application/json"},
         body: jsonEncode(data),
       );
     } else if (title == 'Diagnosis List') {
       var data = {"name": item};
       final http.Response response = await http.post(
         Uri.parse("$apiUrl/diagnostic/add"),
-        body: jsonEncode(data),
-      );
-    } else if (title == 'Nutrition Support List') {
-      var data = {"type": "Nutritional support", "name": item};
-      final http.Response response = await http.post(
-        Uri.parse("$apiUrl/treatment/add"),
-        body: jsonEncode(data),
-      );
-    } else {
-      var data = {"type": title.split(' ')[0], "name": item};
-      // print('data = ${title.split(' ')[0]}');
-      final http.Response response = await http.post(
-        Uri.parse("$apiUrl/treatment/add"),
+        headers: {"Content-Type": "application/json"},
         body: jsonEncode(data),
       );
     }
@@ -65,14 +54,12 @@ class _EditPredefinedListDetailState extends State<EditPredefinedListDetail> {
     if (title == 'Problem List') {
       final http.Response response = await http.post(
         Uri.parse("$apiUrl/problem/delete/$id"),
+        headers: {"Content-Type": "application/json"},
       );
     } else if (title == 'Diagnosis List') {
       final http.Response response = await http.post(
         Uri.parse("$apiUrl/diagnostic/delete/$id"),
-      );
-    } else {
-      final http.Response response = await http.post(
-        Uri.parse("$apiUrl/treatment/delete/$id"),
+        headers: {"Content-Type": "application/json"},
       );
     }
   }
@@ -82,24 +69,14 @@ class _EditPredefinedListDetailState extends State<EditPredefinedListDetail> {
       var data = {"name": item};
       final http.Response response = await http.post(
         Uri.parse("$apiUrl/problem/update/$id"),
+        headers: {"Content-Type": "application/json"},
         body: jsonEncode(data),
       );
     } else if (title == 'Diagnosis List') {
       var data = {"name": item};
       final http.Response response = await http.post(
         Uri.parse("$apiUrl/diagnostic/update/$id"),
-        body: jsonEncode(data),
-      );
-    } else if (title == 'Nutrition Support List') {
-      var data = {"type": "Nutritional support", "name": item};
-      final http.Response response = await http.post(
-        Uri.parse("$apiUrl/treatment/update/$id"),
-        body: jsonEncode(data),
-      );
-    } else {
-      var data = {"type": title.split(' ')[0], "name": item};
-      final http.Response response = await http.post(
-        Uri.parse("$apiUrl/treatment/update/$id"),
+        headers: {"Content-Type": "application/json"},
         body: jsonEncode(data),
       );
     }
@@ -145,17 +122,8 @@ class _EditPredefinedListDetailState extends State<EditPredefinedListDetail> {
                                   DiagnosisObject newItem = DiagnosisObject(
                                       id: 'X', name: textFieldController.text);
                                   fullList.add(newItem);
-                                } else {
-                                  TreatmentObject newItem = TreatmentObject(
-                                      id: 'X',
-                                      type: (widget.title ==
-                                              'Nutrition Support List')
-                                          ? "Nutritional support"
-                                          : widget.title.split(' ')[0],
-                                      name: textFieldController.text);
-                                  fullList.add(newItem);
                                 }
-                                _PostAddData(widget.title,
+                                _postAddData(widget.title,
                                     textFieldController.text); //send data
                                 textFieldController.clear();
                                 displayList = fullList;
@@ -266,15 +234,7 @@ class _EditPredefinedListDetailState extends State<EditPredefinedListDetail> {
                   ),
                 ),
                 const SizedBox(height: 10),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: Text('กลับ'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFF8B72BE),
-                  ),
-                ),
+                MyBackButton(myContext: context),
               ],
             ),
           ),
