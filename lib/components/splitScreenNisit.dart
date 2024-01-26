@@ -48,13 +48,13 @@ class LeftPartContent extends StatelessWidget {
         Row(
           children: [
             Text(
-              'รหัสโจทย์: $quesNum',
+              'รหัสโจทย์: ${listForSplitScreen.name}',
               style: kSubHeaderTextStyle,
             ),
             Container(
               padding: EdgeInsets.only(left: 10),
               child: Row(
-                children: showTagList
+                children: listForSplitScreen.tags
                     .map(
                       (e) => TagBox(text: e.name),
                     )
@@ -68,12 +68,14 @@ class LeftPartContent extends StatelessWidget {
           'ข้อมูลทั่วไป',
           style: kSubHeaderTextStyleInLeftPart,
         ),
-        Text('ชนิดสัตว์: $type'),
-        Text('พันธุ์: $breed'),
-        Text('เพศ: $sex'),
-        Text(sterilize == 1 ? 'ทำหมันแล้ว' : 'ยังไม่ได้ทำหมัน'),
-        Text('อายุ: $age ปี'),
-        Text('น้ำหนัก: $weight Kg'),
+        Text('ชนิดสัตว์: ${listForSplitScreen.signalment.species}'),
+        Text('พันธุ์: ${listForSplitScreen.signalment.breed}'),
+        Text('เพศ: ${listForSplitScreen.signalment.gender}'),
+        Text(listForSplitScreen.signalment.sterilize == true
+            ? 'ทำหมันแล้ว'
+            : 'ยังไม่ได้ทำหมัน'),
+        Text('อายุ: ${listForSplitScreen.signalment.age}'),
+        Text('น้ำหนัก: ${listForSplitScreen.signalment.weight}'),
         SizedBox(
           height: 20,
         ),
@@ -87,7 +89,7 @@ class LeftPartContent extends StatelessWidget {
           padding: EdgeInsets.all(10),
           margin: EdgeInsets.only(bottom: 20),
           color: Color(0xFFDFE4E0),
-          child: Text('$clientComp'),
+          child: Text('${listForSplitScreen.clientComplains}'),
         ),
         // History Taking
         Text(
@@ -99,7 +101,7 @@ class LeftPartContent extends StatelessWidget {
           padding: EdgeInsets.all(10),
           margin: EdgeInsets.only(bottom: 20),
           color: Color(0xFFDFE4E0),
-          child: Text('$historyTaking'),
+          child: Text('${listForSplitScreen.historyTakingInfo}'),
         ),
         // General Test
         Text(
@@ -108,15 +110,15 @@ class LeftPartContent extends StatelessWidget {
         ),
         Expanded(
           child: ListView.builder(
-            itemCount: generalResult.split(',').length,
+            itemCount: listForSplitScreen.generalInfo.split(',').length,
             itemBuilder: (context, index) {
               return ListTile(
                 leading: Icon(
                   Icons.circle,
                   size: 15,
                 ),
-                title:
-                    Text(generalResult.replaceAll(' ', '').split(',')[index]),
+                title: Text(
+                    listForSplitScreen.generalInfo.split(',')[index].trim()),
               );
             },
           ),

@@ -1,24 +1,26 @@
+import 'dart:convert';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/components/appBar.dart';
 import 'package:frontend/constants.dart';
 import 'package:frontend/tmpQuestion.dart';
-import 'package:frontend/screensTeacher/PredefinedScreens/editPredefinedListDetail.dart';
-import 'package:frontend/screensTeacher/PredefinedScreens/editPredefined_treatment_topics.dart';
+import 'package:frontend/models/examinationPreDefinedObject.dart';
+import 'package:frontend/screensTeacher/PredefinedScreens/editPredefined_exam2_add.dart';
 import 'package:frontend/components/backButton.dart';
-import 'package:frontend/screensTeacher/PredefinedScreens/editPredefined_exam2_topic.dart';
+import 'package:frontend/screensTeacher/PredefinedScreens/editPredefined_exams_topics.dart';
+import 'package:frontend/UIModels/teacher/predefinedExam_provider.dart';
+import 'package:frontend/screensTeacher/PredefinedScreens/editPredefined_exam2_edit_choice.dart';
+import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
 
-class EditPredefinedListTopic extends StatelessWidget {
-  const EditPredefinedListTopic({super.key});
+class EditPreDefinedExam2Topic extends StatelessWidget {
+  List<String> _topicList = [
+    'เพิ่ม Examination',
+    'แก้ไข/ลบ Examination',
+  ];
 
   @override
   Widget build(BuildContext context) {
-    List<String> editPredefinedTopicList = [
-      'Problem List',
-      'Diagnosis List',
-      'Treatment List',
-      'Examination List',
-    ];
-
     return Scaffold(
       appBar: AppbarTeacher(),
       body: Padding(
@@ -29,59 +31,45 @@ class EditPredefinedListTopic extends StatelessWidget {
             child: Column(
               children: [
                 Text(
-                  'Edit Predefined List',
+                  'Examination Predefined List',
                   style: kHeaderTextStyle.copyWith(fontWeight: FontWeight.w900),
                 ),
                 const SizedBox(height: 20),
                 Expanded(
                   child: ListView.separated(
-                    itemCount: editPredefinedTopicList.length,
+                    separatorBuilder: (context, index) => SizedBox(
+                      height: 8,
+                    ),
+                    itemCount: 2,
                     itemBuilder: (context, index) {
                       return ListTile(
                         tileColor: Color(0xFFA0E9FF),
                         hoverColor: Color(0xFF42C2FF),
                         title: Text(
-                          editPredefinedTopicList[index],
+                          _topicList[index],
                           style: TextStyle(
                               fontWeight: FontWeight.w500, fontSize: 20),
                         ),
                         onTap: () {
-                          if (editPredefinedTopicList[index] ==
-                              'Examination List') {
-                            // Navigator.pushNamed(
-                            //     context, 'Teacher/editPreDefined/exams_lab');
+                          if (_topicList[index] == 'เพิ่ม Examination') {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) =>
-                                    EditPreDefinedExam2Topic(),
+                                builder: (context) => EditPreDefinedExam2Add(),
                               ),
                             );
-                          } else if (editPredefinedTopicList[index] ==
-                              'Treatment List') {
+                          } else if (_topicList[index] ==
+                              'แก้ไข/ลบ Examination') {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) =>
-                                    EditPredefinedTreatmentType(),
-                              ),
-                            );
-                          } else {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => EditPredefinedListDetail(
-                                    title: editPredefinedTopicList[index]),
+                                builder: (context) => EditPredefinedExamLab(),
                               ),
                             );
                           }
                         },
                       );
                     },
-                    separatorBuilder: (BuildContext context, int index) =>
-                        SizedBox(
-                      height: 8,
-                    ),
                   ),
                 ),
                 MyBackButton(myContext: context),

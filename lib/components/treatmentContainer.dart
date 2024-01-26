@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../tmpQuestion.dart';
 import 'package:frontend/components/BoxesInAddQ.dart';
 import 'package:frontend/components/functions.dart';
-import 'package:frontend/UIModels/treatmentContainer_provider.dart';
+import 'package:frontend/UIModels/teacher/treatmentContainer_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:frontend/constants.dart';
 import 'package:frontend/tmpQuestion.dart';
@@ -47,7 +47,7 @@ class _TreatmentContainerState extends State<TreatmentContainer> {
             children: [
               DropDownButtonInAddQ(
                   selectedValue: widget.selectedTreatmentTopic,
-                  list: treatmentTopicList,
+                  list: getTreatmentTopic(),
                   hintText: "เลือกหัวข้อ Treatment",
                   onChanged: (value) {
                     setState(() {
@@ -69,6 +69,7 @@ class _TreatmentContainerState extends State<TreatmentContainer> {
           DropDownButtonInAddQ(
               selectedValue: widget.selectedTreatmentDetail,
               list: filterTreatment(widget.selectedTreatmentTopic),
+              // list: filterEditTopicList(widget.selectedTreatmentTopic).map((e) => e.name).toList(),
               hintText: "เลือกรายละเอียด Treatment",
               onChanged: (value) {
                 setState(() {

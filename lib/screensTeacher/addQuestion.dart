@@ -6,10 +6,10 @@ import 'package:frontend/constants.dart';
 import 'package:frontend/models/diagnosisObject.dart';
 import 'package:frontend/models/problemListObject.dart';
 import 'package:frontend/tmpQuestion.dart';
-import 'package:frontend/UIModels/examContainer_provider.dart';
+import 'package:frontend/UIModels/teacher/examContainer_provider.dart';
 import 'package:frontend/models/tagObject.dart';
 import 'package:frontend/components/treatmentContainer.dart';
-import 'package:frontend/UIModels/treatmentContainer_provider.dart';
+import 'package:frontend/UIModels/teacher/treatmentContainer_provider.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:frontend/components/BoxesInAddQ.dart';
 import 'package:frontend/components/functions.dart';
@@ -18,6 +18,7 @@ import 'package:provider/provider.dart';
 import 'package:frontend/components/tagSearchBox.dart';
 import 'package:dio/dio.dart';
 import 'package:http_parser/http_parser.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class AddQuestion extends StatefulWidget {
   const AddQuestion({super.key});
@@ -67,7 +68,7 @@ class _AddQuestionState extends State<AddQuestion> {
     TreatmentContainerProvider treatmentProvider =
         Provider.of<TreatmentContainerProvider>(context, listen: false);
 
-    void postQuestion(BuildContext context) async {
+    Future<void> postQuestion(BuildContext context) async {
       final dio = Dio();
 
       setState(() {
@@ -95,19 +96,31 @@ class _AddQuestionState extends State<AddQuestion> {
       // print('diag list before json = $diagnosis');
 
       //exams
-      var exam = examContainers1.map((item) {
+      var exam1 = examContainers1.map((item) {
         return {
           "id": item.id,
-          // "type": item.selectedDepartment,
-          // "name": item.selectedExamTopic,
           "textResult": item.examController.text,
-          "imgResult": item.imageFile == null
+          "imgResult": item.imageResult == null
               ? null
-              : MultipartFile.fromBytes(item.imageFile!.bytes!,
+              : MultipartFile.fromBytes(item.imageResult!.bytes!,
                   filename: "image", contentType: MediaType("image", "png")),
           "round": item.round
         };
       }).toList();
+
+      var exam2 = examContainers2.map((item) {
+        return {
+          "id": item.id,
+          "textResult": item.examController.text,
+          "imgResult": item.imageResult == null
+              ? null
+              : MultipartFile.fromBytes(item.imageResult!.bytes!,
+                  filename: "image", contentType: MediaType("image", "png")),
+          "round": item.round
+        };
+      }).toList();
+
+      exam1.addAll(exam2);
 
       //tags
       var tag = selectedTags.map((item) {
@@ -121,14 +134,14 @@ class _AddQuestionState extends State<AddQuestion> {
         "historyTakingInfo": historyTakingController.text,
         "generalInfo": generalResultsController.text,
         "problems": probList1,
-        "examinations": exam,
+        "examinations": exam1,
         "treatments": treatment,
         "diagnostics": diagnosis,
         "tags": tag,
         "signalment": {
           "species": signalmentTypeValue,
           "breed": signalmentBreedValue,
-          "sex": signalmentSexValue,
+          "gender": signalmentSexValue,
           "sterilize": signalmentSterilizeStat,
           "age": signalmentAgeValue.text,
           "weight": signalmentWeightValue.text,
@@ -136,12 +149,28 @@ class _AddQuestionState extends State<AddQuestion> {
       }, ListFormat.multiCompatible);
       var index = 0;
       for (var item in examContainers1) {
-        if (item.imageFile != null) {
+        if (item.imageResult != null) {
           formData.files.add(
             MapEntry(
-              "examinations[${index}].imgResult",
+              "examinations[$index].imgResult",
               MultipartFile.fromBytes(
-                item.imageFile!.bytes!,
+                item.imageResult!.bytes!,
+                filename: "image1.png",
+                contentType: MediaType("image", "png"),
+              ),
+            ),
+          );
+        }
+        index++;
+      }
+      index = 0;
+      for (var item in examContainers2) {
+        if (item.imageResult != null) {
+          formData.files.add(
+            MapEntry(
+              "examinations[$index].imgResult",
+              MultipartFile.fromBytes(
+                item.imageResult!.bytes!,
                 filename: "image1.png",
                 contentType: MediaType("image", "png"),
               ),
@@ -151,7 +180,8 @@ class _AddQuestionState extends State<AddQuestion> {
         index++;
       }
 
-      final response = await dio.post('path', data: formData);
+      final response = await dio.post('${dotenv.env['API_PATH']}/question/add',
+          data: formData);
 
       // await Future.delayed(Duration(seconds: 5));
 
@@ -232,7 +262,7 @@ class _AddQuestionState extends State<AddQuestion> {
           (signalmentBreedValue != null) &&
           (signalmentSexValue != null);
 
-      print('state1 = $tmp');
+      // print('state1 = $tmp');
 
       for (ExamContainer item in examContainers1) {
         if (item.examController.text.isEmpty) {
@@ -240,16 +270,16 @@ class _AddQuestionState extends State<AddQuestion> {
           break;
         }
       }
-      print('state2 = $tmp');
+      // print('state2 = $tmp');
       for (ExamContainer item in examContainers2) {
         if (item.examController.text.isEmpty) {
           tmp = false;
           break;
         }
       }
-      print('state3 = $tmp');
+      // print('state3 = $tmp');
       for (TreatmentContainer item in treatmentContainer) {
-        if (item.selectedTreatmentDetail == null) {
+        if (item.selectedTreatmentDetail == '') {
           tmp = false;
           break;
         }
@@ -430,7 +460,7 @@ class _AddQuestionState extends State<AddQuestion> {
                     round: '1',
                   ),
                   DividerWithSpace(),
-                  Text('Problem List ครั้งที่ 1', style: kSubHeaderTextStyle),
+                  Text('Problem List ครั้งที่ 2', style: kSubHeaderTextStyle),
                   ProbListMultiSelectDropDown(
                     selectedList: selectedProblemList2,
                     displayList: probObjectList,
@@ -469,9 +499,11 @@ class _AddQuestionState extends State<AddQuestion> {
                             TreatmentContainer(
                               id: currentNub.toString(),
                               key: ObjectKey(currentNub),
-                              selectedTreatmentTopic: treatmentTopicList.first,
+                              selectedTreatmentTopic: getTreatmentTopic().first,
+                              // selectedTreatmentDetail:
+                              //     medicalTreatmentList.first,
                               selectedTreatmentDetail:
-                                  medicalTreatmentList.first,
+                                  filterTreatment('Medical').first,
                             ),
                           );
                         },
@@ -505,11 +537,12 @@ class _AddQuestionState extends State<AddQuestion> {
                       ElevatedButton(
                           onPressed: () {
                             if (!checkNotEmpty()) {
-                              printSTH();
+                              // printSTH();
                               _alertModal(context);
                             } else {
-                              _showModal(context);
+                              // _showModal(context);
                               postQuestion(context);
+                              Navigator.pop(context);
                             }
                           },
                           child: Text('บันทึก')),

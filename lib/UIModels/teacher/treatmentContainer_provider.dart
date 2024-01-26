@@ -36,14 +36,5 @@ class TreatmentContainerProvider extends ChangeNotifier {
           selectedTreatmentTopic: item.type,
           selectedTreatmentDetail: item.name));
     }
-    // List<TreatmentContainer> tmp = importedList.map((item) {
-    //   return TreatmentContainer(
-    //       id: item.id,
-    //       key: ObjectKey(item.id),
-    //       selectedTreatmentTopic: item.type,
-    //       selectedTreatmentDetail: item.name);
-    // }).toList();
-    //
-    // treatmentContainerList = tmp;
   }
 }

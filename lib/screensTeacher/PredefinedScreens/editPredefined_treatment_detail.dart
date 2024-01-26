@@ -7,6 +7,7 @@ import 'package:frontend/constants.dart';
 import 'package:frontend/components/backButton.dart';
 import 'package:frontend/models/treatmentObject.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class EditPredefinedTreatmentDetail extends StatefulWidget {
   Map<String, List<TreatmentObject>> groupedByType;
@@ -27,7 +28,7 @@ class _EditPredefinedTreatmentDetailState
   TreatmentObject? oldItem;
   bool isEditing = false;
 
-  final String apiUrl = "localhost:7197/api";
+  // final String apiUrl = "localhost:7197/api";
   final RegExp _formatRegExp =
       RegExp(r'^\s*[\p{L}0-9\s]+,\s*[0-9]+\s*$', unicode: true);
   bool _isFormatCorrect = true;
@@ -44,7 +45,7 @@ class _EditPredefinedTreatmentDetailState
   Future<void> _postAddData(TreatmentObject item) async {
     var data = {"type": item.type, "name": item.name, "cost": item.cost};
     final http.Response response = await http.post(
-      Uri.parse("$apiUrl/treatment/add"),
+      Uri.parse("${dotenv.env['API_PATH']}/treatment/add"),
       headers: {"Content-Type": "application/json"},
       body: jsonEncode(data),
     );
@@ -52,7 +53,7 @@ class _EditPredefinedTreatmentDetailState
 
   Future<void> _postDeleteData(String id) async {
     final http.Response response = await http.post(
-      Uri.parse("$apiUrl/treatment/delete/$id"),
+      Uri.parse("${dotenv.env['API_PATH']}/treatment/delete/$id"),
       headers: {"Content-Type": "application/json"},
     );
   }
@@ -64,7 +65,7 @@ class _EditPredefinedTreatmentDetailState
       "cost": int.parse(newItem[1]),
     };
     final http.Response response = await http.post(
-      Uri.parse("$apiUrl/treatment/update/${oldItem.id}"),
+      Uri.parse("${dotenv.env['API_PATH']}/treatment/update/${oldItem.id}"),
       headers: {"Content-Type": "application/json"},
       body: jsonEncode(data),
     );

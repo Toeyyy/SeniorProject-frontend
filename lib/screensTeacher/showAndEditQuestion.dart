@@ -51,7 +51,7 @@ class _ShowAndEditQuestionState extends State<ShowAndEditQuestion> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'โจทย์ $quesNum',
+                      'โจทย์ $name',
                       style: kHeaderTextStyle.copyWith(
                           fontWeight: FontWeight.w900),
                     ),
@@ -99,7 +99,8 @@ class _ShowAndEditQuestionState extends State<ShowAndEditQuestion> {
                     style: kNormalTextStyle),
                 Text('พันธุ์: ${showSignalmentList.breed}',
                     style: kNormalTextStyle),
-                Text('เพศ: ${showSignalmentList.sex}', style: kNormalTextStyle),
+                Text('เพศ: ${showSignalmentList.gender}',
+                    style: kNormalTextStyle),
                 Text(
                     showSignalmentList.sterilize
                         ? 'ทำหมันแล้ว'

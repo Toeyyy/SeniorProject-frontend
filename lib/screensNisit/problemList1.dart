@@ -6,7 +6,11 @@ import 'package:frontend/components/splitScreenNisit.dart';
 import 'package:frontend/components/functions.dart';
 import 'package:frontend/models/problemListObject.dart';
 
-class ProbList1 extends StatelessWidget {
+class ProbList extends StatelessWidget {
+  String round;
+
+  ProbList({required this.round});
+
   // String round;
   //
   // ProbList1({required this.round});
@@ -17,21 +21,23 @@ class ProbList1 extends StatelessWidget {
       appBar: AppbarNisit(),
       body: SplitScreenNisit(
         leftPart: LeftPartContent(),
-        rightPart: RightPart_ProbList1(),
+        rightPart: RightPart_ProbList(round: round),
       ),
     );
   }
 }
 
-class RightPart_ProbList1 extends StatefulWidget {
-  const RightPart_ProbList1({super.key});
+class RightPart_ProbList extends StatefulWidget {
+  String round;
+  RightPart_ProbList({required this.round});
 
   @override
-  State<RightPart_ProbList1> createState() => _RightPart_ProbList1State();
+  State<RightPart_ProbList> createState() => _RightPart_ProbListState();
 }
 
-class _RightPart_ProbList1State extends State<RightPart_ProbList1> {
-  List<bool> selectedBool = List.generate(probListSet.length, (index) => false);
+class _RightPart_ProbListState extends State<RightPart_ProbList> {
+  List<bool> selectedBool =
+      List.generate(probObjectList.length, (index) => false);
   TextEditingController _searchController = TextEditingController();
   List<ProblemObject> selectedList = [];
   List<ProblemObject> displayList = probObjectList;
@@ -47,7 +53,7 @@ class _RightPart_ProbList1State extends State<RightPart_ProbList1> {
       child: Column(
         children: [
           Text(
-            'เลือก Problem List',
+            'เลือก Problem List ครั้งที่${widget.round}',
             style: kSubHeaderTextStyle,
           ),
           SizedBox(

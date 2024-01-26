@@ -50,13 +50,24 @@ class PreDefinedExamProvider extends ChangeNotifier {
     ChangeNotifier();
   }
 
-  void updateItem(String id, List<String> newItemList, String labName) {
+  void updateItem(
+      String id, String newName, String newArea, int newCost, String labName) {
     ExamPreDefinedObject item1 = examList.where((e) => e.id == id).first;
-    item1.name = newItemList[0];
-    item1.cost = int.parse(newItemList[1]);
+    item1.name = newName;
+    item1.area = newArea == "" ? null : newArea;
+    item1.cost = newCost;
+    // item1.cost = int.parse(newItemList[1]);
+    // ExamPreDefinedObject item2 =
+    //     groupedByLab[labName]!.where((e) => e.id == id).first;
+    // item2.name = newName;
+    // item2.cost = int.parse(newItemList[1]);
+  }
+
+  void updateAreaName(String id, String newItem, String labName) {
+    ExamPreDefinedObject item1 = examList.where((e) => e.id == id).first;
+    item1.area = newItem;
     ExamPreDefinedObject item2 =
         groupedByLab[labName]!.where((e) => e.id == id).first;
-    item2.name = newItemList[0];
-    item2.cost = int.parse(newItemList[1]);
+    item2.area = newItem;
   }
 }

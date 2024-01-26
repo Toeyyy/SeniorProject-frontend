@@ -3,7 +3,7 @@ class SignalmentObject {
   String breed;
   bool sterilize;
   String age;
-  String sex;
+  String gender;
   String weight;
 
   SignalmentObject(
@@ -11,7 +11,7 @@ class SignalmentObject {
       required this.breed,
       required this.sterilize,
       required this.age,
-      required this.sex,
+      required this.gender,
       required this.weight});
 
   factory SignalmentObject.fromJson(Map<String, dynamic> json) {
@@ -20,7 +20,7 @@ class SignalmentObject {
         breed: json['breed'] ?? "",
         sterilize: json['sterilize'] ?? "",
         age: json['age'] ?? "",
-        sex: json['sex'] ?? "",
+        gender: json['gender'] ?? "",
         weight: json['weight'] ?? "");
   }
 }

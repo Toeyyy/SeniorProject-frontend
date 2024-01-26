@@ -10,9 +10,14 @@ import 'package:frontend/models/diagnosisObject.dart';
 import 'package:frontend/models/tagObject.dart';
 import 'package:frontend/components/functions.dart';
 import 'package:frontend/models/examinationObject.dart';
-import 'package:collection/collection.dart';
-import 'package:frontend/UIModels/treatmentContainer_provider.dart';
+import 'package:frontend/UIModels/teacher/treatmentContainer_provider.dart';
 import 'package:frontend/components/treatmentContainer.dart';
+import 'package:frontend/UIModels/teacher/examContainer_provider.dart';
+import 'package:frontend/components/backButton.dart';
+import 'package:dio/dio.dart';
+import 'package:http_parser/http_parser.dart';
+import 'package:frontend/components/examContainer.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class EditQuestion extends StatefulWidget {
   // String quesNum;
@@ -24,10 +29,11 @@ class EditQuestion extends StatefulWidget {
 }
 
 class _EditQuestionState extends State<EditQuestion> {
+  String id = quesID;
   String signalmentTypeValue = showSignalmentList.species;
   String signalmentBreedValue = showSignalmentList.breed;
   bool signalmentSterilizeStat = showSignalmentList.sterilize;
-  String signalmentSexValue = showSignalmentList.sex;
+  String signalmentSexValue = showSignalmentList.gender;
   TextEditingController signalmentAgeValue =
       TextEditingController(text: showSignalmentList.age);
   TextEditingController signalmentWeightValue =
@@ -46,6 +52,10 @@ class _EditQuestionState extends State<EditQuestion> {
   late TreatmentContainerProvider treatmentProvider;
   late List<TreatmentContainer> treatmentContainer;
 
+  late ExamContainerProvider examProvider;
+  late List<ExamContainer> examContainers1;
+  late List<ExamContainer> examContainers2;
+
   //Update List/////
   void updateProbList(List<ProblemObject> newList, String round) {
     if (round == '1') {
@@ -63,22 +73,6 @@ class _EditQuestionState extends State<EditQuestion> {
     selectedTags = newList;
   }
 
-  /////get init Exams//////
-
-  Map<String, List<ExaminationObject>> splitExams =
-      groupBy(showSelectedExam, (obj) => obj.round);
-
-  // List<ExaminationObject>? accessExamList(String round) {
-  //   List<ExaminationObject>? list = splitExams[round];
-  //   return list?.map((item) {
-  //     return ShowExamContainer(
-  //         department: item.type,
-  //         exam: item.name,
-  //         results: item.textResult,
-  //         imagePath: item.imgResult);
-  //   }).toList();
-  // }
-
   @override
   void initState() {
     super.initState();
@@ -88,15 +82,11 @@ class _EditQuestionState extends State<EditQuestion> {
           .getInfo(showTreatmentList);
     });
 
-    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-    //   // treatmentProvider =
-    //   //     Provider.of<TreatmentContainerProvider>(context, listen: false);
-    //   Provider.of<TreatmentContainerProvider>(context, listen: false)
-    //       .getInfo(showTreatmentList);
-    //   // treatmentContainer =
-    //   //     Provider.of<TreatmentContainerProvider>(context, listen: false)
-    //   //         .treatmentContainerList;
-    // });
+    Future.delayed(Duration.zero, () {
+      Provider.of<ExamContainerProvider>(context, listen: false)
+          .getInfo(showSelectedExam);
+      // examProvider = Provider.of<ExamContainerProvider>(context, listen: false);
+    });
   }
 
   void printtreatment() {
@@ -111,10 +101,127 @@ class _EditQuestionState extends State<EditQuestion> {
 
   @override
   Widget build(BuildContext context) {
-    treatmentProvider =
-        Provider.of<TreatmentContainerProvider>(context, listen: false);
+    treatmentProvider = Provider.of<TreatmentContainerProvider>(context);
     treatmentContainer =
         Provider.of<TreatmentContainerProvider>(context).treatmentContainerList;
+    examProvider = Provider.of<ExamContainerProvider>(context);
+    examContainers1 = examProvider.examContainers1;
+    examContainers2 = examProvider.examContainers2;
+
+    Future<void> _postQuestion(BuildContext context) async {
+      final dio = Dio();
+
+      //prob List
+      var probList1 = selectedProblemList1.map((item) {
+        return {"id": item.id, "round": 1};
+      }).toList();
+      var probList2 = selectedProblemList2.map((item) {
+        return {"id": item.id, "round": 2};
+      }).toList();
+      probList1.addAll(probList2);
+
+      //treatment
+      var treatment = treatmentContainer.map((item) {
+        return {"id": item.id};
+      }).toList();
+
+      //diagnosis
+      var diagnosis = selectedDiagnosisList.map((item) {
+        return {"id": item.id};
+      }).toList();
+
+      //exams
+      var exam1 = examContainers1.map((item) {
+        return {
+          "id": item.id,
+          "textResult": item.examController.text,
+          "imgPath": (item.imagePath != null && item.imageResult == null)
+              ? item.imagePath
+              : null,
+          "imgResult": item.imageResult == null
+              ? null
+              : MultipartFile.fromBytes(item.imageResult!.bytes!,
+                  filename: "image", contentType: MediaType("image", "png")),
+          "round": item.round
+        };
+      }).toList();
+
+      var exam2 = examContainers2.map((item) {
+        return {
+          "id": item.id,
+          "textResult": item.examController.text,
+          "imgPath": (item.imagePath != null && item.imageResult == null)
+              ? item.imagePath
+              : null,
+          "imgResult": item.imageResult == null
+              ? null
+              : MultipartFile.fromBytes(item.imageResult!.bytes!,
+                  filename: "image", contentType: MediaType("image", "png")),
+          "round": item.round
+        };
+      }).toList();
+      exam1.addAll(exam2);
+
+      //tags
+      var tag = selectedTags.map((item) {
+        return {"id": item.id, "name": item.name};
+      }).toList();
+
+      FormData formData = FormData.fromMap({
+        "clientComplains": clientComplainsController.text,
+        "historyTakingInfo": historyTakingController.text,
+        "generalInfo": generalResultsController.text,
+        "problems": probList1,
+        "examinations": exam1,
+        "treatments": treatment,
+        "diagnostics": diagnosis,
+        "tags": tag,
+        "signalment": {
+          "species": signalmentTypeValue,
+          "breed": signalmentBreedValue,
+          "gender": signalmentSexValue,
+          "sterilize": signalmentSterilizeStat,
+          "age": signalmentAgeValue.text,
+          "weight": signalmentWeightValue.text,
+        }
+      }, ListFormat.multiCompatible);
+      var index = 0;
+      for (var item in examContainers1) {
+        if (item.imageResult != null) {
+          formData.files.add(
+            MapEntry(
+              "examinations[$index].imgResult",
+              MultipartFile.fromBytes(
+                item.imageResult!.bytes!,
+                filename: "image1.png",
+                contentType: MediaType("image", "png"),
+              ),
+            ),
+          );
+        }
+        index++;
+      }
+      index = 0;
+      for (var item in examContainers2) {
+        if (item.imageResult != null) {
+          formData.files.add(
+            MapEntry(
+              "examinations[$index].imgResult",
+              MultipartFile.fromBytes(
+                item.imageResult!.bytes!,
+                filename: "image1.png",
+                contentType: MediaType("image", "png"),
+              ),
+            ),
+          );
+        }
+        index++;
+      }
+
+      final response = await dio.post(
+          '${dotenv.env['API_PATH']}/question/update/$quesID',
+          data: formData);
+    }
 
     return Scaffold(
       appBar: AppbarTeacher(),
@@ -129,7 +236,7 @@ class _EditQuestionState extends State<EditQuestion> {
                 children: [
                   Center(
                     child: Text(
-                      'แก้ไขโจทย์ $quesNum',
+                      'แก้ไขโจทย์ $name',
                       style: kHeaderTextStyle.copyWith(
                           fontWeight: FontWeight.w900),
                     ),
@@ -255,6 +362,10 @@ class _EditQuestionState extends State<EditQuestion> {
                   ),
                   const H20Sizedbox(),
                   //TODO exam1
+                  ExamsButtonAndContainer(
+                      examContainers: examProvider.examContainers1,
+                      examListProvider: examProvider,
+                      round: '1'),
                   DividerWithSpace(),
                   Text('Problem List ครั้งที่ 2', style: kSubHeaderTextStyle),
                   ProbListMultiSelectDropDown(
@@ -265,6 +376,10 @@ class _EditQuestionState extends State<EditQuestion> {
                       updateListCallback: updateProbList),
                   const H20Sizedbox(),
                   //TODO exam2
+                  ExamsButtonAndContainer(
+                      examContainers: examProvider.examContainers2,
+                      examListProvider: examProvider,
+                      round: '2'),
                   DividerWithSpace(),
                   Row(
                     children: [
@@ -280,9 +395,9 @@ class _EditQuestionState extends State<EditQuestion> {
                             TreatmentContainer(
                               id: currentNub.toString(),
                               key: ObjectKey(currentNub),
-                              selectedTreatmentTopic: treatmentTopicList.first,
+                              selectedTreatmentTopic: getTreatmentTopic().first,
                               selectedTreatmentDetail:
-                                  medicalTreatmentList.first,
+                                  filterTreatment('Medical').first,
                             ),
                           );
                         },
@@ -301,6 +416,16 @@ class _EditQuestionState extends State<EditQuestion> {
                           },
                         ),
                   const H20Sizedbox(),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      MyBackButton(myContext: context),
+                      ElevatedButton(
+                        onPressed: () {},
+                        child: Text('บันทึก'),
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),

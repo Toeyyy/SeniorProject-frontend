@@ -10,6 +10,7 @@ import 'package:frontend/constants.dart';
 import 'package:frontend/components/functions.dart';
 import 'package:http/http.dart' as http;
 import 'package:frontend/components/backButton.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class EditPredefinedListDetail extends StatefulWidget {
   final String title;
@@ -30,20 +31,20 @@ class _EditPredefinedListDetailState extends State<EditPredefinedListDetail> {
   String? oldItem;
   String? oldItemID;
   String? newItem;
-  final String apiUrl = "localhost:7197/api";
+  // final String apiUrl = "localhost:7197/api";
 
   Future<void> _postAddData(String title, String item) async {
     if (title == 'Problem List') {
       var data = {"name": item};
       final http.Response response = await http.post(
-        Uri.parse("$apiUrl/problem/add"),
+        Uri.parse("${dotenv.env['API_PATH']}/problem/add"),
         headers: {"Content-Type": "application/json"},
         body: jsonEncode(data),
       );
     } else if (title == 'Diagnosis List') {
       var data = {"name": item};
       final http.Response response = await http.post(
-        Uri.parse("$apiUrl/diagnostic/add"),
+        Uri.parse("${dotenv.env['API_PATH']}/diagnostic/add"),
         headers: {"Content-Type": "application/json"},
         body: jsonEncode(data),
       );
@@ -53,12 +54,12 @@ class _EditPredefinedListDetailState extends State<EditPredefinedListDetail> {
   Future<void> _postDeleteData(String title, String id) async {
     if (title == 'Problem List') {
       final http.Response response = await http.post(
-        Uri.parse("$apiUrl/problem/delete/$id"),
+        Uri.parse("${dotenv.env['API_PATH']}/problem/delete/$id"),
         headers: {"Content-Type": "application/json"},
       );
     } else if (title == 'Diagnosis List') {
       final http.Response response = await http.post(
-        Uri.parse("$apiUrl/diagnostic/delete/$id"),
+        Uri.parse("${dotenv.env['API_PATH']}/diagnostic/delete/$id"),
         headers: {"Content-Type": "application/json"},
       );
     }
@@ -68,14 +69,14 @@ class _EditPredefinedListDetailState extends State<EditPredefinedListDetail> {
     if (title == 'Problem List') {
       var data = {"name": item};
       final http.Response response = await http.post(
-        Uri.parse("$apiUrl/problem/update/$id"),
+        Uri.parse("${dotenv.env['API_PATH']}/problem/update/$id"),
         headers: {"Content-Type": "application/json"},
         body: jsonEncode(data),
       );
     } else if (title == 'Diagnosis List') {
       var data = {"name": item};
       final http.Response response = await http.post(
-        Uri.parse("$apiUrl/diagnostic/update/$id"),
+        Uri.parse("${dotenv.env['API_PATH']}/diagnostic/update/$id"),
         headers: {"Content-Type": "application/json"},
         body: jsonEncode(data),
       );

@@ -4,6 +4,10 @@ import 'package:frontend/components/splitScreenNisit.dart';
 import 'package:frontend/constants.dart';
 import 'package:frontend/screensNisit/treatmentDetail.dart';
 import 'package:frontend/components/appBar.dart';
+import 'package:frontend/models/treatmentObject.dart';
+import 'package:collection/collection.dart';
+import 'package:frontend/tmpQuestion.dart';
+import 'package:frontend/screensNisit/treatmentTotal.dart';
 
 class TreatmentTopic extends StatelessWidget {
   const TreatmentTopic({super.key});
@@ -30,9 +34,12 @@ class _RightPart_TreatmentTopicState extends State<RightPart_TreatmentTopic> {
   final List<String> _treatmentList = [
     'Medical Treatment',
     'Surgical Treatment',
-    'Nutritional Support',
+    'Nutritional support',
     'Other Treatment',
   ];
+
+  Map<String, List<TreatmentObject>> _groupedByType =
+      groupBy(preDefinedTreatmentAll, (e) => e.type);
 
   @override
   Widget build(BuildContext context) {
@@ -46,20 +53,20 @@ class _RightPart_TreatmentTopicState extends State<RightPart_TreatmentTopic> {
           ),
           Expanded(
             child: ListView.separated(
-              itemCount: _treatmentList.length,
+              itemCount: _groupedByType.keys.length,
               separatorBuilder: (context, index) => SizedBox(
                 height: 8,
               ),
               itemBuilder: (context, index) {
                 return HoverColorListTile(
                   hoverColor: Color(0xFF42C2FF),
-                  title: Text(_treatmentList[index]),
+                  title: Text(_groupedByType.keys.toList()[index]),
                   onTap: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) =>
-                            TreatmentDetail(_treatmentList[index]),
+                        builder: (context) => TreatmentDetail(
+                            _groupedByType.keys.toList()[index]),
                       ),
                     );
                   },
@@ -68,7 +75,14 @@ class _RightPart_TreatmentTopicState extends State<RightPart_TreatmentTopic> {
             ),
           ),
           ElevatedButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => TreatmentTotal(),
+                ),
+              );
+            },
             child: Text('Treatment ที่เลือก'),
           ),
         ],

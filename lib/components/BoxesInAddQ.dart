@@ -1,13 +1,13 @@
-import 'dart:html';
-
 import 'package:flutter/material.dart';
 import 'package:frontend/constants.dart';
-import 'package:frontend/UIModels/examContainer_provider.dart';
+import 'package:frontend/UIModels/teacher/examContainer_provider.dart';
 import 'package:frontend/tmpQuestion.dart';
 import 'package:multi_dropdown/multiselect_dropdown.dart';
 import 'package:frontend/components/examContainer.dart';
 import 'package:frontend/models/problemListObject.dart';
 import 'package:frontend/models/diagnosisObject.dart';
+import 'package:frontend/models/examinationPreDefinedObject.dart';
+import 'package:collection/collection.dart';
 
 class DropDownButtonInAddQ extends StatelessWidget {
   String? selectedValue;
@@ -217,6 +217,9 @@ class ExamsButtonAndContainer extends StatelessWidget {
       required this.examListProvider,
       required this.round});
 
+  Map<String, List<ExamPreDefinedObject>> groupedByLab =
+      groupBy(preDefinedExamAll, (e) => e.lab);
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -233,13 +236,17 @@ class ExamsButtonAndContainer extends StatelessWidget {
                 final int currentNub = examListProvider.nub;
                 examListProvider.addExamContainer(
                     ExamContainer(
-                        id: currentNub,
+                        id: currentNub.toString(),
                         key: ObjectKey(currentNub),
                         round: round,
-                        selectedDepartment: departmentList.first,
-                        selectedExamTopic: topicExamList1.first,
+                        selectedDepartment: groupedByLab.keys.first,
+                        selectedExamTopic: groupedByLab.values.first.first.type,
+                        selectedExamName: groupedByLab.values.first.first.name,
+                        selectedArea: groupedByLab.values.first.first.area,
+                        areaNull: groupedByLab.values.first.first.area == null,
                         examController: examController,
-                        imageFile: null,
+                        imagePath: null,
+                        imageResult: null,
                         haveImage: false),
                     examContainers);
               },
