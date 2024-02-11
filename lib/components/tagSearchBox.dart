@@ -3,6 +3,7 @@ import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:frontend/tmpQuestion.dart';
 import 'package:frontend/models/tagObject.dart';
 import 'package:multi_dropdown/multiselect_dropdown.dart';
+import 'package:frontend/AllDataFile.dart';
 
 class TagSearchBox extends StatelessWidget {
   List<TagObject> initTags;
@@ -17,7 +18,10 @@ class TagSearchBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiSelectDialogField(
-      items: allTagList
+      // items: allTagList
+      //     .map((tag) => MultiSelectItem<TagObject>(tag, tag.name))
+      //     .toList(),
+      items: tagListPreDefined
           .map((tag) => MultiSelectItem<TagObject>(tag, tag.name))
           .toList(),
       // items: initTags.map((tag) => MultiSelectItem(tag, tag.name)).toList(),

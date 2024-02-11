@@ -9,17 +9,17 @@ class ExaminationObject {
   String textResult;
   String? imgPath;
   PlatformFile? imgResult;
-  String round;
+  int round;
 
   ExaminationObject(
       {required this.id,
       required this.lab,
       required this.type,
-      required this.area,
+      this.area,
       required this.name,
       required this.textResult,
-      required this.imgPath,
-      required this.imgResult,
+      this.imgPath,
+      this.imgResult,
       required this.round});
 
   factory ExaminationObject.fromJson(Map<String, dynamic> json) {
@@ -27,11 +27,11 @@ class ExaminationObject {
         id: json['id'] ?? "",
         lab: json['lab'] ?? "",
         type: json['type'] ?? "",
-        area: json['area'] ?? "",
+        area: json['area'],
         name: json['name'] ?? "",
         textResult: json['textResult'] ?? "",
-        imgPath: json['imgPath'] ?? "",
+        imgPath: json['imgPath'],
         imgResult: json['imgResult'],
-        round: json['round'] ?? "");
+        round: json['round'] ?? 0);
   }
 }

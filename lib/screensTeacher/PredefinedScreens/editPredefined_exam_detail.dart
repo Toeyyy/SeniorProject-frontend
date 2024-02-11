@@ -5,17 +5,18 @@ import 'package:frontend/constants.dart';
 import 'package:frontend/tmpQuestion.dart';
 import 'package:frontend/models/examinationPreDefinedObject.dart';
 import 'package:frontend/components/backButton.dart';
-import 'package:frontend/screensTeacher/PredefinedScreens/editPredefined_exams_name.dart';
-import 'package:frontend/screensTeacher/PredefinedScreens/editPredefined_exams_area.dart';
+import 'package:frontend/screensTeacher/PredefinedScreens/editPredefined_exam_name.dart';
 import 'package:provider/provider.dart';
 import 'package:frontend/UIModels/teacher/predefinedExam_provider.dart';
+import 'package:frontend/AllDataFile.dart';
 
 class EditPredefinedExamLab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     PreDefinedExamProvider examProvider =
         Provider.of<PreDefinedExamProvider>(context);
-    examProvider.assignItem(preDefinedExamAll);
+    // examProvider.assignItem(preDefinedExamAll);
+    examProvider.assignItem(examListPreDefined);
     List<ExamPreDefinedObject> examList = examProvider.examList;
 
     Map<String, List<ExamPreDefinedObject>> groupedByLab =
@@ -97,22 +98,6 @@ class _EditPreDefinedExamTypeState extends State<EditPreDefinedExamType> {
   Widget build(BuildContext context) {
     PreDefinedExamProvider examProvider =
         Provider.of<PreDefinedExamProvider>(context);
-    // bool areaNull = false;
-    //
-    // void checkArea(String title) {
-    //   List<ExamPreDefinedObject> groupedType = widget.groupedByType[title]!;
-    //   setState(() {
-    //     areaNull = true;
-    //   });
-    //   for (ExamPreDefinedObject item in groupedType) {
-    //     if (item.area != null) {
-    //       setState(() {
-    //         areaNull = false;
-    //       });
-    //       break;
-    //     }
-    //   }
-    // }
 
     return Scaffold(
       appBar: AppbarTeacher(),
@@ -154,17 +139,8 @@ class _EditPreDefinedExamTypeState extends State<EditPreDefinedExamType> {
                               builder: (context) => EditPredefinedExamName(
                                 selectedType: title,
                               ),
-                              // groupedExam: ,
                             ),
                           );
-                          // : Navigator.push(
-                          //     context,
-                          //     MaterialPageRoute(
-                          //       builder: (context) =>
-                          //           EditPreDefinedExamChoice(
-                          //               selectedType: title),
-                          //     ),
-                          //   );
                         },
                       );
                     },
@@ -182,75 +158,6 @@ class _EditPreDefinedExamTypeState extends State<EditPreDefinedExamType> {
                     backgroundColor: Color(0xFF8B72BE),
                   ),
                 )
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class EditPreDefinedExamChoice extends StatelessWidget {
-  String selectedType;
-
-  EditPreDefinedExamChoice({required this.selectedType});
-
-  List<String> choiceList = [
-    'Area',
-    'Name',
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppbarTeacher(),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
-        child: Center(
-          child: Container(
-            width: MediaQuery.of(context).size.width * 0.7,
-            child: Column(
-              children: [
-                Text(
-                  selectedType,
-                  style: kHeaderTextStyle.copyWith(fontWeight: FontWeight.w900),
-                ),
-                Expanded(
-                  child: ListView.separated(
-                    separatorBuilder: (context, index) => SizedBox(height: 8),
-                    itemCount: 2,
-                    itemBuilder: (context, index) {
-                      return ListTile(
-                        tileColor: Color(0xFFA0E9FF),
-                        hoverColor: Color(0xFF42C2FF),
-                        title: Text(choiceList[index]),
-                        onTap: () {
-                          if (choiceList[index] == 'Name') {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => EditPredefinedExamName(
-                                  selectedType: selectedType,
-                                ),
-                                // groupedExam: ,
-                              ),
-                            );
-                          } else {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => EditPredefinedExamArea(
-                                    selectedType: selectedType),
-                              ),
-                            );
-                          }
-                        },
-                      );
-                    },
-                  ),
-                ),
-                MyBackButton(myContext: context),
               ],
             ),
           ),

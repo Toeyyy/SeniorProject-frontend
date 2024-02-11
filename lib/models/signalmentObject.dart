@@ -18,7 +18,7 @@ class SignalmentObject {
     return SignalmentObject(
         species: json['species'] ?? "",
         breed: json['breed'] ?? "",
-        sterilize: json['sterilize'] ?? "",
+        sterilize: json['sterilize'] ?? false,
         age: json['age'] ?? "",
         gender: json['gender'] ?? "",
         weight: json['weight'] ?? "");

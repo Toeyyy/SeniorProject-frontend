@@ -4,7 +4,7 @@ class DiagnosisObject {
 
   DiagnosisObject({required this.id, required this.name});
 
-  factory DiagnosisObject.fromJson(Map<String, String> json) {
+  factory DiagnosisObject.fromJson(Map<String, dynamic> json) {
     return DiagnosisObject(id: json['id'] ?? "", name: json['name'] ?? "");
   }
 }

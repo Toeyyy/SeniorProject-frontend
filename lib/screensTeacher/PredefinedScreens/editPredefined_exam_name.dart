@@ -12,6 +12,7 @@ import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 import 'package:frontend/components/BoxesInAddQ.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:frontend/AllDataFile.dart';
 
 class EditPredefinedExamName extends StatefulWidget {
   String selectedType;
@@ -37,8 +38,12 @@ class _EditPredefinedExamNameState extends State<EditPredefinedExamName> {
   bool _isFormatNameCorrect = true;
   bool _isFormatCostCorrect = true;
 
+  // List<String> areaList = groupBy(
+  //         preDefinedExamAll.where((item) => item.area != null), (e) => e.area!)
+  //     .keys
+  //     .toList();
   List<String> areaList = groupBy(
-          preDefinedExamAll.where((item) => item.area != null), (e) => e.area!)
+          examListPreDefined.where((item) => item.area != null), (e) => e.area!)
       .keys
       .toList();
 
@@ -217,8 +222,15 @@ class _EditPredefinedExamNameState extends State<EditPredefinedExamName> {
                                     selectedItem = nameDisplayList[index];
                                     // print(selectedItem);
                                     selectedId = selectedItem!.id;
-                                    selectedTileIndex =
-                                        groupedExam.indexOf(selectedItem!);
+                                    if (groupedExam == nameDisplayList) {
+                                      selectedTileIndex =
+                                          groupedExam.indexOf(selectedItem!);
+                                    } else {
+                                      selectedTileIndex = nameDisplayList
+                                          .indexOf(selectedItem!);
+                                    }
+                                    print(
+                                        'selectedTileIndex = $selectedTileIndex');
                                     _isOtherPartVisible = true;
                                     areaTextFieldController.text =
                                         (selectedItem?.area ?? "");

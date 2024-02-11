@@ -38,7 +38,7 @@ flutter:
   uses-material-design: true
 
   assets:
-     - assets/data/exampleData.json
+     - assets/data/
      - assets/.env
 
   # To add assets to your application, add an assets section, like this:

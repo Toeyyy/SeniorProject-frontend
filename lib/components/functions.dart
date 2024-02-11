@@ -1,19 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/models/treatmentObject.dart';
 import 'package:frontend/tmpQuestion.dart';
 import 'package:frontend/models/problemListObject.dart';
 import 'package:frontend/models/diagnosisObject.dart';
 import 'package:collection/collection.dart';
+import 'package:frontend/AllDataFile.dart';
 
 List<ProblemObject> filterProblemList(
     TextEditingController searchController, List<ProblemObject> listForSearch) {
+  // String query = searchController.text.toLowerCase();
+  // if (query == '') {
+  //   return listForSearch;
+  // } else {
+  //   return listForSearch
+  //       .where((item) => item.name.toLowerCase().startsWith(query))
+  //       .toList();
+  // }
+
   String query = searchController.text.toLowerCase();
-  if (query == '') {
-    return listForSearch;
-  } else {
-    return listForSearch
-        .where((item) => item.name.toLowerCase().startsWith(query))
-        .toList();
-  }
+  return listForSearch
+      .where((item) => item.name.toLowerCase().startsWith(query))
+      .toList();
 }
 
 List<DiagnosisObject> filterDiagnosisList(
@@ -25,93 +32,40 @@ List<DiagnosisObject> filterDiagnosisList(
       .toList();
 }
 
-List<String> filterBreed(String animal) {
-  if (animal == 'สุนัข') {
-    return Signalment_dogBreedList;
-  } else if (animal == 'แมว') {
-    return Signalment_catBreedList;
-  } else {
-    return Signalment_birdBreedList;
-  }
-}
-
-// List<String> filterExam(String de) {
-//   if (de == 'เลือดและปัสสาวะ') {
-//     return topicExamList1;
-//   } else if (de == 'จุลชีววิทยา') {
-//     return topicExamList2;
-//   } else if (de == 'อณูวินิจฉัย') {
-//     return topicExamList3;
-//   } else if (de == 'เซลล์วินิจฉัย') {
-//     return topicExamList4;
+// List<String> filterBreed(String animal) {
+//   if (animal == 'สุนัข') {
+//     return Signalment_dogBreedList;
+//   } else if (animal == 'แมว') {
+//     return Signalment_catBreedList;
 //   } else {
-//     return topicExamList5;
-//   }
-// }
-
-// List<String> filterTreatment(String topic) {
-//   if (topic == 'medical') {
-//     return medicalTreatmentList;
-//   } else if (topic == 'Surgical') {
-//     return surgicalTreatmentList;
-//   } else if (topic == 'Nutritional support') {
-//     return nutritionSupportList;
-//   } else {
-//     return otherTreatmentList;
+//     return Signalment_birdBreedList;
 //   }
 // }
 
 List<String> filterTreatment(String topic) {
-  if (topic == 'Medical') {
-    return preDefinedTreatmentAll
-        .where((item) => item.type == 'Medical')
-        .map((e) => e.name)
-        .toList();
-  } else if (topic == 'Surgical') {
-    return preDefinedTreatmentAll
-        .where((item) => item.type == 'Surgical')
-        .map((e) => e.name)
-        .toList();
-  } else if (topic == 'Nutritional support') {
-    return preDefinedTreatmentAll
-        .where((item) => item.type == 'Nutritional support')
-        .map((e) => e.name)
-        .toList();
-  } else {
-    return preDefinedTreatmentAll
-        .where((item) => item.type == 'Other')
-        .map((e) => e.name)
-        .toList();
-  }
+  // Map<String,List<TreatmentObject>> splitTreatment = groupBy(preDefinedTreatmentAll, (e) => e.type);
+  // return splitTreatment[topic]!.map((e) => e.name).toList();
+
+  Map<String, List<TreatmentObject>> splitTreatment =
+      groupBy(treatmentListPreDefined, (e) => e.type);
+  return splitTreatment[topic]!.map((e) => e.name).toList();
 }
 
 List<String> getTreatmentTopic() {
-  return groupBy(preDefinedTreatmentAll, (e) => e.type).keys.toList();
+  // return groupBy(preDefinedTreatmentAll, (e) => e.type).keys.toList();
+  return groupBy(treatmentListPreDefined, (e) => e.type).keys.toList();
 }
 
 /////predefined//////
 
 List<dynamic> filterEditTopicList(String value) {
   if (value == 'Problem List') {
-    return preDefinedProblem;
-  } else if (value == 'Diagnosis List') {
-    return preDefinedDiagnosis;
-  } else if (value == 'Medical Treatment List') {
-    return preDefinedTreatmentAll
-        .where((item) => item.type == 'Medical')
-        .toList();
-  } else if (value == 'Surgical Treatment List') {
-    return preDefinedTreatmentAll
-        .where((item) => item.type == 'Surgical')
-        .toList();
-  } else if (value == 'Nutrition Support List') {
-    return preDefinedTreatmentAll
-        .where((item) => item.type == 'Nutritional support')
-        .toList();
+    // return preDefinedProblem;
+    return problemListPreDefined;
   } else {
-    return preDefinedTreatmentAll
-        .where((item) => item.type == 'Other')
-        .toList();
+    // value == 'Diagnosis List'
+    // return preDefinedDiagnosis;
+    return diagnosisListPreDefined;
   }
 }
 

@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/aboutData/dataObject.dart';
 import 'package:frontend/components/tagBox.dart';
 import 'package:frontend/constants.dart';
 import 'package:frontend/tmpQuestion.dart';
+import 'package:frontend/models/questionObject.dart';
+import 'package:frontend/screensNisit/problemList.dart';
+import 'package:frontend/screensTeacher/showAndEditQuestion.dart';
 
 class QuestionCard extends StatelessWidget {
-  final QuestionObj questionObj;
+  final QuestionObject questionObj;
+  int role;
 
-  QuestionCard({required this.questionObj});
+  QuestionCard({required this.questionObj, required this.role});
 
   void _showModal(BuildContext context) {
     showDialog(
@@ -17,13 +20,14 @@ class QuestionCard extends StatelessWidget {
             child: Container(
               padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
               width: MediaQuery.of(context).size.width * 0.5,
-              height: MediaQuery.of(context).size.height * 0.5,
+              // height: MediaQuery.of(context).size.height * 0.5,
               decoration: BoxDecoration(
                 color: Color(0xFFBBF5FF),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -35,7 +39,7 @@ class QuestionCard extends StatelessWidget {
                                 vertical: 5, horizontal: 20),
                             color: Color(0xFFE7F9FF),
                             child: Text(
-                              'โจทย์ ${questionObj.quesNum}',
+                              'โจทย์ ${questionObj.name}',
                               style: kSubHeaderTextStyle,
                             ),
                           ),
@@ -44,15 +48,7 @@ class QuestionCard extends StatelessWidget {
                             child: Wrap(
                               spacing: 2,
                               runSpacing: 2,
-                              // children: questionObj.tagList
-                              //     .map(
-                              //       (e) => TagBox(
-                              //         text: e,
-                              //         textSize: 20,
-                              //       ),
-                              //     )
-                              //     .toList(),
-                              children: showTagList
+                              children: questionObj.tags
                                   .map(
                                     (e) => TagBox(text: e.name, textSize: 20),
                                   )
@@ -71,7 +67,7 @@ class QuestionCard extends StatelessWidget {
                   ),
                   SizedBox(height: 15),
                   Text(
-                    'สายพันธุ์: ${questionObj.breed}, อายุ: ${questionObj.age}, น้ำหนัก: ${questionObj.weight}',
+                    'สายพันธุ์: ${questionObj.signalment.breed}, อายุ: ${questionObj.signalment.age}, น้ำหนัก: ${questionObj.signalment.weight}',
                     style: kNormalTextStyle,
                   ),
                   SizedBox(height: 15),
@@ -85,7 +81,7 @@ class QuestionCard extends StatelessWidget {
                     width: double.infinity,
                     height: 50,
                     color: Color(0xFFE7F9FF),
-                    child: Text(questionObj.clientComp, maxLines: 2),
+                    child: Text(questionObj.clientComplains, maxLines: 2),
                   ),
                   SizedBox(height: 15),
                   Text(
@@ -98,14 +94,25 @@ class QuestionCard extends StatelessWidget {
                     width: double.infinity,
                     height: 50,
                     color: Color(0xFFE7F9FF),
-                    child: Text(questionObj.historyTaking, maxLines: 2),
+                    child: Text(questionObj.historyTakingInfo, maxLines: 2),
                   ),
                   SizedBox(height: 15),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          //go to problist page
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ProbList(
+                                round: 1,
+                                questionObj: questionObj,
+                              ),
+                            ),
+                          );
+                        },
                         child: Text('ยืนยัน'),
                       ),
                     ],
@@ -135,18 +142,18 @@ class QuestionCard extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    'รหัสโจทย์: ${questionObj.quesNum}',
+                    'รหัสโจทย์: ${questionObj.name}',
                     style: kSubHeaderTextStyle,
                   ),
                   Text(
-                      'ชนิดสัตว์: ${questionObj.type}, พันธุ์: ${questionObj.breed}',
+                      'ชนิดสัตว์: ${questionObj.signalment.species}, พันธุ์: ${questionObj.signalment.breed}',
                       style: kNormalTextStyle),
                   SizedBox(height: 5),
                   Container(
                     child: Wrap(
                       spacing: 2,
                       runSpacing: 2,
-                      children: showTagList
+                      children: questionObj.tags
                           .map(
                             (e) => TagBox(text: e.name),
                           )
@@ -162,3 +169,17 @@ class QuestionCard extends StatelessWidget {
     );
   }
 }
+
+// ElevatedButton(
+// onPressed: () {
+// //go to showQues
+// Navigator.push(
+// context,
+// MaterialPageRoute(
+// builder: (context) => ShowAndEditQuestion(
+// questionObj: questionObj),
+// ),
+// );
+// },
+// child: Text('ดูโจทย์'),
+// ),

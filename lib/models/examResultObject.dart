@@ -6,7 +6,7 @@ class ExamResultObject {
   ExamResultObject(
       {required this.id, required this.textResult, required this.imgResult});
 
-  factory ExamResultObject.fromJson(Map<String, String> json) {
+  factory ExamResultObject.fromJson(Map<String, dynamic> json) {
     return ExamResultObject(
         id: json['id'] ?? "",
         textResult: json['textResult'] ?? "",

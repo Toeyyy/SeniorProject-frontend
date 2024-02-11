@@ -11,16 +11,17 @@ import 'package:frontend/components/backButton.dart';
 import 'package:frontend/UIModels/teacher/predefinedExam_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
-import 'package:frontend/screensTeacher/PredefinedScreens/editPredefined_exam2_topic.dart';
+import 'package:frontend/AllDataFile.dart';
+import 'package:frontend/screensTeacher/PredefinedScreens/editPredefined_exam_topic.dart';
 
-class EditPreDefinedExam2Add extends StatefulWidget {
-  const EditPreDefinedExam2Add({super.key});
+class EditPreDefinedExamAdd extends StatefulWidget {
+  const EditPreDefinedExamAdd({super.key});
 
   @override
-  State<EditPreDefinedExam2Add> createState() => _EditPreDefinedExam2AddState();
+  State<EditPreDefinedExamAdd> createState() => _EditPreDefinedExamAddState();
 }
 
-class _EditPreDefinedExam2AddState extends State<EditPreDefinedExam2Add> {
+class _EditPreDefinedExamAddState extends State<EditPreDefinedExamAdd> {
   TextEditingController labTextController = TextEditingController();
   TextEditingController typeTextController = TextEditingController();
   TextEditingController areaTextController = TextEditingController();
@@ -31,8 +32,10 @@ class _EditPreDefinedExam2AddState extends State<EditPreDefinedExam2Add> {
   bool _isFormatCorrect = false;
 
   /////lab/////
+  // Map<String, List<ExamPreDefinedObject>> groupedByLab =
+  //     groupBy(preDefinedExamAll, (e) => e.lab);
   Map<String, List<ExamPreDefinedObject>> groupedByLab =
-      groupBy(preDefinedExamAll, (e) => e.lab);
+      groupBy(examListPreDefined, (e) => e.lab);
   late List<String> labNameList = groupedByLab.keys.toList();
   late List<String> labDisplayList = filterList(labTextController, labNameList);
 
@@ -45,8 +48,10 @@ class _EditPreDefinedExam2AddState extends State<EditPreDefinedExam2Add> {
       filterList(typeTextController, typeNameList);
 
   /////area/////
+  // Map<String, List<ExamPreDefinedObject>> groupedByArea = groupBy(
+  //     preDefinedExamAll.where((item) => item.area != null), (e) => e.area!);
   Map<String, List<ExamPreDefinedObject>> groupedByArea = groupBy(
-      preDefinedExamAll.where((item) => item.area != null), (e) => e.area!);
+      examListPreDefined.where((item) => item.area != null), (e) => e.area!);
   late List<String> areaNameList = groupedByArea.keys.toList();
   late List<String> areaDisplayList =
       filterList(areaTextController, areaNameList);
@@ -350,7 +355,8 @@ class _EditPreDefinedExam2AddState extends State<EditPreDefinedExam2Add> {
                               name: nameTextController.text,
                               cost: int.parse(costTextController.text),
                             );
-                            preDefinedExamAll.add(newItem);
+                            // preDefinedExamAll.add(newItem);
+                            examListPreDefined.add(newItem);
                             _postAddData();
                             Navigator.pop(context);
                           }

@@ -4,7 +4,7 @@ class TagObject {
 
   TagObject({required this.id, required this.name});
 
-  factory TagObject.fromJson(Map<String, String> json) {
+  factory TagObject.fromJson(Map<String, dynamic> json) {
     return TagObject(id: json['id'] ?? "", name: json['name'] ?? "");
   }
 }

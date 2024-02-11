@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import '../tmpQuestion.dart';
+import 'package:frontend/tmpQuestion.dart';
 import 'package:frontend/components/BoxesInAddQ.dart';
 import 'package:frontend/components/functions.dart';
 import 'package:frontend/UIModels/teacher/treatmentContainer_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:frontend/constants.dart';
-import 'package:frontend/tmpQuestion.dart';
 
 class TreatmentContainer extends StatefulWidget {
   final String id;

@@ -5,7 +5,8 @@ import 'package:frontend/tmpQuestion.dart';
 import 'package:frontend/screensTeacher/PredefinedScreens/editPredefinedListDetail.dart';
 import 'package:frontend/screensTeacher/PredefinedScreens/editPredefined_treatment_topics.dart';
 import 'package:frontend/components/backButton.dart';
-import 'package:frontend/screensTeacher/PredefinedScreens/editPredefined_exam2_topic.dart';
+import 'package:frontend/screensTeacher/PredefinedScreens/editPredefined_exam_topic.dart';
+import 'package:frontend/aboutData/getDataFunctions.dart';
 
 class EditPredefinedListTopic extends StatelessWidget {
   const EditPredefinedListTopic({super.key});
@@ -18,6 +19,14 @@ class EditPredefinedListTopic extends StatelessWidget {
       'Treatment List',
       'Examination List',
     ];
+
+    Future<void> getTreatment() async {
+      await fetchPreDefinedTreatment();
+    }
+
+    Future<void> getExams() async {
+      await fetchPreDefinedExam();
+    }
 
     return Scaffold(
       appBar: AppbarTeacher(),
@@ -48,8 +57,7 @@ class EditPredefinedListTopic extends StatelessWidget {
                         onTap: () {
                           if (editPredefinedTopicList[index] ==
                               'Examination List') {
-                            // Navigator.pushNamed(
-                            //     context, 'Teacher/editPreDefined/exams_lab');
+                            getExams();
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -59,6 +67,7 @@ class EditPredefinedListTopic extends StatelessWidget {
                             );
                           } else if (editPredefinedTopicList[index] ==
                               'Treatment List') {
+                            getTreatment();
                             Navigator.push(
                               context,
                               MaterialPageRoute(

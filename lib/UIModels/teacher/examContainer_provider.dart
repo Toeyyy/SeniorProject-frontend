@@ -20,8 +20,9 @@ class ExamContainerProvider extends ChangeNotifier {
   void deleteExamContainer(List<ExamContainer> containerList, Key key) {
     // print('key = $key');
     // print('item.key = ${containerList.map((e) => e.key)}');
-    // print('current delete index = $deleteIndex');
     containerList.removeWhere((item) => item.key == key);
+    // print('hello');
+    // print('container len = ${containerList.length}');
     notifyListeners();
   }
 
@@ -37,12 +38,12 @@ class ExamContainerProvider extends ChangeNotifier {
     for (ExaminationObject item in importedList) {
       TextEditingController myController = TextEditingController();
       myController.text = item.textResult;
-      if (item.round == '1') {
+      if (item.round == 1) {
         examContainers1.add(
           ExamContainer(
               id: item.id,
               key: ObjectKey(item.id),
-              round: '1',
+              round: 1,
               selectedDepartment: item.lab,
               selectedExamTopic: item.type,
               selectedExamName: item.name,
@@ -58,7 +59,7 @@ class ExamContainerProvider extends ChangeNotifier {
           ExamContainer(
               id: item.id,
               key: ObjectKey(item.id),
-              round: '2',
+              round: 2,
               selectedDepartment: item.lab,
               selectedExamTopic: item.type,
               selectedExamName: item.name,

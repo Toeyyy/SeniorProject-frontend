@@ -1,0 +1,108 @@
+[
+  {
+    "id" : "ID_3",
+    "name" : "14",
+    "clientComplains" : "client complain 1 vznkjvhesjkdfnnkxfnvhioregtioejdfzk",
+    "historyTakingInfo": "history taking result is flkjadglkzfnvlagjdfvkfjvdnvlzdsgh",
+    "generalInfo" : "หายใจเร็ว, เยื่อเมือกเป็นสีม่วง, เสียงหัวใจปกติ, คลำสัญญาณชีพจรได้ปกติ, เสียงท่อลมดังเป็นเสียงแหลม",
+    "tags" : [
+      {
+        "id" : "1",
+        "name" : "สุนัข"
+      },
+      {
+        "id" : "6",
+        "name" : "ปี 3"
+      },
+      {
+        "id" : "10",
+        "name" : "ระบบไหลเวียนเลือด"
+      }
+    ],
+    "signalment": {
+      "species" : "สุนัข",
+      "breed" : "American Bully",
+      "gender": "เมีย",
+      "sterilize": true,
+      "age": "8 เดือน",
+      "weight" : "15 Kg"
+    },
+    "problems": [
+      {
+        "id": "1",
+        "name": "problem 1",
+        "round": 1
+      },
+      {
+        "id": "3",
+        "name": "problem 3",
+        "round": 1
+      },
+      {
+        "id": "5",
+        "name": "problem 5",
+        "round": 1
+      },
+      {
+        "id": "2",
+        "name": "problem 2",
+        "round": 2
+      },
+      {
+        "id": "4",
+        "name": "problem 4",
+        "round": 2
+      },
+      {
+        "id": "6",
+        "name": "problem 6",
+        "round": 2
+      }
+    ],
+    "treatments": [
+      {
+        "id": "1",
+        "type" : "Medical",
+        "name" : "medical 1",
+        "cost": 100
+      }
+    ],
+    "diagnostics": [
+      {
+        "id": "1",
+        "name": "Diag 1"
+      },
+      {
+        "id": "2",
+        "name": "Diag 2"
+      }
+    ],
+    "examinations" : [
+      {
+        "id": "5",
+        "lab": "lab 1",
+        "type": "lab 1 type 2",
+        "name": "lab 1 type 2 exam 2",
+        "textResult" : "result 1",
+        "round": 1
+      },
+      {
+        "id": "7",
+        "lab": "lab 2",
+        "area": "area 1",
+        "type": "lab 2 type 2",
+        "name": "lab 2 type 1 exam 1",
+        "textResult" : "result 2",
+        "round": 2
+      }
+    ],
+    "modified": true,
+    "logs": [
+      {
+        "id": "9bc52d59-e5c9-42ae-95f1-71cce6c6113c",
+        "name": "abc abc",
+        "dateTime": "2024-01-16T08:39:52.0181364"
+      }
+    ]
+  }
+]

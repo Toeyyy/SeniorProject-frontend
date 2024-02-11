@@ -6,10 +6,13 @@ import 'package:frontend/models/treatmentObject.dart';
 import 'package:frontend/tmpQuestion.dart';
 import 'package:frontend/components/backButton.dart';
 import 'package:frontend/screensTeacher/PredefinedScreens/editPredefined_treatment_detail.dart';
+import 'package:frontend/AllDataFile.dart';
 
 class EditPredefinedTreatmentType extends StatelessWidget {
+  // Map<String, List<TreatmentObject>> groupedByType =
+  //     groupBy(preDefinedTreatmentAll, (e) => e.type);
   Map<String, List<TreatmentObject>> groupedByType =
-      groupBy(preDefinedTreatmentAll, (e) => e.type);
+      groupBy(treatmentListPreDefined, (e) => e.type);
 
   @override
   Widget build(BuildContext context) {

@@ -8,38 +8,84 @@ import 'package:frontend/models/treatmentObject.dart';
 import 'package:collection/collection.dart';
 import 'package:frontend/tmpQuestion.dart';
 import 'package:frontend/screensNisit/treatmentTotal.dart';
+import 'package:frontend/models/questionObject.dart';
+import 'package:frontend/AllDataFile.dart';
+import 'package:frontend/UIModels/nisit/selectedExam_provider.dart';
+import 'package:provider/provider.dart';
+import 'package:frontend/UIModels/nisit/selectedProblem_provider.dart';
+import 'package:frontend/UIModels/nisit/selectedDiagnosis_provider.dart';
+import 'package:frontend/components/BoxesInAddQ.dart';
 
 class TreatmentTopic extends StatelessWidget {
-  const TreatmentTopic({super.key});
+  QuestionObject questionObj;
+
+  TreatmentTopic({super.key, required this.questionObj});
 
   @override
   Widget build(BuildContext context) {
+    SelectedProblem problemProvider =
+        Provider.of<SelectedProblem>(context, listen: false);
+    SelectedExam examProvider =
+        Provider.of<SelectedExam>(context, listen: false);
+    SelectedDiagnosis diagProvider =
+        Provider.of<SelectedDiagnosis>(context, listen: false);
+
     return Scaffold(
       appBar: AppbarNisit(),
       body: SplitScreenNisit(
-        leftPart: LeftPartContent(),
-        rightPart: RightPart_TreatmentTopic(),
+        leftPart: LeftPartContent(
+          questionObj: questionObj,
+          addedContent: Column(
+            children: [
+              TitleAndDottedListView(
+                  title: 'Problem List ครั้งที่ 1',
+                  showList: problemProvider.problemAnsList1
+                      .map((e) => e.name)
+                      .toList()),
+              TitleAndExams(
+                title: 'Examination ครั้งที่ 1',
+                showList: examProvider.examList1,
+                resultList: examProvider.resultList1,
+              ),
+              TitleAndDottedListView(
+                  title: 'Problem List ครั้งที่ 2',
+                  showList: problemProvider.problemAnsList2
+                      .map((e) => e.name)
+                      .toList()),
+              TitleAndExams(
+                title: 'Examination ครั้งที่ 2',
+                showList: examProvider.examList2,
+                resultList: examProvider.resultList2,
+              ),
+              TitleAndDottedListView(
+                  title: 'Diagnosis',
+                  showList: diagProvider.diagList.map((e) => e.name).toList()),
+            ],
+          ),
+        ),
+        rightPart: RightPart_TreatmentTopic(
+          questionObj: questionObj,
+        ),
       ),
     );
   }
 }
 
 class RightPart_TreatmentTopic extends StatefulWidget {
+  QuestionObject questionObj;
+
+  RightPart_TreatmentTopic({required this.questionObj});
+
   @override
   State<RightPart_TreatmentTopic> createState() =>
       _RightPart_TreatmentTopicState();
 }
 
 class _RightPart_TreatmentTopicState extends State<RightPart_TreatmentTopic> {
-  final List<String> _treatmentList = [
-    'Medical Treatment',
-    'Surgical Treatment',
-    'Nutritional support',
-    'Other Treatment',
-  ];
-
-  Map<String, List<TreatmentObject>> _groupedByType =
-      groupBy(preDefinedTreatmentAll, (e) => e.type);
+  // Map<String, List<TreatmentObject>> _groupedByType =
+  //     groupBy(preDefinedTreatmentAll, (e) => e.type);
+  final Map<String, List<TreatmentObject>> _groupedByType =
+      groupBy(treatmentListPreDefined, (e) => e.type);
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +112,9 @@ class _RightPart_TreatmentTopicState extends State<RightPart_TreatmentTopic> {
                       context,
                       MaterialPageRoute(
                         builder: (context) => TreatmentDetail(
-                            _groupedByType.keys.toList()[index]),
+                          _groupedByType.keys.toList()[index],
+                          questionObj: widget.questionObj,
+                        ),
                       ),
                     );
                   },
@@ -79,7 +127,9 @@ class _RightPart_TreatmentTopicState extends State<RightPart_TreatmentTopic> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => TreatmentTotal(),
+                  builder: (context) => TreatmentTotal(
+                    questionObj: widget.questionObj,
+                  ),
                 ),
               );
             },

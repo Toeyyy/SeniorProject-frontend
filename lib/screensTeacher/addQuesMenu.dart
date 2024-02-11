@@ -3,9 +3,18 @@ import 'package:frontend/components/appBar.dart';
 import 'package:frontend/constants.dart';
 import 'package:frontend/screensTeacher/addQuestion.dart';
 import 'package:frontend/screensTeacher/PredefinedScreens/editPredefinedListTopic.dart';
+import 'package:frontend/aboutData/getDataFunctions.dart';
 
 class AddQuesMenu extends StatelessWidget {
   const AddQuesMenu({super.key});
+
+  Future<void> fetchPreDefined() async {
+    await fetchPreDefinedProb();
+    await fetchPreDefinedDiag();
+    await fetchPreDefinedExam();
+    await fetchPreDefinedTag();
+    await fetchPreDefinedTreatment();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,6 +58,7 @@ class AddQuesMenu extends StatelessWidget {
               ),
               ElevatedButton(
                 onPressed: () {
+                  fetchPreDefined();
                   Navigator.push(
                       context,
                       MaterialPageRoute(

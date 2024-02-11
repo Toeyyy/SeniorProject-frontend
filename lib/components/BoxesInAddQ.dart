@@ -8,6 +8,9 @@ import 'package:frontend/models/problemListObject.dart';
 import 'package:frontend/models/diagnosisObject.dart';
 import 'package:frontend/models/examinationPreDefinedObject.dart';
 import 'package:collection/collection.dart';
+import 'package:frontend/AllDataFile.dart';
+import 'package:frontend/components/resultContainer.dart';
+import 'package:frontend/models/examResultObject.dart';
 
 class DropDownButtonInAddQ extends StatelessWidget {
   String? selectedValue;
@@ -23,22 +26,35 @@ class DropDownButtonInAddQ extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DropdownButton(
-      value: selectedValue,
-      hint: Text(hintText),
-      icon: Icon(Icons.arrow_drop_down),
-      padding: EdgeInsets.all(5),
-      isDense: true,
-      alignment: Alignment.center,
-      focusColor: Color(0xFFF2F5F7),
-      items: list.map<DropdownMenuItem<String>>((String value) {
-        return DropdownMenuItem<String>(
-          value: value,
-          child: Text(value),
-        );
-      }).toList(),
-      onChanged: onChanged,
-    );
+    // print('len = ${list.where((element) => element == selectedValue).length}');
+    return (list
+                .map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                })
+                .toList()
+                .where((element) => element.value == selectedValue)
+                .length ==
+            1)
+        ? DropdownButton(
+            value: selectedValue,
+            hint: Text(hintText),
+            icon: Icon(Icons.arrow_drop_down),
+            padding: EdgeInsets.all(5),
+            isDense: true,
+            alignment: Alignment.center,
+            focusColor: Color(0xFFF2F5F7),
+            items: list.map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),
+            onChanged: onChanged,
+          )
+        : SizedBox();
   }
 }
 
@@ -56,7 +72,7 @@ class TextAndTextfield extends StatelessWidget {
       children: [
         Text(title),
         SizedBox(
-          width: 100,
+          width: 150,
           child: TextField(
             controller: myController,
             textAlign: TextAlign.center,
@@ -141,9 +157,9 @@ class DividerWithSpace extends StatelessWidget {
 class ProbListMultiSelectDropDown extends StatelessWidget {
   List<ProblemObject> selectedList;
   List<ProblemObject> displayList;
-  String round;
+  int round;
   final String hintText;
-  Function(List<ProblemObject>, String) updateListCallback;
+  Function(List<ProblemObject>, int) updateListCallback;
 
   ProbListMultiSelectDropDown(
       {required this.selectedList,
@@ -154,6 +170,8 @@ class ProbListMultiSelectDropDown extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // print('select = $selectedList');
+    // print('display = $displayList');
     return MultiSelectDropDown(
         searchEnabled: true,
         hint: hintText,
@@ -208,7 +226,7 @@ class DiagnosisMultiSelectDropDown extends StatelessWidget {
 class ExamsButtonAndContainer extends StatelessWidget {
   List<ExamContainer> examContainers;
   ExamContainerProvider examListProvider;
-  String round;
+  int round;
   ////
   TextEditingController examController = TextEditingController();
 
@@ -217,8 +235,10 @@ class ExamsButtonAndContainer extends StatelessWidget {
       required this.examListProvider,
       required this.round});
 
+  // Map<String, List<ExamPreDefinedObject>> groupedByLab =
+  //     groupBy(preDefinedExamAll, (e) => e.lab);
   Map<String, List<ExamPreDefinedObject>> groupedByLab =
-      groupBy(preDefinedExamAll, (e) => e.lab);
+      groupBy(examListPreDefined, (e) => e.lab);
 
   @override
   Widget build(BuildContext context) {
@@ -242,7 +262,8 @@ class ExamsButtonAndContainer extends StatelessWidget {
                         selectedDepartment: groupedByLab.keys.first,
                         selectedExamTopic: groupedByLab.values.first.first.type,
                         selectedExamName: groupedByLab.values.first.first.name,
-                        selectedArea: groupedByLab.values.first.first.area,
+                        selectedArea:
+                            groupedByLab.values.first.first.area ?? null,
                         areaNull: groupedByLab.values.first.first.area == null,
                         examController: examController,
                         imagePath: null,
@@ -278,14 +299,155 @@ class DottedListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-        shrinkWrap: true,
-        itemCount: showList.length,
-        itemBuilder: (context, index) {
-          return ListTile(
-            title: Text(showList[index]),
-            leading: Icon(Icons.circle, size: 15),
-          );
-        });
+    return showList != []
+        ? ListView.builder(
+            shrinkWrap: true,
+            itemCount: showList.length,
+            itemBuilder: (context, index) {
+              return ListTile(
+                title: Text(showList[index]),
+                leading: Icon(Icons.circle, size: 15),
+              );
+            })
+        : SizedBox();
+  }
+}
+
+//////for show in split screen//////
+class TitleAndDottedListView extends StatelessWidget {
+  String title;
+  List<String> showList;
+  TitleAndDottedListView(
+      {super.key, required this.title, required this.showList});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: kSubHeaderTextStyleInLeftPart,
+        ),
+        ListView.builder(
+          shrinkWrap: true,
+          itemCount: showList.length,
+          itemBuilder: (context, index) {
+            return ListTile(
+              leading: Icon(
+                Icons.circle,
+                size: 15,
+              ),
+              title: Text(showList[index]),
+            );
+          },
+        ),
+      ],
+    );
+  }
+}
+
+class TitleAndExams extends StatelessWidget {
+  String title;
+  List<ExamPreDefinedObject> showList;
+  List<ResultContainer> resultList;
+  TitleAndExams(
+      {super.key,
+      required this.title,
+      required this.showList,
+      required this.resultList});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: kSubHeaderTextStyleInLeftPart,
+        ),
+        ListView.builder(
+            shrinkWrap: true,
+            itemCount: showList.length,
+            itemBuilder: (context, index) {
+              var item = showList[index];
+              ExamResultObject resultItem = resultList[index].result;
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ListTile(
+                    title: Row(
+                      children: [
+                        Text(
+                          'แผนกที่เลือกตรวจ: ',
+                          style: TextStyle(fontWeight: FontWeight.w700),
+                        ),
+                        Text(item.lab),
+                      ],
+                    ),
+                    leading: Icon(
+                      Icons.circle,
+                      size: 15,
+                    ),
+                  ),
+                  ListTile(
+                    title: Padding(
+                      padding: const EdgeInsets.only(left: 35),
+                      child: Row(
+                        children: [
+                          Text(
+                            'หัวข้อการตรวจ: ',
+                            style: TextStyle(fontWeight: FontWeight.w700),
+                          ),
+                          Text(item.type)
+                        ],
+                      ),
+                    ),
+                  ),
+                  item.area != null
+                      ? ListTile(
+                          title: Padding(
+                            padding: const EdgeInsets.only(left: 35),
+                            child: Row(
+                              children: [
+                                Text('ตัวอย่างการส่งตรวจ: ',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.w700)),
+                                Text(item.area!),
+                              ],
+                            ),
+                          ),
+                        )
+                      : SizedBox(),
+                  ListTile(
+                    title: Padding(
+                      padding: const EdgeInsets.only(left: 35),
+                      child: Row(
+                        children: [
+                          Text('ชื่อการส่งตรวจ: ',
+                              style: TextStyle(fontWeight: FontWeight.w700)),
+                          Text(item.name),
+                        ],
+                      ),
+                    ),
+                  ),
+                  resultItem.imgResult != null
+                      ? Padding(
+                          padding: const EdgeInsets.only(left: 35),
+                          child: Image.network(
+                            resultItem.imgResult!,
+                            width: 300,
+                            height: 200,
+                            fit: BoxFit.cover,
+                            alignment: Alignment.topLeft,
+                          ),
+                        )
+                      : SizedBox(),
+                ],
+              );
+            }),
+        SizedBox(height: 15),
+      ],
+    );
   }
 }

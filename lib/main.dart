@@ -5,23 +5,25 @@ import 'package:frontend/UIModels/teacher/examContainer_provider.dart';
 import 'package:frontend/UIModels/teacher/treatmentContainer_provider.dart';
 import 'package:frontend/UIModels/teacher/predefinedExam_provider.dart';
 import 'package:frontend/screensNisit/diagnosis.dart';
-import 'package:frontend/screensNisit/probListAns1.dart';
+import 'package:frontend/screensNisit/probListAns.dart';
 import 'package:frontend/screensNisit/treatmentTopic.dart';
 import 'package:frontend/screensNisit/treatmentTotal.dart';
 import 'package:frontend/screensTeacher/addQuesMenu.dart';
 import 'package:frontend/screensTeacher/addQuestion.dart';
 import 'package:frontend/screensTeacher/PredefinedScreens/editPredefinedListTopic.dart';
 import 'package:frontend/screensTeacher/showAndEditQuestion.dart';
-import 'screensNisit/showQuestionNisit.dart';
-import 'screensNisit/problemList1.dart';
+import 'package:frontend/screensGeneral/mainShowQuestion.dart';
+import 'package:frontend/screensNisit/problemList.dart';
 import 'package:provider/provider.dart';
 import 'package:frontend/screensTeacher/editQuestion.dart';
-import 'package:frontend/screensTeacher/PredefinedScreens/editPredefined_exams_topics.dart';
+import 'package:frontend/screensTeacher/PredefinedScreens/editPredefined_exam_detail.dart';
 import 'package:frontend/screensNisit/examScreens/exam_topics.dart';
 import 'package:frontend/UIModels/nisit/selectedExam_provider.dart';
-import 'package:frontend/screensTeacher/PredefinedScreens/editPredefined_exam2_topic.dart';
-
-import 'package:frontend/screensTeacher/todScreen.dart';
+import 'package:frontend/screensTeacher/PredefinedScreens/editPredefined_exam_topic.dart';
+import 'package:frontend/UIModels/nisit/selectedProblem_provider.dart';
+import 'package:frontend/UIModels/nisit/selectedDiagnosis_provider.dart';
+import 'package:frontend/screensNisit/returnPoint.dart';
+import 'package:frontend/tmpQuestion.dart';
 
 Future main() async {
   await dotenv.load(fileName: "assets/.env");
@@ -32,6 +34,8 @@ Future main() async {
       ChangeNotifierProvider(create: (_) => PreDefinedExamProvider()),
       ChangeNotifierProvider(create: (_) => SelectedTreatment()),
       ChangeNotifierProvider(create: (_) => SelectedExam()),
+      ChangeNotifierProvider(create: (_) => SelectedProblem()),
+      ChangeNotifierProvider(create: (_) => SelectedDiagnosis()),
     ],
     child: const MyApp(),
   ));
@@ -45,24 +49,33 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: lightTheme,
-      // initialRoute: '/Nisit/showQuestionNisit',
-      // initialRoute: '/Teacher/editPredefined',
-      initialRoute: '/Teacher/addQuesMenu',
-      ///////
-      // initialRoute: 'TOD',
+      // initialRoute: '/Nisit/treatmentTotal',
+      initialRoute: '/mainShowQuestionNisit',
+      // initialRoute: '/Teacher/editQuestion',
+      // initialRoute: '/Teacher/addQuesMenu',
+      // initialRoute: '/Nisit/ExamTopic',
       routes: {
-        'TOD': (context) => Tod(),
-        '/Nisit/showQuestionNisit': (context) => NisitShowQuestion(),
-        '/Nisit/probList1': (context) => ProbList(round: '1'),
-        '/Nisit/probListAns1': (context) => ProbListAns1(),
+        /////General/////
+        '/mainShowQuestionNisit': (context) => MainShowQuestion(
+              role: 0,
+            ),
+        '/mainShowQuestionTeacher': (context) => MainShowQuestion(
+              role: 1,
+            ),
+        /////Nisit/////
+        // '/Nisit/probList': (context) => ProbList(round: '1'),
+        // '/Nisit/probListAns': (context) => ProbListAns(round: '1'),
         // '/Nisit/ExamTopic': (context) => ExamTopic(round: '1'),
-        '/Nisit/diagnosis': (context) => Diagnosis(),
-        '/Nisit/treatment': (context) => TreatmentTopic(),
-        '/Nisit/treatmentTotal': (context) => TreatmentTotal(),
+        // '/Nisit/diagnosis': (context) => Diagnosis(),
+        // '/Nisit/treatmentTopic': (context) => TreatmentTopic(),
+        // '/Nisit/treatmentTotal': (context) =>
+        //     TreatmentTotal(questionObj: tmpQues),
+        // '/Nisit/returnPoint': (context) => ReturnPoint(),
+        /////Teacher/////
         '/Teacher/addQuestion': (context) => AddQuestion(),
         '/Teacher/editPredefined': (context) => EditPredefinedListTopic(),
-        '/Teacher/showAndEditQuestion': (context) => ShowAndEditQuestion(),
-        '/Teacher/editQuestion': (context) => EditQuestion(),
+        // '/Teacher/showAndEditQuestion': (context) => ShowAndEditQuestion(),
+        // '/Teacher/editQuestion': (context) => EditQuestion(),
         '/Teacher/addQuesMenu': (context) => AddQuesMenu(),
         'Teacher/editPreDefined/exams_topic': (context) =>
             EditPreDefinedExam2Topic(),

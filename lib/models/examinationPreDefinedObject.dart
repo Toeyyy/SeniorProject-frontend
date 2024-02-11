@@ -5,13 +5,16 @@ class ExamPreDefinedObject {
   String? area;
   String name;
   int cost;
+  int? round;
+
   ExamPreDefinedObject(
       {required this.id,
       required this.lab,
       required this.type,
-      required this.area,
+      this.area,
       required this.name,
-      required this.cost});
+      required this.cost,
+      this.round});
 
   factory ExamPreDefinedObject.fromJson(Map<String, dynamic> json) {
     return ExamPreDefinedObject(
@@ -20,6 +23,7 @@ class ExamPreDefinedObject {
         type: json['type'] ?? json['lab'],
         area: json['area'],
         name: json['name'] ?? "",
-        cost: json['cost'] ?? 0);
+        cost: json['cost'] ?? 0,
+        round: json['round'] as int?);
   }
 }

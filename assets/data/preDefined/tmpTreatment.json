@@ -1,0 +1,122 @@
+[
+  {
+    "id": "1",
+    "type": "Medical",
+    "name": "medical 1",
+    "cost": 100
+  },
+  {
+    "id": "2",
+    "type": "Medical",
+    "name": "medical 2",
+    "cost": 100
+  },
+  {
+    "id": "3",
+    "type": "Medical",
+    "name": "medical 3",
+    "cost": 100
+  },
+  {
+    "id": "4",
+    "type": "Medical",
+    "name": "medical 4",
+    "cost": 100
+  },
+  {
+    "id": "5",
+    "type": "Medical",
+    "name": "medical 5",
+    "cost": 100
+  },
+  {
+    "id": "6",
+    "type": "Surgical",
+    "name": "surgical 1",
+    "cost": 100
+  },
+  {
+    "id": "7",
+    "type": "Surgical",
+    "name": "surgical 2",
+    "cost": 100
+  },
+  {
+    "id": "8",
+    "type": "Surgical",
+    "name": "surgical 3",
+    "cost": 100
+  },
+  {
+    "id": "9",
+    "type": "Surgical",
+    "name": "surgical 4",
+    "cost": 100
+  },
+  {
+    "id": "10",
+    "type": "Surgical",
+    "name": "surgical 5",
+    "cost": 100
+  },
+  {
+    "id": "11",
+    "type": "Nutritional support",
+    "name": "nutrition 1",
+    "cost": 100
+  },
+  {
+    "id": "12",
+    "type": "Nutritional support",
+    "name": "nutrition 2",
+    "cost": 100
+  },
+  {
+    "id": "13",
+    "type": "Nutritional support",
+    "name": "nutrition 3",
+    "cost": 100
+  },
+  {
+    "id": "14",
+    "type": "Nutritional support",
+    "name": "nutrition 4",
+    "cost": 100
+  },
+  {
+    "id": "15",
+    "type": "Nutritional support",
+    "name": "nutrition 6",
+    "cost": 100
+  },
+  {
+    "id": "16",
+    "type": "Other",
+    "name": "other treatment 1",
+    "cost": 100
+  },
+  {
+    "id": "17",
+    "type": "Other",
+    "name": "other treatment 2",
+    "cost": 100
+  },
+  {
+    "id": "18",
+    "type": "Other",
+    "name": "other treatment 3",
+    "cost": 100
+  },
+  {
+    "id": "19",
+    "type": "Other",
+    "name": "other treatment 4",
+    "cost": 100
+  },
+  {
+    "id": "20",
+    "type": "Other",
+    "name": "other treatment 5",
+    "cost": 100
+  }
+]
