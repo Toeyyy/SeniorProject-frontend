@@ -24,6 +24,7 @@ import 'package:frontend/UIModels/nisit/selectedProblem_provider.dart';
 import 'package:frontend/UIModels/nisit/selectedDiagnosis_provider.dart';
 import 'package:frontend/screensNisit/returnPoint.dart';
 import 'package:frontend/tmpQuestion.dart';
+import 'package:frontend/screensNisit/showStats.dart';
 
 Future main() async {
   await dotenv.load(fileName: "assets/.env");
@@ -51,7 +52,7 @@ class MyApp extends StatelessWidget {
       theme: lightTheme,
       // initialRoute: '/Nisit/treatmentTotal',
       initialRoute: '/mainShowQuestionNisit',
-      // initialRoute: '/Teacher/editQuestion',
+      // initialRoute: '/Nisit/showStats',
       // initialRoute: '/Teacher/addQuesMenu',
       // initialRoute: '/Nisit/ExamTopic',
       routes: {
@@ -71,6 +72,7 @@ class MyApp extends StatelessWidget {
         // '/Nisit/treatmentTotal': (context) =>
         //     TreatmentTotal(questionObj: tmpQues),
         // '/Nisit/returnPoint': (context) => ReturnPoint(),
+        '/Nisit/showStats': (context) => ShowStatsForNisit(),
         /////Teacher/////
         '/Teacher/addQuestion': (context) => AddQuestion(),
         '/Teacher/editPredefined': (context) => EditPredefinedListTopic(),

@@ -17,9 +17,20 @@ class SelectedProblem extends ChangeNotifier {
     notifyListeners();
   }
 
-  void assignAnswer(List<ProblemObject> ans1, List<ProblemObject> ans2) {
-    problemAnsList1 = ans1;
-    problemAnsList2 = ans2;
+  // void assignAnswer(List<ProblemObject> ans1, List<ProblemObject> ans2) {
+  //   problemAnsList1 = ans1;
+  //   problemAnsList2 = ans2;
+  //   notifyListeners();
+  // }
+
+  void assignAnswer(List<ProblemObject> ans, int round) {
+    if (round == 1) {
+      problemAnsList1 = ans;
+      // print('assign success');
+      // print(problemAnsList1.map((e) => e.name));
+    } else {
+      problemAnsList2 = ans;
+    }
     notifyListeners();
   }
 

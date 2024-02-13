@@ -201,7 +201,8 @@ class _EditPredefinedExamNameState extends State<EditPredefinedExamName> {
                                           },
                                         ),
                                         IconButton(
-                                          icon: Icon(CupertinoIcons.delete),
+                                          icon:
+                                              const Icon(CupertinoIcons.delete),
                                           onPressed: () {
                                             setState(() {
                                               examProvider

@@ -13,6 +13,7 @@ import 'package:collection/collection.dart';
 import 'package:frontend/AllDataFile.dart';
 import 'package:frontend/UIModels/nisit/selectedExam_provider.dart';
 import 'package:frontend/components/BoxesInAddQ.dart';
+import 'package:frontend/aboutData/getDataFunctions.dart';
 
 class ProbList extends StatelessWidget {
   int round;
@@ -79,8 +80,11 @@ class _RightPart_ProbListState extends State<RightPart_ProbList> {
   bool _isListViewVisible = false;
   late SelectedProblem problemProvider;
   late int heart;
-  late Map<String, List<ProblemObject>> probAnsList =
-      groupBy(widget.questionObj.problems, (e) => e.round.toString());
+  // late Map<String, List<ProblemObject>> probAnsList =
+  //     groupBy(widget.questionObj.problems, (e) => e.round.toString());
+  late List<ProblemObject> probAnsList;
+  // late List<ProblemObject> probAnsList2;
+  bool isLoadingData = false;
 
   void updateList(List<ProblemObject> newList, int round) {
     _selectedList = newList;
@@ -92,12 +96,34 @@ class _RightPart_ProbListState extends State<RightPart_ProbList> {
     Future.delayed(Duration.zero, () {
       _fullList = problemListPreDefined;
       problemProvider = Provider.of<SelectedProblem>(context, listen: false);
-      problemProvider.assignAnswer(probAnsList['1']!, probAnsList['2']!);
+      getData();
+      // problemProvider.assignAnswer(probAnsList['1']!, probAnsList['2']!);
+    });
+  }
+
+  Future<void> getData() async {
+    setState(() {
+      isLoadingData = false;
+    });
+    List<ProblemObject> loadedData =
+        await fetchProblemAns(widget.questionObj.id, widget.round);
+    setState(() {
+      // print('loaded Data = ${loadedData.map((e) => e.name).toList()}');
+      probAnsList = loadedData;
+      problemProvider.assignAnswer(loadedData, widget.round);
+    });
+    // print('loaded Data = ${probAnsList.map((e) => e.name).toList()}');
+    // print('provider = ${problemProvider}');
+    // print('assign success');
+    setState(() {
+      isLoadingData = true;
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    SelectedProblem problemProvider = Provider.of<SelectedProblem>(context);
+
     void _showModal(BuildContext context) {
       showDialog(
           context: context,
@@ -155,122 +181,126 @@ class _RightPart_ProbListState extends State<RightPart_ProbList> {
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
-      child: Column(
-        children: [
-          Text(
-            'เลือก Problem List ครั้งที่ ${widget.round}',
-            style: kSubHeaderTextStyle,
-          ),
-          TextField(
-            controller: _searchController,
-            onChanged: (query) {
-              setState(() {
-                _isListViewVisible = true;
-                _displayList = filterProblemList(_searchController, _fullList);
-                _displayList.sort((a, b) => a.name.compareTo(b.name));
-              });
-              if (query.isEmpty) {
-                setState(() {
-                  _isListViewVisible = false;
-                });
-              }
-            },
-            decoration: InputDecoration(
-              labelText: 'Search',
-              suffixIcon: Icon(Icons.search),
-            ),
-          ),
-          Visibility(
-            visible: _isListViewVisible,
-            child: Expanded(
-              child: ListView.builder(
-                itemCount: _displayList.length,
-                itemBuilder: (context, index) {
-                  return Container(
-                    child: ListTile(
-                        tileColor: Color(0xFFE7F9FF),
-                        hoverColor: Color(0xFFA0E9FF),
-                        title: Text(_displayList[index].name),
-                        onTap: () {
-                          setState(() {
-                            _selectedList.add(_displayList[index]);
-                            _searchController.clear();
-                            // _fullList.remove(_displayList[index]);
-                            // _displayList = _fullList;
-                            _displayList.remove(_displayList[index]);
-                            _isListViewVisible = false;
-                          });
-                        }),
-                  );
-                },
-              ),
-            ),
-          ),
-          Visibility(
-            visible: !_isListViewVisible,
-            child: Expanded(
-              child: ListView.builder(
-                itemCount: _selectedList.length,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(_selectedList[index].name),
-                    trailing: IconButton(
-                      icon: Icon(Icons.remove),
-                      onPressed: () {
-                        setState(() {
-                          // _fullList.add(_selectedList[index]);
-                          _displayList.add(_selectedList[index]);
-                          _selectedList.remove(_selectedList[index]);
-                        });
+      child: isLoadingData
+          ? Column(
+              children: [
+                Text(
+                  'เลือก Problem List ครั้งที่ ${widget.round}',
+                  style: kSubHeaderTextStyle,
+                ),
+                TextField(
+                  controller: _searchController,
+                  onChanged: (query) {
+                    setState(() {
+                      _isListViewVisible = true;
+                      _displayList =
+                          filterProblemList(_searchController, _fullList);
+                      _displayList.sort((a, b) => a.name.compareTo(b.name));
+                    });
+                    if (query.isEmpty) {
+                      setState(() {
+                        _isListViewVisible = false;
+                      });
+                    }
+                  },
+                  decoration: InputDecoration(
+                    labelText: 'Search',
+                    suffixIcon: Icon(Icons.search),
+                  ),
+                ),
+                Visibility(
+                  visible: _isListViewVisible,
+                  child: Expanded(
+                    child: ListView.builder(
+                      itemCount: _displayList.length,
+                      itemBuilder: (context, index) {
+                        return Container(
+                          child: ListTile(
+                              tileColor: Color(0xFFE7F9FF),
+                              hoverColor: Color(0xFFA0E9FF),
+                              title: Text(_displayList[index].name),
+                              onTap: () {
+                                setState(() {
+                                  _selectedList.add(_displayList[index]);
+                                  _searchController.clear();
+                                  // _fullList.remove(_displayList[index]);
+                                  // _displayList = _fullList;
+                                  _displayList.remove(_displayList[index]);
+                                  _isListViewVisible = false;
+                                });
+                              }),
+                        );
                       },
                     ),
-                  );
-                },
-              ),
-            ),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              int heart = widget.round == 1
-                  ? problemProvider.heart1
-                  : problemProvider.heart2;
-              problemProvider.assignProblem(_selectedList, widget.round);
-              if (!problemProvider.checkProbAns(widget.round)) {
-                problemProvider.reduceHeart(widget.round);
-                if (heart > 1) {
-                  print('heart = $heart');
-                  _showModal(context);
-                } else {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ProbListAns(
-                        round: widget.round,
-                        questionObj: widget.questionObj,
-                      ),
-                    ),
-                  );
-                }
-              } else {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ProbListAns(
-                      round: widget.round,
-                      questionObj: widget.questionObj,
+                  ),
+                ),
+                Visibility(
+                  visible: !_isListViewVisible,
+                  child: Expanded(
+                    child: ListView.builder(
+                      itemCount: _selectedList.length,
+                      itemBuilder: (context, index) {
+                        return ListTile(
+                          title: Text(_selectedList[index].name),
+                          trailing: IconButton(
+                            icon: Icon(Icons.remove),
+                            onPressed: () {
+                              setState(() {
+                                // _fullList.add(_selectedList[index]);
+                                _displayList.add(_selectedList[index]);
+                                _selectedList.remove(_selectedList[index]);
+                              });
+                            },
+                          ),
+                        );
+                      },
                     ),
                   ),
-                );
-              }
-              // print(problemProvider.checkProbAns(widget.round));
-              // problemProvider.checkProbAns(widget.round);
-              // print(problemProvider.problemList1.map((e) => e.name).toList());
-              // print(problemProvider.problemAnsList1.map((e) => e.name).toList());
-            },
-            child: Text('ยืนยัน'),
-          ),
-        ],
-      ),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    int heart = widget.round == 1
+                        ? problemProvider.heart1
+                        : problemProvider.heart2;
+                    problemProvider.assignProblem(_selectedList, widget.round);
+                    if (!problemProvider.checkProbAns(widget.round)) {
+                      problemProvider.reduceHeart(widget.round);
+                      if (heart > 1) {
+                        // print('heart = $heart');
+                        _showModal(context);
+                      } else {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ProbListAns(
+                              round: widget.round,
+                              questionObj: widget.questionObj,
+                            ),
+                          ),
+                        );
+                      }
+                    } else {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ProbListAns(
+                            round: widget.round,
+                            questionObj: widget.questionObj,
+                          ),
+                        ),
+                      );
+                    }
+                    // print(problemProvider.checkProbAns(widget.round));
+                    // problemProvider.checkProbAns(widget.round);
+                    // print(problemProvider.problemList1.map((e) => e.name).toList());
+                    // print(problemProvider.problemAnsList1.map((e) => e.name).toList());
+                  },
+                  child: Text('ยืนยัน'),
+                ),
+              ],
+            )
+          : SizedBox(
+              width: 10, child: Center(child: CircularProgressIndicator())),
     );
   }
 }

@@ -8,6 +8,7 @@ import 'package:frontend/models/questionObject.dart';
 import 'package:frontend/components/tagSearchBox.dart';
 import 'package:frontend/models/tagObject.dart';
 import 'package:frontend/models/fullQuestionObject.dart';
+import 'package:frontend/components/functions.dart';
 import 'package:frontend/AllDataFile.dart';
 
 class MainShowQuestion extends StatefulWidget {
@@ -25,6 +26,8 @@ class _MainShowQuestionState extends State<MainShowQuestion> {
   List<FullQuestionObject> teacherQuestionObjList = [];
   List<FullQuestionObject> teacherDisplayList = [];
 
+  bool _isLoadData = false;
+
   @override
   void initState() {
     super.initState();
@@ -33,6 +36,9 @@ class _MainShowQuestionState extends State<MainShowQuestion> {
 
   Future getData() async {
     super.initState();
+    setState(() {
+      _isLoadData = true;
+    });
     if (widget.role == 0) {
       List<QuestionObject> loadedData = await fetchQuestionList();
       await fetchPreDefinedProb();
@@ -58,6 +64,9 @@ class _MainShowQuestionState extends State<MainShowQuestion> {
         teacherDisplayList = loadedData;
       });
     }
+    setState(() {
+      _isLoadData = false;
+    });
   }
 
   @override
@@ -66,6 +75,14 @@ class _MainShowQuestionState extends State<MainShowQuestion> {
 
     void updateTagList(List<TagObject> newList) {
       selectedTags = newList;
+      setState(() {
+        if (widget.role == 0) {
+          displayList = filterFromTagsNisit(questionObjList, selectedTags);
+        } else {
+          teacherDisplayList =
+              filterFromTagsTeacher(teacherQuestionObjList, selectedTags);
+        }
+      });
     }
 
     return Scaffold(
@@ -125,41 +142,43 @@ class _MainShowQuestionState extends State<MainShowQuestion> {
                   SizedBox(
                     height: 20,
                   ),
-                  widget.role == 0
-                      ? displayList.isNotEmpty
-                          ? GridView.builder(
-                              shrinkWrap: true,
-                              gridDelegate:
-                                  SliverGridDelegateWithFixedCrossAxisCount(
-                                      crossAxisCount: 2,
-                                      mainAxisSpacing: 8,
-                                      crossAxisSpacing: 8),
-                              itemCount: displayList.length,
-                              itemBuilder: (context, index) {
-                                return QuestionCard(
-                                  questionObj: displayList[index],
-                                  role: widget.role,
-                                );
-                              },
-                            )
-                          : Center(child: CircularProgressIndicator())
-                      : teacherDisplayList.isNotEmpty
-                          ? GridView.builder(
-                              shrinkWrap: true,
-                              gridDelegate:
-                                  SliverGridDelegateWithFixedCrossAxisCount(
-                                      crossAxisCount: 2,
-                                      mainAxisSpacing: 8,
-                                      crossAxisSpacing: 8),
-                              itemCount: teacherDisplayList.length,
-                              itemBuilder: (context, index) {
-                                return FullQuestionCard(
-                                  questionObj: teacherDisplayList[index],
-                                  role: widget.role,
-                                );
-                              },
-                            )
-                          : Center(child: CircularProgressIndicator())
+                  _isLoadData == false
+                      ? widget.role == 0
+                          ? displayList.isNotEmpty
+                              ? GridView.builder(
+                                  shrinkWrap: true,
+                                  gridDelegate:
+                                      SliverGridDelegateWithFixedCrossAxisCount(
+                                          crossAxisCount: 2,
+                                          mainAxisSpacing: 8,
+                                          crossAxisSpacing: 8),
+                                  itemCount: displayList.length,
+                                  itemBuilder: (context, index) {
+                                    return QuestionCard(
+                                      questionObj: displayList[index],
+                                      role: widget.role,
+                                    );
+                                  },
+                                )
+                              : SizedBox()
+                          : teacherDisplayList.isNotEmpty
+                              ? GridView.builder(
+                                  shrinkWrap: true,
+                                  gridDelegate:
+                                      SliverGridDelegateWithFixedCrossAxisCount(
+                                          crossAxisCount: 2,
+                                          mainAxisSpacing: 8,
+                                          crossAxisSpacing: 8),
+                                  itemCount: teacherDisplayList.length,
+                                  itemBuilder: (context, index) {
+                                    return FullQuestionCard(
+                                      questionObj: teacherDisplayList[index],
+                                      role: widget.role,
+                                    );
+                                  },
+                                )
+                              : SizedBox()
+                      : Center(child: CircularProgressIndicator()),
                 ],
               ),
             ),

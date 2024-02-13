@@ -21,3 +21,6 @@ const kVerticalDividerInAppBar = VerticalDivider(
   thickness: 3,
   color: Color(0xFFF5F5F5),
 );
+
+const kTableHeaderTextStyle =
+    TextStyle(fontWeight: FontWeight.w600, fontSize: 20);

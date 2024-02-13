@@ -5,6 +5,10 @@ import 'package:frontend/tmpQuestion.dart';
 import 'package:frontend/models/questionObject.dart';
 import 'package:frontend/screensNisit/problemList.dart';
 import 'package:frontend/screensTeacher/showAndEditQuestion.dart';
+import 'package:frontend/models/problemListObject.dart';
+import 'package:frontend/aboutData/getDataFunctions.dart';
+import 'package:provider/provider.dart';
+import 'package:frontend/UIModels/nisit/selectedProblem_provider.dart';
 
 class QuestionCard extends StatelessWidget {
   final QuestionObject questionObj;
@@ -20,7 +24,6 @@ class QuestionCard extends StatelessWidget {
             child: Container(
               padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
               width: MediaQuery.of(context).size.width * 0.5,
-              // height: MediaQuery.of(context).size.height * 0.5,
               decoration: BoxDecoration(
                 color: Color(0xFFBBF5FF),
                 borderRadius: BorderRadius.circular(10),

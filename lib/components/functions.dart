@@ -5,18 +5,12 @@ import 'package:frontend/models/problemListObject.dart';
 import 'package:frontend/models/diagnosisObject.dart';
 import 'package:collection/collection.dart';
 import 'package:frontend/AllDataFile.dart';
+import 'package:frontend/models/questionObject.dart';
+import 'package:frontend/models/fullQuestionObject.dart';
+import 'package:frontend/models/tagObject.dart';
 
 List<ProblemObject> filterProblemList(
     TextEditingController searchController, List<ProblemObject> listForSearch) {
-  // String query = searchController.text.toLowerCase();
-  // if (query == '') {
-  //   return listForSearch;
-  // } else {
-  //   return listForSearch
-  //       .where((item) => item.name.toLowerCase().startsWith(query))
-  //       .toList();
-  // }
-
   String query = searchController.text.toLowerCase();
   return listForSearch
       .where((item) => item.name.toLowerCase().startsWith(query))
@@ -75,4 +69,42 @@ List<dynamic> filterList(
   return listForSearch
       .where((item) => item.name.toLowerCase().startsWith(query))
       .toList();
+}
+
+/////filter in mainShowQuestion/////
+
+List<QuestionObject> filterFromTagsNisit(
+    List<QuestionObject> list, List<TagObject> tagList) {
+  List<QuestionObject> returnList = [];
+  for (QuestionObject item in list) {
+    bool isTagCorrect = true;
+    for (TagObject tag in tagList) {
+      for (var i in item.tags) {}
+      if (!item.tags.contains(tag)) {
+        isTagCorrect = false;
+      }
+    }
+    if (isTagCorrect) {
+      returnList.add(item);
+    }
+  }
+  return returnList;
+}
+
+List<FullQuestionObject> filterFromTagsTeacher(
+    List<FullQuestionObject> list, List<TagObject> tagList) {
+  List<FullQuestionObject> returnList = [];
+  for (FullQuestionObject item in list) {
+    bool isTagCorrect = true;
+    for (TagObject tag in tagList) {
+      for (var i in item.tags) {}
+      if (!item.tags.contains(tag)) {
+        isTagCorrect = false;
+      }
+    }
+    if (isTagCorrect) {
+      returnList.add(item);
+    }
+  }
+  return returnList;
 }

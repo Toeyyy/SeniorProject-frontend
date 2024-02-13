@@ -171,18 +171,18 @@ import 'models/examResultObject.dart';
 // ];
 
 List<String> Signalment_typeList = ["สุนัข", "แมว", "นก"];
-
-List<String> Signalment_dogBreedList = [
-  'American Bully',
-  'Golden Retriever',
-  'Chihuahua'
-];
-List<String> Signalment_catBreedList = [
-  'Ragdoll',
-  'American Shorthair',
-  'Bengal'
-];
-List<String> Signalment_birdBreedList = ['Lovebird', 'Canary', 'Parrot'];
+//
+// List<String> Signalment_dogBreedList = [
+//   'American Bully',
+//   'Golden Retriever',
+//   'Chihuahua'
+// ];
+// List<String> Signalment_catBreedList = [
+//   'Ragdoll',
+//   'American Shorthair',
+//   'Bengal'
+// ];
+// List<String> Signalment_birdBreedList = ['Lovebird', 'Canary', 'Parrot'];
 
 // List<DiagnosisObject> diagnosisList = [
 //   DiagnosisObject(id: '1', name: 'diag 1'),

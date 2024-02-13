@@ -302,11 +302,6 @@ class _EditQuestionState extends State<EditQuestion> {
           });
     }
 
-    void printSTH() {
-      print(examContainers1.first.selectedArea);
-      print(examContainers2.first.selectedArea);
-    }
-
     return Scaffold(
       appBar: AppbarTeacher(),
       body: SingleChildScrollView(

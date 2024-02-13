@@ -1,4 +1,3 @@
-import 'package:frontend/models/problemListObject.dart';
 import 'package:frontend/models/tagObject.dart';
 import 'package:frontend/models/signalmentObject.dart';
 
@@ -10,7 +9,6 @@ class QuestionObject {
   String generalInfo;
   List<TagObject> tags;
   SignalmentObject signalment;
-  List<ProblemObject> problems;
 
   QuestionObject(
       {required this.id,
@@ -19,8 +17,7 @@ class QuestionObject {
       required this.historyTakingInfo,
       required this.generalInfo,
       required this.tags,
-      required this.signalment,
-      required this.problems});
+      required this.signalment});
 
   factory QuestionObject.fromJson(Map<String, dynamic> json) {
     return QuestionObject(
@@ -34,10 +31,6 @@ class QuestionObject {
               .toList() ??
           [],
       signalment: SignalmentObject.fromJson(json['signalment']),
-      problems: (json['problems'] as List<dynamic>)
-              .map((probJson) => ProblemObject.fromJson(probJson))
-              .toList() ??
-          [],
     );
   }
 }
