@@ -118,16 +118,16 @@ Future<List<FullQuestionObject>> fetchFullQuestionList() async {
   }
 }
 
-Future<List<ExamResultObject>> fetchResult(String examID) async {
+Future<List<ExamResultObject>> fetchResult(String examID, String quesID) async {
   //real
-  // final String apiUrl = "${dotenv.env['API_PATH']}/question/";
+  // final String apiUrl = "${dotenv.env['API_PATH']}/question/$quesID/examinationresult";
   // List<Map<String, dynamic>> body = [
-  //   {"id": examID}
+  //   {"examinationId": examID}
   // ];
   // final headers = {"Content-Type": "application/json"};
   // try {
   //   final response =
-  //       await http.post(Uri.parse(apiUrl), headers: headers, body: body);
+  //       await http.post(Uri.parse(apiUrl), headers: headers, body: jsonEncode(body));
   //
   //   if (response.statusCode >= 200 && response.statusCode < 300) {
   //     List<dynamic> jsonList = jsonDecode(response.body);
@@ -186,6 +186,7 @@ Future<List<StatQuestionObject>> fetchStatQuestion(String quesId) async {
 
 Future<List<StatQuestionObject>> fetchStatForNisit() async {
   //real
+  //TODO แก้ link
   // final String apiUrl = "${dotenv.env['API_PATH']}/$quesId/stats";
   // final headers = {"Content-Type": "application/json"};
   // try {
@@ -216,9 +217,9 @@ Future<List<StatQuestionObject>> fetchStatForNisit() async {
 }
 
 /////get predefined/////
+
 Future<void> fetchPreDefinedProb() async {
   //real
-  //TODO แก้ link
   // final String apiUrl = "${dotenv.env['API_PATH']}";
   // final headers = {"Content-Type": "application/json"};
   // try {

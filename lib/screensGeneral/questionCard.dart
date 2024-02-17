@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/components/tagBox.dart';
 import 'package:frontend/constants.dart';
-import 'package:frontend/tmpQuestion.dart';
 import 'package:frontend/models/questionObject.dart';
 import 'package:frontend/screensNisit/problemList.dart';
 import 'package:frontend/screensTeacher/showAndEditQuestion.dart';
@@ -9,6 +8,9 @@ import 'package:frontend/models/problemListObject.dart';
 import 'package:frontend/aboutData/getDataFunctions.dart';
 import 'package:provider/provider.dart';
 import 'package:frontend/UIModels/nisit/selectedProblem_provider.dart';
+import 'package:frontend/UIModels/nisit/selectedDiagnosis_provider.dart';
+import 'package:frontend/UIModels/nisit/selectedExam_provider.dart';
+import 'package:frontend/UIModels/nisit/selectedTreatment_provider.dart';
 
 class QuestionCard extends StatelessWidget {
   final QuestionObject questionObj;
@@ -17,6 +19,11 @@ class QuestionCard extends StatelessWidget {
   QuestionCard({required this.questionObj, required this.role});
 
   void _showModal(BuildContext context) {
+    SelectedProblem problemProvider = Provider.of(context, listen: false);
+    SelectedDiagnosis diagProvider = Provider.of(context, listen: false);
+    SelectedExam examProvider = Provider.of(context, listen: false);
+    SelectedTreatment treatmentProvider = Provider.of(context, listen: false);
+
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -105,7 +112,11 @@ class QuestionCard extends StatelessWidget {
                     children: [
                       ElevatedButton(
                         onPressed: () {
-                          //go to problist page
+                          problemProvider.clearList();
+                          examProvider.clearList();
+                          treatmentProvider.clearList();
+                          diagProvider.clearList();
+                          //go to prob list page
                           Navigator.push(
                             context,
                             MaterialPageRoute(

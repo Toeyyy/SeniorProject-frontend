@@ -47,8 +47,12 @@ class AddQuesMenu extends StatelessWidget {
               ),
               ElevatedButton(
                 onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => AddQuestion()));
+                  fetchPreDefined().then((value) => {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => AddQuestion()))
+                      });
                 },
                 child: Text('กรอกโจทย์โดยตรง'),
                 style: ElevatedButton.styleFrom(
@@ -58,11 +62,13 @@ class AddQuesMenu extends StatelessWidget {
               ),
               ElevatedButton(
                 onPressed: () {
-                  fetchPreDefined();
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => EditPredefinedListTopic()));
+                  fetchPreDefined().then((value) => {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    EditPredefinedListTopic()))
+                      });
                 },
                 child: Text('แก้ไข Predefined List'),
                 style: ElevatedButton.styleFrom(

@@ -1,18 +1,14 @@
 import 'dart:convert';
 import 'package:collection/collection.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/components/appBar.dart';
 import 'package:frontend/constants.dart';
-import 'package:frontend/tmpQuestion.dart';
 import 'package:frontend/components/BoxesInAddQ.dart';
 import 'package:frontend/models/examinationPreDefinedObject.dart';
 import 'package:frontend/components/backButton.dart';
-import 'package:frontend/UIModels/teacher/predefinedExam_provider.dart';
-import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 import 'package:frontend/AllDataFile.dart';
-import 'package:frontend/screensTeacher/PredefinedScreens/editPredefined_exam_topic.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class EditPreDefinedExamAdd extends StatefulWidget {
   const EditPreDefinedExamAdd({super.key});
@@ -27,15 +23,15 @@ class _EditPreDefinedExamAddState extends State<EditPreDefinedExamAdd> {
   TextEditingController areaTextController = TextEditingController();
   TextEditingController nameTextController = TextEditingController();
   TextEditingController costTextController = TextEditingController();
+  TextEditingController defaultTextController = TextEditingController();
   final RegExp _formatCost = RegExp(r'^[0-9]+$');
-  final String apiUrl = "localhost:7197/api";
   bool _isFormatCorrect = false;
+  List<ExamPreDefinedObject> addedList = [];
+  List<ExamPreDefinedObject> fullList = examListPreDefined;
 
   /////lab/////
-  // Map<String, List<ExamPreDefinedObject>> groupedByLab =
-  //     groupBy(preDefinedExamAll, (e) => e.lab);
-  Map<String, List<ExamPreDefinedObject>> groupedByLab =
-      groupBy(examListPreDefined, (e) => e.lab);
+  late Map<String, List<ExamPreDefinedObject>> groupedByLab =
+      groupBy(fullList, (e) => e.lab);
   late List<String> labNameList = groupedByLab.keys.toList();
   late List<String> labDisplayList = filterList(labTextController, labNameList);
 
@@ -48,10 +44,8 @@ class _EditPreDefinedExamAddState extends State<EditPreDefinedExamAdd> {
       filterList(typeTextController, typeNameList);
 
   /////area/////
-  // Map<String, List<ExamPreDefinedObject>> groupedByArea = groupBy(
-  //     preDefinedExamAll.where((item) => item.area != null), (e) => e.area!);
-  Map<String, List<ExamPreDefinedObject>> groupedByArea = groupBy(
-      examListPreDefined.where((item) => item.area != null), (e) => e.area!);
+  late Map<String, List<ExamPreDefinedObject>> groupedByArea =
+      groupBy(fullList.where((item) => item.area != null), (e) => e.area!);
   late List<String> areaNameList = groupedByArea.keys.toList();
   late List<String> areaDisplayList =
       filterList(areaTextController, areaNameList);
@@ -60,6 +54,8 @@ class _EditPreDefinedExamAddState extends State<EditPreDefinedExamAdd> {
   late List<ExamPreDefinedObject> selectedTypeList = groupedByType.values.first;
   late List<String> nameList = selectedTypeList.map((e) => e.name).toList();
   late List<String> nameDisplayList = filterList(nameTextController, nameList);
+
+  bool _canSave = true;
 
   List<String> filterList(
       TextEditingController searchController, List<String> listForSearch) {
@@ -71,18 +67,39 @@ class _EditPreDefinedExamAddState extends State<EditPreDefinedExamAdd> {
 
   /////post/////
   Future<void> _postAddData() async {
-    var data = {
-      "lab": labTextController.text,
-      "type": typeTextController.text,
-      "area": areaTextController.text,
-      "name": nameTextController.text,
-      "cost": int.parse(costTextController.text),
-    };
-    final http.Response response = await http.post(
-      Uri.parse("$apiUrl/exam/add"),
-      headers: {"Content-Type": "application/json"},
-      body: jsonEncode(data),
-    );
+    try {
+      var data = addedList.map((item) {
+        return {
+          "lab": labTextController.text,
+          "type": typeTextController.text,
+          "area":
+              areaTextController.text == '' ? null : areaTextController.text,
+          "name": nameTextController.text,
+          "textDefault": defaultTextController.text,
+          "cost": int.parse(costTextController.text)
+        };
+      }).toList();
+      final http.Response response = await http.post(
+        Uri.parse("${dotenv.env['API_PATH']}/exam/add"),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode(data),
+      );
+      if ((response.statusCode >= 200 && response.statusCode < 300)) {
+        print("Posting complete");
+      } else {
+        print("Error: ${response.statusCode} - ${response.body}");
+      }
+    } catch (error) {
+      print('Error: $error');
+    }
+  }
+
+  bool _checkEmpty() {
+    return labTextController.text == '' &&
+        typeTextController.text == '' &&
+        nameTextController.text == '' &&
+        costTextController.text == '' &&
+        defaultTextController.text == '';
   }
 
   @override
@@ -106,7 +123,25 @@ class _EditPreDefinedExamAddState extends State<EditPreDefinedExamAdd> {
                   ),
                   DividerWithSpace(),
                   /////lab/////
-                  Text('แผนกการตรวจ', style: kSubHeaderTextStyle),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text('แผนกการตรวจ', style: kSubHeaderTextStyle),
+                      ElevatedButton(
+                          onPressed: () {
+                            labTextController.clear();
+                            typeTextController.clear();
+                            areaTextController.clear();
+                            defaultTextController.clear();
+                            nameTextController.clear();
+                            defaultTextController.clear();
+                            setState(() {
+                              _canSave = true;
+                            });
+                          },
+                          child: Text('Clear All')),
+                    ],
+                  ),
                   const SizedBox(height: 20),
                   TextField(
                     controller: labTextController,
@@ -115,9 +150,10 @@ class _EditPreDefinedExamAddState extends State<EditPreDefinedExamAdd> {
                       setState(() {
                         labDisplayList =
                             filterList(labTextController, labNameList);
+                        _canSave = _checkEmpty();
                       });
                     },
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       contentPadding: EdgeInsets.all(8),
                       border: OutlineInputBorder(),
                       hintText: "ชื่อแผนกการตรวจ เช่น อัลตราซาวด์",
@@ -158,6 +194,7 @@ class _EditPreDefinedExamAddState extends State<EditPreDefinedExamAdd> {
                                     .toList();
                                 nameDisplayList =
                                     filterList(nameTextController, nameList);
+                                _canSave = _checkEmpty();
                               });
                             },
                           ),
@@ -176,9 +213,10 @@ class _EditPreDefinedExamAddState extends State<EditPreDefinedExamAdd> {
                       setState(() {
                         typeDisplayList =
                             filterList(typeTextController, typeNameList);
+                        _canSave = _checkEmpty();
                       });
                     },
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       contentPadding: EdgeInsets.all(8),
                       border: OutlineInputBorder(),
                       hintText: "หัวข้อการตรวจ",
@@ -214,6 +252,7 @@ class _EditPreDefinedExamAddState extends State<EditPreDefinedExamAdd> {
                                     .toList();
                                 nameDisplayList =
                                     filterList(nameTextController, nameList);
+                                _canSave = _checkEmpty();
                               });
                             },
                           ),
@@ -235,7 +274,7 @@ class _EditPreDefinedExamAddState extends State<EditPreDefinedExamAdd> {
                             filterList(areaTextController, areaNameList);
                       });
                     },
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       contentPadding: EdgeInsets.all(8),
                       border: OutlineInputBorder(),
                       hintText: "ตัวอย่างที่ใช้ในการส่งตรวจ เช่น Nasal Swab",
@@ -261,6 +300,7 @@ class _EditPreDefinedExamAddState extends State<EditPreDefinedExamAdd> {
                               setState(() {
                                 areaTextController.text =
                                     areaDisplayList[index];
+                                _canSave = _checkEmpty();
                               });
                             },
                           ),
@@ -279,9 +319,10 @@ class _EditPreDefinedExamAddState extends State<EditPreDefinedExamAdd> {
                       setState(() {
                         nameDisplayList =
                             filterList(nameTextController, nameList);
+                        _canSave = _checkEmpty();
                       });
                     },
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       contentPadding: EdgeInsets.all(8),
                       border: OutlineInputBorder(),
                       hintText: "ชื่อการตรวจ",
@@ -307,6 +348,7 @@ class _EditPreDefinedExamAddState extends State<EditPreDefinedExamAdd> {
                               setState(() {
                                 nameTextController.text =
                                     nameDisplayList[index];
+                                _canSave = _checkEmpty();
                               });
                             },
                           ),
@@ -325,6 +367,7 @@ class _EditPreDefinedExamAddState extends State<EditPreDefinedExamAdd> {
                       setState(() {
                         _isFormatCorrect =
                             value == '' ? false : _formatCost.hasMatch(value);
+                        _canSave = _checkEmpty();
                       });
                     },
                     decoration: InputDecoration(
@@ -336,33 +379,85 @@ class _EditPreDefinedExamAddState extends State<EditPreDefinedExamAdd> {
                     ),
                   ),
                   DividerWithSpace(),
-                  ////////
+                  ////default////
+                  Text('ค่าผลตรวจ Default', style: kSubHeaderTextStyle),
+                  const SizedBox(height: 20),
+                  TextField(
+                    controller: defaultTextController,
+                    textAlignVertical: TextAlignVertical.center,
+                    onChanged: (value) {
+                      setState(() {
+                        _canSave = _checkEmpty();
+                      });
+                    },
+                    decoration: const InputDecoration(
+                      contentPadding: EdgeInsets.all(8),
+                      border: OutlineInputBorder(),
+                      hintText: "ค่าผลตรวจ Default",
+                    ),
+                  ),
+                  const DividerWithSpace(),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       MyBackButton(myContext: context),
-                      ElevatedButton(
-                        onPressed: () {
-                          if (_isFormatCorrect &&
-                              nameTextController.text != '' &&
-                              typeTextController.text != '' &&
-                              labTextController.text != '') {
-                            ExamPreDefinedObject newItem = ExamPreDefinedObject(
-                              id: 'X',
-                              lab: labTextController.text,
-                              type: typeTextController.text,
-                              area: areaTextController.text,
-                              name: nameTextController.text,
-                              cost: int.parse(costTextController.text),
-                            );
-                            // preDefinedExamAll.add(newItem);
-                            examListPreDefined.add(newItem);
-                            _postAddData();
-                            Navigator.pop(context);
-                          }
-                        },
-                        child: Text('บันทึก'),
-                      ),
+                      !_canSave
+                          ? ElevatedButton(
+                              onPressed: () {
+                                if (_isFormatCorrect &&
+                                    nameTextController.text != '' &&
+                                    typeTextController.text != '' &&
+                                    labTextController.text != '' &&
+                                    defaultTextController.text != '' &&
+                                    costTextController.text != '') {
+                                  ExamPreDefinedObject newItem =
+                                      ExamPreDefinedObject(
+                                    id: 'X',
+                                    lab: labTextController.text,
+                                    type: typeTextController.text,
+                                    area: areaTextController.text,
+                                    name: nameTextController.text,
+                                    defaultText: defaultTextController.text,
+                                    cost: int.parse(costTextController.text),
+                                  );
+                                  setState(() {
+                                    fullList.add(newItem);
+                                    groupedByLab =
+                                        groupBy(fullList, (e) => e.lab);
+                                    labNameList = groupedByLab.keys.toList();
+                                    selectedLabList = groupedByLab.values.first;
+                                    groupedByType =
+                                        groupBy(selectedLabList, (e) => e.type);
+                                    typeNameList = groupedByType.keys.toList();
+                                    groupedByArea = groupBy(
+                                        fullList
+                                            .where((item) => item.area != null),
+                                        (e) => e.area!);
+                                    areaNameList = groupedByArea.keys.toList();
+                                    selectedTypeList =
+                                        groupedByType.values.first;
+                                    nameList = selectedTypeList
+                                        .map((e) => e.name)
+                                        .toList();
+                                    _canSave = true;
+                                  });
+                                  addedList.add(newItem);
+                                  labTextController.clear();
+                                  typeTextController.clear();
+                                  areaTextController.clear();
+                                  nameTextController.clear();
+                                  defaultTextController.clear();
+                                  costTextController.clear();
+                                }
+                              },
+                              child: const Text('เพิ่ม'),
+                            )
+                          : ElevatedButton(
+                              onPressed: () async {
+                                await _postAddData()
+                                    .then((value) => Navigator.pop(context));
+                              },
+                              child: Text('บันทึก')),
                     ],
                   ),
                 ],

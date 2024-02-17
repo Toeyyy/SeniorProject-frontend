@@ -5,8 +5,6 @@ import 'package:frontend/components/BoxesInAddQ.dart';
 import 'package:frontend/constants.dart';
 import 'package:frontend/UIModels/teacher/examContainer_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:frontend/tmpQuestion.dart';
-import 'package:frontend/components/functions.dart';
 import 'package:frontend/models/examinationPreDefinedObject.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';

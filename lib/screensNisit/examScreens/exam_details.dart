@@ -137,26 +137,63 @@ class _ExamDetail_NameState extends State<ExamDetail_Name> {
   late ExamPreDefinedObject? selectedItem =
       areaList.isEmpty ? null : areaList.first;
 
-  late ExamResultObject result;
+  late ExamResultObject? result;
 
-  bool _isAreaVisible = false;
+  bool isLoadingData = false;
 
   Future getData(String examID) async {
-    List<ExamResultObject> loadedData = await fetchResult(examID);
-
+    setState(() {
+      isLoadingData = true;
+    });
+    List<ExamResultObject> loadedData =
+        await fetchResult(examID, widget.questionObj.id);
     setState(() {
       result = loadedData.first;
+      isLoadingData = false;
     });
   }
 
   @override
   Widget build(BuildContext context) {
     SelectedExam examProvider = Provider.of<SelectedExam>(context);
+    SelectedProblem problemProvider =
+        Provider.of<SelectedProblem>(context, listen: false);
 
     return Scaffold(
       appBar: AppbarNisit(),
       body: SplitScreenNisit(
-        leftPart: LeftPartContent(questionObj: widget.questionObj),
+        leftPart: widget.round == 1
+            ? LeftPartContent(
+                questionObj: widget.questionObj,
+                addedContent: TitleAndDottedListView(
+                  title: 'Problem List ครั้งที่ 1',
+                  showList: problemProvider.problemAnsList1
+                      .map((e) => e.name)
+                      .toList(),
+                ),
+              )
+            : LeftPartContent(
+                questionObj: widget.questionObj,
+                addedContent: Column(
+                  children: [
+                    TitleAndDottedListView(
+                        title: 'Problem List ครั้งที่ 1',
+                        showList: problemProvider.problemAnsList1
+                            .map((e) => e.name)
+                            .toList()),
+                    TitleAndExams(
+                      title: 'Examination ครั้งที่ 1',
+                      showList: examProvider.examList1,
+                      resultList: examProvider.resultList1,
+                    ),
+                    TitleAndDottedListView(
+                        title: 'Problem List ครั้งที่ 2',
+                        showList: problemProvider.problemAnsList2
+                            .map((e) => e.name)
+                            .toList()),
+                  ],
+                ),
+              ),
         rightPart: Padding(
           padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
           child: Column(
@@ -193,11 +230,6 @@ class _ExamDetail_NameState extends State<ExamDetail_Name> {
                           areaList = groupedByName[selectedName]!;
                           selectedItem =
                               areaList.isEmpty ? null : areaList.first;
-                          if (areaList.length == 1) {
-                            _isAreaVisible = false;
-                          } else {
-                            _isAreaVisible = true;
-                          }
                           // print('areaList = $areaList');
                           // print('selectedItem = $selectedItem');
                         });
@@ -248,19 +280,21 @@ class _ExamDetail_NameState extends State<ExamDetail_Name> {
                       MyBackButton(myContext: context),
                       ElevatedButton(
                         onPressed: () async {
+                          // BuildContext currentContext = context;
                           examProvider.addNewExam(selectedItem!, widget.round);
-                          await getData(selectedItem!.id);
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ExamResult(
-                                selectedExam: selectedItem!,
-                                round: widget.round,
-                                questionObj: widget.questionObj,
-                                result: result,
+                          await getData(selectedItem!.id).then((value) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ExamResult(
+                                  selectedExam: selectedItem!,
+                                  round: widget.round,
+                                  questionObj: widget.questionObj,
+                                  result: result!,
+                                ),
                               ),
-                            ),
-                          );
+                            );
+                          });
                         },
                         child: Text('ยืนยัน'),
                       ),

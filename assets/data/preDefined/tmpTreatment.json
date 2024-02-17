@@ -2,32 +2,32 @@
   {
     "id": "1",
     "type": "Medical",
-    "name": "medical 1",
+    "name": "medical A 15",
     "cost": 100
   },
   {
     "id": "2",
     "type": "Medical",
-    "name": "medical 2",
-    "cost": 100
+    "name": "medical A 11",
+    "cost": 200
   },
   {
     "id": "3",
     "type": "Medical",
-    "name": "medical 3",
-    "cost": 100
+    "name": "medical B 13",
+    "cost": 300
   },
   {
     "id": "4",
     "type": "Medical",
-    "name": "medical 4",
-    "cost": 100
+    "name": "medical B 12",
+    "cost": 400
   },
   {
     "id": "5",
     "type": "Medical",
-    "name": "medical 5",
-    "cost": 100
+    "name": "medical B 14",
+    "cost": 500
   },
   {
     "id": "6",

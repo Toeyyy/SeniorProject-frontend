@@ -19,11 +19,10 @@ import 'package:frontend/screensTeacher/editQuestion.dart';
 import 'package:frontend/screensTeacher/PredefinedScreens/editPredefined_exam_detail.dart';
 import 'package:frontend/screensNisit/examScreens/exam_topics.dart';
 import 'package:frontend/UIModels/nisit/selectedExam_provider.dart';
-import 'package:frontend/screensTeacher/PredefinedScreens/editPredefined_exam_topic.dart';
+import 'package:frontend/screensTeacher/PredefinedScreens/editPredefined_exam_choice.dart';
 import 'package:frontend/UIModels/nisit/selectedProblem_provider.dart';
 import 'package:frontend/UIModels/nisit/selectedDiagnosis_provider.dart';
 import 'package:frontend/screensNisit/returnPoint.dart';
-import 'package:frontend/tmpQuestion.dart';
 import 'package:frontend/screensNisit/showStats.dart';
 
 Future main() async {
@@ -51,9 +50,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       theme: lightTheme,
       // initialRoute: '/Nisit/treatmentTotal',
-      initialRoute: '/mainShowQuestionNisit',
+      // initialRoute: '/mainShowQuestionNisit',
+      // initialRoute: '/mainShowQuestionTeacher',
       // initialRoute: '/Nisit/showStats',
-      // initialRoute: '/Teacher/addQuesMenu',
+      initialRoute: '/Teacher/addQuesMenu',
       // initialRoute: '/Nisit/ExamTopic',
       routes: {
         /////General/////
@@ -80,7 +80,7 @@ class MyApp extends StatelessWidget {
         // '/Teacher/editQuestion': (context) => EditQuestion(),
         '/Teacher/addQuesMenu': (context) => AddQuesMenu(),
         'Teacher/editPreDefined/exams_topic': (context) =>
-            EditPreDefinedExam2Topic(),
+            EditPreDefinedExamChoice(),
       },
     );
   }

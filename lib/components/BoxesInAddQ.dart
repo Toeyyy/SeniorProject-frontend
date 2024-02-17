@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/constants.dart';
 import 'package:frontend/UIModels/teacher/examContainer_provider.dart';
-import 'package:frontend/tmpQuestion.dart';
 import 'package:multi_dropdown/multiselect_dropdown.dart';
 import 'package:frontend/components/examContainer.dart';
 import 'package:frontend/models/problemListObject.dart';

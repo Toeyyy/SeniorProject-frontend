@@ -1,6 +1,6 @@
 class TagObject {
   final String id;
-  final String name;
+  String name;
 
   TagObject({required this.id, required this.name});
 

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
-import 'package:frontend/tmpQuestion.dart';
 import 'package:frontend/models/tagObject.dart';
 import 'package:multi_dropdown/multiselect_dropdown.dart';
 import 'package:frontend/AllDataFile.dart';

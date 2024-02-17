@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/components/appBar.dart';
 import 'package:frontend/constants.dart';
-import 'package:frontend/tmpQuestion.dart';
 import 'package:frontend/components/splitScreenNisit.dart';
 import 'package:frontend/components/functions.dart';
 import 'package:frontend/models/problemListObject.dart';
@@ -9,7 +8,6 @@ import 'package:frontend/UIModels/nisit/selectedProblem_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:frontend/screensNisit/probListAns.dart';
 import 'package:frontend/models/questionObject.dart';
-import 'package:collection/collection.dart';
 import 'package:frontend/AllDataFile.dart';
 import 'package:frontend/UIModels/nisit/selectedExam_provider.dart';
 import 'package:frontend/components/BoxesInAddQ.dart';
@@ -124,7 +122,7 @@ class _RightPart_ProbListState extends State<RightPart_ProbList> {
   Widget build(BuildContext context) {
     SelectedProblem problemProvider = Provider.of<SelectedProblem>(context);
 
-    void _showModal(BuildContext context) {
+    void showModal(BuildContext context) {
       showDialog(
           context: context,
           builder: (context) {
@@ -267,7 +265,7 @@ class _RightPart_ProbListState extends State<RightPart_ProbList> {
                       problemProvider.reduceHeart(widget.round);
                       if (heart > 1) {
                         // print('heart = $heart');
-                        _showModal(context);
+                        showModal(context);
                       } else {
                         Navigator.push(
                           context,

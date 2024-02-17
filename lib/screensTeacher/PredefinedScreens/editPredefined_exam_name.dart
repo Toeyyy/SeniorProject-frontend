@@ -4,7 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/components/appBar.dart';
 import 'package:frontend/constants.dart';
-import 'package:frontend/tmpQuestion.dart';
 import 'package:frontend/models/examinationPreDefinedObject.dart';
 import 'package:frontend/components/backButton.dart';
 import 'package:frontend/UIModels/teacher/predefinedExam_provider.dart';
@@ -26,34 +25,38 @@ class _EditPredefinedExamNameState extends State<EditPredefinedExamName> {
   TextEditingController nameTextFieldController = TextEditingController();
   TextEditingController areaTextFieldController = TextEditingController();
   TextEditingController costTextFieldController = TextEditingController();
+  TextEditingController defaultTextFieldController = TextEditingController();
   int selectedTileIndex = -1;
   bool _isEditing = false;
   bool _isOtherPartVisible = false;
-  ExamPreDefinedObject? oldItem;
   ExamPreDefinedObject? selectedItem;
-  String selectedId = '';
-  // final String apiUrl = "localhost:7197/api";
-  final RegExp _formatName = RegExp(r'^\s*[\p{L}0-9\s]+$', unicode: true);
   final RegExp _formatCost = RegExp(r'^[0-9]+$');
-  bool _isFormatNameCorrect = true;
   bool _isFormatCostCorrect = true;
+  List<ExamPreDefinedObject> editedList = [];
+  List<ExamPreDefinedObject> deletedList = [];
 
-  // List<String> areaList = groupBy(
-  //         preDefinedExamAll.where((item) => item.area != null), (e) => e.area!)
-  //     .keys
-  //     .toList();
   List<String> areaList = groupBy(
           examListPreDefined.where((item) => item.area != null), (e) => e.area!)
       .keys
       .toList();
 
+  bool _checkNotEmpty() {
+    return nameTextFieldController.text != '' &&
+        costTextFieldController.text != '' &&
+        defaultTextFieldController.text != '';
+  }
+
   List<ExamPreDefinedObject> nameFilterList(
       TextEditingController searchController,
       List<ExamPreDefinedObject> listForSearch) {
-    String query = searchController.text.toLowerCase();
-    return listForSearch
-        .where((item) => item.name.toLowerCase().startsWith(query))
-        .toList();
+    if (selectedTileIndex == -1) {
+      String query = searchController.text.toLowerCase();
+      return listForSearch
+          .where((item) => item.name.toLowerCase().startsWith(query))
+          .toList();
+    } else {
+      return listForSearch;
+    }
   }
 
   List<String> areaFilterList(
@@ -66,25 +69,52 @@ class _EditPredefinedExamNameState extends State<EditPredefinedExamName> {
 
   //////post///////
 
-  Future<void> _postDeleteData(String id) async {
-    final http.Response response = await http.post(
-      Uri.parse("${dotenv.env['API_PATH']}/exam/delete/$id"),
-      headers: {"Content-Type": "application/json"},
-    );
+  Future<void> _postDeleteData() async {
+    try {
+      var data = deletedList.map((item) {
+        return {"id": item.id};
+      }).toList();
+      final http.Response response = await http.post(
+        Uri.parse("${dotenv.env['API_PATH']}/exam/delete"),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode(data),
+      );
+      if ((response.statusCode >= 200 && response.statusCode < 300)) {
+        print("Posting complete");
+      } else {
+        print("Error: ${response.statusCode} - ${response.body}");
+      }
+    } catch (error) {
+      print('Error: $error');
+    }
   }
 
-  Future<void> _postUpdateData(
-      String id, String newName, String newArea, int newCost) async {
-    var data = {
-      "name": newName,
-      "area": newArea == '' ? null : newArea,
-      "cost": newCost,
-    };
-    final http.Response response = await http.post(
-      Uri.parse("${dotenv.env['API_PATH']}/exam/update/$id"),
-      headers: {"Content-Type": "application/json"},
-      body: jsonEncode(data),
-    );
+  Future<void> _postUpdateData() async {
+    try {
+      var data = editedList.map((item) {
+        return {
+          "id": item.id,
+          "lab": item.lab,
+          "type": item.type,
+          "area": item.area,
+          "name": item.name,
+          "textDefault": item.defaultText,
+          "cost": item.cost
+        };
+      });
+      final http.Response response = await http.post(
+        Uri.parse("${dotenv.env['API_PATH']}/exam/update"),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode(data),
+      );
+      if ((response.statusCode >= 200 && response.statusCode < 300)) {
+        print("Posting complete");
+      } else {
+        print("Error: ${response.statusCode} - ${response.body}");
+      }
+    } catch (error) {
+      print('Error: $error');
+    }
   }
 
   /////
@@ -93,14 +123,13 @@ class _EditPredefinedExamNameState extends State<EditPredefinedExamName> {
   Widget build(BuildContext context) {
     PreDefinedExamProvider examProvider =
         Provider.of<PreDefinedExamProvider>(context);
+    examProvider.assignItem(examListPreDefined);
     List<ExamPreDefinedObject> groupedExam =
         examProvider.getGroupByType(widget.selectedType);
     List<ExamPreDefinedObject> nameDisplayList =
         nameFilterList(nameTextFieldController, groupedExam);
-    // List<ExamPreDefinedObject> nameDisplayList = groupedExam;
     List<String> areaDisplayList =
         areaFilterList(areaTextFieldController, areaList);
-    // List<String> areaDisplayList = areaList;
 
     return Scaffold(
       appBar: AppbarTeacher(),
@@ -127,7 +156,6 @@ class _EditPredefinedExamNameState extends State<EditPredefinedExamName> {
                     textAlignVertical: TextAlignVertical.center,
                     onChanged: (value) {
                       setState(() {
-                        _isFormatNameCorrect = _formatName.hasMatch(value);
                         nameDisplayList = nameFilterList(
                             nameTextFieldController, groupedExam);
                       });
@@ -136,41 +164,12 @@ class _EditPredefinedExamNameState extends State<EditPredefinedExamName> {
                       isDense: true,
                       border: OutlineInputBorder(),
                       hintText: "Exam name",
-                      errorText:
-                          _isFormatNameCorrect ? null : "Please fill text box",
-                      suffixIcon: _isEditing
-                          ? IconButton(
-                              icon: Icon(Icons.save),
-                              onPressed: () {
-                                setState(() {
-                                  if (_isFormatNameCorrect == true &&
-                                      _isFormatCostCorrect == true) {
-                                    examProvider.updateItem(
-                                        selectedId,
-                                        nameTextFieldController.text,
-                                        areaTextFieldController.text,
-                                        int.parse(costTextFieldController.text),
-                                        selectedItem!.lab);
-                                    _postUpdateData(
-                                        selectedId,
-                                        nameTextFieldController.text,
-                                        areaTextFieldController.text,
-                                        int.parse(
-                                            costTextFieldController.text));
-                                    _isEditing = false;
-                                  } else {
-                                    null;
-                                  }
-                                });
-                              },
-                            )
-                          : null,
                     ),
                   ),
                   Card(
-                    color: Color(0xFFF2F5F7),
+                    color: const Color(0xFFF2F5F7),
                     elevation: 0,
-                    margin: EdgeInsets.symmetric(horizontal: 15),
+                    margin: const EdgeInsets.symmetric(horizontal: 15),
                     child: ListView.builder(
                         shrinkWrap: true,
                         itemCount: nameDisplayList.length,
@@ -178,13 +177,13 @@ class _EditPredefinedExamNameState extends State<EditPredefinedExamName> {
                           return Container(
                             decoration: BoxDecoration(
                               border: Border.all(
-                                  color: Color(0xFFB5C1BE), width: 1.0),
+                                  color: const Color(0xFFB5C1BE), width: 1.0),
                             ),
                             child: ListTile(
                               tileColor: selectedTileIndex == index
-                                  ? Color(0xFFA0E9FF)
-                                  : Color(0xFFE7F9FF),
-                              hoverColor: Color(0xFFA0E9FF),
+                                  ? const Color(0xFFA0E9FF)
+                                  : const Color(0xFFE7F9FF),
+                              hoverColor: const Color(0xFFA0E9FF),
                               trailing: index == selectedTileIndex
                                   ? Row(
                                       mainAxisAlignment: MainAxisAlignment.end,
@@ -193,9 +192,15 @@ class _EditPredefinedExamNameState extends State<EditPredefinedExamName> {
                                         IconButton(
                                           icon: Icon(CupertinoIcons.pencil),
                                           onPressed: () {
-                                            nameTextFieldController.text =
-                                                nameDisplayList[index].name;
                                             setState(() {
+                                              nameTextFieldController.text =
+                                                  nameDisplayList[index].name;
+                                              nameDisplayList = nameFilterList(
+                                                  nameTextFieldController,
+                                                  groupedExam);
+                                              selectedTileIndex =
+                                                  nameDisplayList
+                                                      .indexOf(selectedItem!);
                                               _isEditing = true;
                                             });
                                           },
@@ -207,38 +212,45 @@ class _EditPredefinedExamNameState extends State<EditPredefinedExamName> {
                                             setState(() {
                                               examProvider
                                                   .deleteItem(selectedItem!);
+                                              deletedList.add(selectedItem!);
                                               groupedExam.remove(selectedItem);
-                                              _postDeleteData(selectedId);
+                                              nameDisplayList = groupedExam;
+                                              nameTextFieldController.clear();
+                                              costTextFieldController.clear();
+                                              defaultTextFieldController
+                                                  .clear();
+                                              areaTextFieldController.clear();
+                                              selectedTileIndex = -1;
                                             });
                                           },
                                         ),
                                       ],
                                     )
                                   : null,
-                              title: Text(nameDisplayList[index].name),
+                              title: nameDisplayList[index].area != null
+                                  ? Text(
+                                      '${nameDisplayList[index].name}, ${nameDisplayList[index].area}')
+                                  : Text(nameDisplayList[index].name),
                               onTap: () {
                                 setState(() {
                                   if (selectedTileIndex == -1 ||
                                       selectedTileIndex != index) {
                                     selectedItem = nameDisplayList[index];
-                                    // print(selectedItem);
-                                    selectedId = selectedItem!.id;
                                     if (groupedExam == nameDisplayList) {
-                                      selectedTileIndex =
-                                          groupedExam.indexOf(selectedItem!);
+                                      selectedTileIndex = index;
                                     } else {
                                       selectedTileIndex = nameDisplayList
                                           .indexOf(selectedItem!);
                                     }
-                                    print(
-                                        'selectedTileIndex = $selectedTileIndex');
+                                    _isEditing = false;
                                     _isOtherPartVisible = true;
                                     areaTextFieldController.text =
                                         (selectedItem?.area ?? "");
                                     costTextFieldController.text =
                                         selectedItem!.cost.toString();
+                                    defaultTextFieldController.text =
+                                        selectedItem!.defaultText!;
                                   } else {
-                                    selectedId = '';
                                     selectedTileIndex = -1;
                                     selectedItem = null;
                                     _isEditing = false;
@@ -250,16 +262,16 @@ class _EditPredefinedExamNameState extends State<EditPredefinedExamName> {
                           );
                         }),
                   ),
-                  DividerWithSpace(),
+                  const DividerWithSpace(),
                   /////area/////
                   Visibility(
                     visible: _isOtherPartVisible,
                     child: Container(
-                      margin: EdgeInsets.only(left: 60),
+                      margin: const EdgeInsets.only(left: 60),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('ตัวอย่างที่ใช้ในการส่งตรวจ',
+                          const Text('ตัวอย่างที่ใช้ในการส่งตรวจ',
                               style: kSubHeaderTextStyle),
                           const SizedBox(height: 20),
                           TextField(
@@ -272,7 +284,7 @@ class _EditPredefinedExamNameState extends State<EditPredefinedExamName> {
                                     areaTextFieldController, areaList);
                               });
                             },
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                               isDense: true,
                               border: OutlineInputBorder(),
                               hintText: "ชื่อตัวอย่างที่ใช้ในการส่งตรวจ",
@@ -281,9 +293,10 @@ class _EditPredefinedExamNameState extends State<EditPredefinedExamName> {
                           Visibility(
                             visible: _isEditing,
                             child: Card(
-                              color: Color(0xFFF2F5F7),
+                              color: const Color(0xFFF2F5F7),
                               elevation: 0,
-                              margin: EdgeInsets.symmetric(horizontal: 15),
+                              margin:
+                                  const EdgeInsets.symmetric(horizontal: 15),
                               child: ListView.builder(
                                   shrinkWrap: true,
                                   itemCount: areaDisplayList.length,
@@ -291,15 +304,12 @@ class _EditPredefinedExamNameState extends State<EditPredefinedExamName> {
                                     return Container(
                                       decoration: BoxDecoration(
                                         border: Border.all(
-                                            color: Color(0xFFB5C1BE),
+                                            color: const Color(0xFFB5C1BE),
                                             width: 1.0),
                                       ),
                                       child: ListTile(
-                                        // tileColor: index == selectedTileIndex
-                                        //     ? Color(0xFFA0E9FF)
-                                        //     : Color(0xFFE7F9FF),
-                                        tileColor: Color(0xFFE7F9FF),
-                                        hoverColor: Color(0xFFA0E9FF),
+                                        tileColor: const Color(0xFFE7F9FF),
+                                        hoverColor: const Color(0xFFA0E9FF),
                                         title: Text(areaDisplayList[index]),
                                         onTap: () {
                                           setState(() {
@@ -312,9 +322,10 @@ class _EditPredefinedExamNameState extends State<EditPredefinedExamName> {
                                   }),
                             ),
                           ),
-                          DividerWithSpace(),
+                          const DividerWithSpace(),
                           /////cost/////
-                          Text('ราคาการส่งตรวจ', style: kSubHeaderTextStyle),
+                          const Text('ราคาการส่งตรวจ',
+                              style: kSubHeaderTextStyle),
                           const SizedBox(height: 20),
                           TextField(
                             enabled: _isEditing,
@@ -328,11 +339,26 @@ class _EditPredefinedExamNameState extends State<EditPredefinedExamName> {
                             },
                             decoration: InputDecoration(
                               isDense: true,
-                              border: OutlineInputBorder(),
-                              hintText: "ราคาการส่งตรวจ",
+                              border: const OutlineInputBorder(),
+                              hintText: "ราคาการส่งตรวจ [ใส่แค่ตัวเลขเท่านั้น]",
                               errorText: _isFormatCostCorrect
                                   ? null
-                                  : "Please fill text box",
+                                  : "Please use correct format: number only",
+                            ),
+                          ),
+                          const DividerWithSpace(),
+                          /////default/////
+                          const Text('ค่าผลตรวจ Default',
+                              style: kSubHeaderTextStyle),
+                          const SizedBox(height: 20),
+                          TextField(
+                            enabled: _isEditing,
+                            controller: defaultTextFieldController,
+                            textAlignVertical: TextAlignVertical.center,
+                            decoration: const InputDecoration(
+                              isDense: true,
+                              border: OutlineInputBorder(),
+                              hintText: "ค่าผลตรวจ Default",
                             ),
                           ),
                         ],
@@ -340,8 +366,50 @@ class _EditPredefinedExamNameState extends State<EditPredefinedExamName> {
                     ),
                   ),
                   const SizedBox(height: 30),
-                  Center(
-                    child: MyBackButton(myContext: context),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      MyBackButton(myContext: context),
+                      _isEditing
+                          ? ElevatedButton(
+                              onPressed: () {
+                                if (_checkNotEmpty()) {
+                                  selectedItem!.name =
+                                      nameTextFieldController.text;
+                                  selectedItem!.area =
+                                      areaTextFieldController.text == ''
+                                          ? null
+                                          : areaTextFieldController.text;
+                                  selectedItem!.cost =
+                                      int.parse(costTextFieldController.text);
+                                  selectedItem!.defaultText =
+                                      defaultTextFieldController.text;
+                                  editedList.add(selectedItem!);
+                                  setState(() {
+                                    _isEditing = false;
+                                    nameTextFieldController.clear();
+                                    areaTextFieldController.clear();
+                                    costTextFieldController.clear();
+                                    defaultTextFieldController.clear();
+                                    selectedTileIndex = -1;
+                                    groupedExam.sort(
+                                        (a, b) => a.name.compareTo(b.name));
+                                    nameDisplayList = groupedExam;
+                                  });
+                                }
+                              },
+                              child: const Text('บันทึกแก้ไข'))
+                          : ElevatedButton(
+                              onPressed: () async {
+                                if (editedList.isNotEmpty) {
+                                  await _postUpdateData();
+                                }
+                                if (deletedList.isNotEmpty) {
+                                  await _postDeleteData();
+                                }
+                              },
+                              child: Text('บันทึก'))
+                    ],
                   ),
                 ],
               ),
@@ -352,22 +420,3 @@ class _EditPredefinedExamNameState extends State<EditPredefinedExamName> {
     );
   }
 }
-
-// suffixIcon: IconButton(
-//   icon: Icon(CupertinoIcons.pencil),
-//   onPressed: () {
-//     !_isFormatNameCorrect
-//         ? null
-//         : setState(() {
-//             // _postUpdateData(oldItem!, textFieldController.text);
-//             // examProvider.updateItem(
-//             //     oldItem!.id, nameTextFieldController.text, oldItem!.lab);
-//             // isEditing = false;
-//             // nameTextFieldController.clear();
-//             // selectedTileIndex = -1;
-//             // groupedExam.sort((a, b) =>
-//             //     a.name.compareTo(b.name));
-//             // displayList = groupedExam;
-//           });
-//   },
-// ),

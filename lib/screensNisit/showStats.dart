@@ -53,6 +53,17 @@ class _ShowStatsForNisitState extends State<ShowStatsForNisit> {
       return res;
     }
 
+    int findTotalPoint(StatQuestionObject stat) {
+      int res = 0;
+      res = stat.problem1Score +
+          stat.problem2Score +
+          stat.examination1Score +
+          stat.examination1Score +
+          stat.diagnosticScore +
+          stat.treatmentScore;
+      return res;
+    }
+
     void probDiagTreatmentModal(
         BuildContext context, String title, List<dynamic> list) {
       showDialog(
@@ -62,7 +73,8 @@ class _ShowStatsForNisitState extends State<ShowStatsForNisit> {
               child: Container(
                 padding: EdgeInsets.all(20),
                 width: MediaQuery.of(context).size.width * 0.5,
-                // height: MediaQuery.of(context).size.width * 0.3,
+                constraints: BoxConstraints(
+                    maxHeight: MediaQuery.of(context).size.height * 0.4),
                 decoration: BoxDecoration(
                   color: Color(0xFFBBF5FF),
                   borderRadius: BorderRadius.circular(10),
@@ -83,15 +95,19 @@ class _ShowStatsForNisitState extends State<ShowStatsForNisit> {
                         ),
                       ],
                     ),
-                    ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: list.length,
-                        itemBuilder: (context, index) {
-                          return ListTile(
-                            title: Text(list[index].name),
-                            leading: Icon(Icons.circle, size: 15),
-                          );
-                        }),
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: list.length,
+                            itemBuilder: (context, index) {
+                              return ListTile(
+                                title: Text(list[index].name),
+                                leading: Icon(Icons.circle, size: 15),
+                              );
+                            }),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -129,78 +145,83 @@ class _ShowStatsForNisitState extends State<ShowStatsForNisit> {
                         ),
                       ],
                     ),
-                    ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: examList.length,
-                        itemBuilder: (context, index) {
-                          var item = examList[index];
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              ListTile(
-                                title: Row(
-                                  children: [
-                                    const Text(
-                                      'แผนกที่เลือกตรวจ: ',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w700),
-                                    ),
-                                    Text(item.lab),
-                                  ],
-                                ),
-                                leading: const Icon(
-                                  Icons.circle,
-                                  size: 15,
-                                ),
-                              ),
-                              ListTile(
-                                title: Padding(
-                                  padding: const EdgeInsets.only(left: 35),
-                                  child: Row(
-                                    children: [
-                                      const Text(
-                                        'หัวข้อการตรวจ: ',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w700),
-                                      ),
-                                      Text(item.type)
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              item.area != null
-                                  ? ListTile(
-                                      title: Padding(
-                                        padding:
-                                            const EdgeInsets.only(left: 35),
-                                        child: Row(
-                                          children: [
-                                            const Text('ตัวอย่างการส่งตรวจ: ',
-                                                style: TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.w700)),
-                                            Text(item.area!),
-                                          ],
-                                        ),
-                                      ),
-                                    )
-                                  : SizedBox(),
-                              ListTile(
-                                title: Padding(
-                                  padding: const EdgeInsets.only(left: 35),
-                                  child: Row(
-                                    children: [
-                                      const Text('ชื่อการส่งตรวจ: ',
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: examList.length,
+                            itemBuilder: (context, index) {
+                              var item = examList[index];
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  ListTile(
+                                    title: Row(
+                                      children: [
+                                        const Text(
+                                          'แผนกที่เลือกตรวจ: ',
                                           style: TextStyle(
-                                              fontWeight: FontWeight.w700)),
-                                      Text(item.name),
-                                    ],
+                                              fontWeight: FontWeight.w700),
+                                        ),
+                                        Text(item.lab),
+                                      ],
+                                    ),
+                                    leading: const Icon(
+                                      Icons.circle,
+                                      size: 15,
+                                    ),
                                   ),
-                                ),
-                              ),
-                            ],
-                          );
-                        }),
+                                  ListTile(
+                                    title: Padding(
+                                      padding: const EdgeInsets.only(left: 35),
+                                      child: Row(
+                                        children: [
+                                          const Text(
+                                            'หัวข้อการตรวจ: ',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w700),
+                                          ),
+                                          Text(item.type)
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  item.area != null
+                                      ? ListTile(
+                                          title: Padding(
+                                            padding:
+                                                const EdgeInsets.only(left: 35),
+                                            child: Row(
+                                              children: [
+                                                const Text(
+                                                    'ตัวอย่างการส่งตรวจ: ',
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w700)),
+                                                Text(item.area!),
+                                              ],
+                                            ),
+                                          ),
+                                        )
+                                      : SizedBox(),
+                                  ListTile(
+                                    title: Padding(
+                                      padding: const EdgeInsets.only(left: 35),
+                                      child: Row(
+                                        children: [
+                                          const Text('ชื่อการส่งตรวจ: ',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w700)),
+                                          Text(item.name),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            }),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -241,6 +262,11 @@ class _ShowStatsForNisitState extends State<ShowStatsForNisit> {
                                     DataColumn(
                                       label: Expanded(
                                         child: Text('คะแนนรวม'),
+                                      ),
+                                    ),
+                                    DataColumn(
+                                      label: Expanded(
+                                        child: Text('ราคาค่าตรวจรวม'),
                                       ),
                                     ),
                                     DataColumn(
@@ -300,110 +326,140 @@ class _ShowStatsForNisitState extends State<ShowStatsForNisit> {
                                           ),
                                           DataCell(
                                             Center(
+                                              child: Text(findTotalPoint(
+                                                      statList[index])
+                                                  .toString()),
+                                            ),
+                                          ),
+                                          DataCell(
+                                            Center(
                                               child: Text(
                                                   findTotalCost(statList[index])
                                                       .toString()),
                                             ),
                                           ),
                                           DataCell(
-                                            Center(
-                                              child: ElevatedButton(
-                                                onPressed: () {
-                                                  probDiagTreatmentModal(
-                                                      context,
-                                                      "Problem List ครั้งที่ 1",
-                                                      splitProblems['1']!);
-                                                },
-                                                child: Text(
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Text(
                                                   statList[index]
                                                       .problem1Score
                                                       .toString(),
                                                 ),
-                                                // style: TextButton.styleFrom(),
-                                              ),
+                                                IconButton(
+                                                    onPressed: () {
+                                                      probDiagTreatmentModal(
+                                                          context,
+                                                          "Problem List ครั้งที่ 1",
+                                                          splitProblems['1']!);
+                                                    },
+                                                    icon: Icon(Icons.search)),
+                                              ],
                                             ),
                                           ),
                                           DataCell(
-                                            Center(
-                                              child: TextButton(
-                                                onPressed: () {
-                                                  examModal(context, '1',
-                                                      splitExams['1']!);
-                                                },
-                                                child: Text(
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Text(
                                                   statList[index]
                                                       .examination1Score
                                                       .toString(),
                                                 ),
-                                              ),
+                                                IconButton(
+                                                    onPressed: () {
+                                                      examModal(context, '1',
+                                                          splitExams['1']!);
+                                                    },
+                                                    icon: Icon(Icons.search))
+                                              ],
                                             ),
                                           ),
                                           DataCell(
-                                            Center(
-                                              child: ElevatedButton(
-                                                onPressed: () {
-                                                  probDiagTreatmentModal(
-                                                      context,
-                                                      "Problem List ครั้งที่ 2",
-                                                      splitProblems['2']!);
-                                                },
-                                                child: Text(
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Text(
                                                   statList[index]
                                                       .problem2Score
                                                       .toString(),
                                                 ),
-                                              ),
+                                                IconButton(
+                                                    onPressed: () {
+                                                      probDiagTreatmentModal(
+                                                          context,
+                                                          "Problem List ครั้งที่ 2",
+                                                          splitProblems['2']!);
+                                                    },
+                                                    icon: Icon(Icons.search)),
+                                              ],
                                             ),
                                           ),
                                           DataCell(
-                                            Center(
-                                              child: TextButton(
-                                                onPressed: () {
-                                                  examModal(context, '2',
-                                                      splitExams['2']!);
-                                                },
-                                                child: Text(
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Text(
                                                   statList[index]
                                                       .examination2Score
                                                       .toString(),
                                                 ),
-                                              ),
+                                                IconButton(
+                                                    onPressed: () {
+                                                      examModal(context, '2',
+                                                          splitExams['2']!);
+                                                    },
+                                                    icon: Icon(Icons.search))
+                                              ],
                                             ),
                                           ),
                                           DataCell(
-                                            Center(
-                                              child: TextButton(
-                                                onPressed: () {
-                                                  probDiagTreatmentModal(
-                                                      context,
-                                                      "Diagnosis",
-                                                      statList[index]
-                                                          .diagnostics);
-                                                },
-                                                child: Text(
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Text(
                                                   statList[index]
                                                       .diagnosticScore
                                                       .toString(),
                                                 ),
-                                              ),
+                                                IconButton(
+                                                    onPressed: () {
+                                                      probDiagTreatmentModal(
+                                                          context,
+                                                          "Diagnosis",
+                                                          statList[index]
+                                                              .diagnostics);
+                                                    },
+                                                    icon: Icon(Icons.search)),
+                                              ],
                                             ),
                                           ),
                                           DataCell(
-                                            Center(
-                                              child: TextButton(
-                                                onPressed: () {
-                                                  probDiagTreatmentModal(
-                                                      context,
-                                                      "Treatment",
-                                                      statList[index]
-                                                          .treatments);
-                                                },
-                                                child: Text(
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Text(
                                                   statList[index]
                                                       .treatmentScore
                                                       .toString(),
                                                 ),
-                                              ),
+                                                IconButton(
+                                                    onPressed: () {
+                                                      probDiagTreatmentModal(
+                                                          context,
+                                                          "Treatment",
+                                                          statList[index]
+                                                              .treatments);
+                                                    },
+                                                    icon: Icon(Icons.search))
+                                              ],
                                             ),
                                           ),
                                         ],

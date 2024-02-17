@@ -101,7 +101,8 @@ class _MainShowQuestionState extends State<MainShowQuestion> {
                   Padding(
                     padding: const EdgeInsets.only(bottom: 15),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Row(
                           children: [
@@ -125,10 +126,10 @@ class _MainShowQuestionState extends State<MainShowQuestion> {
                             ),
                           ],
                         ),
-                        ElevatedButton(
-                          onPressed: () {},
-                          child: Text('โจทย์ยอดนิยม'),
-                        ),
+                        // ElevatedButton(
+                        //   onPressed: () {},
+                        //   child: Text('โจทย์ยอดนิยม'),
+                        // ),
                       ],
                     ),
                   ),

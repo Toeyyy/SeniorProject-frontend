@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/components/tagBox.dart';
 import 'package:frontend/constants.dart';
-import 'package:frontend/tmpQuestion.dart';
 import 'package:frontend/models/fullQuestionObject.dart';
-import 'package:frontend/screensNisit/problemList.dart';
 import 'package:frontend/screensTeacher/showAndEditQuestion.dart';
 
 class FullQuestionCard extends StatelessWidget {

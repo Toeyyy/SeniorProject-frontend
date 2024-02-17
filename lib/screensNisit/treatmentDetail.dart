@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/components/splitScreenNisit.dart';
-import 'package:frontend/tmpQuestion.dart';
 import 'package:frontend/constants.dart';
 import 'package:frontend/components/appBar.dart';
 import 'package:collection/collection.dart';

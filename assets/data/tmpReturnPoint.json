@@ -28,6 +28,11 @@
         "round": 1
       },
       {
+        "id": "3",
+        "name": "problem 3",
+        "round": 1
+      },
+      {
         "id": "5",
         "name": "problem 5",
         "round": 1
@@ -36,6 +41,11 @@
         "id": "2",
         "name": "problem 2",
         "round": 2
+      },
+      {
+        "id": "4",
+        "name": "problem 4",
+        "round": 1
       },
       {
         "id": "6",

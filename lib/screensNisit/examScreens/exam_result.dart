@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/components/appBar.dart';
-import 'package:frontend/tmpQuestion.dart';
 import 'package:frontend/models/examResultObject.dart';
 import 'package:frontend/components/splitScreenNisit.dart';
 import 'package:frontend/models/examinationPreDefinedObject.dart';
@@ -25,13 +24,13 @@ class ExamResult extends StatelessWidget {
       required this.questionObj,
       required this.result});
 
-  // ExamResultObject result = showExamResult[0];
-
   @override
   Widget build(BuildContext context) {
     SelectedExam examProvider = Provider.of<SelectedExam>(context);
     SelectedProblem problemProvider =
         Provider.of<SelectedProblem>(context, listen: false);
+
+    // print(result == null);
 
     return Scaffold(
       appBar: AppbarNisit(),
@@ -105,7 +104,7 @@ class ExamResult extends StatelessWidget {
                     ),
                   ],
                 )
-              : SizedBox(
+              : const SizedBox(
                   width: 10, child: Center(child: CircularProgressIndicator())),
         ),
       ),

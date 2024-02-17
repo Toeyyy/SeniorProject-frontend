@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:frontend/components/BoxesInAddQ.dart';
 import 'package:frontend/components/appBar.dart';
 import 'package:frontend/constants.dart';
 import 'package:frontend/components/backButton.dart';
@@ -24,151 +25,128 @@ class EditPredefinedTreatmentDetail extends StatefulWidget {
 class _EditPredefinedTreatmentDetailState
     extends State<EditPredefinedTreatmentDetail> {
   TextEditingController textFieldController = TextEditingController();
+  TextEditingController costTextFieldController = TextEditingController();
+  late List<TreatmentObject> fullList =
+      widget.groupedByType[widget.selectedType]!;
+  late List<TreatmentObject> displayList =
+      widget.groupedByType[widget.selectedType]!;
   int selectedTileIndex = -1;
   TreatmentObject? oldItem;
   bool isEditing = false;
-
-  // final String apiUrl = "localhost:7197/api";
-  final RegExp _formatRegExp =
-      RegExp(r'^\s*[\p{L}0-9\s]+,\s*[0-9]+\s*$', unicode: true);
-  bool _isFormatCorrect = true;
+  bool isOtherPartVisible = false;
+  final RegExp _formatCost = RegExp(r'^[0-9]+$');
+  bool _isCostCorrect = true;
+  String? oldItemId;
+  List<TreatmentObject> deletedList = [];
+  List<TreatmentObject> editedList = [];
 
   List<TreatmentObject> filterList(TextEditingController searchController,
       List<TreatmentObject> listForSearch) {
-    String query = searchController.text.toLowerCase();
-    return listForSearch
-        .where((item) => item.name.toLowerCase().startsWith(query))
-        .toList();
+    if (selectedTileIndex == -1) {
+      String query = searchController.text.toLowerCase();
+      return listForSearch
+          .where((item) => item.name.toLowerCase().startsWith(query))
+          .toList();
+    } else {
+      return listForSearch;
+    }
   }
 
   ////post/////
-  Future<void> _postAddData(TreatmentObject item) async {
-    var data = {"type": item.type, "name": item.name, "cost": item.cost};
-    final http.Response response = await http.post(
-      Uri.parse("${dotenv.env['API_PATH']}/treatment/add"),
-      headers: {"Content-Type": "application/json"},
-      body: jsonEncode(data),
-    );
+
+  Future<void> _postDeleteData() async {
+    var data = deletedList.map((item) {
+      return {"id": item.id};
+    }).toList();
+    try {
+      final http.Response response = await http.post(
+        Uri.parse("${dotenv.env['API_PATH']}/treatment/delete"),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode(data),
+      );
+      if ((response.statusCode >= 200 && response.statusCode < 300)) {
+        print("Posting complete");
+      } else {
+        print("Error: ${response.statusCode} - ${response.body}");
+      }
+    } catch (error) {
+      print('Error: $error');
+    }
   }
 
-  Future<void> _postDeleteData(String id) async {
-    final http.Response response = await http.post(
-      Uri.parse("${dotenv.env['API_PATH']}/treatment/delete/$id"),
-      headers: {"Content-Type": "application/json"},
-    );
+  Future<void> _postUpdateData() async {
+    var data = editedList.map((item) {
+      return {"id": item.id, "name": item.name, "cost": item.cost};
+    }).toList();
+    try {
+      final http.Response response = await http.post(
+        Uri.parse("${dotenv.env['API_PATH']}/treatment/update"),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode(data),
+      );
+      if ((response.statusCode >= 200 && response.statusCode < 300)) {
+        print("Posting complete");
+      } else {
+        print("Error: ${response.statusCode} - ${response.body}");
+      }
+    } catch (error) {
+      print('Error: $error');
+    }
   }
 
-  Future<void> _postUpdateData(
-      TreatmentObject oldItem, List<String> newItem) async {
-    var data = {
-      "name": newItem[0],
-      "cost": int.parse(newItem[1]),
-    };
-    final http.Response response = await http.post(
-      Uri.parse("${dotenv.env['API_PATH']}/treatment/update/${oldItem.id}"),
-      headers: {"Content-Type": "application/json"},
-      body: jsonEncode(data),
-    );
+  bool checkNotEmpty() {
+    if (_isCostCorrect == false) {
+      return false;
+    }
+    return textFieldController.text != '' && costTextFieldController.text != '';
   }
 
   @override
   Widget build(BuildContext context) {
-    String selectedType = widget.selectedType;
-    List<TreatmentObject> fullList = widget.groupedByType[selectedType]!;
-    List<TreatmentObject> displayList =
-        filterList(textFieldController, widget.groupedByType[selectedType]!);
-
     return Scaffold(
       appBar: AppbarTeacher(),
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
-        child: Center(
-          child: Container(
-            width: MediaQuery.of(context).size.width * 0.7,
-            child: Column(
-              children: [
-                Text(
-                  selectedType,
-                  style: kSubHeaderTextStyle,
-                ),
-                SizedBox(height: 20),
-                TextField(
-                  controller: textFieldController,
-                  textAlignVertical: TextAlignVertical.center,
-                  onChanged: (value) {
-                    setState(() {
-                      _isFormatCorrect =
-                          value == '' ? true : _formatRegExp.hasMatch(value);
-                      displayList = filterList(textFieldController, fullList);
-                    });
-                  },
-                  decoration: InputDecoration(
-                    isDense: true,
-                    border: OutlineInputBorder(),
-                    hintText: "Exam name, cost",
-                    errorText: _isFormatCorrect
-                        ? null
-                        : "Please use the correct format: 'Exam name,cost'",
-                    suffixIcon: !isEditing
-                        ? IconButton(
-                            icon: Icon(Icons.add),
-                            onPressed: () {
-                              !_isFormatCorrect
-                                  ? null
-                                  : setState(() {
-                                      List<String> txt = textFieldController
-                                          .text
-                                          .split(',')
-                                          .map((e) => e.trim())
-                                          .toList();
-                                      TreatmentObject newItem = TreatmentObject(
-                                          id: 'X',
-                                          type: widget
-                                              .groupedByType[selectedType]!
-                                              .first
-                                              .type,
-                                          name: txt[0],
-                                          cost: int.parse(txt[1]));
-                                      _postAddData(newItem);
-                                      fullList.add(newItem);
-                                      textFieldController.clear();
-                                      displayList = fullList;
-                                    });
-                            },
-                          )
-                        : IconButton(
-                            icon: Icon(Icons.save),
-                            onPressed: () {
-                              !_isFormatCorrect
-                                  ? null
-                                  : setState(() {
-                                      List<String> txt = textFieldController
-                                          .text
-                                          .split(',')
-                                          .map((e) => e.trim())
-                                          .toList();
-                                      _postUpdateData(oldItem!, txt);
-                                      oldItem!.name = txt[0];
-                                      oldItem!.cost = int.parse(txt[1]);
-                                      isEditing = false;
-                                      _isFormatCorrect = true;
-                                      textFieldController.clear();
-                                      selectedTileIndex = -1;
-                                      fullList.sort(
-                                          (a, b) => a.name.compareTo(b.name));
-                                      displayList = fullList;
-                                    });
-                            },
-                          ),
+        child: SingleChildScrollView(
+          child: Center(
+            child: Container(
+              width: MediaQuery.of(context).size.width * 0.7,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Center(
+                    child: Text(
+                      widget.selectedType,
+                      style: kSubHeaderTextStyle,
+                    ),
                   ),
-                ),
-                Expanded(
-                  child: Card(
+                  const SizedBox(height: 20),
+                  const Text('ชื่อ Treatment', style: kSubHeaderTextStyle),
+                  const SizedBox(height: 20),
+                  TextField(
+                    controller: textFieldController,
+                    textAlignVertical: TextAlignVertical.center,
+                    onChanged: (value) {
+                      setState(() {
+                        displayList = filterList(textFieldController, fullList);
+                        if (selectedTileIndex != -1) {
+                          selectedTileIndex = displayList.indexOf(oldItem!);
+                        }
+                      });
+                    },
+                    decoration: InputDecoration(
+                      isDense: true,
+                      border: OutlineInputBorder(),
+                      hintText: "Treatment name",
+                    ),
+                  ),
+                  Card(
                     color: Color(0xFFF2F5F7),
                     elevation: 0,
                     margin: EdgeInsets.symmetric(horizontal: 15),
                     child: ListView.builder(
-                      itemCount: fullList.length,
+                      shrinkWrap: true,
+                      itemCount: displayList.length,
                       itemBuilder: (context, index) {
                         return Container(
                           decoration: BoxDecoration(
@@ -187,11 +165,14 @@ class _EditPredefinedTreatmentDetailState
                                     children: [
                                       IconButton(
                                         onPressed: () {
-                                          textFieldController.text =
-                                              '${fullList[selectedTileIndex].name},${fullList[selectedTileIndex].cost}';
                                           setState(() {
-                                            oldItem =
-                                                displayList[selectedTileIndex];
+                                            textFieldController.text =
+                                                displayList[index].name;
+                                            costTextFieldController.text =
+                                                displayList[index]
+                                                    .cost
+                                                    .toString();
+                                            oldItem = displayList[index];
                                             isEditing = true;
                                           });
                                         },
@@ -202,14 +183,12 @@ class _EditPredefinedTreatmentDetailState
                                           setState(() {
                                             TreatmentObject item =
                                                 displayList[selectedTileIndex];
-                                            _postDeleteData(item.id);
+                                            deletedList.add(item);
                                             fullList.remove(item);
                                             fullList.sort((a, b) =>
                                                 a.name.compareTo(b.name));
-                                            displayList = widget
-                                                .groupedByType[selectedType]!;
+                                            displayList = fullList;
                                             textFieldController.clear();
-                                            _isFormatCorrect = true;
                                             selectedTileIndex = -1;
                                           });
                                         },
@@ -218,17 +197,22 @@ class _EditPredefinedTreatmentDetailState
                                     ],
                                   )
                                 : null,
-                            title: Text(
-                                '${fullList[index].name},${fullList[index].cost}'),
+                            title: Text(displayList[index].name),
                             onTap: () {
                               setState(() {
-                                if ((selectedTileIndex != -1) &
-                                    (selectedTileIndex == index)) {
+                                if ((selectedTileIndex == -1) ||
+                                    (selectedTileIndex != index)) {
+                                  oldItem = displayList[index];
+                                  costTextFieldController.text =
+                                      displayList[index].cost.toString();
+                                  isEditing = false;
+                                  selectedTileIndex = index;
+                                  isOtherPartVisible = true;
+                                } else {
+                                  oldItem = null;
                                   selectedTileIndex = -1;
                                   isEditing = false;
-                                } else {
-                                  selectedTileIndex = index;
-                                  isEditing = false;
+                                  isOtherPartVisible = false;
                                 }
                               });
                             },
@@ -237,10 +221,82 @@ class _EditPredefinedTreatmentDetailState
                       },
                     ),
                   ),
-                ),
-                const SizedBox(height: 10),
-                MyBackButton(myContext: context),
-              ],
+                  DividerWithSpace(),
+                  /////cost/////
+                  Visibility(
+                    visible: isOtherPartVisible,
+                    child: Container(
+                      margin: EdgeInsets.only(left: 60),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('ราคา Treatment', style: kSubHeaderTextStyle),
+                          const SizedBox(height: 20),
+                          TextField(
+                            enabled: isEditing,
+                            controller: costTextFieldController,
+                            textAlignVertical: TextAlignVertical.center,
+                            decoration: InputDecoration(
+                              contentPadding: const EdgeInsets.all(8),
+                              border: OutlineInputBorder(),
+                              hintText: "ราคา Treatment [ใส่แค่ตัวเลข]",
+                              errorText: _isCostCorrect
+                                  ? null
+                                  : "ใส่แค่ตัวเลขเท่านั้น",
+                            ),
+                            onChanged: (value) {
+                              setState(() {
+                                _isCostCorrect = value == ''
+                                    ? false
+                                    : _formatCost.hasMatch(value);
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      MyBackButton(myContext: context),
+                      isEditing
+                          ? ElevatedButton(
+                              onPressed: () {
+                                if (checkNotEmpty()) {
+                                  oldItem!.name = textFieldController.text;
+                                  oldItem!.cost =
+                                      int.parse(costTextFieldController.text);
+                                  editedList.add(oldItem!);
+                                  setState(() {
+                                    isEditing = false;
+                                    textFieldController.clear();
+                                    costTextFieldController.clear();
+                                    selectedTileIndex = -1;
+                                    fullList.sort(
+                                        (a, b) => a.name.compareTo(b.name));
+                                    displayList = fullList;
+                                  });
+                                }
+                              },
+                              child: Text('บันทึกแก้ไข'))
+                          : ElevatedButton(
+                              onPressed: () async {
+                                if (editedList.isNotEmpty) {
+                                  _postUpdateData()
+                                      .then((value) => Navigator.pop(context));
+                                }
+                                if (deletedList.isNotEmpty) {
+                                  _postDeleteData()
+                                      .then((value) => Navigator.pop(context));
+                                }
+                              },
+                              child: Text('บันทึก'))
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),

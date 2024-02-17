@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:frontend/components/appBar.dart';
 import 'package:frontend/constants.dart';
-import 'package:frontend/tmpQuestion.dart';
 import 'package:frontend/components/BoxesInAddQ.dart';
 import 'package:frontend/components/tagSearchBox.dart';
 import 'package:frontend/models/problemListObject.dart';
@@ -323,12 +322,11 @@ class _EditQuestionState extends State<EditQuestion> {
                                 ),
                               ),
                               const H20Sizedbox(),
-                              // TagMultiSelectDropDown(
-                              //     selectedList: selectedTags,
-                              //     // displayList: allTagList,
-                              //     displayList: tagListPreDefined,
-                              //     hintText: 'Select tags',
-                              //     updateListCallback: updateTagList),
+                              TagMultiSelectDropDown(
+                                  selectedList: selectedTags,
+                                  displayList: tagListPreDefined,
+                                  hintText: 'Select tags',
+                                  updateListCallback: updateTagList),
                               const H20Sizedbox(),
                               //Signalment
                               Text(

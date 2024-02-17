@@ -4,7 +4,6 @@ import 'package:frontend/components/appBar.dart';
 import 'package:frontend/constants.dart';
 import 'package:frontend/components/functions.dart';
 import 'package:frontend/models/diagnosisObject.dart';
-import 'package:frontend/tmpQuestion.dart';
 import 'package:frontend/screensNisit/treatmentTopic.dart';
 import 'package:frontend/UIModels/nisit/selectedDiagnosis_provider.dart';
 import 'package:provider/provider.dart';
@@ -75,7 +74,6 @@ class RightPart_Diagnosis extends StatefulWidget {
 class _RightPart_DiagnosisState extends State<RightPart_Diagnosis> {
   TextEditingController _searchController = TextEditingController();
   List<DiagnosisObject> _displayList = [];
-  // List<DiagnosisObject> _fullList = preDefinedDiagnosis;
   List<DiagnosisObject> _fullList = diagnosisListPreDefined;
   List<DiagnosisObject> _selectedList = [];
   bool _isListViewVisible = false;
@@ -108,7 +106,7 @@ class _RightPart_DiagnosisState extends State<RightPart_Diagnosis> {
                 });
               }
             },
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               labelText: 'Search',
               suffixIcon: Icon(Icons.search),
             ),
@@ -129,7 +127,7 @@ class _RightPart_DiagnosisState extends State<RightPart_Diagnosis> {
                           _selectedList.add(_displayList[index]);
                           _searchController.clear();
                           setState(() {
-                            _fullList.remove(_displayList[index]);
+                            // _fullList.remove(_displayList[index]);
                             _displayList.remove(_displayList[index]);
                             _isListViewVisible = false;
                           });
@@ -148,10 +146,10 @@ class _RightPart_DiagnosisState extends State<RightPart_Diagnosis> {
                   return ListTile(
                     title: Text(_selectedList[index].name),
                     trailing: IconButton(
-                      icon: Icon(Icons.remove),
+                      icon: const Icon(Icons.remove),
                       onPressed: () {
                         setState(() {
-                          _fullList.add(_selectedList[index]);
+                          // _fullList.add(_selectedList[index]);
                           _displayList.add(_selectedList[index]);
                           // diagnosisList.add(_selectedList[index]);
                           _selectedList.remove(_selectedList[index]);

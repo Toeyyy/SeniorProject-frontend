@@ -1,19 +1,13 @@
-import 'dart:convert';
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/components/appBar.dart';
 import 'package:frontend/constants.dart';
-import 'package:frontend/tmpQuestion.dart';
-import 'package:frontend/models/examinationPreDefinedObject.dart';
 import 'package:frontend/screensTeacher/PredefinedScreens/editPredefined_exam_add.dart';
 import 'package:frontend/components/backButton.dart';
 import 'package:frontend/screensTeacher/PredefinedScreens/editPredefined_exam_detail.dart';
-import 'package:frontend/UIModels/teacher/predefinedExam_provider.dart';
-import 'package:provider/provider.dart';
-import 'package:http/http.dart' as http;
+import 'package:frontend/aboutData/getDataFunctions.dart';
 
-class EditPreDefinedExam2Topic extends StatelessWidget {
-  List<String> _topicList = [
+class EditPreDefinedExamChoice extends StatelessWidget {
+  final List<String> _topicList = [
     'เพิ่ม Examination',
     'แก้ไข/ลบ Examination',
   ];
@@ -30,7 +24,7 @@ class EditPreDefinedExam2Topic extends StatelessWidget {
             child: Column(
               children: [
                 Text(
-                  'Examination Predefined List',
+                  'Examination List',
                   style: kHeaderTextStyle.copyWith(fontWeight: FontWeight.w900),
                 ),
                 const SizedBox(height: 20),
@@ -46,25 +40,30 @@ class EditPreDefinedExam2Topic extends StatelessWidget {
                         hoverColor: Color(0xFF42C2FF),
                         title: Text(
                           _topicList[index],
-                          style: TextStyle(
+                          style: const TextStyle(
                               fontWeight: FontWeight.w500, fontSize: 20),
                         ),
-                        onTap: () {
+                        onTap: () async {
                           if (_topicList[index] == 'เพิ่ม Examination') {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => EditPreDefinedExamAdd(),
-                              ),
-                            );
+                            await fetchPreDefinedExam().then((value) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => EditPreDefinedExamAdd(),
+                                ),
+                              );
+                            });
                           } else if (_topicList[index] ==
                               'แก้ไข/ลบ Examination') {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => EditPredefinedExamLab(),
-                              ),
-                            );
+                            await fetchPreDefinedExam().then((value) => {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          EditPredefinedExamLab(),
+                                    ),
+                                  )
+                                });
                           }
                         },
                       );

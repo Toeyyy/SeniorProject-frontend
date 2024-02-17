@@ -2,7 +2,6 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/components/appBar.dart';
 import 'package:frontend/constants.dart';
-import 'package:frontend/tmpQuestion.dart';
 import 'package:frontend/models/examinationPreDefinedObject.dart';
 import 'package:frontend/components/backButton.dart';
 import 'package:frontend/screensTeacher/PredefinedScreens/editPredefined_exam_name.dart';
@@ -130,9 +129,6 @@ class _EditPreDefinedExamTypeState extends State<EditPreDefinedExamType> {
                               fontWeight: FontWeight.w500, fontSize: 20),
                         ),
                         onTap: () {
-                          // checkArea(title);
-                          // // print('areaNull = $areaNull');
-                          // areaNull
                           Navigator.push(
                             context,
                             MaterialPageRoute(

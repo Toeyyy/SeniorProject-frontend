@@ -6,7 +6,6 @@ import 'package:frontend/screensNisit/treatmentDetail.dart';
 import 'package:frontend/components/appBar.dart';
 import 'package:frontend/models/treatmentObject.dart';
 import 'package:collection/collection.dart';
-import 'package:frontend/tmpQuestion.dart';
 import 'package:frontend/screensNisit/treatmentTotal.dart';
 import 'package:frontend/models/questionObject.dart';
 import 'package:frontend/AllDataFile.dart';

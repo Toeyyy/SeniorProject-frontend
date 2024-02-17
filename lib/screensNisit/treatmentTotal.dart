@@ -196,23 +196,24 @@ class _RightPart_TreatmentTotalState extends State<RightPart_TreatmentTotal> {
                         //post answer//
                         await postStat(context);
                         ////get stat////
-                        await getData(widget.questionObj.id);
-                        setState(() {
-                          _isSendingData = false;
-                        });
-                        //clear data//
-                        treatmentProvider.clearList();
-                        problemProvider.clearList();
-                        examProvider.clearList();
-                        diagProvider.clearList();
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ReturnPoint(
-                              stat: stat,
+                        await getData(widget.questionObj.id).then((value) {
+                          setState(() {
+                            _isSendingData = false;
+                          });
+                          //clear data//
+                          treatmentProvider.clearList();
+                          problemProvider.clearList();
+                          examProvider.clearList();
+                          diagProvider.clearList();
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ReturnPoint(
+                                stat: stat,
+                              ),
                             ),
-                          ),
-                        );
+                          );
+                        });
                       },
                       child: Text('ส่งคำตอบ'),
                     ),

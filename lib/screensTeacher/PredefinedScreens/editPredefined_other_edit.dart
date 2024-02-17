@@ -1,28 +1,24 @@
 import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/components/appBar.dart';
-import 'package:frontend/models/diagnosisObject.dart';
-import 'package:frontend/models/problemListObject.dart';
-import 'package:frontend/tmpQuestion.dart';
 import 'package:frontend/constants.dart';
 import 'package:frontend/components/functions.dart';
 import 'package:http/http.dart' as http;
 import 'package:frontend/components/backButton.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-class EditPredefinedListDetail extends StatefulWidget {
+class EditPredefinedOtherEdit extends StatefulWidget {
   final String title;
 
-  EditPredefinedListDetail({required this.title});
+  EditPredefinedOtherEdit({required this.title});
 
   @override
-  State<EditPredefinedListDetail> createState() =>
-      _EditPredefinedListDetailState();
+  State<EditPredefinedOtherEdit> createState() =>
+      _EditPredefinedOtherEditState();
 }
 
-class _EditPredefinedListDetailState extends State<EditPredefinedListDetail> {
+class _EditPredefinedOtherEditState extends State<EditPredefinedOtherEdit> {
   TextEditingController textFieldController = TextEditingController();
   late List<dynamic> fullList = filterEditTopicList(widget.title);
   late List<dynamic> displayList = filterEditTopicList(widget.title);
@@ -31,55 +27,76 @@ class _EditPredefinedListDetailState extends State<EditPredefinedListDetail> {
   String? oldItem;
   String? oldItemID;
   String? newItem;
-  // final String apiUrl = "localhost:7197/api";
+  List<dynamic> deletedList = [];
+  List<dynamic> editedList = [];
 
-  Future<void> _postAddData(String title, String item) async {
-    if (title == 'Problem List') {
-      var data = {"name": item};
-      final http.Response response = await http.post(
-        Uri.parse("${dotenv.env['API_PATH']}/problem/add"),
-        headers: {"Content-Type": "application/json"},
-        body: jsonEncode(data),
-      );
-    } else if (title == 'Diagnosis List') {
-      var data = {"name": item};
-      final http.Response response = await http.post(
-        Uri.parse("${dotenv.env['API_PATH']}/diagnostic/add"),
-        headers: {"Content-Type": "application/json"},
-        body: jsonEncode(data),
-      );
+  Future<void> _postDeleteData(String title) async {
+    var data = deletedList.map((item) {
+      return {"id": item.id};
+    }).toList();
+    try {
+      if (title == 'Problem List') {
+        final http.Response response = await http.post(
+          Uri.parse("${dotenv.env['API_PATH']}/problem/delete"),
+          headers: {"Content-Type": "application/json"},
+          body: jsonEncode(data),
+        );
+      } else if (title == 'Diagnosis List') {
+        final http.Response response = await http.post(
+          Uri.parse("${dotenv.env['API_PATH']}/diagnostic/delete"),
+          headers: {"Content-Type": "application/json"},
+          body: jsonEncode(data),
+        );
+      } else if (title == 'Tag List') {
+        final http.Response response = await http.post(
+          Uri.parse("${dotenv.env['API_PATH']}/tag/delete"),
+          headers: {"Content-Type": "application/json"},
+          body: jsonEncode(data),
+        );
+      }
+    } catch (error) {
+      print("Error: $error");
     }
   }
 
-  Future<void> _postDeleteData(String title, String id) async {
-    if (title == 'Problem List') {
-      final http.Response response = await http.post(
-        Uri.parse("${dotenv.env['API_PATH']}/problem/delete/$id"),
-        headers: {"Content-Type": "application/json"},
-      );
-    } else if (title == 'Diagnosis List') {
-      final http.Response response = await http.post(
-        Uri.parse("${dotenv.env['API_PATH']}/diagnostic/delete/$id"),
-        headers: {"Content-Type": "application/json"},
-      );
+  Future<void> _postEditData(String title) async {
+    var data = editedList.map((item) {
+      return {"id": item.id, "name": item.name};
+    }).toList();
+    try {
+      if (title == 'Problem List') {
+        final http.Response response = await http.post(
+          Uri.parse("${dotenv.env['API_PATH']}/problem/update"),
+          headers: {"Content-Type": "application/json"},
+          body: jsonEncode(data),
+        );
+      } else if (title == 'Diagnosis List') {
+        final http.Response response = await http.post(
+          Uri.parse("${dotenv.env['API_PATH']}/diagnostic/update"),
+          headers: {"Content-Type": "application/json"},
+          body: jsonEncode(data),
+        );
+      } else if (title == 'Tag List') {
+        final http.Response response = await http.post(
+          Uri.parse("${dotenv.env['API_PATH']}/tag/update"),
+          headers: {"Content-Type": "application/json"},
+          body: jsonEncode(data),
+        );
+      }
+    } catch (error) {
+      print("Error: $error");
     }
   }
 
-  Future<void> _postEditData(String title, String id, String item) async {
-    if (title == 'Problem List') {
-      var data = {"name": item};
-      final http.Response response = await http.post(
-        Uri.parse("${dotenv.env['API_PATH']}/problem/update/$id"),
-        headers: {"Content-Type": "application/json"},
-        body: jsonEncode(data),
-      );
-    } else if (title == 'Diagnosis List') {
-      var data = {"name": item};
-      final http.Response response = await http.post(
-        Uri.parse("${dotenv.env['API_PATH']}/diagnostic/update/$id"),
-        headers: {"Content-Type": "application/json"},
-        body: jsonEncode(data),
-      );
+  List<dynamic> filterNameList(
+      TextEditingController searchController, List<dynamic> listForSearch) {
+    if (selectedTileIndex == -1) {
+      String query = searchController.text.toLowerCase();
+      return listForSearch
+          .where((item) => item.name.toLowerCase().startsWith(query))
+          .toList();
+    } else {
+      return listForSearch;
     }
   }
 
@@ -95,42 +112,24 @@ class _EditPredefinedListDetailState extends State<EditPredefinedListDetail> {
             child: Column(
               children: [
                 Text(
-                  widget.title,
+                  'แก้ไข/ลบ ${widget.title}',
                   style: kSubHeaderTextStyle,
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 TextField(
                   controller: textFieldController,
                   textAlignVertical: TextAlignVertical.center,
                   onChanged: (value) {
                     setState(() {
-                      displayList = filterList(textFieldController, fullList);
+                      displayList =
+                          filterNameList(textFieldController, fullList);
                     });
                   },
                   decoration: InputDecoration(
                     isDense: true,
                     border: OutlineInputBorder(),
                     suffixIcon: !isEditing
-                        ? IconButton(
-                            icon: Icon(Icons.add),
-                            onPressed: () {
-                              setState(() {
-                                if (widget.title == 'Problem List') {
-                                  ProblemObject newItem = ProblemObject(
-                                      id: 'X', name: textFieldController.text);
-                                  fullList.add(newItem);
-                                } else if (widget.title == 'Diagnosis List') {
-                                  DiagnosisObject newItem = DiagnosisObject(
-                                      id: 'X', name: textFieldController.text);
-                                  fullList.add(newItem);
-                                }
-                                _postAddData(widget.title,
-                                    textFieldController.text); //send data
-                                textFieldController.clear();
-                                displayList = fullList;
-                              });
-                            },
-                          )
+                        ? null
                         : IconButton(
                             icon: Icon(Icons.save),
                             onPressed: () {
@@ -138,8 +137,7 @@ class _EditPredefinedListDetailState extends State<EditPredefinedListDetail> {
                                 newItem = textFieldController.text;
                                 for (var item in fullList) {
                                   if (item.id == oldItemID) {
-                                    _postEditData(
-                                        widget.title, item.id, item.name);
+                                    editedList.add(item);
                                     item.name = newItem;
                                   }
                                 }
@@ -157,7 +155,7 @@ class _EditPredefinedListDetailState extends State<EditPredefinedListDetail> {
                   child: Card(
                     color: Color(0xFFF2F5F7),
                     elevation: 0,
-                    margin: EdgeInsets.symmetric(horizontal: 15),
+                    margin: const EdgeInsets.symmetric(horizontal: 15),
                     child: ListView.builder(
                       itemCount: displayList.length,
                       itemBuilder: (context, index) {
@@ -196,13 +194,10 @@ class _EditPredefinedListDetailState extends State<EditPredefinedListDetail> {
                                       IconButton(
                                         onPressed: () {
                                           setState(() {
-                                            _postDeleteData(
-                                                widget.title,
-                                                displayList[selectedTileIndex]
-                                                    .id);
+                                            deletedList.add(
+                                                displayList[selectedTileIndex]);
                                             fullList.remove(
                                                 displayList[selectedTileIndex]);
-                                            // print('state1 = ${fullList.map((e) => e.name).toList()}');
                                             fullList.sort((a, b) =>
                                                 a.name.compareTo(b.name));
                                             displayList = fullList;
@@ -235,7 +230,26 @@ class _EditPredefinedListDetailState extends State<EditPredefinedListDetail> {
                   ),
                 ),
                 const SizedBox(height: 10),
-                MyBackButton(myContext: context),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    MyBackButton(myContext: context),
+                    ElevatedButton(
+                      onPressed: () async {
+                        if (editedList.isNotEmpty) {
+                          await _postEditData(widget.title).then((value) {
+                            Navigator.pop(context);
+                          });
+                        }
+                        if (deletedList.isNotEmpty) {
+                          await _postDeleteData(widget.title)
+                              .then((value) => Navigator.pop(context));
+                        }
+                      },
+                      child: Text('บันทึก'),
+                    ),
+                  ],
+                ),
               ],
             ),
           ),

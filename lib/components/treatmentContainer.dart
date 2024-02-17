@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/tmpQuestion.dart';
 import 'package:frontend/components/BoxesInAddQ.dart';
 import 'package:frontend/components/functions.dart';
 import 'package:frontend/UIModels/teacher/treatmentContainer_provider.dart';

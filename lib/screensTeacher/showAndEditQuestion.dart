@@ -6,7 +6,6 @@ import 'package:frontend/models/problemListObject.dart';
 import 'package:frontend/models/signalmentObject.dart';
 import 'package:frontend/models/tagObject.dart';
 import 'package:frontend/screensTeacher/editQuestion.dart';
-import 'package:frontend/tmpQuestion.dart';
 import 'package:frontend/components/tagBox.dart';
 import 'package:frontend/components/splitScreenNisit.dart';
 import 'package:frontend/components/BoxesInAddQ.dart';

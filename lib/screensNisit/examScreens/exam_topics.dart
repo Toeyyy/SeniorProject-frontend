@@ -5,7 +5,6 @@ import 'package:frontend/constants.dart';
 import 'package:collection/collection.dart';
 import 'package:frontend/models/examinationPreDefinedObject.dart';
 import 'package:frontend/screensNisit/examScreens/exam_details.dart';
-import 'package:frontend/tmpQuestion.dart';
 import 'package:frontend/models/questionObject.dart';
 import 'package:frontend/AllDataFile.dart';
 import 'package:frontend/components/BoxesInAddQ.dart';

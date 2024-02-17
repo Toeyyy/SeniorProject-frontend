@@ -4,6 +4,7 @@ class ExamPreDefinedObject {
   String type;
   String? area;
   String name;
+  String? defaultText;
   int cost;
   int? round;
 
@@ -13,6 +14,7 @@ class ExamPreDefinedObject {
       required this.type,
       this.area,
       required this.name,
+      this.defaultText,
       required this.cost,
       this.round});
 
@@ -23,6 +25,7 @@ class ExamPreDefinedObject {
         type: json['type'] ?? json['lab'],
         area: json['area'],
         name: json['name'] ?? "",
+        defaultText: json['textDefault'],
         cost: json['cost'] ?? 0,
         round: json['round'] as int?);
   }

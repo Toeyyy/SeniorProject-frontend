@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/components/appBar.dart';
 import 'package:frontend/constants.dart';
-import 'package:frontend/tmpQuestion.dart';
-import 'package:frontend/screensTeacher/PredefinedScreens/editPredefinedListDetail.dart';
 import 'package:frontend/screensTeacher/PredefinedScreens/editPredefined_treatment_topics.dart';
 import 'package:frontend/components/backButton.dart';
-import 'package:frontend/screensTeacher/PredefinedScreens/editPredefined_exam_topic.dart';
+import 'package:frontend/screensTeacher/PredefinedScreens/editPredefined_exam_choice.dart';
 import 'package:frontend/aboutData/getDataFunctions.dart';
+import 'package:frontend/screensTeacher/PredefinedScreens/editPredefined_other_choice.dart';
+import 'package:frontend/screensTeacher/PredefinedScreens/editPredefined_treatment_choice.dart';
 
 class EditPredefinedListTopic extends StatelessWidget {
   const EditPredefinedListTopic({super.key});
@@ -18,6 +18,7 @@ class EditPredefinedListTopic extends StatelessWidget {
       'Diagnosis List',
       'Treatment List',
       'Examination List',
+      'Tag List',
     ];
 
     Future<void> getTreatment() async {
@@ -62,7 +63,7 @@ class EditPredefinedListTopic extends StatelessWidget {
                               context,
                               MaterialPageRoute(
                                 builder: (context) =>
-                                    EditPreDefinedExam2Topic(),
+                                    EditPreDefinedExamChoice(),
                               ),
                             );
                           } else if (editPredefinedTopicList[index] ==
@@ -72,14 +73,14 @@ class EditPredefinedListTopic extends StatelessWidget {
                               context,
                               MaterialPageRoute(
                                 builder: (context) =>
-                                    EditPredefinedTreatmentType(),
+                                    EditPreDefinedTreatmentChoice(),
                               ),
                             );
                           } else {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => EditPredefinedListDetail(
+                                builder: (context) => EditPreDefinedOtherChoice(
                                     title: editPredefinedTopicList[index]),
                               ),
                             );

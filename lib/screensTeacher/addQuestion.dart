@@ -1,10 +1,8 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:frontend/components/appBar.dart';
 import 'package:frontend/constants.dart';
 import 'package:frontend/models/diagnosisObject.dart';
 import 'package:frontend/models/problemListObject.dart';
-import 'package:frontend/tmpQuestion.dart';
 import 'package:frontend/UIModels/teacher/examContainer_provider.dart';
 import 'package:frontend/models/tagObject.dart';
 import 'package:frontend/components/treatmentContainer.dart';
@@ -28,9 +26,8 @@ class AddQuestion extends StatefulWidget {
 }
 
 class _AddQuestionState extends State<AddQuestion> {
-  String signalmentTypeValue = Signalment_typeList.first;
-  // String? signalmentBreedValue;
-  String? signalmentSexValue;
+  String signalmentTypeValue = 'สุนัข';
+  String? signalmentSexValue = 'ผู้';
   bool signalmentSterilizeStat = false;
   TextEditingController signalmentBreedValue = TextEditingController();
   TextEditingController signalmentAgeValue = TextEditingController();
@@ -84,7 +81,7 @@ class _AddQuestionState extends State<AddQuestion> {
                   borderRadius: BorderRadius.circular(5),
                   color: Color(0xFFDFE4E0),
                 ),
-                child: !_isPosting
+                child: _isPosting
                     ? CircularProgressIndicator(
                         color: Color(0xFF42C2FF),
                       )
@@ -120,7 +117,7 @@ class _AddQuestionState extends State<AddQuestion> {
               child: Container(
                 width: MediaQuery.of(context).size.height * 0.5,
                 height: MediaQuery.of(context).size.height * 0.2,
-                child: Center(
+                child: const Center(
                   child: Text(
                     'กรุณากรอกข้อมูลให้ครบ',
                     style: kSubHeaderTextStyle,
@@ -285,11 +282,6 @@ class _AddQuestionState extends State<AddQuestion> {
       return tmp;
     }
 
-    void printSTH() {
-      print(selectedTags);
-      // print('isPosting = $_isPosting');
-    }
-
     ////Update functions/////
     void updateProbList(List<ProblemObject> newList, int round) {
       // print('round = $round');
@@ -309,6 +301,8 @@ class _AddQuestionState extends State<AddQuestion> {
     }
 
     //////////////////
+
+    List<String> Signalment_typeList = ["สุนัข", "แมว", "นก"];
 
     return Scaffold(
       appBar: AppbarTeacher(),
@@ -547,20 +541,18 @@ class _AddQuestionState extends State<AddQuestion> {
                             ),
                             ElevatedButton(
                                 onPressed: () async {
-                                  // await postQuestion(context);
-                                  // if (context.mounted) _showModal(context);
-                                  // showModal(context);
                                   if (!checkNotEmpty()) {
                                     _alertModal(context);
                                   } else {
                                     setState(() {
                                       _isPosting = true;
                                     });
-                                    await postQuestion(context);
-                                    setState(() {
-                                      _isPosting = false;
+                                    await postQuestion(context).then((value) {
+                                      setState(() {
+                                        _isPosting = false;
+                                      });
+                                      showModal(context);
                                     });
-                                    showModal(context);
                                   }
                                 },
                                 child: Text('บันทึก')),

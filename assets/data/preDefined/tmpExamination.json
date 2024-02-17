@@ -4,6 +4,7 @@
     "lab": "lab 1",
     "type": "lab 1 type 1",
     "name": "lab 1 type 1 exam 1",
+    "textDefault": "default",
     "cost": 100
   },
   {
@@ -11,6 +12,7 @@
   "lab": "lab 1",
   "type": "lab 1 type 1",
   "name": "lab 1 type 1 exam 2",
+  "textDefault": "default",
   "cost": 100
   },
   {
@@ -18,6 +20,7 @@
     "lab": "lab 1",
     "type": "lab 1 type 1",
     "name": "lab 1 type 1 exam 3",
+    "textDefault": "default",
     "cost": 100
   },
   {
@@ -25,6 +28,7 @@
     "lab": "lab 1",
     "type": "lab 1 type 2",
     "name": "lab 1 type 2 exam 1",
+    "textDefault": "default",
     "cost": 100
   },
   {
@@ -39,6 +43,7 @@
     "lab": "lab 1",
     "type": "lab 1 type 2",
     "name": "lab 1 type 2 exam 3",
+    "textDefault": "default",
     "cost": 100
   },
   {
@@ -47,6 +52,7 @@
     "area": "area 1",
     "type": "lab 2 type 2",
     "name": "lab 2 type 1 exam 1",
+    "textDefault": "default",
     "cost": 100
   },
   {
@@ -55,6 +61,7 @@
     "area": "area 2",
     "type": "lab 2 type 1",
     "name": "lab 2 type 1 exam 2",
+    "textDefault": "default",
     "cost": 100
   },
   {
@@ -63,6 +70,7 @@
     "area": "area 1",
     "type": "lab 2 type 1",
     "name": "lab 2 type 1 exam 3",
+    "textDefault": "default",
     "cost": 100
   },
   {
@@ -71,6 +79,7 @@
     "area": "area 2",
     "type": "lab 2 type 2",
     "name": "lab 2 type 2 exam 1",
+    "textDefault": "default",
     "cost": 100
   },
   {
@@ -79,6 +88,7 @@
     "area": "area 3",
     "type": "lab 2 type 2",
     "name": "lab 2 type 2 exam 2",
+    "textDefault": "default",
     "cost": 100
   },
   {
@@ -87,6 +97,7 @@
     "area": "area 3",
     "type": "lab 2 type 2",
     "name": "lab 2 type 2 exam 3",
+    "textDefault": "default",
     "cost": 100
   },
   {
@@ -94,6 +105,7 @@
     "lab": "lab 3",
     "type": "lab 3 type 1",
     "name": "lab 3 type 1 exam 1",
+    "textDefault": "default",
     "cost": 100
   },
   {
@@ -101,6 +113,7 @@
     "lab": "lab 3",
     "type": "lab 3 type 1",
     "name": "lab 3 type 1 exam 2",
+    "textDefault": "default",
     "cost": 100
   },
   {
@@ -108,6 +121,7 @@
     "lab": "lab 3",
     "type": "lab 3 type 1",
     "name": "lab 3 type 1 exam 3",
+    "textDefault": "default",
     "cost": 100
   },
   {
@@ -115,6 +129,7 @@
     "lab": "lab 3",
     "type": "lab 3 type 2",
     "name": "lab 3 type 2 exam 1",
+    "textDefault": "default",
     "cost": 100
   },
   {
@@ -122,14 +137,16 @@
     "lab": "lab 3",
     "type": "lab 3 type 2",
     "name": "lab 3 type 2 exam 2",
+    "textDefault": "default",
     "cost": 100
   },
   {
     "id": "18",
     "lab": "lab 3",
     "type": "lab 3 type 2",
-    "area": "area 4",
+    "area": "area 3",
     "name": "lab 3 type 2 exam 3",
+    "textDefault": "default",
     "cost": 100
   },
   {
@@ -137,6 +154,7 @@
     "lab": "Ultrasound",
     "type": "Ultrasound",
     "name": "Liver",
+    "textDefault": "default",
     "cost": 100
   },
   {
@@ -144,6 +162,7 @@
     "lab": "Ultrasound",
     "type": "Ultrasound",
     "name": "Eyes",
+    "textDefault": "default",
     "cost": 100
   },
   {
@@ -151,6 +170,7 @@
     "lab": "Ultrasound",
     "type": "Ultrasound",
     "name": "Head",
+    "textDefault": "default",
     "cost": 100
   },
   {
@@ -159,6 +179,7 @@
     "type": "lab 3 type 2",
     "area": "area 1",
     "name": "lab 3 type 2 exam 3",
+    "textDefault": "default 1",
     "cost": 100
   },
   {
@@ -167,7 +188,8 @@
     "type": "lab 3 type 2",
     "area": "area 2",
     "name": "lab 3 type 2 exam 3",
-    "cost": 100
+    "textDefault": "default 2",
+    "cost": 200
   },
   {
     "id": "24",
@@ -175,7 +197,8 @@
     "type": "lab 3 type 2",
     "area": "area 4",
     "name": "lab 3 type 2 exam 3",
-    "cost": 100
+    "textDefault": "default 4",
+    "cost": 400
   },
   {
     "id": "25",
@@ -183,6 +206,7 @@
     "type": "lab 3 type 2",
     "area": "area 3",
     "name": "lab 3 type 2 exam 2",
-    "cost": 100
+    "textDefault": "default 3",
+    "cost": 300
   }
 ]

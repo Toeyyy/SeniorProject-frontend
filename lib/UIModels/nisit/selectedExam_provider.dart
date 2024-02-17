@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:frontend/models/examinationPreDefinedObject.dart';
 import 'package:frontend/models/examResultObject.dart';
 import 'package:frontend/components/resultContainer.dart';
-import 'package:frontend/tmpQuestion.dart';
 
 class SelectedExam extends ChangeNotifier {
   List<ExamPreDefinedObject> examList1 = [];
