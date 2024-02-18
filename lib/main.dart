@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:frontend/UIModels/nisit/selectedTreatment_provider.dart';
+import 'package:frontend/UIModels/nisit/selected_treatment_provider.dart';
 import 'package:frontend/UIModels/teacher/examContainer_provider.dart';
 import 'package:frontend/UIModels/teacher/treatmentContainer_provider.dart';
 import 'package:frontend/UIModels/teacher/predefinedExam_provider.dart';
@@ -18,10 +18,10 @@ import 'package:provider/provider.dart';
 import 'package:frontend/screensTeacher/editQuestion.dart';
 import 'package:frontend/screensTeacher/PredefinedScreens/editPredefined_exam_detail.dart';
 import 'package:frontend/screensNisit/examScreens/exam_topics.dart';
-import 'package:frontend/UIModels/nisit/selectedExam_provider.dart';
+import 'package:frontend/UIModels/nisit/selected_exam_provider.dart';
 import 'package:frontend/screensTeacher/PredefinedScreens/editPredefined_exam_choice.dart';
-import 'package:frontend/UIModels/nisit/selectedProblem_provider.dart';
-import 'package:frontend/UIModels/nisit/selectedDiagnosis_provider.dart';
+import 'package:frontend/UIModels/nisit/selected_problem_provider.dart';
+import 'package:frontend/UIModels/nisit/selected_diagnosis_provider.dart';
 import 'package:frontend/screensNisit/returnPoint.dart';
 import 'package:frontend/screensNisit/showStats.dart';
 
@@ -50,10 +50,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       theme: lightTheme,
       // initialRoute: '/Nisit/treatmentTotal',
-      // initialRoute: '/mainShowQuestionNisit',
+      initialRoute: '/mainShowQuestionNisit',
       // initialRoute: '/mainShowQuestionTeacher',
       // initialRoute: '/Nisit/showStats',
-      initialRoute: '/Teacher/addQuesMenu',
+      // initialRoute: '/Teacher/addQuesMenu',
       // initialRoute: '/Nisit/ExamTopic',
       routes: {
         /////General/////

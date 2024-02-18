@@ -5,12 +5,12 @@ import 'package:frontend/components/splitScreenNisit.dart';
 import 'package:frontend/models/examinationPreDefinedObject.dart';
 import 'package:frontend/constants.dart';
 import 'package:frontend/components/BoxesInAddQ.dart';
-import 'package:frontend/UIModels/nisit/selectedExam_provider.dart';
+import 'package:frontend/UIModels/nisit/selected_exam_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:frontend/components/resultContainer.dart';
 import 'package:frontend/screensNisit/examScreens/exam_total.dart';
 import 'package:frontend/models/questionObject.dart';
-import 'package:frontend/UIModels/nisit/selectedProblem_provider.dart';
+import 'package:frontend/UIModels/nisit/selected_problem_provider.dart';
 
 class ExamResult extends StatelessWidget {
   ExamPreDefinedObject selectedExam;

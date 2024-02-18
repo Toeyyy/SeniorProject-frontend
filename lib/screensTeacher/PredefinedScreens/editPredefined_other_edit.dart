@@ -36,20 +36,20 @@ class _EditPredefinedOtherEditState extends State<EditPredefinedOtherEdit> {
     }).toList();
     try {
       if (title == 'Problem List') {
-        final http.Response response = await http.post(
-          Uri.parse("${dotenv.env['API_PATH']}/problem/delete"),
+        final http.Response response = await http.delete(
+          Uri.parse("${dotenv.env['API_PATH']}/problem"),
           headers: {"Content-Type": "application/json"},
           body: jsonEncode(data),
         );
       } else if (title == 'Diagnosis List') {
-        final http.Response response = await http.post(
-          Uri.parse("${dotenv.env['API_PATH']}/diagnostic/delete"),
+        final http.Response response = await http.delete(
+          Uri.parse("${dotenv.env['API_PATH']}/diagnostic"),
           headers: {"Content-Type": "application/json"},
           body: jsonEncode(data),
         );
       } else if (title == 'Tag List') {
-        final http.Response response = await http.post(
-          Uri.parse("${dotenv.env['API_PATH']}/tag/delete"),
+        final http.Response response = await http.delete(
+          Uri.parse("${dotenv.env['API_PATH']}/tag"),
           headers: {"Content-Type": "application/json"},
           body: jsonEncode(data),
         );
@@ -65,20 +65,20 @@ class _EditPredefinedOtherEditState extends State<EditPredefinedOtherEdit> {
     }).toList();
     try {
       if (title == 'Problem List') {
-        final http.Response response = await http.post(
-          Uri.parse("${dotenv.env['API_PATH']}/problem/update"),
+        final http.Response response = await http.put(
+          Uri.parse("${dotenv.env['API_PATH']}/problem"),
           headers: {"Content-Type": "application/json"},
           body: jsonEncode(data),
         );
       } else if (title == 'Diagnosis List') {
-        final http.Response response = await http.post(
-          Uri.parse("${dotenv.env['API_PATH']}/diagnostic/update"),
+        final http.Response response = await http.put(
+          Uri.parse("${dotenv.env['API_PATH']}/diagnostic"),
           headers: {"Content-Type": "application/json"},
           body: jsonEncode(data),
         );
       } else if (title == 'Tag List') {
-        final http.Response response = await http.post(
-          Uri.parse("${dotenv.env['API_PATH']}/tag/update"),
+        final http.Response response = await http.put(
+          Uri.parse("${dotenv.env['API_PATH']}/tag"),
           headers: {"Content-Type": "application/json"},
           body: jsonEncode(data),
         );

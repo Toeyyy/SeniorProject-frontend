@@ -8,9 +8,9 @@ import 'package:frontend/screensNisit/examScreens/exam_details.dart';
 import 'package:frontend/models/questionObject.dart';
 import 'package:frontend/AllDataFile.dart';
 import 'package:frontend/components/BoxesInAddQ.dart';
-import 'package:frontend/UIModels/nisit/selectedProblem_provider.dart';
+import 'package:frontend/UIModels/nisit/selected_problem_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:frontend/UIModels/nisit/selectedExam_provider.dart';
+import 'package:frontend/UIModels/nisit/selected_exam_provider.dart';
 
 class ExamTopic extends StatelessWidget {
   final int round;

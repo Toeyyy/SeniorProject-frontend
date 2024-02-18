@@ -60,7 +60,7 @@ class _EditPreDefinedTreatmentAddState
     }).toList();
     try {
       final http.Response response = await http.post(
-        Uri.parse("${dotenv.env['API_PATH']}/treatment/add"),
+        Uri.parse("${dotenv.env['API_PATH']}/treatment"),
         headers: {"Content-Type": "application/json"},
         body: jsonEncode(data),
       );

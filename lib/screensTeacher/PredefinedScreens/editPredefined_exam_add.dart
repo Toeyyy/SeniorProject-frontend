@@ -80,7 +80,7 @@ class _EditPreDefinedExamAddState extends State<EditPreDefinedExamAdd> {
         };
       }).toList();
       final http.Response response = await http.post(
-        Uri.parse("${dotenv.env['API_PATH']}/exam/add"),
+        Uri.parse("${dotenv.env['API_PATH']}/exam"),
         headers: {"Content-Type": "application/json"},
         body: jsonEncode(data),
       );

@@ -3,11 +3,8 @@ import 'package:frontend/components/appBar.dart';
 import 'package:frontend/components/examContainer.dart';
 import 'package:frontend/constants.dart';
 import 'package:frontend/models/problemListObject.dart';
-import 'package:frontend/models/signalmentObject.dart';
-import 'package:frontend/models/tagObject.dart';
 import 'package:frontend/screensTeacher/editQuestion.dart';
 import 'package:frontend/components/tagBox.dart';
-import 'package:frontend/components/splitScreenNisit.dart';
 import 'package:frontend/components/BoxesInAddQ.dart';
 import 'package:frontend/models/examinationObject.dart';
 import 'package:frontend/components/treatmentContainer.dart';
@@ -17,8 +14,10 @@ import 'package:frontend/components/backButton.dart';
 
 class ShowAndEditQuestion extends StatefulWidget {
   FullQuestionObject questionObj;
+  VoidCallback refreshCallBack;
 
-  ShowAndEditQuestion({super.key, required this.questionObj});
+  ShowAndEditQuestion(
+      {super.key, required this.questionObj, required this.refreshCallBack});
 
   @override
   State<ShowAndEditQuestion> createState() => _ShowAndEditQuestionState();
@@ -76,20 +75,6 @@ class _ShowAndEditQuestionState extends State<ShowAndEditQuestion> {
 
   @override
   Widget build(BuildContext context) {
-    // questionObj = widget.questionObj;
-    // splitExams =
-    //     groupBy(questionObj!.examinations, (obj) => obj.round.toString());
-    // splitProblems = groupBy(questionObj!.problems, (e) => e.round.toString());
-    // void printSTH() {
-    //   print(splitExams['1']);
-    //   print(splitExams['2']);
-    // }
-    // ElevatedButton(
-    //     onPressed: () {
-    //       printSTH();
-    //     },
-    //     child: Text('กด')),
-
     return Scaffold(
       appBar: AppbarTeacher(),
       body: SingleChildScrollView(
@@ -125,7 +110,9 @@ class _ShowAndEditQuestionState extends State<ShowAndEditQuestion> {
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) => EditQuestion(
-                                          questionObj: questionObj!),
+                                          questionObj: questionObj!,
+                                          refreshCallBack:
+                                              widget.refreshCallBack),
                                     ),
                                   );
                                 },
@@ -287,7 +274,7 @@ class _ShowAndEditQuestionState extends State<ShowAndEditQuestion> {
                       Center(child: MyBackButton(myContext: context)),
                     ],
                   )
-                : SizedBox(
+                : const SizedBox(
                     width: 10,
                     child: Center(child: CircularProgressIndicator())),
           ),

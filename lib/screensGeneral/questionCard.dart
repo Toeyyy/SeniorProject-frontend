@@ -7,10 +7,10 @@ import 'package:frontend/screensTeacher/showAndEditQuestion.dart';
 import 'package:frontend/models/problemListObject.dart';
 import 'package:frontend/aboutData/getDataFunctions.dart';
 import 'package:provider/provider.dart';
-import 'package:frontend/UIModels/nisit/selectedProblem_provider.dart';
-import 'package:frontend/UIModels/nisit/selectedDiagnosis_provider.dart';
-import 'package:frontend/UIModels/nisit/selectedExam_provider.dart';
-import 'package:frontend/UIModels/nisit/selectedTreatment_provider.dart';
+import 'package:frontend/UIModels/nisit/selected_problem_provider.dart';
+import 'package:frontend/UIModels/nisit/selected_diagnosis_provider.dart';
+import 'package:frontend/UIModels/nisit/selected_exam_provider.dart';
+import 'package:frontend/UIModels/nisit/selected_treatment_provider.dart';
 
 class QuestionCard extends StatelessWidget {
   final QuestionObject questionObj;

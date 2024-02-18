@@ -74,8 +74,8 @@ class _EditPredefinedExamNameState extends State<EditPredefinedExamName> {
       var data = deletedList.map((item) {
         return {"id": item.id};
       }).toList();
-      final http.Response response = await http.post(
-        Uri.parse("${dotenv.env['API_PATH']}/exam/delete"),
+      final http.Response response = await http.delete(
+        Uri.parse("${dotenv.env['API_PATH']}/exam"),
         headers: {"Content-Type": "application/json"},
         body: jsonEncode(data),
       );
@@ -102,8 +102,8 @@ class _EditPredefinedExamNameState extends State<EditPredefinedExamName> {
           "cost": item.cost
         };
       });
-      final http.Response response = await http.post(
-        Uri.parse("${dotenv.env['API_PATH']}/exam/update"),
+      final http.Response response = await http.put(
+        Uri.parse("${dotenv.env['API_PATH']}/exam"),
         headers: {"Content-Type": "application/json"},
         body: jsonEncode(data),
       );
@@ -163,7 +163,7 @@ class _EditPredefinedExamNameState extends State<EditPredefinedExamName> {
                     decoration: InputDecoration(
                       isDense: true,
                       border: OutlineInputBorder(),
-                      hintText: "Exam name",
+                      hintText: "Exam name only",
                     ),
                   ),
                   Card(
@@ -373,7 +373,7 @@ class _EditPredefinedExamNameState extends State<EditPredefinedExamName> {
                       _isEditing
                           ? ElevatedButton(
                               onPressed: () {
-                                if (_checkNotEmpty()) {
+                                if (_checkNotEmpty() && _isFormatCostCorrect) {
                                   selectedItem!.name =
                                       nameTextFieldController.text;
                                   selectedItem!.area =

@@ -33,19 +33,19 @@ class _EditPreDefinedOtherAddState extends State<EditPreDefinedOtherAdd> {
     try {
       if (title == 'Problem List') {
         final http.Response response = await http.post(
-          Uri.parse("${dotenv.env['API_PATH']}/problem/add"),
+          Uri.parse("${dotenv.env['API_PATH']}/problem"),
           headers: {"Content-Type": "application/json"},
           body: jsonEncode(data),
         );
       } else if (title == 'Diagnosis List') {
         final http.Response response = await http.post(
-          Uri.parse("${dotenv.env['API_PATH']}/diagnostic/add"),
+          Uri.parse("${dotenv.env['API_PATH']}/diagnostic"),
           headers: {"Content-Type": "application/json"},
           body: jsonEncode(data),
         );
       } else if (title == 'Tag List') {
         final http.Response response = await http.post(
-          Uri.parse("${dotenv.env['API_PATH']}/tag/add"),
+          Uri.parse("${dotenv.env['API_PATH']}/tag"),
           headers: {"Content-Type": "application/json"},
           body: jsonEncode(data),
         );

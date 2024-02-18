@@ -6,9 +6,13 @@ import 'package:frontend/screensTeacher/showAndEditQuestion.dart';
 
 class FullQuestionCard extends StatelessWidget {
   final FullQuestionObject questionObj;
+  VoidCallback refreshCallBack;
   int role;
 
-  FullQuestionCard({required this.questionObj, required this.role});
+  FullQuestionCard(
+      {required this.questionObj,
+      required this.role,
+      required this.refreshCallBack});
 
   void _showModal(BuildContext context) {
     showDialog(
@@ -104,8 +108,10 @@ class FullQuestionCard extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) =>
-                                  ShowAndEditQuestion(questionObj: questionObj),
+                              builder: (context) => ShowAndEditQuestion(
+                                questionObj: questionObj,
+                                refreshCallBack: refreshCallBack,
+                              ),
                             ),
                           );
                         },

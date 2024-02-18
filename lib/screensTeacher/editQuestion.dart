@@ -23,8 +23,9 @@ import 'package:frontend/AllDataFile.dart';
 
 class EditQuestion extends StatefulWidget {
   FullQuestionObject questionObj;
+  VoidCallback refreshCallBack;
 
-  EditQuestion({required this.questionObj});
+  EditQuestion({required this.questionObj, required this.refreshCallBack});
 
   @override
   State<EditQuestion> createState() => _EditQuestionState();
@@ -148,7 +149,7 @@ class _EditQuestionState extends State<EditQuestion> {
     examContainers2 = examProvider.examContainers2;
 
     //post function
-    Future<void> _postQuestion(BuildContext context) async {
+    Future<void> postQuestion(BuildContext context) async {
       final dio = Dio();
 
       //prob List
@@ -263,7 +264,7 @@ class _EditQuestionState extends State<EditQuestion> {
           data: formData);
     }
 
-    void showModal(BuildContext context) {
+    void showModal(BuildContext context, VoidCallback callbackFunction) {
       showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -271,23 +272,25 @@ class _EditQuestionState extends State<EditQuestion> {
               child: Container(
                 width: MediaQuery.of(context).size.height * 0.3,
                 height: MediaQuery.of(context).size.height * 0.35,
-                padding: EdgeInsets.all(40),
+                padding: const EdgeInsets.all(40),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(5),
-                  color: Color(0xFFDFE4E0),
+                  color: const Color(0xFFDFE4E0),
                 ),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Icon(
+                    const Icon(
                       Icons.check_circle_outline,
                       size: 100,
                       color: Color(0xFF42C2FF),
                     ),
                     ElevatedButton(
                       onPressed: () {
+                        callbackFunction();
+                        Navigator.pop(context);
                         Navigator.pop(context);
                         Navigator.pop(context);
                         Navigator.pop(context);
@@ -508,21 +511,22 @@ class _EditQuestionState extends State<EditQuestion> {
                                   ElevatedButton(
                                     onPressed: () {
                                       //send data
-                                      _postQuestion(context);
-                                      showModal(context);
+                                      postQuestion(context);
+                                      showModal(
+                                          context, widget.refreshCallBack);
                                     },
-                                    child: Text('บันทึก'),
+                                    child: const Text('บันทึก'),
                                   ),
                                 ],
                               ),
                             ],
                           )
-                        : SizedBox(
+                        : const SizedBox(
                             width: 10,
                             child: Center(child: CircularProgressIndicator()),
                           ),
                   )
-                : SizedBox(
+                : const SizedBox(
                     width: 10,
                     child: Center(child: CircularProgressIndicator())),
           ),

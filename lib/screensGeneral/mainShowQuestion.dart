@@ -28,6 +28,13 @@ class _MainShowQuestionState extends State<MainShowQuestion> {
 
   bool _isLoadData = false;
 
+  void refreshScreen() {
+    print('refresh page');
+    setState(() {
+      //refresh
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -39,29 +46,22 @@ class _MainShowQuestionState extends State<MainShowQuestion> {
     setState(() {
       _isLoadData = true;
     });
+    await fetchPreDefinedProb();
+    await fetchPreDefinedDiag();
+    await fetchPreDefinedExam();
+    await fetchPreDefinedTag();
+    await fetchPreDefinedTreatment();
     if (widget.role == 0) {
       List<QuestionObject> loadedData = await fetchQuestionList();
-      await fetchPreDefinedProb();
-      await fetchPreDefinedDiag();
-      await fetchPreDefinedExam();
-      await fetchPreDefinedTag();
-      await fetchPreDefinedTreatment();
-      // print('loaded data = ${loadedData[0].type}');
       setState(() {
         questionObjList = loadedData;
         displayList = loadedData;
       });
     } else {
-      List<FullQuestionObject> loadedData = await fetchFullQuestionList();
-      await fetchPreDefinedProb();
-      await fetchPreDefinedDiag();
-      await fetchPreDefinedExam();
-      await fetchPreDefinedTag();
-      await fetchPreDefinedTreatment();
-      // print('loaded data = ${loadedData[0].type}');
+      await fetchFullQuestionList();
       setState(() {
-        teacherQuestionObjList = loadedData;
-        teacherDisplayList = loadedData;
+        teacherQuestionObjList = teacherQuestionList;
+        teacherDisplayList = teacherQuestionList;
       });
     }
     setState(() {
@@ -133,14 +133,14 @@ class _MainShowQuestionState extends State<MainShowQuestion> {
                       ],
                     ),
                   ),
-                  Divider(),
-                  SizedBox(
+                  const Divider(),
+                  const SizedBox(
                     height: 20,
                   ),
                   TagSearchBox(
                       initTags: selectedTags,
                       updateListCallback: updateTagList),
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
                   _isLoadData == false
@@ -149,7 +149,7 @@ class _MainShowQuestionState extends State<MainShowQuestion> {
                               ? GridView.builder(
                                   shrinkWrap: true,
                                   gridDelegate:
-                                      SliverGridDelegateWithFixedCrossAxisCount(
+                                      const SliverGridDelegateWithFixedCrossAxisCount(
                                           crossAxisCount: 2,
                                           mainAxisSpacing: 8,
                                           crossAxisSpacing: 8),
@@ -161,12 +161,12 @@ class _MainShowQuestionState extends State<MainShowQuestion> {
                                     );
                                   },
                                 )
-                              : SizedBox()
+                              : const SizedBox()
                           : teacherDisplayList.isNotEmpty
                               ? GridView.builder(
                                   shrinkWrap: true,
                                   gridDelegate:
-                                      SliverGridDelegateWithFixedCrossAxisCount(
+                                      const SliverGridDelegateWithFixedCrossAxisCount(
                                           crossAxisCount: 2,
                                           mainAxisSpacing: 8,
                                           crossAxisSpacing: 8),
@@ -175,11 +175,12 @@ class _MainShowQuestionState extends State<MainShowQuestion> {
                                     return FullQuestionCard(
                                       questionObj: teacherDisplayList[index],
                                       role: widget.role,
+                                      refreshCallBack: refreshScreen,
                                     );
                                   },
                                 )
-                              : SizedBox()
-                      : Center(child: CircularProgressIndicator()),
+                              : const SizedBox()
+                      : const Center(child: CircularProgressIndicator()),
                 ],
               ),
             ),

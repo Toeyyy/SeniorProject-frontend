@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/components/splitScreenNisit.dart';
 import 'package:frontend/components/appBar.dart';
 import 'package:frontend/models/examResultObject.dart';
-import 'package:frontend/UIModels/nisit/selectedExam_provider.dart';
+import 'package:frontend/UIModels/nisit/selected_exam_provider.dart';
 import 'package:frontend/screensNisit/examScreens/exam_topics.dart';
 import 'package:provider/provider.dart';
 import 'package:frontend/components/BoxesInAddQ.dart';
@@ -11,7 +11,7 @@ import 'package:frontend/components/resultContainer.dart';
 import 'package:frontend/screensNisit/problemList.dart';
 import 'package:frontend/screensNisit/diagnosis.dart';
 import 'package:frontend/models/questionObject.dart';
-import 'package:frontend/UIModels/nisit/selectedProblem_provider.dart';
+import 'package:frontend/UIModels/nisit/selected_problem_provider.dart';
 
 class ExamTotal extends StatelessWidget {
   int round;

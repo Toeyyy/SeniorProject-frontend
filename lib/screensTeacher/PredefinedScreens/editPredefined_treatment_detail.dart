@@ -59,8 +59,8 @@ class _EditPredefinedTreatmentDetailState
       return {"id": item.id};
     }).toList();
     try {
-      final http.Response response = await http.post(
-        Uri.parse("${dotenv.env['API_PATH']}/treatment/delete"),
+      final http.Response response = await http.delete(
+        Uri.parse("${dotenv.env['API_PATH']}/treatment"),
         headers: {"Content-Type": "application/json"},
         body: jsonEncode(data),
       );
@@ -79,8 +79,8 @@ class _EditPredefinedTreatmentDetailState
       return {"id": item.id, "name": item.name, "cost": item.cost};
     }).toList();
     try {
-      final http.Response response = await http.post(
-        Uri.parse("${dotenv.env['API_PATH']}/treatment/update"),
+      final http.Response response = await http.put(
+        Uri.parse("${dotenv.env['API_PATH']}/treatment"),
         headers: {"Content-Type": "application/json"},
         body: jsonEncode(data),
       );
