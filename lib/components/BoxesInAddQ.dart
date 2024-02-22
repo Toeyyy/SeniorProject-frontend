@@ -1,3 +1,5 @@
+import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/constants.dart';
 import 'package:frontend/UIModels/teacher/examContainer_provider.dart';
@@ -446,6 +448,236 @@ class TitleAndExams extends StatelessWidget {
               );
             }),
         SizedBox(height: 15),
+      ],
+    );
+  }
+}
+
+/////stat pages/////
+
+void probDiagTreatmentModal(
+    BuildContext context, String title, List<dynamic> list) {
+  showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          child: Container(
+            padding: const EdgeInsets.all(20),
+            width: MediaQuery.of(context).size.width * 0.5,
+            constraints: BoxConstraints(
+                maxHeight: MediaQuery.of(context).size.height * 0.4),
+            decoration: BoxDecoration(
+              color: const Color(0xFFBBF5FF),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(title, style: kSubHeaderTextStyleInLeftPart),
+                    IconButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      icon: Icon(Icons.close),
+                    ),
+                  ],
+                ),
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: list.length,
+                        itemBuilder: (context, index) {
+                          return ListTile(
+                            title: Text(list[index].name),
+                            leading: Icon(Icons.circle, size: 15),
+                          );
+                        }),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      });
+}
+
+void examModal(
+    BuildContext context, String round, List<ExamPreDefinedObject> examList) {
+  showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          child: Container(
+            padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+            width: MediaQuery.of(context).size.width * 0.5,
+            decoration: BoxDecoration(
+              color: Color(0xFFBBF5FF),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Examination ครั้งที่ $round',
+                        style: kSubHeaderTextStyleInLeftPart),
+                    IconButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      icon: Icon(Icons.close),
+                    ),
+                  ],
+                ),
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: examList.length,
+                        itemBuilder: (context, index) {
+                          var item = examList[index];
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              ListTile(
+                                title: Row(
+                                  children: [
+                                    const Text(
+                                      'แผนกที่เลือกตรวจ: ',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w700),
+                                    ),
+                                    Text(item.lab),
+                                  ],
+                                ),
+                                leading: const Icon(
+                                  Icons.circle,
+                                  size: 15,
+                                ),
+                              ),
+                              ListTile(
+                                title: Padding(
+                                  padding: const EdgeInsets.only(left: 35),
+                                  child: Row(
+                                    children: [
+                                      const Text(
+                                        'หัวข้อการตรวจ: ',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w700),
+                                      ),
+                                      Text(item.type)
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              item.area != null
+                                  ? ListTile(
+                                      title: Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 35),
+                                        child: Row(
+                                          children: [
+                                            const Text('ตัวอย่างการส่งตรวจ: ',
+                                                style: TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.w700)),
+                                            Text(item.area!),
+                                          ],
+                                        ),
+                                      ),
+                                    )
+                                  : SizedBox(),
+                              ListTile(
+                                title: Padding(
+                                  padding: const EdgeInsets.only(left: 35),
+                                  child: Row(
+                                    children: [
+                                      const Text('ชื่อการส่งตรวจ: ',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w700)),
+                                      Text(item.name),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          );
+                        }),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      });
+}
+
+class StatBarGraph extends StatelessWidget {
+  Map<String, int> statList;
+  String title;
+
+  StatBarGraph({super.key, required this.statList, required this.title});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Container(
+          margin: const EdgeInsets.only(bottom: 30),
+          height: 300,
+          child: BarChart(
+            BarChartData(
+              maxY: statList.values.reduce(
+                      (value, element) => value > element ? value : element) +
+                  1,
+              gridData: const FlGridData(
+                show: false,
+              ),
+              titlesData: FlTitlesData(
+                topTitles: AxisTitles(
+                  axisNameWidget: Container(
+                    alignment: Alignment.topLeft,
+                    child: Text(title, style: kTableHeaderTextStyle),
+                  ),
+                  axisNameSize: 35,
+                ),
+                bottomTitles: AxisTitles(
+                  sideTitles: SideTitles(
+                    showTitles: true,
+                    getTitlesWidget: (value, meta) {
+                      if (value >= 0 && value < statList.length) {
+                        String title = statList.keys.toList()[value.toInt()];
+                        // return Text(title);
+                        return Transform.rotate(
+                          angle: -45,
+                          child: Text(title),
+                        );
+                      }
+                      return const SizedBox();
+                    },
+                  ),
+                ),
+              ),
+              barGroups: statList.entries.map((entry) {
+                final String name = entry.key;
+                final int count = entry.value;
+                return BarChartGroupData(
+                  x: statList.keys.toList().indexOf(name),
+                  barRods: [BarChartRodData(toY: count.toDouble())],
+                  barsSpace: 2,
+                );
+              }).toList(),
+            ),
+          ),
+        ),
+        const SizedBox(height: 20),
       ],
     );
   }

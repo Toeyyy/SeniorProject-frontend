@@ -43,18 +43,6 @@ class ExamContainer extends StatefulWidget {
 }
 
 class _ExamContainerState extends State<ExamContainer> {
-  // late String selectedName = "";
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    // print('selectedName = ${widget.selectedExamName}');
-    Future.delayed(Duration.zero, () {
-      // selectedName = widget.selectedExamName;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     ExamContainerProvider examProvider =
@@ -62,11 +50,6 @@ class _ExamContainerState extends State<ExamContainer> {
     List<ExamContainer> examList = widget.round == 1
         ? examProvider.examContainers1
         : examProvider.examContainers2;
-    // bool isAreaNull = true;
-    // print("value = ${widget.selectedArea}");
-
-    // Map<String, List<ExamPreDefinedObject>> groupedByLab =
-    //     groupBy(preDefinedExamAll, (e) => e.lab);
     Map<String, List<ExamPreDefinedObject>> groupedByLab =
         groupBy(examListPreDefined, (e) => e.lab);
 
@@ -89,7 +72,6 @@ class _ExamContainerState extends State<ExamContainer> {
           break;
         }
       }
-      // print('isAreaNull = ${widget.areaNull}');
     }
 
     Future<void> pickImage() async {

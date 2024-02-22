@@ -88,6 +88,7 @@ class _RightPart_TreatmentTotalState extends State<RightPart_TreatmentTotal> {
   bool _isSendingData = false;
 
   Future getData(String questionID) async {
+    //TODO แก้ลิ้ง
     List<StatQuestionObject> loadedData = await fetchStatQuestion(questionID);
 
     setState(() {
@@ -215,7 +216,7 @@ class _RightPart_TreatmentTotalState extends State<RightPart_TreatmentTotal> {
                           );
                         });
                       },
-                      child: Text('ส่งคำตอบ'),
+                      child: const Text('ส่งคำตอบ'),
                     ),
                   ],
                 ),

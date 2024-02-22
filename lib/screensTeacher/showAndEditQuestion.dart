@@ -11,6 +11,9 @@ import 'package:frontend/components/treatmentContainer.dart';
 import 'package:collection/collection.dart';
 import 'package:frontend/models/fullQuestionObject.dart';
 import 'package:frontend/components/backButton.dart';
+import 'package:frontend/screensTeacher/showStatOverall.dart';
+import 'package:http/http.dart' as http;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class ShowAndEditQuestion extends StatefulWidget {
   FullQuestionObject questionObj;
@@ -45,7 +48,6 @@ class _ShowAndEditQuestionState extends State<ShowAndEditQuestion> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     Future.delayed(Duration.zero, () {
       setState(() {
@@ -60,21 +62,61 @@ class _ShowAndEditQuestionState extends State<ShowAndEditQuestion> {
     });
   }
 
-  // Future<void> initializeData() async {
-  //   if (!initialized) {
-  //     questionObj = widget.questionObj;
-  //     splitExams =
-  //         groupBy(questionObj.examinations, (obj) => obj.round.toString());
-  //     splitProblems = groupBy(questionObj.problems, (e) => e.round.toString());
-  //
-  //     setState(() {
-  //       initialized = true;
-  //     });
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) {
+    Future<void> deleteQuestion() async {
+      try {
+        final http.Response response = await http.delete(
+          Uri.parse("${dotenv.env['API_PATH']}/question/${questionObj!.id}"),
+          headers: {"Content-Type": "application/json"},
+        );
+      } catch (error) {
+        print('Error: $error');
+      }
+    }
+
+    void deleteModal(BuildContext context) {
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return Dialog(
+              child: Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFBBF5FF),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text('ยืนยันการลบโจทย์',
+                        style: kTableHeaderTextStyle),
+                    const SizedBox(height: 10),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        ElevatedButton(
+                            onPressed: () {
+                              deleteQuestion().then((value) {
+                                Navigator.pop(context);
+                                Navigator.pop(context);
+                                Navigator.pop(context);
+                                widget.refreshCallBack();
+                              });
+                            },
+                            child: const Text('ยืนยัน')),
+                        const SizedBox(width: 30),
+                        MyBackButton(myContext: context),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            );
+          });
+    }
+
     return Scaffold(
       appBar: AppbarTeacher(),
       body: SingleChildScrollView(
@@ -99,7 +141,14 @@ class _ShowAndEditQuestionState extends State<ShowAndEditQuestion> {
                             children: [
                               ElevatedButton(
                                 onPressed: () {
-                                  //TODO stat
+                                  //go to stat
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => ShowStatOverall(
+                                          questionObj: questionObj!),
+                                    ),
+                                  );
                                 },
                                 child: Text('ดูสถิติ'),
                               ),
@@ -122,6 +171,7 @@ class _ShowAndEditQuestionState extends State<ShowAndEditQuestion> {
                               ElevatedButton(
                                 onPressed: () {
                                   //delete ques
+                                  deleteModal(context);
                                 },
                                 child: Text('ลบโจทย์'),
                                 style: ElevatedButton.styleFrom(

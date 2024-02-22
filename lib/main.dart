@@ -50,10 +50,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       theme: lightTheme,
       // initialRoute: '/Nisit/treatmentTotal',
-      initialRoute: '/mainShowQuestionNisit',
+      // initialRoute: '/mainShowQuestionNisit',
       // initialRoute: '/mainShowQuestionTeacher',
       // initialRoute: '/Nisit/showStats',
-      // initialRoute: '/Teacher/addQuesMenu',
+      initialRoute: '/Teacher/addQuesMenu',
       // initialRoute: '/Nisit/ExamTopic',
       routes: {
         /////General/////

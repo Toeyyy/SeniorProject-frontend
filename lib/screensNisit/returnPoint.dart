@@ -12,8 +12,6 @@ class ReturnPoint extends StatelessWidget {
   late StatQuestionObject? stat;
 
   ReturnPoint({required this.stat});
-  // int point = 70;
-  int price = 450;
 
   late Map<String, List<ProblemObject>> splitProblems =
       groupBy(stat!.problems, (e) => e.round.toString());
@@ -22,8 +20,6 @@ class ReturnPoint extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // print('stat = $stat');
-
     int findTotalCost() {
       int res = 0;
       for (var item in stat!.examinations) {
@@ -48,7 +44,7 @@ class ReturnPoint extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Column(
+                        const Column(
                           children: [
                             Text(
                               'รายงานคะแนน',
@@ -61,14 +57,14 @@ class ReturnPoint extends StatelessWidget {
                           'Problem List ครั้งที่ 1, คะแนนที่ได้: ${stat!.problem1Score} คะแนน',
                           style: kSubHeaderTextStyleInLeftPart,
                         ),
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
                         ListView.builder(
                           shrinkWrap: true,
                           itemCount: splitProblems['1']!.length,
                           itemBuilder: (context, index) {
                             return ListTile(
                               title: Text(splitProblems['1']![index].name),
-                              leading: Icon(
+                              leading: const Icon(
                                 Icons.circle,
                                 size: 15,
                               ),
@@ -140,7 +136,7 @@ class ReturnPoint extends StatelessWidget {
                           itemBuilder: (context, index) {
                             return ListTile(
                               title: Text(stat!.diagnostics[index].name),
-                              leading: Icon(
+                              leading: const Icon(
                                 Icons.circle,
                                 size: 15,
                               ),
@@ -191,7 +187,7 @@ class ReturnPoint extends StatelessWidget {
                     ),
                   ),
                 )
-              : SizedBox(
+              : const SizedBox(
                   width: 10,
                   child: Center(
                     child: CircularProgressIndicator(),

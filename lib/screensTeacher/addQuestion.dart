@@ -236,8 +236,8 @@ class _AddQuestionState extends State<AddQuestion> {
         index++;
       }
 
-      final response = await dio.post('${dotenv.env['API_PATH']}/question/add',
-          data: formData);
+      final response =
+          await dio.post('${dotenv.env['API_PATH']}/question', data: formData);
     }
 
     /////check if null///////

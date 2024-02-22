@@ -36,7 +36,6 @@ class _EditQuestionState extends State<EditQuestion> {
   late String id = '0';
   late String name = 'X';
   late String signalmentTypeValue = 'สุนัข';
-  // late String signalmentBreedValue = 'Chihuahua';
   late bool signalmentSterilizeValue = false;
   late String signalmentSexValue = 'ผู้';
   late TextEditingController signalmentBreedValue =
@@ -259,8 +258,7 @@ class _EditQuestionState extends State<EditQuestion> {
         index++;
       }
 
-      final response = await dio.post(
-          '${dotenv.env['API_PATH']}/question/update/$id',
+      final response = await dio.put('${dotenv.env['API_PATH']}/question/$id',
           data: formData);
     }
 
