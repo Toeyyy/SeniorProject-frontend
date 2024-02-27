@@ -1,12 +1,12 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/components/splitScreenNisit.dart';
-import 'package:frontend/components/appBar.dart';
+import 'package:frontend/components/appbar.dart';
 import 'package:frontend/constants.dart';
 import 'package:frontend/models/examinationPreDefinedObject.dart';
 import 'package:frontend/UIModels/nisit/selected_exam_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:frontend/components/backButton.dart';
+import 'package:frontend/components/back_button.dart';
 import 'package:frontend/components/BoxesInAddQ.dart';
 import 'package:frontend/screensNisit/examScreens/exam_result.dart';
 import 'package:frontend/models/questionObject.dart';
@@ -21,7 +21,8 @@ class ExamDetail_Type extends StatelessWidget {
   QuestionObject questionObj;
 
   ExamDetail_Type(
-      {required this.list,
+      {super.key,
+      required this.list,
       required this.title,
       required this.round,
       required this.questionObj});
@@ -37,7 +38,7 @@ class ExamDetail_Type extends StatelessWidget {
         Provider.of<SelectedExam>(context, listen: false);
 
     return Scaffold(
-      appBar: AppbarNisit(),
+      appBar: const AppbarNisit(),
       body: SplitScreenNisit(
         leftPart: round == 1
             ? LeftPartContent(
@@ -79,12 +80,13 @@ class ExamDetail_Type extends StatelessWidget {
               const SizedBox(height: 20),
               Expanded(
                 child: ListView.separated(
-                  separatorBuilder: (context, index) => SizedBox(height: 8),
+                  separatorBuilder: (context, index) =>
+                      const SizedBox(height: 8),
                   itemCount: groupedByType.length,
                   itemBuilder: (context, index) {
                     return ListTile(
-                      tileColor: Color(0xFFA0E9FF),
-                      hoverColor: Color(0xFF42C2FF),
+                      tileColor: const Color(0xFFA0E9FF),
+                      hoverColor: const Color(0xFF42C2FF),
                       title: Text(groupedByType.keys.toList()[index]),
                       onTap: () {
                         Navigator.push(
@@ -119,7 +121,8 @@ class ExamDetail_Name extends StatefulWidget {
   QuestionObject questionObj;
 
   ExamDetail_Name(
-      {required this.list,
+      {super.key,
+      required this.list,
       required this.title,
       required this.round,
       required this.questionObj});
@@ -160,7 +163,7 @@ class _ExamDetail_NameState extends State<ExamDetail_Name> {
         Provider.of<SelectedProblem>(context, listen: false);
 
     return Scaffold(
-      appBar: AppbarNisit(),
+      appBar: const AppbarNisit(),
       body: SplitScreenNisit(
         leftPart: widget.round == 1
             ? LeftPartContent(
@@ -204,17 +207,17 @@ class _ExamDetail_NameState extends State<ExamDetail_Name> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Center(child: Text(widget.title, style: kSubHeaderTextStyle)),
-                  DividerWithSpace(),
+                  const DividerWithSpace(),
                   /////name/////
-                  Text('ชื่อการส่งตรวจ', style: kSubHeaderTextStyle),
+                  const Text('ชื่อการส่งตรวจ', style: kSubHeaderTextStyle),
                   const SizedBox(height: 20),
                   DropdownButton(
                       value: selectedName,
-                      icon: Icon(Icons.arrow_drop_down),
-                      padding: EdgeInsets.all(5),
+                      icon: const Icon(Icons.arrow_drop_down),
+                      padding: const EdgeInsets.all(5),
                       isDense: true,
                       alignment: Alignment.center,
-                      focusColor: Color(0xFFF2F5F7),
+                      focusColor: const Color(0xFFF2F5F7),
                       items: groupedByName.keys
                           .map(
                             (e) => DropdownMenuItem(
@@ -225,20 +228,17 @@ class _ExamDetail_NameState extends State<ExamDetail_Name> {
                           .toList(),
                       onChanged: (value) {
                         setState(() {
-                          // print('value = $value');
                           selectedName = value!;
                           areaList = groupedByName[selectedName]!;
                           selectedItem =
                               areaList.isEmpty ? null : areaList.first;
-                          // print('areaList = $areaList');
-                          // print('selectedItem = $selectedItem');
                         });
                       }),
                   /////area/////
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      DividerWithSpace(),
+                      const DividerWithSpace(),
                       Text(
                           areaList.length != 1
                               ? 'ตัวอย่างและราคาที่ใช้ในการส่งตรวจ'
@@ -249,11 +249,11 @@ class _ExamDetail_NameState extends State<ExamDetail_Name> {
                           ? Text('ราคาค่าตรวจ ${areaList.first.cost} บาท')
                           : DropdownButton(
                               value: selectedItem,
-                              icon: Icon(Icons.arrow_drop_down),
-                              padding: EdgeInsets.all(5),
+                              icon: const Icon(Icons.arrow_drop_down),
+                              padding: const EdgeInsets.all(5),
                               isDense: true,
                               alignment: Alignment.center,
-                              focusColor: Color(0xFFF2F5F7),
+                              focusColor: const Color(0xFFF2F5F7),
                               items: areaList.map((e) {
                                 return DropdownMenuItem(
                                   value: e,
@@ -263,7 +263,6 @@ class _ExamDetail_NameState extends State<ExamDetail_Name> {
                               }).toList(),
                               onChanged: (value) {
                                 setState(() {
-                                  // print('value = $value');
                                   selectedItem = value;
                                 });
                               }),
@@ -273,14 +272,13 @@ class _ExamDetail_NameState extends State<ExamDetail_Name> {
               ),
               Column(
                 children: [
-                  DividerWithSpace(),
+                  const DividerWithSpace(),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       MyBackButton(myContext: context),
                       ElevatedButton(
                         onPressed: () async {
-                          // BuildContext currentContext = context;
                           examProvider.addNewExam(selectedItem!, widget.round);
                           await getData(selectedItem!.id).then((value) {
                             Navigator.push(
@@ -296,7 +294,7 @@ class _ExamDetail_NameState extends State<ExamDetail_Name> {
                             );
                           });
                         },
-                        child: Text('ยืนยัน'),
+                        child: const Text('ยืนยัน'),
                       ),
                     ],
                   ),

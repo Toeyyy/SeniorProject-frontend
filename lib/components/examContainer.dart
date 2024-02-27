@@ -103,15 +103,16 @@ class _ExamContainerState extends State<ExamContainer> {
           fit: BoxFit.cover,
         );
       } else {
-        return Text('No Image Selected');
+        return const Text('No Image Selected');
       }
     }
 
     return Container(
-      margin: EdgeInsets.only(bottom: 15),
-      padding: EdgeInsets.all(10),
+      margin: const EdgeInsets.only(bottom: 15),
+      padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10), color: Color(0xFFA0E9FF)),
+          borderRadius: BorderRadius.circular(10),
+          color: const Color(0xFFA0E9FF)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
@@ -121,7 +122,7 @@ class _ExamContainerState extends State<ExamContainer> {
             children: [
               Row(
                 children: [
-                  Text('เลือกแผนกการตรวจ'),
+                  const Text('เลือกแผนกการตรวจ'),
                   DropDownButtonInAddQ(
                       selectedValue: widget.selectedDepartment,
                       list: groupedByLab.keys.toList(),
@@ -133,7 +134,6 @@ class _ExamContainerState extends State<ExamContainer> {
                               groupedByLab[widget.selectedDepartment];
                           widget.selectedExamTopic = newList!.first.type;
                           checkArea();
-                          // print('area null = ${widget.areaNull}');
                           widget.selectedExamName =
                               groupedByType()[widget.selectedExamTopic]!
                                   .first
@@ -152,14 +152,14 @@ class _ExamContainerState extends State<ExamContainer> {
                   onPressed: () {
                     examProvider.deleteExamContainer(examList, widget.key);
                   },
-                  icon: Icon(Icons.remove)),
+                  icon: const Icon(Icons.remove)),
             ],
           ),
-          SizedBox(height: 15),
+          const SizedBox(height: 15),
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Text("เลือกหัวข้อการตรวจ"),
+              const Text("เลือกหัวข้อการตรวจ"),
               DropDownButtonInAddQ(
                   selectedValue: widget.selectedExamTopic,
                   list: groupedByType().keys.toList(),
@@ -167,12 +167,9 @@ class _ExamContainerState extends State<ExamContainer> {
                   onChanged: (value) {
                     setState(() {
                       widget.selectedExamTopic = value.toString();
-                      // print('topic = ${widget.selectedExamTopic}');
                       widget.selectedExamName =
                           groupedByType()[widget.selectedExamTopic]!.first.name;
                       if (groupedByType()[widget.selectedExamTopic] != null) {
-                        // print(
-                        // 'value = ${groupedByType()[widget.selectedExamTopic]}');
                         widget.selectedArea =
                             groupedByType()[widget.selectedExamTopic]!
                                 .first
@@ -182,14 +179,14 @@ class _ExamContainerState extends State<ExamContainer> {
                   }),
             ],
           ),
-          SizedBox(height: 15),
+          const SizedBox(height: 15),
           Visibility(
             visible: !widget.areaNull,
             child: widget.selectedArea != null
                 ? Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Text("เลือกตัวอย่างการส่งตรวจ"),
+                      const Text("เลือกตัวอย่างการส่งตรวจ"),
                       DropDownButtonInAddQ(
                           selectedValue: widget.areaNull == false
                               ? widget.selectedArea
@@ -207,20 +204,19 @@ class _ExamContainerState extends State<ExamContainer> {
                           }),
                     ],
                   )
-                : SizedBox(),
+                : const SizedBox(),
           ),
-          SizedBox(height: 15),
+          const SizedBox(height: 15),
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Text("เลือกการตรวจ"),
+              const Text("เลือกการตรวจ"),
               DropDownButtonInAddQ(
                   selectedValue: widget.selectedExamName,
                   list: groupedByType()[widget.selectedExamTopic]!
                       .map((e) => e.name)
                       .toSet()
                       .toList(),
-                  // list: groupBy(groupedByType()[widget.selectedExamTopic] as Iterable<Object?>, (e) => e?.name).keys.toList(),
                   hintText: "เลือกการตรวจ",
                   onChanged: (value) {
                     setState(() {
@@ -229,22 +225,22 @@ class _ExamContainerState extends State<ExamContainer> {
                   }),
             ],
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           TextBoxMultiLine(
             myController: widget.examController,
             hintText: "ผลการส่งตรวจ",
             titleText: "",
             maxLine: 2,
-            boxColor: Color(0xFFE7F9FF),
+            boxColor: const Color(0xFFE7F9FF),
           ),
-          SizedBox(height: 15),
+          const SizedBox(height: 15),
           Row(
             children: [
               ElevatedButton(
                 onPressed: pickImage,
-                child: Text('เพิ่มรูป (Optional)'),
+                child: const Text('เพิ่มรูป (Optional)'),
               ),
-              SizedBox(width: 20),
+              const SizedBox(width: 20),
               Visibility(
                 visible: widget.imagePath != null || widget.imageResult != null,
                 child: ElevatedButton(
@@ -254,17 +250,15 @@ class _ExamContainerState extends State<ExamContainer> {
                       widget.imagePath = null;
                     });
                   },
-                  child: Text('ลบรูป'),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFF8B72BE),
+                    backgroundColor: const Color(0xFF8B72BE),
                   ),
+                  child: const Text('ลบรูป'),
                 ),
               ),
             ],
           ),
-          SizedBox(
-            height: 15,
-          ),
+          const SizedBox(height: 15),
           displayImage(),
         ],
       ),
@@ -281,7 +275,8 @@ class ShowExamContainer extends StatelessWidget {
   String? imagePath;
 
   ShowExamContainer(
-      {required this.lab,
+      {super.key,
+      required this.lab,
       required this.type,
       required this.area,
       required this.name,
@@ -291,38 +286,39 @@ class ShowExamContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(bottom: 15),
-      padding: EdgeInsets.all(10),
+      margin: const EdgeInsets.only(bottom: 15),
+      padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10), color: Color(0xFFA0E9FF)),
+          borderRadius: BorderRadius.circular(10),
+          color: const Color(0xFFA0E9FF)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
             padding: const EdgeInsets.only(left: 10),
-            margin: EdgeInsets.only(bottom: 15),
+            margin: const EdgeInsets.only(bottom: 15),
             child: Row(
               children: [
                 Text(
                   'แผนกการตรวจ',
                   style: kNormalTextStyle.copyWith(fontWeight: FontWeight.w800),
                 ),
-                SizedBox(width: 10),
+                const SizedBox(width: 10),
                 Text(lab, style: kNormalTextStyle),
               ],
             ),
           ),
           Container(
             padding: const EdgeInsets.only(left: 10),
-            margin: EdgeInsets.only(bottom: 15),
+            margin: const EdgeInsets.only(bottom: 15),
             child: Row(
               children: [
                 Text(
                   'หัวข้อการส่งตรวจ',
                   style: kNormalTextStyle.copyWith(fontWeight: FontWeight.w800),
                 ),
-                SizedBox(width: 10),
+                const SizedBox(width: 10),
                 Text(type, style: kNormalTextStyle),
               ],
             ),
@@ -330,7 +326,7 @@ class ShowExamContainer extends StatelessWidget {
           area != null
               ? Container(
                   padding: const EdgeInsets.only(left: 10),
-                  margin: EdgeInsets.only(bottom: 15),
+                  margin: const EdgeInsets.only(bottom: 15),
                   child: Row(
                     children: [
                       Text(
@@ -338,7 +334,7 @@ class ShowExamContainer extends StatelessWidget {
                         style: kNormalTextStyle.copyWith(
                             fontWeight: FontWeight.w800),
                       ),
-                      SizedBox(width: 10),
+                      const SizedBox(width: 10),
                       Text(area!, style: kNormalTextStyle),
                     ],
                   ),
@@ -346,14 +342,14 @@ class ShowExamContainer extends StatelessWidget {
               : Container(),
           Container(
             padding: const EdgeInsets.only(left: 10),
-            margin: EdgeInsets.only(bottom: 15),
+            margin: const EdgeInsets.only(bottom: 15),
             child: Row(
               children: [
                 Text(
                   'ชื่อการส่งตรวจ',
                   style: kNormalTextStyle.copyWith(fontWeight: FontWeight.w800),
                 ),
-                SizedBox(width: 10),
+                const SizedBox(width: 10),
                 Text(name, style: kNormalTextStyle),
               ],
             ),
@@ -362,16 +358,16 @@ class ShowExamContainer extends StatelessWidget {
               ? Container(
                   height: 70,
                   width: double.infinity,
-                  margin: EdgeInsets.symmetric(horizontal: 10),
-                  padding: EdgeInsets.all(10),
-                  color: Color(0xFFE7F9FF),
+                  margin: const EdgeInsets.symmetric(horizontal: 10),
+                  padding: const EdgeInsets.all(10),
+                  color: const Color(0xFFE7F9FF),
                   child: Text(results!),
                 )
               : Container(),
           imagePath != null
               ? Column(
                   children: [
-                    SizedBox(height: 15),
+                    const SizedBox(height: 15),
                     Padding(
                         padding: const EdgeInsets.only(left: 10),
                         child: Image.network(

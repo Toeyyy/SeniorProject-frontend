@@ -1,20 +1,21 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:frontend/components/appBar.dart';
+import 'package:frontend/components/appbar.dart';
 import 'package:frontend/constants.dart';
 import 'package:frontend/models/examinationPreDefinedObject.dart';
-import 'package:frontend/components/backButton.dart';
+import 'package:frontend/components/back_button.dart';
 import 'package:frontend/screensTeacher/PredefinedScreens/editPredefined_exam_name.dart';
 import 'package:provider/provider.dart';
 import 'package:frontend/UIModels/teacher/predefinedExam_provider.dart';
 import 'package:frontend/AllDataFile.dart';
 
 class EditPredefinedExamLab extends StatelessWidget {
+  const EditPredefinedExamLab({super.key});
+
   @override
   Widget build(BuildContext context) {
     PreDefinedExamProvider examProvider =
         Provider.of<PreDefinedExamProvider>(context);
-    // examProvider.assignItem(preDefinedExamAll);
     examProvider.assignItem(examListPreDefined);
     List<ExamPreDefinedObject> examList = examProvider.examList;
 
@@ -26,11 +27,11 @@ class EditPredefinedExamLab extends StatelessWidget {
     }
 
     return Scaffold(
-      appBar: AppbarTeacher(),
+      appBar: const AppbarTeacher(),
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
         child: Center(
-          child: Container(
+          child: SizedBox(
             width: MediaQuery.of(context).size.width * 0.7,
             child: Column(
               children: [
@@ -41,16 +42,17 @@ class EditPredefinedExamLab extends StatelessWidget {
                 const SizedBox(height: 20),
                 Expanded(
                   child: ListView.separated(
-                    separatorBuilder: (context, index) => SizedBox(height: 8),
+                    separatorBuilder: (context, index) =>
+                        const SizedBox(height: 8),
                     itemCount: groupedByLab.length,
                     itemBuilder: (context, index) {
                       String title = groupedByLab.keys.elementAt(index);
                       return ListTile(
-                        tileColor: Color(0xFFA0E9FF),
-                        hoverColor: Color(0xFF42C2FF),
+                        tileColor: const Color(0xFFA0E9FF),
+                        hoverColor: const Color(0xFF42C2FF),
                         title: Text(
                           title,
-                          style: TextStyle(
+                          style: const TextStyle(
                               fontWeight: FontWeight.w500, fontSize: 20),
                         ),
                         onTap: () {
@@ -86,7 +88,7 @@ class EditPreDefinedExamType extends StatefulWidget {
   String selectedLab;
   Map<String, List<ExamPreDefinedObject>> groupedByType;
   EditPreDefinedExamType(
-      {required this.selectedLab, required this.groupedByType});
+      {super.key, required this.selectedLab, required this.groupedByType});
 
   @override
   State<EditPreDefinedExamType> createState() => _EditPreDefinedExamTypeState();
@@ -95,15 +97,12 @@ class EditPreDefinedExamType extends StatefulWidget {
 class _EditPreDefinedExamTypeState extends State<EditPreDefinedExamType> {
   @override
   Widget build(BuildContext context) {
-    PreDefinedExamProvider examProvider =
-        Provider.of<PreDefinedExamProvider>(context);
-
     return Scaffold(
-      appBar: AppbarTeacher(),
+      appBar: const AppbarTeacher(),
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
         child: Center(
-          child: Container(
+          child: SizedBox(
             width: MediaQuery.of(context).size.width * 0.7,
             child: Column(
               children: [
@@ -114,18 +113,19 @@ class _EditPreDefinedExamTypeState extends State<EditPreDefinedExamType> {
                 const SizedBox(height: 20),
                 Expanded(
                   child: ListView.separated(
-                    separatorBuilder: (context, index) => SizedBox(height: 8),
+                    separatorBuilder: (context, index) =>
+                        const SizedBox(height: 8),
                     itemCount: widget.groupedByType.length,
                     // itemCount: groupedExam,
                     itemBuilder: (context, index) {
                       String title = widget.groupedByType.keys.toList()[index];
                       return ListTile(
-                        tileColor: Color(0xFFA0E9FF),
-                        hoverColor: Color(0xFF42C2FF),
+                        tileColor: const Color(0xFFA0E9FF),
+                        hoverColor: const Color(0xFF42C2FF),
                         // title: Text(groupedByType.keys.elementAt(index)),
                         title: Text(
                           title,
-                          style: TextStyle(
+                          style: const TextStyle(
                               fontWeight: FontWeight.w500, fontSize: 20),
                         ),
                         onTap: () {
@@ -147,11 +147,11 @@ class _EditPreDefinedExamTypeState extends State<EditPreDefinedExamType> {
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                  child: Text(
-                    'ยกเลิก',
-                  ),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFF8B72BE),
+                    backgroundColor: const Color(0xFF8B72BE),
+                  ),
+                  child: const Text(
+                    'ยกเลิก',
                   ),
                 )
               ],

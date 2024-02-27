@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/components/splitScreenNisit.dart';
-import 'package:frontend/components/appBar.dart';
+import 'package:frontend/components/appbar.dart';
 import 'package:frontend/constants.dart';
 import 'package:frontend/components/functions.dart';
 import 'package:frontend/models/diagnosisObject.dart';
@@ -25,7 +25,7 @@ class Diagnosis extends StatelessWidget {
     SelectedProblem problemProvider =
         Provider.of<SelectedProblem>(context, listen: false);
     return Scaffold(
-      appBar: AppbarNisit(),
+      appBar: const AppbarNisit(),
       body: SplitScreenNisit(
         leftPart: LeftPartContent(
           questionObj: questionObj,
@@ -74,7 +74,7 @@ class RightPart_Diagnosis extends StatefulWidget {
 class _RightPart_DiagnosisState extends State<RightPart_Diagnosis> {
   TextEditingController _searchController = TextEditingController();
   List<DiagnosisObject> _displayList = [];
-  List<DiagnosisObject> _fullList = diagnosisListPreDefined;
+  final List<DiagnosisObject> _fullList = diagnosisListPreDefined;
   List<DiagnosisObject> _selectedList = [];
   bool _isListViewVisible = false;
 
@@ -87,7 +87,7 @@ class _RightPart_DiagnosisState extends State<RightPart_Diagnosis> {
       child: Column(
         // mainAxisSize: MainAxisSize.min,
         children: [
-          Text(
+          const Text(
             'Tentative/Definitive Diagnosis',
             style: kHeaderTextStyle,
           ),
@@ -116,23 +116,20 @@ class _RightPart_DiagnosisState extends State<RightPart_Diagnosis> {
             child: Expanded(
               child: ListView.builder(
                 itemCount: _displayList.length,
-                // separatorBuilder: (context, index) => Divider(),
                 itemBuilder: (context, index) {
-                  return Container(
-                    child: ListTile(
-                        tileColor: Color(0xFFE7F9FF),
-                        hoverColor: Color(0xFFA0E9FF),
-                        title: Text(_displayList[index].name),
-                        onTap: () {
-                          _selectedList.add(_displayList[index]);
-                          _searchController.clear();
-                          setState(() {
-                            // _fullList.remove(_displayList[index]);
-                            _displayList.remove(_displayList[index]);
-                            _isListViewVisible = false;
-                          });
-                        }),
-                  );
+                  return ListTile(
+                      tileColor: const Color(0xFFE7F9FF),
+                      hoverColor: const Color(0xFFA0E9FF),
+                      title: Text(_displayList[index].name),
+                      onTap: () {
+                        _selectedList.add(_displayList[index]);
+                        _searchController.clear();
+                        setState(() {
+                          // _fullList.remove(_displayList[index]);
+                          _displayList.remove(_displayList[index]);
+                          _isListViewVisible = false;
+                        });
+                      });
                 },
               ),
             ),
@@ -163,15 +160,8 @@ class _RightPart_DiagnosisState extends State<RightPart_Diagnosis> {
           ),
           ElevatedButton(
             onPressed: () {
-              //TODO go to treatment
+              //go to treatment
               diagProvider.assignList(_selectedList);
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(
-              //     builder: (context) => TreatmentTopic(),
-              //   ),
-              // );
-              // Navigator.popAndPushNamed(context, '/Nisit/treatmentTopic');
               Navigator.pop(context);
               Navigator.push(
                 context,
@@ -181,7 +171,7 @@ class _RightPart_DiagnosisState extends State<RightPart_Diagnosis> {
                 ),
               );
             },
-            child: Text('ยืนยัน'),
+            child: const Text('ยืนยัน'),
           ),
         ],
       ),

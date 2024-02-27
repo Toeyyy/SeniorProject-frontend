@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/components/appBar.dart';
+import 'package:frontend/components/appbar.dart';
 import 'package:frontend/constants.dart';
-import 'package:frontend/components/backButton.dart';
+import 'package:frontend/components/back_button.dart';
 import 'package:frontend/aboutData/getDataFunctions.dart';
 import 'package:frontend/screensTeacher/PredefinedScreens/editPredefined_other_add.dart';
 import 'package:frontend/screensTeacher/PredefinedScreens/editPredefined_other_edit.dart';
 
 class EditPreDefinedOtherChoice extends StatelessWidget {
-  String title;
-  EditPreDefinedOtherChoice({required this.title});
+  final String title;
+  EditPreDefinedOtherChoice({super.key, required this.title});
 
   final List<String> _topicList = [
     'เพิ่ม',
@@ -28,11 +28,11 @@ class EditPreDefinedOtherChoice extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppbarTeacher(),
+      appBar: const AppbarTeacher(),
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
         child: Center(
-          child: Container(
+          child: SizedBox(
             width: MediaQuery.of(context).size.width * 0.7,
             child: Column(
               children: [
@@ -43,14 +43,14 @@ class EditPreDefinedOtherChoice extends StatelessWidget {
                 const SizedBox(height: 20),
                 Expanded(
                   child: ListView.separated(
-                    separatorBuilder: (context, index) => SizedBox(
+                    separatorBuilder: (context, index) => const SizedBox(
                       height: 8,
                     ),
                     itemCount: 2,
                     itemBuilder: (context, index) {
                       return ListTile(
-                        tileColor: Color(0xFFA0E9FF),
-                        hoverColor: Color(0xFF42C2FF),
+                        tileColor: const Color(0xFFA0E9FF),
+                        hoverColor: const Color(0xFF42C2FF),
                         title: Text(
                           _topicList[index],
                           style: const TextStyle(

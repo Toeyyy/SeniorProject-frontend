@@ -8,42 +8,34 @@ class TagSearchBox extends StatelessWidget {
   List<TagObject> initTags;
   Function(List<TagObject>) updateListCallback;
 
-  TagSearchBox({required this.initTags, required this.updateListCallback});
-
-  void printInitList() {
-    print(initTags.map((item) => item.name));
-  }
+  TagSearchBox(
+      {super.key, required this.initTags, required this.updateListCallback});
 
   @override
   Widget build(BuildContext context) {
     return MultiSelectDialogField(
-      // items: allTagList
-      //     .map((tag) => MultiSelectItem<TagObject>(tag, tag.name))
-      //     .toList(),
       items: tagListPreDefined
           .map((tag) => MultiSelectItem<TagObject>(tag, tag.name))
           .toList(),
-      // items: initTags.map((tag) => MultiSelectItem(tag, tag.name)).toList(),
       searchable: true,
       searchHint: "Search for tags",
-      buttonText: Text("Select Tags"),
-      title: Text("Tags"),
-      backgroundColor: Color(0xFFE7F9FF),
-      selectedColor: Color(0xFF42C2FF),
+      buttonText: const Text("Select Tags"),
+      title: const Text("Tags"),
+      backgroundColor: const Color(0xFFE7F9FF),
+      selectedColor: const Color(0xFF42C2FF),
       onConfirm: (results) {
         initTags = results;
         updateListCallback(initTags);
-        // printInitList();
       },
       onSelectionChanged: (results) {
         initTags = results;
       },
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(
+        borderRadius: const BorderRadius.all(
           Radius.circular(10),
         ),
         border: Border.all(
-          color: Color(0xFF000411),
+          color: const Color(0xFF000411),
           width: 2,
         ),
       ),
@@ -54,11 +46,12 @@ class TagSearchBox extends StatelessWidget {
 class TagMultiSelectDropDown extends StatelessWidget {
   List<TagObject> selectedList;
   final List<TagObject> displayList;
-  String hintText;
+  final String hintText;
   Function(List<TagObject>) updateListCallback;
 
   TagMultiSelectDropDown(
-      {required this.selectedList,
+      {super.key,
+      required this.selectedList,
       required this.displayList,
       required this.hintText,
       required this.updateListCallback});
@@ -68,7 +61,7 @@ class TagMultiSelectDropDown extends StatelessWidget {
     return MultiSelectDropDown(
         searchEnabled: true,
         hint: hintText,
-        chipConfig: ChipConfig(
+        chipConfig: const ChipConfig(
             backgroundColor: Color(0xFF42C2FF), wrapType: WrapType.wrap),
         onOptionSelected: (List<ValueItem> selectedOptions) {
           updateListCallback(selectedOptions.map((item) {

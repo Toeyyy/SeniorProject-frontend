@@ -1,11 +1,10 @@
 import 'dart:convert';
-import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/components/BoxesInAddQ.dart';
-import 'package:frontend/components/appBar.dart';
+import 'package:frontend/components/appbar.dart';
 import 'package:frontend/constants.dart';
-import 'package:frontend/components/backButton.dart';
+import 'package:frontend/components/back_button.dart';
 import 'package:frontend/models/treatmentObject.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -55,42 +54,46 @@ class _EditPredefinedTreatmentDetailState
   ////post/////
 
   Future<void> _postDeleteData() async {
-    var data = deletedList.map((item) {
-      return {"id": item.id};
-    }).toList();
-    try {
-      final http.Response response = await http.delete(
-        Uri.parse("${dotenv.env['API_PATH']}/treatment"),
-        headers: {"Content-Type": "application/json"},
-        body: jsonEncode(data),
-      );
-      if ((response.statusCode >= 200 && response.statusCode < 300)) {
-        print("Posting complete");
-      } else {
-        print("Error: ${response.statusCode} - ${response.body}");
+    if (deletedList.isNotEmpty) {
+      var data = deletedList.map((item) {
+        return {"id": item.id};
+      }).toList();
+      try {
+        final http.Response response = await http.delete(
+          Uri.parse("${dotenv.env['API_PATH']}/treatment"),
+          headers: {"Content-Type": "application/json"},
+          body: jsonEncode(data),
+        );
+        if ((response.statusCode >= 200 && response.statusCode < 300)) {
+          print("Posting complete");
+        } else {
+          print("Error: ${response.statusCode} - ${response.body}");
+        }
+      } catch (error) {
+        print('Error: $error');
       }
-    } catch (error) {
-      print('Error: $error');
     }
   }
 
   Future<void> _postUpdateData() async {
-    var data = editedList.map((item) {
-      return {"id": item.id, "name": item.name, "cost": item.cost};
-    }).toList();
-    try {
-      final http.Response response = await http.put(
-        Uri.parse("${dotenv.env['API_PATH']}/treatment"),
-        headers: {"Content-Type": "application/json"},
-        body: jsonEncode(data),
-      );
-      if ((response.statusCode >= 200 && response.statusCode < 300)) {
-        print("Posting complete");
-      } else {
-        print("Error: ${response.statusCode} - ${response.body}");
+    if (editedList.isNotEmpty) {
+      var data = editedList.map((item) {
+        return {"id": item.id, "name": item.name, "cost": item.cost};
+      }).toList();
+      try {
+        final http.Response response = await http.put(
+          Uri.parse("${dotenv.env['API_PATH']}/treatment"),
+          headers: {"Content-Type": "application/json"},
+          body: jsonEncode(data),
+        );
+        if ((response.statusCode >= 200 && response.statusCode < 300)) {
+          print("Posting complete");
+        } else {
+          print("Error: ${response.statusCode} - ${response.body}");
+        }
+      } catch (error) {
+        print('Error: $error');
       }
-    } catch (error) {
-      print('Error: $error');
     }
   }
 
@@ -104,12 +107,12 @@ class _EditPredefinedTreatmentDetailState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppbarTeacher(),
+      appBar: const AppbarTeacher(),
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
         child: SingleChildScrollView(
           child: Center(
-            child: Container(
+            child: SizedBox(
               width: MediaQuery.of(context).size.width * 0.7,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -134,16 +137,16 @@ class _EditPredefinedTreatmentDetailState
                         }
                       });
                     },
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       isDense: true,
                       border: OutlineInputBorder(),
                       hintText: "Treatment name",
                     ),
                   ),
                   Card(
-                    color: Color(0xFFF2F5F7),
+                    color: const Color(0xFFF2F5F7),
                     elevation: 0,
-                    margin: EdgeInsets.symmetric(horizontal: 15),
+                    margin: const EdgeInsets.symmetric(horizontal: 15),
                     child: ListView.builder(
                       shrinkWrap: true,
                       itemCount: displayList.length,
@@ -151,13 +154,13 @@ class _EditPredefinedTreatmentDetailState
                         return Container(
                           decoration: BoxDecoration(
                             border: Border.all(
-                                color: Color(0xFFB5C1BE), width: 1.0),
+                                color: const Color(0xFFB5C1BE), width: 1.0),
                           ),
                           child: ListTile(
                             tileColor: index == selectedTileIndex
-                                ? Color(0xFFA0E9FF)
-                                : Color(0xFFE7F9FF),
-                            hoverColor: Color(0xFFA0E9FF),
+                                ? const Color(0xFFA0E9FF)
+                                : const Color(0xFFE7F9FF),
+                            hoverColor: const Color(0xFFA0E9FF),
                             trailing: index == selectedTileIndex
                                 ? Row(
                                     mainAxisAlignment: MainAxisAlignment.end,
@@ -176,7 +179,7 @@ class _EditPredefinedTreatmentDetailState
                                             isEditing = true;
                                           });
                                         },
-                                        icon: Icon(CupertinoIcons.pencil),
+                                        icon: const Icon(CupertinoIcons.pencil),
                                       ),
                                       IconButton(
                                         onPressed: () {
@@ -192,7 +195,7 @@ class _EditPredefinedTreatmentDetailState
                                             selectedTileIndex = -1;
                                           });
                                         },
-                                        icon: Icon(CupertinoIcons.delete),
+                                        icon: const Icon(CupertinoIcons.delete),
                                       ),
                                     ],
                                   )
@@ -221,16 +224,17 @@ class _EditPredefinedTreatmentDetailState
                       },
                     ),
                   ),
-                  DividerWithSpace(),
+                  const DividerWithSpace(),
                   /////cost/////
                   Visibility(
                     visible: isOtherPartVisible,
                     child: Container(
-                      margin: EdgeInsets.only(left: 60),
+                      margin: const EdgeInsets.only(left: 60),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('ราคา Treatment', style: kSubHeaderTextStyle),
+                          const Text('ราคา Treatment',
+                              style: kSubHeaderTextStyle),
                           const SizedBox(height: 20),
                           TextField(
                             enabled: isEditing,
@@ -238,7 +242,7 @@ class _EditPredefinedTreatmentDetailState
                             textAlignVertical: TextAlignVertical.center,
                             decoration: InputDecoration(
                               contentPadding: const EdgeInsets.all(8),
-                              border: OutlineInputBorder(),
+                              border: const OutlineInputBorder(),
                               hintText: "ราคา Treatment [ใส่แค่ตัวเลข]",
                               errorText: _isCostCorrect
                                   ? null
@@ -280,19 +284,14 @@ class _EditPredefinedTreatmentDetailState
                                   });
                                 }
                               },
-                              child: Text('บันทึกแก้ไข'))
+                              child: const Text('บันทึกแก้ไข'))
                           : ElevatedButton(
                               onPressed: () async {
-                                if (editedList.isNotEmpty) {
-                                  _postUpdateData()
-                                      .then((value) => Navigator.pop(context));
-                                }
-                                if (deletedList.isNotEmpty) {
-                                  _postDeleteData()
-                                      .then((value) => Navigator.pop(context));
-                                }
+                                await _postUpdateData();
+                                await _postDeleteData()
+                                    .then((value) => Navigator.pop(context));
                               },
-                              child: Text('บันทึก'))
+                              child: const Text('บันทึก'))
                     ],
                   ),
                 ],

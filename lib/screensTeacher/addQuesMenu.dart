@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:frontend/components/appBar.dart';
+import 'package:frontend/components/appbar.dart';
 import 'package:frontend/constants.dart';
 import 'package:frontend/screensTeacher/addQuestion.dart';
 import 'package:frontend/screensTeacher/PredefinedScreens/editPredefinedListTopic.dart';
@@ -155,7 +155,7 @@ class AddQuesMenu extends StatelessWidget {
     }
 
     return Scaffold(
-      appBar: AppbarTeacher(),
+      appBar: const AppbarTeacher(),
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
         child: Center(
@@ -191,7 +191,7 @@ class AddQuesMenu extends StatelessWidget {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => AddQuestion()))
+                                builder: (context) => const AddQuestion()))
                       });
                 },
                 style: ElevatedButton.styleFrom(
@@ -207,7 +207,7 @@ class AddQuesMenu extends StatelessWidget {
                             context,
                             MaterialPageRoute(
                                 builder: (context) =>
-                                    EditPredefinedListTopic()))
+                                    const EditPredefinedListTopic()))
                       });
                 },
                 style: ElevatedButton.styleFrom(

@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/components/appBar.dart';
+import 'package:frontend/components/appbar.dart';
 import 'package:frontend/components/examContainer.dart';
 import 'package:frontend/constants.dart';
 import 'package:frontend/models/problemListObject.dart';
 import 'package:frontend/screensTeacher/editQuestion.dart';
-import 'package:frontend/components/tagBox.dart';
+import 'package:frontend/components/tag_box.dart';
 import 'package:frontend/components/BoxesInAddQ.dart';
 import 'package:frontend/models/examinationObject.dart';
 import 'package:frontend/components/treatmentContainer.dart';
 import 'package:collection/collection.dart';
 import 'package:frontend/models/fullQuestionObject.dart';
-import 'package:frontend/components/backButton.dart';
+import 'package:frontend/components/back_button.dart';
 import 'package:frontend/screensTeacher/showStatOverall.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -118,7 +118,7 @@ class _ShowAndEditQuestionState extends State<ShowAndEditQuestion> {
     }
 
     return Scaffold(
-      appBar: AppbarTeacher(),
+      appBar: const AppbarTeacher(),
       body: SingleChildScrollView(
         child: Center(
           child: Container(
@@ -150,9 +150,9 @@ class _ShowAndEditQuestionState extends State<ShowAndEditQuestion> {
                                     ),
                                   );
                                 },
-                                child: Text('ดูสถิติ'),
+                                child: const Text('ดูสถิติ'),
                               ),
-                              SizedBox(width: 15),
+                              const SizedBox(width: 15),
                               ElevatedButton(
                                 onPressed: () {
                                   Navigator.push(
@@ -165,25 +165,25 @@ class _ShowAndEditQuestionState extends State<ShowAndEditQuestion> {
                                     ),
                                   );
                                 },
-                                child: Text('แก้ไขโจทย์'),
+                                child: const Text('แก้ไขโจทย์'),
                               ),
-                              SizedBox(width: 15),
+                              const SizedBox(width: 15),
                               ElevatedButton(
                                 onPressed: () {
                                   //delete ques
                                   deleteModal(context);
                                 },
-                                child: Text('ลบโจทย์'),
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: Color(0xFF8B72BE),
+                                  backgroundColor: const Color(0xFF8B72BE),
                                 ),
+                                child: const Text('ลบโจทย์'),
                               ),
                             ],
                           ),
                         ],
                       ),
                       Container(
-                        padding: EdgeInsets.only(left: 10),
+                        padding: const EdgeInsets.only(left: 10),
                         child: questionObj != null
                             ? Row(
                                 children: questionObj!.tags
@@ -194,8 +194,8 @@ class _ShowAndEditQuestionState extends State<ShowAndEditQuestion> {
                               )
                             : null,
                       ),
-                      SizedBox(height: 20),
-                      Text(
+                      const SizedBox(height: 20),
+                      const Text(
                         'ข้อมูลทั่วไป',
                         style: kSubHeaderTextStyle,
                       ),
@@ -218,49 +218,49 @@ class _ShowAndEditQuestionState extends State<ShowAndEditQuestion> {
                           style: kNormalTextStyle),
                       Text('น้ำหนัก: ${questionObj?.signalment.weight ?? '0'}',
                           style: kNormalTextStyle),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       //Client Complains
-                      Text(
+                      const Text(
                         'Client Complains',
                         style: kSubHeaderTextStyle,
                       ),
                       Container(
-                        padding: EdgeInsets.all(10),
+                        padding: const EdgeInsets.all(10),
+                        color: const Color(0xFFDFE4E0),
+                        width: double.infinity,
                         child: questionObj != null
                             ? Text(
                                 questionObj!.clientComplains,
                                 style: kNormalTextStyle,
                               )
-                            : Text(''),
-                        color: Color(0xFFDFE4E0),
-                        width: double.infinity,
+                            : const Text(''),
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       //History Taking
-                      Text(
+                      const Text(
                         'History Taking',
                         style: kSubHeaderTextStyle,
                       ),
                       Container(
-                        padding: EdgeInsets.all(10),
+                        padding: const EdgeInsets.all(10),
+                        color: const Color(0xFFDFE4E0),
+                        width: double.infinity,
                         child: questionObj != null
                             ? Text(
                                 questionObj!.historyTakingInfo,
                                 style: kNormalTextStyle,
                               )
                             : null,
-                        color: Color(0xFFDFE4E0),
-                        width: double.infinity,
                       ),
                       //General Results
                       const SizedBox(height: 20),
-                      Text('ผลตรวจทั่วไป', style: kSubHeaderTextStyle),
+                      const Text('ผลตรวจทั่วไป', style: kSubHeaderTextStyle),
                       DottedListView(
                           showList: questionObj?.generalInfo.split(',') ?? []),
                       const DividerWithSpace(),
-                      Text('เฉลย', style: kHeaderTextStyle),
+                      const Text('เฉลย', style: kHeaderTextStyle),
                       const H20Sizedbox(),
-                      Text('Problem List ครั้งที่ 1',
+                      const Text('Problem List ครั้งที่ 1',
                           style: kSubHeaderTextStyle),
                       DottedListView(
                           showList: questionObj != null
@@ -268,7 +268,7 @@ class _ShowAndEditQuestionState extends State<ShowAndEditQuestion> {
                                   .map((item) => item.name)
                                   .toList()
                               : []),
-                      Text('ผลการส่งตรวจครั้งที่ 1',
+                      const Text('ผลการส่งตรวจครั้งที่ 1',
                           style: kSubHeaderTextStyle),
                       const H20Sizedbox(),
                       ListView.builder(
@@ -280,7 +280,7 @@ class _ShowAndEditQuestionState extends State<ShowAndEditQuestion> {
                       ),
                       const DividerWithSpace(),
                       //prob&exam2
-                      Text('Problem List ครั้งที่ 2',
+                      const Text('Problem List ครั้งที่ 2',
                           style: kSubHeaderTextStyle),
                       DottedListView(
                           showList: questionObj != null
@@ -288,7 +288,7 @@ class _ShowAndEditQuestionState extends State<ShowAndEditQuestion> {
                                   .map((item) => item.name)
                                   .toList()
                               : []),
-                      Text('ผลการส่งตรวจครั้งที่ 2',
+                      const Text('ผลการส่งตรวจครั้งที่ 2',
                           style: kSubHeaderTextStyle),
                       const H20Sizedbox(),
                       ListView.builder(
@@ -299,14 +299,14 @@ class _ShowAndEditQuestionState extends State<ShowAndEditQuestion> {
                         },
                       ),
                       const DividerWithSpace(),
-                      Text('Diagnosis List', style: kSubHeaderTextStyle),
+                      const Text('Diagnosis List', style: kSubHeaderTextStyle),
                       DottedListView(
                           showList: questionObj?.diagnostics
                                   .map((item) => item.name)
                                   .toList() ??
                               []),
                       const DividerWithSpace(),
-                      Text('Treatment', style: kSubHeaderTextStyle),
+                      const Text('Treatment', style: kSubHeaderTextStyle),
                       ListView.builder(
                           shrinkWrap: true,
                           itemCount: questionObj?.treatments.map((item) {

@@ -1,5 +1,4 @@
 import 'package:fl_chart/fl_chart.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/constants.dart';
 import 'package:frontend/UIModels/teacher/examContainer_provider.dart';
@@ -20,14 +19,14 @@ class DropDownButtonInAddQ extends StatelessWidget {
   String hintText;
 
   DropDownButtonInAddQ(
-      {required this.selectedValue,
+      {super.key,
+      required this.selectedValue,
       required this.list,
       required this.hintText,
       required this.onChanged});
 
   @override
   Widget build(BuildContext context) {
-    // print('len = ${list.where((element) => element == selectedValue).length}');
     return (list
                 .map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
@@ -42,11 +41,11 @@ class DropDownButtonInAddQ extends StatelessWidget {
         ? DropdownButton(
             value: selectedValue,
             hint: Text(hintText),
-            icon: Icon(Icons.arrow_drop_down),
-            padding: EdgeInsets.all(5),
+            icon: const Icon(Icons.arrow_drop_down),
+            padding: const EdgeInsets.all(5),
             isDense: true,
             alignment: Alignment.center,
-            focusColor: Color(0xFFF2F5F7),
+            focusColor: const Color(0xFFF2F5F7),
             items: list.map<DropdownMenuItem<String>>((String value) {
               return DropdownMenuItem<String>(
                 value: value,
@@ -55,7 +54,7 @@ class DropDownButtonInAddQ extends StatelessWidget {
             }).toList(),
             onChanged: onChanged,
           )
-        : SizedBox();
+        : const SizedBox();
   }
 }
 
@@ -63,7 +62,8 @@ class TextAndTextfield extends StatelessWidget {
   TextEditingController myController = TextEditingController();
   String title;
 
-  TextAndTextfield({required this.title, required this.myController});
+  TextAndTextfield(
+      {super.key, required this.title, required this.myController});
 
   @override
   Widget build(BuildContext context) {
@@ -77,7 +77,7 @@ class TextAndTextfield extends StatelessWidget {
           child: TextField(
             controller: myController,
             textAlign: TextAlign.center,
-            decoration: InputDecoration(isDense: true),
+            decoration: const InputDecoration(isDense: true),
           ),
         ),
       ],
@@ -93,7 +93,8 @@ class TextBoxMultiLine extends StatelessWidget {
   final Color boxColor;
 
   TextBoxMultiLine(
-      {required this.myController,
+      {super.key,
+      required this.myController,
       required this.hintText,
       required this.titleText,
       required this.maxLine,
@@ -109,7 +110,7 @@ class TextBoxMultiLine extends StatelessWidget {
                 titleText,
                 style: kSubHeaderTextStyle,
               )
-            : SizedBox(
+            : const SizedBox(
                 width: 2,
               ),
         Container(
@@ -118,7 +119,7 @@ class TextBoxMultiLine extends StatelessWidget {
             controller: myController,
             maxLines: maxLine,
             decoration: InputDecoration(
-              contentPadding: EdgeInsets.all(10),
+              contentPadding: const EdgeInsets.all(10),
               border: InputBorder.none,
               hintText: hintText,
             ),
@@ -145,11 +146,11 @@ class DividerWithSpace extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return const Column(
       children: [
-        const H20Sizedbox(),
+        H20Sizedbox(),
         Divider(),
-        const H20Sizedbox(),
+        H20Sizedbox(),
       ],
     );
   }
@@ -163,7 +164,8 @@ class ProbListMultiSelectDropDown extends StatelessWidget {
   Function(List<ProblemObject>, int) updateListCallback;
 
   ProbListMultiSelectDropDown(
-      {required this.selectedList,
+      {super.key,
+      required this.selectedList,
       required this.displayList,
       required this.hintText,
       required this.round,
@@ -171,12 +173,10 @@ class ProbListMultiSelectDropDown extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // print('select = $selectedList');
-    // print('display = $displayList');
     return MultiSelectDropDown(
         searchEnabled: true,
         hint: hintText,
-        chipConfig: ChipConfig(
+        chipConfig: const ChipConfig(
             backgroundColor: Color(0xFF42C2FF), wrapType: WrapType.wrap),
         onOptionSelected: (List<ValueItem> selectedOptions) {
           updateListCallback(
@@ -201,7 +201,8 @@ class DiagnosisMultiSelectDropDown extends StatelessWidget {
   Function(List<DiagnosisObject>) updateListCallback;
 
   DiagnosisMultiSelectDropDown(
-      {required this.selectedList,
+      {super.key,
+      required this.selectedList,
       required this.displayList,
       required this.hintText,
       required this.updateListCallback});
@@ -211,7 +212,7 @@ class DiagnosisMultiSelectDropDown extends StatelessWidget {
     return MultiSelectDropDown(
         searchEnabled: true,
         hint: hintText,
-        chipConfig: ChipConfig(
+        chipConfig: const ChipConfig(
             backgroundColor: Color(0xFF42C2FF), wrapType: WrapType.wrap),
         onOptionSelected: (List<ValueItem> selectedOptions) {
           updateListCallback(selectedOptions.map((item) {
@@ -228,16 +229,15 @@ class ExamsButtonAndContainer extends StatelessWidget {
   List<ExamContainer> examContainers;
   ExamContainerProvider examListProvider;
   int round;
-  ////
+
   TextEditingController examController = TextEditingController();
 
   ExamsButtonAndContainer(
-      {required this.examContainers,
+      {super.key,
+      required this.examContainers,
       required this.examListProvider,
       required this.round});
 
-  // Map<String, List<ExamPreDefinedObject>> groupedByLab =
-  //     groupBy(preDefinedExamAll, (e) => e.lab);
   Map<String, List<ExamPreDefinedObject>> groupedByLab =
       groupBy(examListPreDefined, (e) => e.lab);
 
@@ -251,7 +251,7 @@ class ExamsButtonAndContainer extends StatelessWidget {
               'ผลการส่งตรวจครั้งที่ $round',
               style: kSubHeaderTextStyle,
             ),
-            SizedBox(width: 20),
+            const SizedBox(width: 20),
             ElevatedButton(
               onPressed: () {
                 final int currentNub = examListProvider.nub;
@@ -263,8 +263,7 @@ class ExamsButtonAndContainer extends StatelessWidget {
                         selectedDepartment: groupedByLab.keys.first,
                         selectedExamTopic: groupedByLab.values.first.first.type,
                         selectedExamName: groupedByLab.values.first.first.name,
-                        selectedArea:
-                            groupedByLab.values.first.first.area ?? null,
+                        selectedArea: groupedByLab.values.first.first.area,
                         areaNull: groupedByLab.values.first.first.area == null,
                         examController: examController,
                         imagePath: null,
@@ -272,7 +271,7 @@ class ExamsButtonAndContainer extends StatelessWidget {
                         haveImage: false),
                     examContainers);
               },
-              child: Text('เพิ่มการส่งตรวจ'),
+              child: const Text('เพิ่มการส่งตรวจ'),
             ),
           ],
         ),
@@ -281,9 +280,6 @@ class ExamsButtonAndContainer extends StatelessWidget {
             shrinkWrap: true,
             itemCount: examContainers.length,
             itemBuilder: (context, index) {
-              // String itemId = examContainers[index].id;
-              // // Key itemKey = Key(itemId);
-              // examContainers[index].itemKey = Key(itemId);
               return examContainers[index];
             }),
       ],
@@ -296,7 +292,7 @@ class ExamsButtonAndContainer extends StatelessWidget {
 class DottedListView extends StatelessWidget {
   List<String> showList;
 
-  DottedListView({required this.showList});
+  DottedListView({super.key, required this.showList});
 
   @override
   Widget build(BuildContext context) {
@@ -307,10 +303,10 @@ class DottedListView extends StatelessWidget {
             itemBuilder: (context, index) {
               return ListTile(
                 title: Text(showList[index]),
-                leading: Icon(Icons.circle, size: 15),
+                leading: const Icon(Icons.circle, size: 15),
               );
             })
-        : SizedBox();
+        : const SizedBox();
   }
 }
 
@@ -335,7 +331,7 @@ class TitleAndDottedListView extends StatelessWidget {
           itemCount: showList.length,
           itemBuilder: (context, index) {
             return ListTile(
-              leading: Icon(
+              leading: const Icon(
                 Icons.circle,
                 size: 15,
               ),
@@ -379,14 +375,14 @@ class TitleAndExams extends StatelessWidget {
                   ListTile(
                     title: Row(
                       children: [
-                        Text(
+                        const Text(
                           'แผนกที่เลือกตรวจ: ',
                           style: TextStyle(fontWeight: FontWeight.w700),
                         ),
                         Text(item.lab),
                       ],
                     ),
-                    leading: Icon(
+                    leading: const Icon(
                       Icons.circle,
                       size: 15,
                     ),
@@ -396,7 +392,7 @@ class TitleAndExams extends StatelessWidget {
                       padding: const EdgeInsets.only(left: 35),
                       child: Row(
                         children: [
-                          Text(
+                          const Text(
                             'หัวข้อการตรวจ: ',
                             style: TextStyle(fontWeight: FontWeight.w700),
                           ),
@@ -411,7 +407,7 @@ class TitleAndExams extends StatelessWidget {
                             padding: const EdgeInsets.only(left: 35),
                             child: Row(
                               children: [
-                                Text('ตัวอย่างการส่งตรวจ: ',
+                                const Text('ตัวอย่างการส่งตรวจ: ',
                                     style:
                                         TextStyle(fontWeight: FontWeight.w700)),
                                 Text(item.area!),
@@ -419,13 +415,13 @@ class TitleAndExams extends StatelessWidget {
                             ),
                           ),
                         )
-                      : SizedBox(),
+                      : const SizedBox(),
                   ListTile(
                     title: Padding(
                       padding: const EdgeInsets.only(left: 35),
                       child: Row(
                         children: [
-                          Text('ชื่อการส่งตรวจ: ',
+                          const Text('ชื่อการส่งตรวจ: ',
                               style: TextStyle(fontWeight: FontWeight.w700)),
                           Text(item.name),
                         ],
@@ -443,11 +439,11 @@ class TitleAndExams extends StatelessWidget {
                             alignment: Alignment.topLeft,
                           ),
                         )
-                      : SizedBox(),
+                      : const SizedBox(),
                 ],
               );
             }),
-        SizedBox(height: 15),
+        const SizedBox(height: 15),
       ],
     );
   }
@@ -482,7 +478,7 @@ void probDiagTreatmentModal(
                       onPressed: () {
                         Navigator.pop(context);
                       },
-                      icon: Icon(Icons.close),
+                      icon: const Icon(Icons.close),
                     ),
                   ],
                 ),
@@ -494,7 +490,7 @@ void probDiagTreatmentModal(
                         itemBuilder: (context, index) {
                           return ListTile(
                             title: Text(list[index].name),
-                            leading: Icon(Icons.circle, size: 15),
+                            leading: const Icon(Icons.circle, size: 15),
                           );
                         }),
                   ),
@@ -513,10 +509,10 @@ void examModal(
       builder: (BuildContext context) {
         return Dialog(
           child: Container(
-            padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
             width: MediaQuery.of(context).size.width * 0.5,
             decoration: BoxDecoration(
-              color: Color(0xFFBBF5FF),
+              color: const Color(0xFFBBF5FF),
               borderRadius: BorderRadius.circular(10),
             ),
             child: Column(
@@ -532,7 +528,7 @@ void examModal(
                       onPressed: () {
                         Navigator.pop(context);
                       },
-                      icon: Icon(Icons.close),
+                      icon: const Icon(Icons.close),
                     ),
                   ],
                 ),
@@ -593,7 +589,7 @@ void examModal(
                                         ),
                                       ),
                                     )
-                                  : SizedBox(),
+                                  : const SizedBox(),
                               ListTile(
                                 title: Padding(
                                   padding: const EdgeInsets.only(left: 35),
@@ -679,6 +675,25 @@ class StatBarGraph extends StatelessWidget {
         ),
         const SizedBox(height: 20),
       ],
+    );
+  }
+}
+
+/////login & register page/////
+class SimpleTextField extends StatelessWidget {
+  TextEditingController myController;
+  String hintText;
+  SimpleTextField(
+      {super.key, required this.myController, required this.hintText});
+
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      controller: myController,
+      decoration: InputDecoration(
+        border: const OutlineInputBorder(),
+        hintText: hintText,
+      ),
     );
   }
 }

@@ -4,8 +4,6 @@ import 'package:frontend/models/problemListObject.dart';
 import 'package:frontend/models/diagnosisObject.dart';
 import 'package:collection/collection.dart';
 import 'package:frontend/AllDataFile.dart';
-import 'package:frontend/models/questionObject.dart';
-import 'package:frontend/models/fullQuestionObject.dart';
 import 'package:frontend/models/tagObject.dart';
 
 List<ProblemObject> filterProblemList(
@@ -26,16 +24,12 @@ List<DiagnosisObject> filterDiagnosisList(
 }
 
 List<String> filterTreatment(String topic) {
-  // Map<String,List<TreatmentObject>> splitTreatment = groupBy(preDefinedTreatmentAll, (e) => e.type);
-  // return splitTreatment[topic]!.map((e) => e.name).toList();
-
   Map<String, List<TreatmentObject>> splitTreatment =
       groupBy(treatmentListPreDefined, (e) => e.type);
   return splitTreatment[topic]!.map((e) => e.name).toList();
 }
 
 List<String> getTreatmentTopic() {
-  // return groupBy(preDefinedTreatmentAll, (e) => e.type).keys.toList();
   return groupBy(treatmentListPreDefined, (e) => e.type).keys.toList();
 }
 
@@ -69,13 +63,11 @@ List<String> filterStringList(
 
 /////filter in mainShowQuestion/////
 
-List<QuestionObject> filterFromTagsNisit(
-    List<QuestionObject> list, List<TagObject> tagList) {
-  List<QuestionObject> returnList = [];
-  for (QuestionObject item in list) {
+List<dynamic> filterFromTags(List<dynamic> list, List<TagObject> tagList) {
+  List<dynamic> returnList = [];
+  for (var item in list) {
     bool isTagCorrect = true;
     for (TagObject tag in tagList) {
-      for (var i in item.tags) {}
       if (!item.tags.contains(tag)) {
         isTagCorrect = false;
       }
@@ -87,20 +79,9 @@ List<QuestionObject> filterFromTagsNisit(
   return returnList;
 }
 
-List<FullQuestionObject> filterFromTagsTeacher(
-    List<FullQuestionObject> list, List<TagObject> tagList) {
-  List<FullQuestionObject> returnList = [];
-  for (FullQuestionObject item in list) {
-    bool isTagCorrect = true;
-    for (TagObject tag in tagList) {
-      for (var i in item.tags) {}
-      if (!item.tags.contains(tag)) {
-        isTagCorrect = false;
-      }
-    }
-    if (isTagCorrect) {
-      returnList.add(item);
-    }
+List<dynamic> filterFromQuesName(List<dynamic> list, String query) {
+  if (query == '') {
+    return list;
   }
-  return returnList;
+  return list.where((item) => item.name.startsWith(query)).toList();
 }

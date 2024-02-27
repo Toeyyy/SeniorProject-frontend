@@ -1,12 +1,12 @@
 import 'dart:convert';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:frontend/components/appBar.dart';
+import 'package:frontend/components/appbar.dart';
 import 'package:frontend/components/functions.dart';
 import 'package:frontend/constants.dart';
 import 'package:frontend/components/BoxesInAddQ.dart';
 import 'package:frontend/models/treatmentObject.dart';
-import 'package:frontend/components/backButton.dart';
+import 'package:frontend/components/back_button.dart';
 import 'package:http/http.dart' as http;
 import 'package:frontend/AllDataFile.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -77,12 +77,12 @@ class _EditPreDefinedTreatmentAddState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppbarTeacher(),
+      appBar: const AppbarTeacher(),
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
         child: SingleChildScrollView(
           child: Center(
-            child: Container(
+            child: SizedBox(
               width: MediaQuery.of(context).size.width * 0.7,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -135,9 +135,9 @@ class _EditPreDefinedTreatmentAddState
                     ),
                   ),
                   Card(
-                    color: Color(0xFFF2F5F7),
+                    color: const Color(0xFFF2F5F7),
                     elevation: 0,
-                    margin: EdgeInsets.symmetric(horizontal: 15),
+                    margin: const EdgeInsets.symmetric(horizontal: 15),
                     child: ListView.builder(
                         shrinkWrap: true,
                         itemCount: typeDisplayList.length,
@@ -145,10 +145,10 @@ class _EditPreDefinedTreatmentAddState
                           return Container(
                             decoration: BoxDecoration(
                               border: Border.all(
-                                  color: Color(0xFFB5C1BE), width: 1.0),
+                                  color: const Color(0xFFB5C1BE), width: 1.0),
                             ),
                             child: ListTile(
-                              hoverColor: Color(0xFFA0E9FF),
+                              hoverColor: const Color(0xFFA0E9FF),
                               title: Text(typeDisplayList[index]),
                               onTap: () {
                                 setState(() {
@@ -168,9 +168,9 @@ class _EditPreDefinedTreatmentAddState
                           );
                         }),
                   ),
-                  DividerWithSpace(),
+                  const DividerWithSpace(),
                   /////name/////
-                  Text('ชื่อ Treatment', style: kSubHeaderTextStyle),
+                  const Text('ชื่อ Treatment', style: kSubHeaderTextStyle),
                   const SizedBox(height: 20),
                   TextField(
                     controller: nameTextController,
@@ -191,9 +191,9 @@ class _EditPreDefinedTreatmentAddState
                     ),
                   ),
                   Card(
-                    color: Color(0xFFF2F5F7),
+                    color: const Color(0xFFF2F5F7),
                     elevation: 0,
-                    margin: EdgeInsets.symmetric(horizontal: 15),
+                    margin: const EdgeInsets.symmetric(horizontal: 15),
                     child: ListView.builder(
                         shrinkWrap: true,
                         itemCount: nameList.length,
@@ -201,10 +201,10 @@ class _EditPreDefinedTreatmentAddState
                           return Container(
                             decoration: BoxDecoration(
                               border: Border.all(
-                                  color: Color(0xFFB5C1BE), width: 1.0),
+                                  color: const Color(0xFFB5C1BE), width: 1.0),
                             ),
                             child: ListTile(
-                              hoverColor: Color(0xFFA0E9FF),
+                              hoverColor: const Color(0xFFA0E9FF),
                               title: Text(nameList[index]),
                               onTap: () {
                                 setState(() {
@@ -218,16 +218,16 @@ class _EditPreDefinedTreatmentAddState
                           );
                         }),
                   ),
-                  DividerWithSpace(),
+                  const DividerWithSpace(),
                   /////cost/////
-                  Text('ราคา Treatment', style: kSubHeaderTextStyle),
+                  const Text('ราคา Treatment', style: kSubHeaderTextStyle),
                   const SizedBox(height: 20),
                   TextField(
                     controller: costTextController,
                     textAlignVertical: TextAlignVertical.center,
                     decoration: InputDecoration(
                       contentPadding: const EdgeInsets.all(8),
-                      border: OutlineInputBorder(),
+                      border: const OutlineInputBorder(),
                       hintText: "ราคา Treatment [ใส่แค่ตัวเลข]",
                       errorText: _isCostCorrect ? null : "ใส่แค่ตัวเลขเท่านั้น",
                     ),
@@ -270,10 +270,10 @@ class _EditPreDefinedTreatmentAddState
                                   costTextController.clear();
                                 }
                               },
-                              child: Text('เพิ่ม'),
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: Color(0xFF926096),
+                                backgroundColor: const Color(0xFF926096),
                               ),
+                              child: const Text('เพิ่ม'),
                             )
                           : ElevatedButton(
                               onPressed: () async {
@@ -281,7 +281,7 @@ class _EditPreDefinedTreatmentAddState
                                   Navigator.pop(context);
                                 });
                               },
-                              child: Text('บันทึก'),
+                              child: const Text('บันทึก'),
                             ),
                     ],
                   )

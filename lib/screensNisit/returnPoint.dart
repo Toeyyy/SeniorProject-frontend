@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/components/appBar.dart';
+import 'package:frontend/components/appbar.dart';
 import 'package:frontend/constants.dart';
 import 'package:frontend/models/statModels/StatQuestionObject.dart';
 import 'package:frontend/components/BoxesInAddQ.dart';
@@ -11,7 +11,7 @@ import 'package:frontend/models/examinationPreDefinedObject.dart';
 class ReturnPoint extends StatelessWidget {
   late StatQuestionObject? stat;
 
-  ReturnPoint({required this.stat});
+  ReturnPoint({super.key, required this.stat});
 
   late Map<String, List<ProblemObject>> splitProblems =
       groupBy(stat!.problems, (e) => e.round.toString());
@@ -32,13 +32,13 @@ class ReturnPoint extends StatelessWidget {
     }
 
     return Scaffold(
-      appBar: AppbarNisit(),
+      appBar: const AppbarNisit(),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
           child: stat != null
               ? Center(
-                  child: Container(
+                  child: SizedBox(
                     width: MediaQuery.of(context).size.width * 0.8,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -75,7 +75,7 @@ class ReturnPoint extends StatelessWidget {
                           'Examination ครั้งที่ 1, คะแนนที่ได้: ${stat!.examination1Score} คะแนน',
                           style: kSubHeaderTextStyleInLeftPart,
                         ),
-                        SizedBox(height: 15),
+                        const SizedBox(height: 15),
                         ListView.builder(
                             shrinkWrap: true,
                             itemCount: splitExams['1']!.length,
@@ -87,13 +87,13 @@ class ReturnPoint extends StatelessWidget {
                                   area: item.area,
                                   name: item.name);
                             }),
-                        DividerWithSpace(),
+                        const DividerWithSpace(),
                         /////prob&exam2/////
                         Text(
                           'Problem List ครั้งที่ 2, คะแนนที่ได้: ${stat!.problem2Score} คะแนน',
                           style: kSubHeaderTextStyleInLeftPart,
                         ),
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
                         ListView.builder(
                           shrinkWrap: true,
                           itemCount: splitProblems['2']!.length,
@@ -111,7 +111,7 @@ class ReturnPoint extends StatelessWidget {
                           'Examination ครั้งที่ 2, คะแนนที่ได้: ${stat!.examination2Score} คะแนน',
                           style: kSubHeaderTextStyleInLeftPart,
                         ),
-                        SizedBox(height: 15),
+                        const SizedBox(height: 15),
                         ListView.builder(
                             shrinkWrap: true,
                             itemCount: splitExams['2']!.length,
@@ -123,13 +123,13 @@ class ReturnPoint extends StatelessWidget {
                                   area: item.area,
                                   name: item.name);
                             }),
-                        DividerWithSpace(),
+                        const DividerWithSpace(),
                         /////diag/////
                         Text(
                           'Diagnosis, คะแนนที่ได้: ${stat!.diagnosticScore} คะแนน',
                           style: kSubHeaderTextStyleInLeftPart,
                         ),
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
                         ListView.builder(
                           shrinkWrap: true,
                           itemCount: stat!.diagnostics.length,
@@ -143,27 +143,27 @@ class ReturnPoint extends StatelessWidget {
                             );
                           },
                         ),
-                        DividerWithSpace(),
+                        const DividerWithSpace(),
                         /////treatment/////
                         Text(
                           'Treatment, คะแนนที่ได้: ${stat!.treatmentScore} คะแนน',
                           style: kSubHeaderTextStyleInLeftPart,
                         ),
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
                         ListView.builder(
                           shrinkWrap: true,
                           itemCount: stat!.treatments.length,
                           itemBuilder: (context, index) {
                             return ListTile(
                               title: Text(stat!.treatments[index].name),
-                              leading: Icon(
+                              leading: const Icon(
                                 Icons.circle,
                                 size: 15,
                               ),
                             );
                           },
                         ),
-                        DividerWithSpace(),
+                        const DividerWithSpace(),
                         Text(
                           'คะแนนรวม: ${stat!.problem1Score + stat!.problem2Score + stat!.examination1Score + stat!.examination2Score + stat!.diagnosticScore + stat!.treatmentScore} คะแนน',
                           style: kSubHeaderTextStyleInLeftPart,
@@ -180,7 +180,7 @@ class ReturnPoint extends StatelessWidget {
                                 ModalRoute.withName('/mainShowQuestionNisit'),
                               );
                             },
-                            child: Text('หน้าแรก'),
+                            child: const Text('หน้าแรก'),
                           ),
                         ),
                       ],

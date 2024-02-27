@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/components/appBar.dart';
+import 'package:frontend/components/appbar.dart';
 import 'package:frontend/constants.dart';
 import 'package:frontend/models/statModels/StatNisitObject.dart';
 import 'package:frontend/components/BoxesInAddQ.dart';
@@ -8,8 +8,8 @@ import 'package:frontend/models/examinationPreDefinedObject.dart';
 import 'package:collection/collection.dart';
 
 class ShowStatDetail extends StatelessWidget {
-  List<StatNisitObject> statList;
-  ShowStatDetail({super.key, required this.statList});
+  final List<StatNisitObject> statList;
+  const ShowStatDetail({super.key, required this.statList});
 
   @override
   Widget build(BuildContext context) {
@@ -39,11 +39,11 @@ class ShowStatDetail extends StatelessWidget {
     }
 
     return Scaffold(
-      appBar: AppbarTeacher(),
+      appBar: const AppbarTeacher(),
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
         child: Center(
-          child: Container(
+          child: SizedBox(
             width: MediaQuery.of(context).size.width * 0.9,
             child: Column(
               children: [
@@ -147,7 +147,7 @@ class ShowStatDetail extends StatelessWidget {
                                                 "Problem List ครั้งที่ 1",
                                                 splitProblems['1']!);
                                           },
-                                          icon: Icon(Icons.search)),
+                                          icon: const Icon(Icons.search)),
                                     ],
                                   ),
                                 ),
@@ -165,7 +165,7 @@ class ShowStatDetail extends StatelessWidget {
                                             examModal(
                                                 context, '1', splitExams['1']!);
                                           },
-                                          icon: Icon(Icons.search))
+                                          icon: const Icon(Icons.search))
                                     ],
                                   ),
                                 ),
@@ -203,7 +203,7 @@ class ShowStatDetail extends StatelessWidget {
                                             examModal(
                                                 context, '2', splitExams['2']!);
                                           },
-                                          icon: Icon(Icons.search))
+                                          icon: const Icon(Icons.search))
                                     ],
                                   ),
                                 ),
@@ -223,7 +223,7 @@ class ShowStatDetail extends StatelessWidget {
                                                 "Diagnosis",
                                                 statList[index].diagnostics);
                                           },
-                                          icon: Icon(Icons.search)),
+                                          icon: const Icon(Icons.search)),
                                     ],
                                   ),
                                 ),
@@ -243,7 +243,7 @@ class ShowStatDetail extends StatelessWidget {
                                                 "Treatment",
                                                 statList[index].treatments);
                                           },
-                                          icon: Icon(Icons.search))
+                                          icon: const Icon(Icons.search))
                                     ],
                                   ),
                                 ),

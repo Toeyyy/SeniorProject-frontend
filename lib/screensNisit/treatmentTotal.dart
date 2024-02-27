@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/aboutData/getDataFunctions.dart';
 import 'package:frontend/components/splitScreenNisit.dart';
-import 'package:frontend/components/appBar.dart';
+import 'package:frontend/components/appbar.dart';
 import 'package:frontend/UIModels/nisit/selected_treatment_provider.dart';
 import 'package:frontend/constants.dart';
 import 'package:provider/provider.dart';
@@ -21,7 +21,7 @@ import 'package:frontend/UIModels/nisit/selected_exam_provider.dart';
 class TreatmentTotal extends StatelessWidget {
   QuestionObject questionObj;
 
-  TreatmentTotal({required this.questionObj});
+  TreatmentTotal({super.key, required this.questionObj});
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +33,7 @@ class TreatmentTotal extends StatelessWidget {
         Provider.of<SelectedDiagnosis>(context, listen: false);
 
     return Scaffold(
-      appBar: AppbarNisit(),
+      appBar: const AppbarNisit(),
       body: SplitScreenNisit(
         leftPart: LeftPartContent(
           questionObj: questionObj,
@@ -76,7 +76,7 @@ class TreatmentTotal extends StatelessWidget {
 class RightPart_TreatmentTotal extends StatefulWidget {
   QuestionObject questionObj;
 
-  RightPart_TreatmentTotal({required this.questionObj});
+  RightPart_TreatmentTotal({super.key, required this.questionObj});
 
   @override
   State<RightPart_TreatmentTotal> createState() =>
@@ -88,12 +88,10 @@ class _RightPart_TreatmentTotalState extends State<RightPart_TreatmentTotal> {
   bool _isSendingData = false;
 
   Future getData(String questionID) async {
-    //TODO แก้ลิ้ง
     List<StatQuestionObject> loadedData = await fetchStatQuestion(questionID);
 
     setState(() {
       stat = loadedData.first;
-      // print('stat = $stat');
     });
   }
 
@@ -154,7 +152,7 @@ class _RightPart_TreatmentTotalState extends State<RightPart_TreatmentTotal> {
       child: !_isSendingData
           ? Column(
               children: [
-                Text(
+                const Text(
                   "Treatment ที่เลือก",
                   style: kHeaderTextStyle,
                 ),
@@ -163,7 +161,7 @@ class _RightPart_TreatmentTotalState extends State<RightPart_TreatmentTotal> {
                     itemCount: treatmentProvider.treatmentList.length,
                     itemBuilder: (context, index) {
                       return ListTile(
-                        leading: Icon(Icons.circle, size: 15),
+                        leading: const Icon(Icons.circle, size: 15),
                         title:
                             Text(treatmentProvider.treatmentList[index].name),
                       );
@@ -184,10 +182,10 @@ class _RightPart_TreatmentTotalState extends State<RightPart_TreatmentTotal> {
                           ),
                         );
                       },
-                      child: Text('เลือก Treatment'),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(0xFF8B72BE),
+                        backgroundColor: const Color(0xFF8B72BE),
                       ),
+                      child: const Text('เลือก Treatment'),
                     ),
                     ElevatedButton(
                       onPressed: () async {
@@ -222,7 +220,7 @@ class _RightPart_TreatmentTotalState extends State<RightPart_TreatmentTotal> {
                 ),
               ],
             )
-          : SizedBox(
+          : const SizedBox(
               width: 10,
               child: Center(
                 child: CircularProgressIndicator(

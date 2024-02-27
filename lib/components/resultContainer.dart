@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:frontend/models/examResultObject.dart';
 import 'package:frontend/models/examinationPreDefinedObject.dart';
 import 'package:frontend/constants.dart';
-import 'package:frontend/components/BoxesInAddQ.dart';
 
 class ResultContainer extends StatelessWidget {
-  ExamResultObject result;
-  ExamPreDefinedObject selectedExam;
-  ResultContainer({required this.result, required this.selectedExam});
+  final ExamResultObject result;
+  final ExamPreDefinedObject selectedExam;
+
+  const ResultContainer(
+      {super.key, required this.result, required this.selectedExam});
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -19,14 +21,14 @@ class ResultContainer extends StatelessWidget {
                   '${selectedExam.name} (${selectedExam.area})',
                   style: kSubHeaderTextStyleInLeftPart,
                 ),
-                leading: Icon(Icons.circle, size: 15),
+                leading: const Icon(Icons.circle, size: 15),
               )
             : ListTile(
                 title: Text(
                   selectedExam.name,
                   style: kSubHeaderTextStyleInLeftPart,
                 ),
-                leading: Icon(Icons.circle, size: 15),
+                leading: const Icon(Icons.circle, size: 15),
               ),
         result.imgResult != null
             ? Padding(
@@ -34,17 +36,17 @@ class ResultContainer extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     Image.network(
                       result.imgResult!,
                       height: 200,
                       width: 300,
                       fit: BoxFit.fill,
                     ),
-                    SizedBox(height: 15),
+                    const SizedBox(height: 15),
                     Text(
                       result.textResult,
-                      style: TextStyle(fontSize: 18),
+                      style: const TextStyle(fontSize: 18),
                     ),
                   ],
                 ),
@@ -53,7 +55,7 @@ class ResultContainer extends StatelessWidget {
                 padding: const EdgeInsets.only(left: 50),
                 child: Text(
                   result.textResult,
-                  style: TextStyle(fontSize: 18),
+                  style: const TextStyle(fontSize: 18),
                 ),
               ),
       ],

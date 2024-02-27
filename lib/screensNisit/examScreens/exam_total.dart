@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/components/splitScreenNisit.dart';
-import 'package:frontend/components/appBar.dart';
-import 'package:frontend/models/examResultObject.dart';
+import 'package:frontend/components/appbar.dart';
 import 'package:frontend/UIModels/nisit/selected_exam_provider.dart';
 import 'package:frontend/screensNisit/examScreens/exam_topics.dart';
 import 'package:provider/provider.dart';
@@ -17,7 +16,7 @@ class ExamTotal extends StatelessWidget {
   int round;
   QuestionObject questionObj;
 
-  ExamTotal({required this.round, required this.questionObj});
+  ExamTotal({super.key, required this.round, required this.questionObj});
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +26,7 @@ class ExamTotal extends StatelessWidget {
         Provider.of<SelectedProblem>(context, listen: false);
 
     return Scaffold(
-      appBar: AppbarNisit(),
+      appBar: const AppbarNisit(),
       body: SplitScreenNisit(
         leftPart: round == 1
             ? LeftPartContent(
@@ -66,7 +65,7 @@ class ExamTotal extends StatelessWidget {
           child: Column(
             // mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Column(
+              const Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Align(
@@ -87,7 +86,7 @@ class ExamTotal extends StatelessWidget {
               Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  DividerWithSpace(),
+                  const DividerWithSpace(),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -101,17 +100,16 @@ class ExamTotal extends StatelessWidget {
                                   round: round, questionObj: questionObj),
                             ),
                           );
-                          // Navigator.popAndPushNamed(context, '/Nisit/ExamTopic');
                         },
-                        child: Text('เลือกตรวจเพิ่ม'),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Color(0xFF8B72BE),
+                          backgroundColor: const Color(0xFF8B72BE),
                         ),
+                        child: const Text('เลือกตรวจเพิ่ม'),
                       ),
                       round == 1
                           ? ElevatedButton(
                               onPressed: () {
-                                //TODO go to problist 2
+                                //go to prob list 2
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -122,11 +120,12 @@ class ExamTotal extends StatelessWidget {
                                   ),
                                 );
                               },
-                              child: Text('เลือก Problem List ครั้งที่ 2'),
+                              child:
+                                  const Text('เลือก Problem List ครั้งที่ 2'),
                             )
                           : ElevatedButton(
                               onPressed: () {
-                                //TODO go to diag
+                                //go to diag
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -136,7 +135,7 @@ class ExamTotal extends StatelessWidget {
                                   ),
                                 );
                               },
-                              child: Text('วินิจฉัย'),
+                              child: const Text('วินิจฉัย'),
                             ),
                     ],
                   ),

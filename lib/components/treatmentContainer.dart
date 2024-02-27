@@ -23,20 +23,17 @@ class TreatmentContainer extends StatefulWidget {
 }
 
 class _TreatmentContainerState extends State<TreatmentContainer> {
-  // String selectedTreatmentTopic = treatmentTopicList.first;
-  // String selectedTreatmentDetail = medicalTreatmentList.first;
-
   @override
   Widget build(BuildContext context) {
     TreatmentContainerProvider treatmentProvider =
         Provider.of<TreatmentContainerProvider>(context);
     return Container(
-      padding: EdgeInsets.all(10),
-      margin: EdgeInsets.only(bottom: 15),
+      padding: const EdgeInsets.all(10),
+      margin: const EdgeInsets.only(bottom: 15),
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10), color: Color(0xFFA0E9FF)),
+          borderRadius: BorderRadius.circular(10),
+          color: const Color(0xFFA0E9FF)),
       child: Column(
-        // key: widget.key,
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -56,10 +53,9 @@ class _TreatmentContainerState extends State<TreatmentContainer> {
                   }),
               IconButton(
                 onPressed: () {
-                  print('this container id = ${widget.id}');
                   treatmentProvider.deleteContainer(widget.key);
                 },
-                icon: Icon(Icons.remove),
+                icon: const Icon(Icons.remove),
               ),
             ],
           ),
@@ -67,7 +63,6 @@ class _TreatmentContainerState extends State<TreatmentContainer> {
           DropDownButtonInAddQ(
               selectedValue: widget.selectedTreatmentDetail,
               list: filterTreatment(widget.selectedTreatmentTopic),
-              // list: filterEditTopicList(widget.selectedTreatmentTopic).map((e) => e.name).toList(),
               hintText: "เลือกรายละเอียด Treatment",
               onChanged: (value) {
                 setState(() {
@@ -81,33 +76,34 @@ class _TreatmentContainerState extends State<TreatmentContainer> {
 }
 
 class ShowTreatmentContainer extends StatelessWidget {
-  String treatmentTopic;
-  String treatment;
+  final String treatmentTopic;
+  final String treatment;
 
-  ShowTreatmentContainer(
-      {required this.treatmentTopic, required this.treatment});
+  const ShowTreatmentContainer(
+      {super.key, required this.treatmentTopic, required this.treatment});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(bottom: 15),
-      padding: EdgeInsets.fromLTRB(0, 10, 10, 10),
+      margin: const EdgeInsets.only(bottom: 15),
+      padding: const EdgeInsets.fromLTRB(0, 10, 10, 10),
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10), color: Color(0xFFA0E9FF)),
+          borderRadius: BorderRadius.circular(10),
+          color: const Color(0xFFA0E9FF)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
             padding: const EdgeInsets.only(left: 10),
-            margin: EdgeInsets.only(bottom: 15),
+            margin: const EdgeInsets.only(bottom: 15),
             child: Row(
               children: [
                 Text(
                   'ประเภท Treatment',
                   style: kNormalTextStyle.copyWith(fontWeight: FontWeight.w800),
                 ),
-                SizedBox(width: 10),
+                const SizedBox(width: 10),
                 Text(treatmentTopic, style: kNormalTextStyle),
               ],
             ),
@@ -120,7 +116,7 @@ class ShowTreatmentContainer extends StatelessWidget {
                   'Treatment',
                   style: kNormalTextStyle.copyWith(fontWeight: FontWeight.w800),
                 ),
-                SizedBox(width: 10),
+                const SizedBox(width: 10),
                 Text(treatment, style: kNormalTextStyle),
               ],
             ),

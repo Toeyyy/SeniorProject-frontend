@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/components/appBar.dart';
+import 'package:frontend/components/appbar.dart';
 import 'package:frontend/constants.dart';
 import 'package:frontend/models/diagnosisObject.dart';
 import 'package:frontend/models/problemListObject.dart';
@@ -76,13 +76,13 @@ class _AddQuestionState extends State<AddQuestion> {
               child: Container(
                 width: MediaQuery.of(context).size.height * 0.3,
                 height: MediaQuery.of(context).size.height * 0.35,
-                padding: EdgeInsets.all(40),
+                padding: const EdgeInsets.all(40),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(5),
-                  color: Color(0xFFDFE4E0),
+                  color: const Color(0xFFDFE4E0),
                 ),
                 child: _isPosting
-                    ? CircularProgressIndicator(
+                    ? const CircularProgressIndicator(
                         color: Color(0xFF42C2FF),
                       )
                     : Column(
@@ -90,7 +90,7 @@ class _AddQuestionState extends State<AddQuestion> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Icon(
+                          const Icon(
                             Icons.check_circle_outline,
                             size: 100,
                             color: Color(0xFF42C2FF),
@@ -100,7 +100,7 @@ class _AddQuestionState extends State<AddQuestion> {
                               Navigator.pop(context);
                               Navigator.pop(context);
                             },
-                            child: Text('กลับ'),
+                            child: const Text('กลับ'),
                           ),
                         ],
                       ),
@@ -109,12 +109,12 @@ class _AddQuestionState extends State<AddQuestion> {
           });
     }
 
-    void _alertModal(BuildContext context) {
+    void alertModal(BuildContext context) {
       showDialog(
           context: context,
           builder: (BuildContext context) {
             return Dialog(
-              child: Container(
+              child: SizedBox(
                 width: MediaQuery.of(context).size.height * 0.5,
                 height: MediaQuery.of(context).size.height * 0.2,
                 child: const Center(
@@ -302,15 +302,15 @@ class _AddQuestionState extends State<AddQuestion> {
 
     //////////////////
 
-    List<String> Signalment_typeList = ["สุนัข", "แมว", "นก"];
+    List<String> signalmentTypelist = ["สุนัข", "แมว", "นก"];
 
     return Scaffold(
-      appBar: AppbarTeacher(),
+      appBar: const AppbarTeacher(),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
           child: Center(
-            child: Container(
+            child: SizedBox(
               width: MediaQuery.of(context).size.width * 0.7,
               child: !_isPosting
                   ? Column(
@@ -328,7 +328,7 @@ class _AddQuestionState extends State<AddQuestion> {
                           'โจทย์',
                           style: kSubHeaderTextStyle.copyWith(fontSize: 35),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 20,
                         ),
                         TagSearchBox(
@@ -336,23 +336,21 @@ class _AddQuestionState extends State<AddQuestion> {
                             updateListCallback: updateTagList),
                         const H20Sizedbox(),
                         //Signalment
-                        Text(
+                        const Text(
                           'ข้อมูลทั่วไป',
                           style: kSubHeaderTextStyle,
                         ),
                         Row(
                           children: [
-                            Text('ประเภท'),
-                            SizedBox(width: 2),
+                            const Text('ประเภท'),
+                            const SizedBox(width: 2),
                             DropDownButtonInAddQ(
                                 selectedValue: signalmentTypeValue,
-                                list: Signalment_typeList,
+                                list: signalmentTypelist,
                                 hintText: "เลือกประเภทสัตว์",
                                 onChanged: (value) {
                                   setState(() {
                                     signalmentTypeValue = value.toString();
-                                    // signalmentBreedValue =
-                                    //     filterBreed(signalmentTypeValue!).first;
                                   });
                                 }),
                           ],
@@ -360,31 +358,16 @@ class _AddQuestionState extends State<AddQuestion> {
                         TextAndTextfield(
                             title: "สายพันธุ์",
                             myController: signalmentBreedValue),
-                        SizedBox(
+                        const SizedBox(
                           height: 5,
                         ),
-                        // Row(
-                        //   children: [
-                        //     Text('สายพันธุ์'),
-                        //     SizedBox(width: 2),
-                        //     DropDownButtonInAddQ(
-                        //         selectedValue: signalmentBreedValue,
-                        //         list: filterBreed(signalmentTypeValue!),
-                        //         hintText: "เลือกสายพันธุ์",
-                        //         onChanged: (value) {
-                        //           setState(() {
-                        //             signalmentBreedValue = value.toString();
-                        //           });
-                        //         }),
-                        //   ],
-                        // ),
                         Row(
                           children: [
-                            Text('เพศ'),
-                            SizedBox(width: 2),
+                            const Text('เพศ'),
+                            const SizedBox(width: 2),
                             DropDownButtonInAddQ(
                                 selectedValue: signalmentSexValue,
-                                list: ['ผู้', 'เมีย'],
+                                list: const ['ผู้', 'เมีย'],
                                 hintText: "เลือกเพศสัตว์",
                                 onChanged: (value) {
                                   setState(() {
@@ -394,8 +377,8 @@ class _AddQuestionState extends State<AddQuestion> {
                           ],
                         ),
                         ListTile(
-                          contentPadding: EdgeInsets.only(left: 0),
-                          title: Text('ทำหมันแล้ว'),
+                          contentPadding: const EdgeInsets.only(left: 0),
+                          title: const Text('ทำหมันแล้ว'),
                           leading: Checkbox(
                             value: signalmentSterilizeStat,
                             onChanged: (value) {
@@ -407,7 +390,7 @@ class _AddQuestionState extends State<AddQuestion> {
                         ),
                         TextAndTextfield(
                             title: "อายุ", myController: signalmentAgeValue),
-                        SizedBox(
+                        const SizedBox(
                           height: 5,
                         ),
                         TextAndTextfield(
@@ -420,7 +403,7 @@ class _AddQuestionState extends State<AddQuestion> {
                           hintText: "ข้อมูล Client Complains",
                           titleText: 'Client Complains',
                           maxLine: 4,
-                          boxColor: Color(0xFFDFE4E0),
+                          boxColor: const Color(0xFFDFE4E0),
                         ),
                         const H20Sizedbox(),
                         //History Taking
@@ -429,7 +412,7 @@ class _AddQuestionState extends State<AddQuestion> {
                           hintText: "ข้อมูล History Taking",
                           titleText: "History Taking",
                           maxLine: 4,
-                          boxColor: Color(0xFFDFE4E0),
+                          boxColor: const Color(0xFFDFE4E0),
                         ),
                         const H20Sizedbox(),
                         TextBoxMultiLine(
@@ -437,20 +420,19 @@ class _AddQuestionState extends State<AddQuestion> {
                           hintText: "ผลตรวจ 1, ผลตรวจ 2, ผลตรวจ 3",
                           titleText: "ผลตรวจร่างกาย [คั่นด้วยเครื่องหมาย , ]",
                           maxLine: 4,
-                          boxColor: Color(0xFFDFE4E0),
+                          boxColor: const Color(0xFFDFE4E0),
                         ),
-                        DividerWithSpace(),
+                        const DividerWithSpace(),
                         //Answer
                         Text(
                           'เฉลย',
                           style: kSubHeaderTextStyle.copyWith(fontSize: 35),
                         ),
                         const H20Sizedbox(),
-                        Text('Problem List ครั้งที่ 1',
+                        const Text('Problem List ครั้งที่ 1',
                             style: kSubHeaderTextStyle),
                         ProbListMultiSelectDropDown(
                           selectedList: selectedProblemList1,
-                          // displayList: preDefinedProblem,
                           displayList: problemListPreDefined,
                           hintText: "เลือก Problem List ครั้งที่ 1",
                           round: 1,
@@ -462,8 +444,8 @@ class _AddQuestionState extends State<AddQuestion> {
                           examListProvider: examListProvider,
                           round: 1,
                         ),
-                        DividerWithSpace(),
-                        Text('Problem List ครั้งที่ 2',
+                        const DividerWithSpace(),
+                        const Text('Problem List ครั้งที่ 2',
                             style: kSubHeaderTextStyle),
                         ProbListMultiSelectDropDown(
                           selectedList: selectedProblemList2,
@@ -479,8 +461,8 @@ class _AddQuestionState extends State<AddQuestion> {
                           examListProvider: examListProvider,
                           round: 2,
                         ),
-                        DividerWithSpace(),
-                        Text(
+                        const DividerWithSpace(),
+                        const Text(
                           'Diagnosis',
                           style: kSubHeaderTextStyle,
                         ),
@@ -490,14 +472,14 @@ class _AddQuestionState extends State<AddQuestion> {
                             // displayList: preDefinedDiagnosis,
                             hintText: 'เลือก Diagnosis',
                             updateListCallback: updateDiagList),
-                        DividerWithSpace(),
+                        const DividerWithSpace(),
                         Row(
                           children: [
-                            Text(
+                            const Text(
                               'Treatment',
                               style: kSubHeaderTextStyle,
                             ),
-                            SizedBox(width: 20),
+                            const SizedBox(width: 20),
                             ElevatedButton(
                               onPressed: () {
                                 final int currentNub = treatmentProvider.nub;
@@ -512,7 +494,7 @@ class _AddQuestionState extends State<AddQuestion> {
                                   ),
                                 );
                               },
-                              child: Text('เพิ่ม Treatment'),
+                              child: const Text('เพิ่ม Treatment'),
                             ),
                           ],
                         ),
@@ -532,17 +514,17 @@ class _AddQuestionState extends State<AddQuestion> {
                               onPressed: () {
                                 Navigator.maybePop(context);
                               },
-                              child: Text(
-                                'ยกเลิก',
-                              ),
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: Color(0xFF8B72BE),
+                                backgroundColor: const Color(0xFF8B72BE),
+                              ),
+                              child: const Text(
+                                'ยกเลิก',
                               ),
                             ),
                             ElevatedButton(
                                 onPressed: () async {
                                   if (!checkNotEmpty()) {
-                                    _alertModal(context);
+                                    alertModal(context);
                                   } else {
                                     setState(() {
                                       _isPosting = true;
@@ -555,12 +537,12 @@ class _AddQuestionState extends State<AddQuestion> {
                                     });
                                   }
                                 },
-                                child: Text('บันทึก')),
+                                child: const Text('บันทึก')),
                           ],
                         )
                       ],
                     )
-                  : SizedBox(
+                  : const SizedBox(
                       width: 10,
                       child: Center(child: CircularProgressIndicator())),
             ),

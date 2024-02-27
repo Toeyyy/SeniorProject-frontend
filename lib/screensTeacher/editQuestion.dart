@@ -1,7 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:frontend/components/appBar.dart';
+import 'package:frontend/components/appbar.dart';
 import 'package:frontend/constants.dart';
 import 'package:frontend/components/BoxesInAddQ.dart';
 import 'package:frontend/components/tagSearchBox.dart';
@@ -9,11 +9,10 @@ import 'package:frontend/models/problemListObject.dart';
 import 'package:frontend/models/diagnosisObject.dart';
 import 'package:frontend/models/tagObject.dart';
 import 'package:frontend/components/functions.dart';
-import 'package:frontend/models/examinationObject.dart';
 import 'package:frontend/UIModels/teacher/treatmentContainer_provider.dart';
 import 'package:frontend/components/treatmentContainer.dart';
 import 'package:frontend/UIModels/teacher/examContainer_provider.dart';
-import 'package:frontend/components/backButton.dart';
+import 'package:frontend/components/back_button.dart';
 import 'package:dio/dio.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:frontend/components/examContainer.dart';
@@ -25,7 +24,8 @@ class EditQuestion extends StatefulWidget {
   FullQuestionObject questionObj;
   VoidCallback refreshCallBack;
 
-  EditQuestion({required this.questionObj, required this.refreshCallBack});
+  EditQuestion(
+      {super.key, required this.questionObj, required this.refreshCallBack});
 
   @override
   State<EditQuestion> createState() => _EditQuestionState();
@@ -293,7 +293,7 @@ class _EditQuestionState extends State<EditQuestion> {
                         Navigator.pop(context);
                         Navigator.pop(context);
                       },
-                      child: Text('กลับ'),
+                      child: const Text('กลับ'),
                     ),
                   ],
                 ),
@@ -303,13 +303,13 @@ class _EditQuestionState extends State<EditQuestion> {
     }
 
     return Scaffold(
-      appBar: AppbarTeacher(),
+      appBar: const AppbarTeacher(),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
           child: Center(
             child: !_isPosting
-                ? Container(
+                ? SizedBox(
                     width: MediaQuery.of(context).size.width * 0.7,
                     child: questionObj != null
                         ? Column(
@@ -330,14 +330,14 @@ class _EditQuestionState extends State<EditQuestion> {
                                   updateListCallback: updateTagList),
                               const H20Sizedbox(),
                               //Signalment
-                              Text(
+                              const Text(
                                 'ข้อมูลทั่วไป',
                                 style: kSubHeaderTextStyle,
                               ),
                               Row(
                                 children: [
-                                  Text('ประเภท'),
-                                  SizedBox(width: 2),
+                                  const Text('ประเภท'),
+                                  const SizedBox(width: 2),
                                   DropDownButtonInAddQ(
                                       selectedValue: signalmentTypeValue,
                                       list: signalmentTypeList,
@@ -346,9 +346,6 @@ class _EditQuestionState extends State<EditQuestion> {
                                         setState(() {
                                           signalmentTypeValue =
                                               value.toString();
-                                          // signalmentBreedValue =
-                                          //     filterBreed(signalmentTypeValue)
-                                          //         .first;
                                         });
                                       }),
                                 ],
@@ -356,17 +353,16 @@ class _EditQuestionState extends State<EditQuestion> {
                               TextAndTextfield(
                                   title: "สายพันธุ์",
                                   myController: signalmentBreedValue),
-                              SizedBox(
+                              const SizedBox(
                                 height: 5,
                               ),
-
                               Row(
                                 children: [
-                                  Text('เพศ'),
-                                  SizedBox(width: 2),
+                                  const Text('เพศ'),
+                                  const SizedBox(width: 2),
                                   DropDownButtonInAddQ(
                                       selectedValue: signalmentSexValue,
-                                      list: ['ผู้', 'เมีย'],
+                                      list: const ['ผู้', 'เมีย'],
                                       hintText: "เลือกเพศสัตว์",
                                       onChanged: (value) {
                                         setState(() {
@@ -376,8 +372,8 @@ class _EditQuestionState extends State<EditQuestion> {
                                 ],
                               ),
                               ListTile(
-                                contentPadding: EdgeInsets.only(left: 0),
-                                title: Text('ทำหมันแล้ว'),
+                                contentPadding: const EdgeInsets.only(left: 0),
+                                title: const Text('ทำหมันแล้ว'),
                                 leading: Checkbox(
                                   value: signalmentSterilizeValue,
                                   onChanged: (value) {
@@ -390,7 +386,7 @@ class _EditQuestionState extends State<EditQuestion> {
                               TextAndTextfield(
                                   title: "อายุ",
                                   myController: signalmentAgeValue),
-                              SizedBox(
+                              const SizedBox(
                                 height: 5,
                               ),
                               TextAndTextfield(
@@ -403,7 +399,7 @@ class _EditQuestionState extends State<EditQuestion> {
                                 hintText: "ข้อมูล Client Complains",
                                 titleText: 'Client Complains',
                                 maxLine: 4,
-                                boxColor: Color(0xFFDFE4E0),
+                                boxColor: const Color(0xFFDFE4E0),
                               ),
                               const H20Sizedbox(),
                               //History Taking
@@ -412,7 +408,7 @@ class _EditQuestionState extends State<EditQuestion> {
                                 hintText: "ข้อมูล History Taking",
                                 titleText: "History Taking",
                                 maxLine: 4,
-                                boxColor: Color(0xFFDFE4E0),
+                                boxColor: const Color(0xFFDFE4E0),
                               ),
                               const H20Sizedbox(),
                               TextBoxMultiLine(
@@ -421,9 +417,9 @@ class _EditQuestionState extends State<EditQuestion> {
                                 titleText:
                                     "ผลตรวจร่างกาย [คั่นด้วยเครื่องหมาย , ]",
                                 maxLine: 4,
-                                boxColor: Color(0xFFDFE4E0),
+                                boxColor: const Color(0xFFDFE4E0),
                               ),
-                              DividerWithSpace(),
+                              const DividerWithSpace(),
                               //Answer
                               Text(
                                 'เฉลย',
@@ -431,46 +427,44 @@ class _EditQuestionState extends State<EditQuestion> {
                                     kSubHeaderTextStyle.copyWith(fontSize: 35),
                               ),
                               const H20Sizedbox(),
-                              Text('Problem List ครั้งที่ 1',
+                              const Text('Problem List ครั้งที่ 1',
                                   style: kSubHeaderTextStyle),
                               ProbListMultiSelectDropDown(
                                 selectedList: selectedProblemList1,
-                                // displayList: preDefinedProblem,
                                 displayList: problemListPreDefined,
                                 hintText: "เลือก Problem List ครั้งที่ 1",
                                 round: 1,
                                 updateListCallback: updateProbList,
                               ),
                               const H20Sizedbox(),
-                              //TODO exam1
+                              //exam1
                               ExamsButtonAndContainer(
                                   examContainers: examProvider.examContainers1,
                                   examListProvider: examProvider,
                                   round: 1),
-                              DividerWithSpace(),
-                              Text('Problem List ครั้งที่ 2',
+                              const DividerWithSpace(),
+                              const Text('Problem List ครั้งที่ 2',
                                   style: kSubHeaderTextStyle),
                               ProbListMultiSelectDropDown(
                                   selectedList: selectedProblemList2,
-                                  // displayList: preDefinedProblem,
                                   displayList: problemListPreDefined,
                                   hintText: "เลือก Problem List ครั้งที่ 2",
                                   round: 2,
                                   updateListCallback: updateProbList),
                               const H20Sizedbox(),
-                              //TODO exam2
+                              //exam2
                               ExamsButtonAndContainer(
                                   examContainers: examProvider.examContainers2,
                                   examListProvider: examProvider,
                                   round: 2),
-                              DividerWithSpace(),
+                              const DividerWithSpace(),
                               Row(
                                 children: [
-                                  Text(
+                                  const Text(
                                     'Treatment',
                                     style: kSubHeaderTextStyle,
                                   ),
-                                  SizedBox(width: 20),
+                                  const SizedBox(width: 20),
                                   ElevatedButton(
                                     onPressed: () {
                                       final int currentNub =
@@ -486,13 +480,13 @@ class _EditQuestionState extends State<EditQuestion> {
                                         ),
                                       );
                                     },
-                                    child: Text('เพิ่ม Treatment'),
+                                    child: const Text('เพิ่ม Treatment'),
                                   ),
                                 ],
                               ),
                               const H20Sizedbox(),
                               treatmentContainer.isEmpty
-                                  ? SizedBox()
+                                  ? const SizedBox()
                                   : ListView.builder(
                                       shrinkWrap: true,
                                       itemCount: treatmentContainer.length,
@@ -509,9 +503,10 @@ class _EditQuestionState extends State<EditQuestion> {
                                   ElevatedButton(
                                     onPressed: () {
                                       //send data
-                                      postQuestion(context);
-                                      showModal(
-                                          context, widget.refreshCallBack);
+                                      postQuestion(context).then((value) {
+                                        showModal(
+                                            context, widget.refreshCallBack);
+                                      });
                                     },
                                     child: const Text('บันทึก'),
                                   ),

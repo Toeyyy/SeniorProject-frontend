@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:frontend/components/appBar.dart';
+import 'package:frontend/components/appbar.dart';
 import 'package:frontend/constants.dart';
 import 'package:frontend/components/BoxesInAddQ.dart';
 import 'package:frontend/models/examinationPreDefinedObject.dart';
-import 'package:frontend/components/backButton.dart';
+import 'package:frontend/components/back_button.dart';
 import 'package:http/http.dart' as http;
 import 'package:frontend/AllDataFile.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -105,12 +105,12 @@ class _EditPreDefinedExamAddState extends State<EditPreDefinedExamAdd> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppbarTeacher(),
+      appBar: const AppbarTeacher(),
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
         child: SingleChildScrollView(
           child: Center(
-            child: Container(
+            child: SizedBox(
               width: MediaQuery.of(context).size.width * 0.7,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -121,7 +121,7 @@ class _EditPreDefinedExamAddState extends State<EditPreDefinedExamAdd> {
                     style:
                         kHeaderTextStyle.copyWith(fontWeight: FontWeight.w900),
                   ),
-                  DividerWithSpace(),
+                  const DividerWithSpace(),
                   /////lab/////
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -139,7 +139,7 @@ class _EditPreDefinedExamAddState extends State<EditPreDefinedExamAdd> {
                               _canSave = true;
                             });
                           },
-                          child: Text('Clear All')),
+                          child: const Text('Clear All')),
                     ],
                   ),
                   const SizedBox(height: 20),
@@ -160,9 +160,9 @@ class _EditPreDefinedExamAddState extends State<EditPreDefinedExamAdd> {
                     ),
                   ),
                   Card(
-                    color: Color(0xFFF2F5F7),
+                    color: const Color(0xFFF2F5F7),
                     elevation: 0,
-                    margin: EdgeInsets.symmetric(horizontal: 15),
+                    margin: const EdgeInsets.symmetric(horizontal: 15),
                     child: ListView.builder(
                       shrinkWrap: true,
                       itemCount: labDisplayList.length,
@@ -170,10 +170,10 @@ class _EditPreDefinedExamAddState extends State<EditPreDefinedExamAdd> {
                         return Container(
                           decoration: BoxDecoration(
                             border: Border.all(
-                                color: Color(0xFFB5C1BE), width: 1.0),
+                                color: const Color(0xFFB5C1BE), width: 1.0),
                           ),
                           child: ListTile(
-                            hoverColor: Color(0xFFA0E9FF),
+                            hoverColor: const Color(0xFFA0E9FF),
                             title: Text(labDisplayList[index]),
                             onTap: () {
                               setState(() {
@@ -202,9 +202,9 @@ class _EditPreDefinedExamAddState extends State<EditPreDefinedExamAdd> {
                       },
                     ),
                   ),
-                  DividerWithSpace(),
+                  const DividerWithSpace(),
                   /////type//////
-                  Text('หัวข้อการตรวจ', style: kSubHeaderTextStyle),
+                  const Text('หัวข้อการตรวจ', style: kSubHeaderTextStyle),
                   const SizedBox(height: 20),
                   TextField(
                     controller: typeTextController,
@@ -223,9 +223,9 @@ class _EditPreDefinedExamAddState extends State<EditPreDefinedExamAdd> {
                     ),
                   ),
                   Card(
-                    color: Color(0xFFF2F5F7),
+                    color: const Color(0xFFF2F5F7),
                     elevation: 0,
-                    margin: EdgeInsets.symmetric(horizontal: 15),
+                    margin: const EdgeInsets.symmetric(horizontal: 15),
                     child: ListView.builder(
                       shrinkWrap: true,
                       itemCount: typeDisplayList.length,
@@ -233,10 +233,10 @@ class _EditPreDefinedExamAddState extends State<EditPreDefinedExamAdd> {
                         return Container(
                           decoration: BoxDecoration(
                             border: Border.all(
-                                color: Color(0xFFB5C1BE), width: 1.0),
+                                color: const Color(0xFFB5C1BE), width: 1.0),
                           ),
                           child: ListTile(
-                            hoverColor: Color(0xFFA0E9FF),
+                            hoverColor: const Color(0xFFA0E9FF),
                             title: Text(typeDisplayList[index]),
                             onTap: () {
                               setState(() {
@@ -260,9 +260,9 @@ class _EditPreDefinedExamAddState extends State<EditPreDefinedExamAdd> {
                       },
                     ),
                   ),
-                  DividerWithSpace(),
+                  const DividerWithSpace(),
                   /////area/////
-                  Text('ตัวอย่างที่ใช้ในการส่งตรวจ',
+                  const Text('ตัวอย่างที่ใช้ในการส่งตรวจ',
                       style: kSubHeaderTextStyle),
                   const SizedBox(height: 20),
                   TextField(
@@ -281,9 +281,9 @@ class _EditPreDefinedExamAddState extends State<EditPreDefinedExamAdd> {
                     ),
                   ),
                   Card(
-                    color: Color(0xFFF2F5F7),
+                    color: const Color(0xFFF2F5F7),
                     elevation: 0,
-                    margin: EdgeInsets.symmetric(horizontal: 15),
+                    margin: const EdgeInsets.symmetric(horizontal: 15),
                     child: ListView.builder(
                       shrinkWrap: true,
                       itemCount: areaDisplayList.length,
@@ -291,10 +291,10 @@ class _EditPreDefinedExamAddState extends State<EditPreDefinedExamAdd> {
                         return Container(
                           decoration: BoxDecoration(
                             border: Border.all(
-                                color: Color(0xFFB5C1BE), width: 1.0),
+                                color: const Color(0xFFB5C1BE), width: 1.0),
                           ),
                           child: ListTile(
-                            hoverColor: Color(0xFFA0E9FF),
+                            hoverColor: const Color(0xFFA0E9FF),
                             title: Text(areaDisplayList[index]),
                             onTap: () {
                               setState(() {
@@ -308,9 +308,9 @@ class _EditPreDefinedExamAddState extends State<EditPreDefinedExamAdd> {
                       },
                     ),
                   ),
-                  DividerWithSpace(),
+                  const DividerWithSpace(),
                   /////name/////
-                  Text('ชื่อการส่งตรวจ', style: kSubHeaderTextStyle),
+                  const Text('ชื่อการส่งตรวจ', style: kSubHeaderTextStyle),
                   const SizedBox(height: 20),
                   TextField(
                     controller: nameTextController,
@@ -329,9 +329,9 @@ class _EditPreDefinedExamAddState extends State<EditPreDefinedExamAdd> {
                     ),
                   ),
                   Card(
-                    color: Color(0xFFF2F5F7),
+                    color: const Color(0xFFF2F5F7),
                     elevation: 0,
-                    margin: EdgeInsets.symmetric(horizontal: 15),
+                    margin: const EdgeInsets.symmetric(horizontal: 15),
                     child: ListView.builder(
                       shrinkWrap: true,
                       itemCount: nameDisplayList.length,
@@ -339,10 +339,10 @@ class _EditPreDefinedExamAddState extends State<EditPreDefinedExamAdd> {
                         return Container(
                           decoration: BoxDecoration(
                             border: Border.all(
-                                color: Color(0xFFB5C1BE), width: 1.0),
+                                color: const Color(0xFFB5C1BE), width: 1.0),
                           ),
                           child: ListTile(
-                            hoverColor: Color(0xFFA0E9FF),
+                            hoverColor: const Color(0xFFA0E9FF),
                             title: Text(nameDisplayList[index]),
                             onTap: () {
                               setState(() {
@@ -356,9 +356,9 @@ class _EditPreDefinedExamAddState extends State<EditPreDefinedExamAdd> {
                       },
                     ),
                   ),
-                  DividerWithSpace(),
+                  const DividerWithSpace(),
                   /////cost/////
-                  Text('ราคาการส่งตรวจ', style: kSubHeaderTextStyle),
+                  const Text('ราคาการส่งตรวจ', style: kSubHeaderTextStyle),
                   const SizedBox(height: 20),
                   TextField(
                     controller: costTextController,
@@ -371,16 +371,16 @@ class _EditPreDefinedExamAddState extends State<EditPreDefinedExamAdd> {
                       });
                     },
                     decoration: InputDecoration(
-                      contentPadding: EdgeInsets.all(8),
-                      border: OutlineInputBorder(),
+                      contentPadding: const EdgeInsets.all(8),
+                      border: const OutlineInputBorder(),
                       hintText: "ราคาการส่งตรวจ [ใส่แค่ตัวเลข]",
                       errorText:
                           _isFormatCorrect ? null : "ใส่แค่ตัวเลขเท่านั้น",
                     ),
                   ),
-                  DividerWithSpace(),
+                  const DividerWithSpace(),
                   ////default////
-                  Text('ค่าผลตรวจ Default', style: kSubHeaderTextStyle),
+                  const Text('ค่าผลตรวจ Default', style: kSubHeaderTextStyle),
                   const SizedBox(height: 20),
                   TextField(
                     controller: defaultTextController,
@@ -457,7 +457,7 @@ class _EditPreDefinedExamAddState extends State<EditPreDefinedExamAdd> {
                                 await _postAddData()
                                     .then((value) => Navigator.pop(context));
                               },
-                              child: Text('บันทึก')),
+                              child: const Text('บันทึก')),
                     ],
                   ),
                 ],

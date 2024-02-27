@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/components/appBar.dart';
+import 'package:frontend/components/appbar.dart';
 import 'package:frontend/constants.dart';
 import 'package:frontend/models/logObject.dart';
 import 'package:frontend/components/BoxesInAddQ.dart';
 import 'package:intl/intl.dart';
 
 class ShowEditHistory extends StatelessWidget {
-  List<LogObject> logList;
-  ShowEditHistory({super.key, required this.logList});
+  final List<LogObject> logList;
+  const ShowEditHistory({super.key, required this.logList});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppbarTeacher(),
+      appBar: const AppbarTeacher(),
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
         child: Center(
-          child: Container(
+          child: SizedBox(
             width: MediaQuery.of(context).size.width * 0.6,
             child: Column(
               children: [

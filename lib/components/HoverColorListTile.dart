@@ -5,8 +5,8 @@ class HoverColorListTile extends StatefulWidget {
   final Color hoverColor;
   final Function()? onTap;
 
-  HoverColorListTile(
-      {required this.title, required this.hoverColor, this.onTap});
+  const HoverColorListTile(
+      {super.key, required this.title, required this.hoverColor, this.onTap});
 
   @override
   _HoverColorListTileState createState() => _HoverColorListTileState();
@@ -25,7 +25,6 @@ class _HoverColorListTileState extends State<HoverColorListTile> {
         child: ListTile(
           title: widget.title,
           onTap: widget.onTap,
-          // Add other ListTile properties as needed
         ),
       ),
     );

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/components/splitScreenNisit.dart';
-import 'package:frontend/components/appBar.dart';
+import 'package:frontend/components/appbar.dart';
 import 'package:frontend/constants.dart';
 import 'package:collection/collection.dart';
 import 'package:frontend/models/examinationPreDefinedObject.dart';
@@ -16,7 +16,7 @@ class ExamTopic extends StatelessWidget {
   final int round;
   QuestionObject questionObj;
 
-  ExamTopic({required this.round, required this.questionObj});
+  ExamTopic({super.key, required this.round, required this.questionObj});
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +26,7 @@ class ExamTopic extends StatelessWidget {
         Provider.of<SelectedExam>(context, listen: false);
 
     return Scaffold(
-      appBar: AppbarNisit(),
+      appBar: const AppbarNisit(),
       body: SplitScreenNisit(
         leftPart: round == 1
             ? LeftPartContent(
@@ -73,10 +73,9 @@ class RightPart_ExamTopic extends StatelessWidget {
   int round;
   QuestionObject questionObj;
 
-  RightPart_ExamTopic({required this.round, required this.questionObj});
+  RightPart_ExamTopic(
+      {super.key, required this.round, required this.questionObj});
 
-  // Map<String, List<ExamPreDefinedObject>> groupedByLab =
-  //     groupBy(preDefinedExamAll, (e) => e.lab);
   Map<String, List<ExamPreDefinedObject>> groupedByLab =
       groupBy(examListPreDefined, (e) => e.lab);
 
@@ -86,16 +85,16 @@ class RightPart_ExamTopic extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
       child: Column(
         children: [
-          Text('เลือกแผนกการตรวจ', style: kSubHeaderTextStyle),
+          const Text('เลือกแผนกการตรวจ', style: kSubHeaderTextStyle),
           const SizedBox(height: 20),
           Expanded(
             child: ListView.separated(
-              separatorBuilder: (context, index) => SizedBox(height: 8),
+              separatorBuilder: (context, index) => const SizedBox(height: 8),
               itemCount: groupedByLab.keys.length,
               itemBuilder: (context, index) {
                 return ListTile(
-                  tileColor: Color(0xFFA0E9FF),
-                  hoverColor: Color(0xFF42C2FF),
+                  tileColor: const Color(0xFFA0E9FF),
+                  hoverColor: const Color(0xFF42C2FF),
                   title: Text(groupedByLab.keys.toList()[index]),
                   onTap: () {
                     String labName = groupedByLab.keys.toList()[index];

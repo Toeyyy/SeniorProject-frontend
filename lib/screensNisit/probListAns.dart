@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/components/splitScreenNisit.dart';
-import 'package:frontend/components/appBar.dart';
+import 'package:frontend/components/appbar.dart';
 import 'package:frontend/constants.dart';
 import 'package:frontend/models/problemListObject.dart';
 import 'package:frontend/UIModels/nisit/selected_problem_provider.dart';
@@ -14,16 +14,17 @@ class ProbListAns extends StatelessWidget {
   int round;
   QuestionObject questionObj;
 
-  ProbListAns({required this.round, required this.questionObj});
+  ProbListAns({super.key, required this.round, required this.questionObj});
 
   ListView showAnsProbList(
       List<ProblemObject> ansList, List<ProblemObject> actualList) {
     List<bool> checkList = [];
     for (ProblemObject item in actualList) {
-      if (ansList.map((e) => e.name).toList().contains(item.name))
+      if (ansList.map((e) => e.name).toList().contains(item.name)) {
         checkList.add(true);
-      else
+      } else {
         checkList.add(false);
+      }
     }
     return ListView.builder(
       itemCount: actualList.length,
@@ -32,15 +33,17 @@ class ProbListAns extends StatelessWidget {
           title: Text(
             actualList[index].name,
             style: TextStyle(
-              color: checkList[index] ? Color(0xFF42C2FF) : Color(0xFF16302B),
+              color: checkList[index]
+                  ? const Color(0xFF42C2FF)
+                  : const Color(0xFF16302B),
             ),
           ),
           trailing: checkList[index]
-              ? Icon(
+              ? const Icon(
                   Icons.check,
                   color: Color(0xFF42C2FF),
                 )
-              : Icon(
+              : const Icon(
                   Icons.close,
                   color: Color(0xFF16302B),
                 ),
@@ -64,7 +67,7 @@ class ProbListAns extends StatelessWidget {
         : problemProvider.problemList2;
 
     return Scaffold(
-      appBar: AppbarNisit(),
+      appBar: const AppbarNisit(),
       body: SplitScreenNisit(
         leftPart: round == 1
             ? LeftPartContent(questionObj: questionObj)
@@ -89,7 +92,7 @@ class ProbListAns extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
           child: Column(
             children: [
-              Text(
+              const Text(
                 'Correct Problem List',
                 style: kHeaderTextStyle,
               ),
@@ -99,7 +102,7 @@ class ProbListAns extends StatelessWidget {
                   itemBuilder: (context, index) {
                     return ListTile(
                       title: Text(correctProblem[index].name),
-                      leading: Icon(
+                      leading: const Icon(
                         Icons.circle,
                         size: 15,
                       ),
@@ -107,7 +110,7 @@ class ProbListAns extends StatelessWidget {
                   },
                 ),
               ),
-              Text(
+              const Text(
                 'Your Problem List',
                 style: kHeaderTextStyle,
               ),
@@ -116,7 +119,7 @@ class ProbListAns extends StatelessWidget {
               ),
               ElevatedButton(
                 onPressed: () {
-                  //TODO go to exam
+                  //go to exam
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -127,7 +130,7 @@ class ProbListAns extends StatelessWidget {
                     ),
                   );
                 },
-                child: Text('ส่งตรวจ'),
+                child: const Text('ส่งตรวจ'),
               )
             ],
           ),

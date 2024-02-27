@@ -8,27 +8,23 @@ class AppbarNisit extends StatelessWidget implements PreferredSizeWidget {
   const AppbarNisit({super.key});
 
   @override
-  Size get preferredSize => Size.fromHeight(kToolbarHeight);
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
       automaticallyImplyLeading: false,
-      title: Text(
+      title: const Text(
         'App Name',
         textAlign: TextAlign.left,
       ),
       actions: [
         TextButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => MainShowQuestion(role: 0),
-                ),
-              );
-            },
-            child: Text('โจทย์')),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: const Text('โจทย์', style: KAppBarTextStyle),
+        ),
         kVerticalDividerInAppBar,
         TextButton(
           onPressed: () {
@@ -36,18 +32,18 @@ class AppbarNisit extends StatelessWidget implements PreferredSizeWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => ShowStatsForNisit(),
+                builder: (context) => const ShowStatsForNisit(),
               ),
             );
           },
-          child: Text('สถิติ', style: KAppBarTextStyle),
+          child: const Text('สถิติ', style: KAppBarTextStyle),
         ),
         kVerticalDividerInAppBar,
         TextButton(
           onPressed: () {
             //TODO log out
           },
-          child: Text(
+          child: const Text(
             'Log Out',
             style: KAppBarTextStyle,
           ),
@@ -67,7 +63,7 @@ class AppbarTeacher extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       automaticallyImplyLeading: false,
-      title: Text(
+      title: const Text(
         'App Name',
         textAlign: TextAlign.left,
       ),
@@ -81,7 +77,7 @@ class AppbarTeacher extends StatelessWidget implements PreferredSizeWidget {
               ),
             );
           },
-          child: Text('โจทย์', style: KAppBarTextStyle),
+          child: const Text('โจทย์', style: KAppBarTextStyle),
         ),
         kVerticalDividerInAppBar,
         TextButton(
@@ -93,14 +89,14 @@ class AppbarTeacher extends StatelessWidget implements PreferredSizeWidget {
               ),
             );
           },
-          child: Text('เพิ่มโจทย์', style: KAppBarTextStyle),
+          child: const Text('เพิ่มโจทย์', style: KAppBarTextStyle),
         ),
         kVerticalDividerInAppBar,
         TextButton(
           onPressed: () {
             //TODO log out
           },
-          child: Text(
+          child: const Text(
             'Log Out',
             style: KAppBarTextStyle,
           ),

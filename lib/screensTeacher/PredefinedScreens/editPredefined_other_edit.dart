@@ -1,17 +1,17 @@
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:frontend/components/appBar.dart';
+import 'package:frontend/components/appbar.dart';
 import 'package:frontend/constants.dart';
 import 'package:frontend/components/functions.dart';
 import 'package:http/http.dart' as http;
-import 'package:frontend/components/backButton.dart';
+import 'package:frontend/components/back_button.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class EditPredefinedOtherEdit extends StatefulWidget {
   final String title;
 
-  EditPredefinedOtherEdit({required this.title});
+  const EditPredefinedOtherEdit({super.key, required this.title});
 
   @override
   State<EditPredefinedOtherEdit> createState() =>
@@ -31,60 +31,64 @@ class _EditPredefinedOtherEditState extends State<EditPredefinedOtherEdit> {
   List<dynamic> editedList = [];
 
   Future<void> _postDeleteData(String title) async {
-    var data = deletedList.map((item) {
-      return {"id": item.id};
-    }).toList();
-    try {
-      if (title == 'Problem List') {
-        final http.Response response = await http.delete(
-          Uri.parse("${dotenv.env['API_PATH']}/problem"),
-          headers: {"Content-Type": "application/json"},
-          body: jsonEncode(data),
-        );
-      } else if (title == 'Diagnosis List') {
-        final http.Response response = await http.delete(
-          Uri.parse("${dotenv.env['API_PATH']}/diagnostic"),
-          headers: {"Content-Type": "application/json"},
-          body: jsonEncode(data),
-        );
-      } else if (title == 'Tag List') {
-        final http.Response response = await http.delete(
-          Uri.parse("${dotenv.env['API_PATH']}/tag"),
-          headers: {"Content-Type": "application/json"},
-          body: jsonEncode(data),
-        );
+    if (deletedList.isNotEmpty) {
+      var data = deletedList.map((item) {
+        return {"id": item.id};
+      }).toList();
+      try {
+        if (title == 'Problem List') {
+          final http.Response response = await http.delete(
+            Uri.parse("${dotenv.env['API_PATH']}/problem"),
+            headers: {"Content-Type": "application/json"},
+            body: jsonEncode(data),
+          );
+        } else if (title == 'Diagnosis List') {
+          final http.Response response = await http.delete(
+            Uri.parse("${dotenv.env['API_PATH']}/diagnostic"),
+            headers: {"Content-Type": "application/json"},
+            body: jsonEncode(data),
+          );
+        } else if (title == 'Tag List') {
+          final http.Response response = await http.delete(
+            Uri.parse("${dotenv.env['API_PATH']}/tag"),
+            headers: {"Content-Type": "application/json"},
+            body: jsonEncode(data),
+          );
+        }
+      } catch (error) {
+        print("Error: $error");
       }
-    } catch (error) {
-      print("Error: $error");
     }
   }
 
   Future<void> _postEditData(String title) async {
-    var data = editedList.map((item) {
-      return {"id": item.id, "name": item.name};
-    }).toList();
-    try {
-      if (title == 'Problem List') {
-        final http.Response response = await http.put(
-          Uri.parse("${dotenv.env['API_PATH']}/problem"),
-          headers: {"Content-Type": "application/json"},
-          body: jsonEncode(data),
-        );
-      } else if (title == 'Diagnosis List') {
-        final http.Response response = await http.put(
-          Uri.parse("${dotenv.env['API_PATH']}/diagnostic"),
-          headers: {"Content-Type": "application/json"},
-          body: jsonEncode(data),
-        );
-      } else if (title == 'Tag List') {
-        final http.Response response = await http.put(
-          Uri.parse("${dotenv.env['API_PATH']}/tag"),
-          headers: {"Content-Type": "application/json"},
-          body: jsonEncode(data),
-        );
+    if (editedList.isNotEmpty) {
+      var data = editedList.map((item) {
+        return {"id": item.id, "name": item.name};
+      }).toList();
+      try {
+        if (title == 'Problem List') {
+          final http.Response response = await http.put(
+            Uri.parse("${dotenv.env['API_PATH']}/problem"),
+            headers: {"Content-Type": "application/json"},
+            body: jsonEncode(data),
+          );
+        } else if (title == 'Diagnosis List') {
+          final http.Response response = await http.put(
+            Uri.parse("${dotenv.env['API_PATH']}/diagnostic"),
+            headers: {"Content-Type": "application/json"},
+            body: jsonEncode(data),
+          );
+        } else if (title == 'Tag List') {
+          final http.Response response = await http.put(
+            Uri.parse("${dotenv.env['API_PATH']}/tag"),
+            headers: {"Content-Type": "application/json"},
+            body: jsonEncode(data),
+          );
+        }
+      } catch (error) {
+        print("Error: $error");
       }
-    } catch (error) {
-      print("Error: $error");
     }
   }
 
@@ -103,11 +107,11 @@ class _EditPredefinedOtherEditState extends State<EditPredefinedOtherEdit> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppbarTeacher(),
+      appBar: const AppbarTeacher(),
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
         child: Center(
-          child: Container(
+          child: SizedBox(
             width: MediaQuery.of(context).size.width * 0.7,
             child: Column(
               children: [
@@ -127,11 +131,11 @@ class _EditPredefinedOtherEditState extends State<EditPredefinedOtherEdit> {
                   },
                   decoration: InputDecoration(
                     isDense: true,
-                    border: OutlineInputBorder(),
+                    border: const OutlineInputBorder(),
                     suffixIcon: !isEditing
                         ? null
                         : IconButton(
-                            icon: Icon(Icons.save),
+                            icon: const Icon(Icons.save),
                             onPressed: () {
                               setState(() {
                                 newItem = textFieldController.text;
@@ -153,7 +157,7 @@ class _EditPredefinedOtherEditState extends State<EditPredefinedOtherEdit> {
                 ),
                 Expanded(
                   child: Card(
-                    color: Color(0xFFF2F5F7),
+                    color: const Color(0xFFF2F5F7),
                     elevation: 0,
                     margin: const EdgeInsets.symmetric(horizontal: 15),
                     child: ListView.builder(
@@ -162,13 +166,13 @@ class _EditPredefinedOtherEditState extends State<EditPredefinedOtherEdit> {
                         return Container(
                           decoration: BoxDecoration(
                             border: Border.all(
-                                color: Color(0xFFB5C1BE), width: 1.0),
+                                color: const Color(0xFFB5C1BE), width: 1.0),
                           ),
                           child: ListTile(
                             tileColor: index == selectedTileIndex
-                                ? Color(0xFFA0E9FF)
-                                : Color(0xFFE7F9FF),
-                            hoverColor: Color(0xFFA0E9FF),
+                                ? const Color(0xFFA0E9FF)
+                                : const Color(0xFFE7F9FF),
+                            hoverColor: const Color(0xFFA0E9FF),
                             trailing: index == selectedTileIndex
                                 ? Row(
                                     mainAxisAlignment: MainAxisAlignment.end,
@@ -189,7 +193,7 @@ class _EditPredefinedOtherEditState extends State<EditPredefinedOtherEdit> {
                                             isEditing = true;
                                           });
                                         },
-                                        icon: Icon(CupertinoIcons.pencil),
+                                        icon: const Icon(CupertinoIcons.pencil),
                                       ),
                                       IconButton(
                                         onPressed: () {
@@ -205,7 +209,7 @@ class _EditPredefinedOtherEditState extends State<EditPredefinedOtherEdit> {
                                             selectedTileIndex = -1;
                                           });
                                         },
-                                        icon: Icon(CupertinoIcons.delete),
+                                        icon: const Icon(CupertinoIcons.delete),
                                       ),
                                     ],
                                   )
@@ -236,17 +240,11 @@ class _EditPredefinedOtherEditState extends State<EditPredefinedOtherEdit> {
                     MyBackButton(myContext: context),
                     ElevatedButton(
                       onPressed: () async {
-                        if (editedList.isNotEmpty) {
-                          await _postEditData(widget.title).then((value) {
-                            Navigator.pop(context);
-                          });
-                        }
-                        if (deletedList.isNotEmpty) {
-                          await _postDeleteData(widget.title)
-                              .then((value) => Navigator.pop(context));
-                        }
+                        await _postEditData(widget.title);
+                        await _postDeleteData(widget.title)
+                            .then((value) => Navigator.pop(context));
                       },
-                      child: Text('บันทึก'),
+                      child: const Text('บันทึก'),
                     ),
                   ],
                 ),

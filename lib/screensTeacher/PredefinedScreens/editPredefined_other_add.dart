@@ -1,12 +1,10 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:frontend/components/appBar.dart';
+import 'package:frontend/components/appbar.dart';
 import 'package:frontend/components/functions.dart';
 import 'package:frontend/constants.dart';
-import 'package:frontend/components/BoxesInAddQ.dart';
-import 'package:frontend/components/backButton.dart';
+import 'package:frontend/components/back_button.dart';
 import 'package:http/http.dart' as http;
-import 'package:frontend/AllDataFile.dart';
 import 'package:frontend/models/problemListObject.dart';
 import 'package:frontend/models/diagnosisObject.dart';
 import 'package:frontend/models/tagObject.dart';
@@ -14,7 +12,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class EditPreDefinedOtherAdd extends StatefulWidget {
   String title;
-  EditPreDefinedOtherAdd({required this.title});
+  EditPreDefinedOtherAdd({super.key, required this.title});
 
   @override
   State<EditPreDefinedOtherAdd> createState() => _EditPreDefinedOtherAddState();
@@ -58,11 +56,11 @@ class _EditPreDefinedOtherAddState extends State<EditPreDefinedOtherAdd> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppbarTeacher(),
+      appBar: const AppbarTeacher(),
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
         child: Center(
-          child: Container(
+          child: SizedBox(
             width: MediaQuery.of(context).size.width * 0.7,
             child: Column(
               children: [
@@ -113,9 +111,9 @@ class _EditPreDefinedOtherAddState extends State<EditPreDefinedOtherAdd> {
                 ),
                 Expanded(
                   child: Card(
-                    color: Color(0xFFF2F5F7),
+                    color: const Color(0xFFF2F5F7),
                     elevation: 0,
-                    margin: EdgeInsets.symmetric(horizontal: 15),
+                    margin: const EdgeInsets.symmetric(horizontal: 15),
                     child: ListView.builder(
                         shrinkWrap: true,
                         itemCount: displayList.length,
@@ -123,10 +121,10 @@ class _EditPreDefinedOtherAddState extends State<EditPreDefinedOtherAdd> {
                           return Container(
                             decoration: BoxDecoration(
                               border: Border.all(
-                                  color: Color(0xFFB5C1BE), width: 1.0),
+                                  color: const Color(0xFFB5C1BE), width: 1.0),
                             ),
                             child: ListTile(
-                              hoverColor: Color(0xFFA0E9FF),
+                              hoverColor: const Color(0xFFA0E9FF),
                               title: Text(displayList[index].name),
                               onTap: () {
                                 setState(() {
@@ -139,7 +137,7 @@ class _EditPreDefinedOtherAddState extends State<EditPreDefinedOtherAdd> {
                         }),
                   ),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -150,7 +148,7 @@ class _EditPreDefinedOtherAddState extends State<EditPreDefinedOtherAdd> {
                           Navigator.pop(context);
                         });
                       },
-                      child: Text('บันทึก'),
+                      child: const Text('บันทึก'),
                     ),
                   ],
                 ),

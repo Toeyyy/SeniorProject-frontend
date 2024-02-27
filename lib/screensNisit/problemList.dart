@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/components/appBar.dart';
+import 'package:frontend/components/appbar.dart';
 import 'package:frontend/constants.dart';
 import 'package:frontend/components/splitScreenNisit.dart';
 import 'package:frontend/components/functions.dart';
@@ -17,7 +17,7 @@ class ProbList extends StatelessWidget {
   int round;
   QuestionObject questionObj;
 
-  ProbList({required this.round, required this.questionObj});
+  ProbList({super.key, required this.round, required this.questionObj});
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +26,7 @@ class ProbList extends StatelessWidget {
     SelectedProblem problemProvider =
         Provider.of<SelectedProblem>(context, listen: false);
     return Scaffold(
-      appBar: AppbarNisit(),
+      appBar: const AppbarNisit(),
       body: SplitScreenNisit(
         leftPart: round == 1
             ? LeftPartContent(questionObj: questionObj)
@@ -60,15 +60,14 @@ class RightPart_ProbList extends StatefulWidget {
   int round;
   QuestionObject questionObj;
 
-  RightPart_ProbList({required this.round, required this.questionObj});
+  RightPart_ProbList(
+      {super.key, required this.round, required this.questionObj});
 
   @override
   State<RightPart_ProbList> createState() => _RightPart_ProbListState();
 }
 
 class _RightPart_ProbListState extends State<RightPart_ProbList> {
-  // List<bool> selectedBool =
-  //     List.generate(preDefinedProblem.length, (index) => false);
   List<bool> selectedBool =
       List.generate(problemListPreDefined.length, (index) => false);
   TextEditingController _searchController = TextEditingController();
@@ -78,10 +77,7 @@ class _RightPart_ProbListState extends State<RightPart_ProbList> {
   bool _isListViewVisible = false;
   late SelectedProblem problemProvider;
   late int heart;
-  // late Map<String, List<ProblemObject>> probAnsList =
-  //     groupBy(widget.questionObj.problems, (e) => e.round.toString());
   late List<ProblemObject> probAnsList;
-  // late List<ProblemObject> probAnsList2;
   bool isLoadingData = false;
 
   void updateList(List<ProblemObject> newList, int round) {
@@ -95,7 +91,6 @@ class _RightPart_ProbListState extends State<RightPart_ProbList> {
       _fullList = problemListPreDefined;
       problemProvider = Provider.of<SelectedProblem>(context, listen: false);
       getData();
-      // problemProvider.assignAnswer(probAnsList['1']!, probAnsList['2']!);
     });
   }
 
@@ -106,13 +101,9 @@ class _RightPart_ProbListState extends State<RightPart_ProbList> {
     List<ProblemObject> loadedData =
         await fetchProblemAns(widget.questionObj.id, widget.round);
     setState(() {
-      // print('loaded Data = ${loadedData.map((e) => e.name).toList()}');
       probAnsList = loadedData;
       problemProvider.assignAnswer(loadedData, widget.round);
     });
-    // print('loaded Data = ${probAnsList.map((e) => e.name).toList()}');
-    // print('provider = ${problemProvider}');
-    // print('assign success');
     setState(() {
       isLoadingData = true;
     });
@@ -128,9 +119,10 @@ class _RightPart_ProbListState extends State<RightPart_ProbList> {
           builder: (context) {
             return Dialog(
               child: Container(
-                padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
                 decoration: BoxDecoration(
-                  color: Color(0xFFBBF5FF),
+                  color: const Color(0xFFBBF5FF),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Column(
@@ -139,7 +131,7 @@ class _RightPart_ProbListState extends State<RightPart_ProbList> {
                     Text('คำตอบไม่ถูกต้อง ต้องการเลือกใหม่หรือไม่',
                         style: kNormalTextStyle.copyWith(
                             fontWeight: FontWeight.w700)),
-                    SizedBox(height: 15),
+                    const SizedBox(height: 15),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       mainAxisSize: MainAxisSize.min,
@@ -148,12 +140,12 @@ class _RightPart_ProbListState extends State<RightPart_ProbList> {
                           onPressed: () {
                             Navigator.pop(context);
                           },
-                          child: Text('เลือกคำตอบใหม่'),
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Color(0xFF8B72BE),
+                            backgroundColor: const Color(0xFF8B72BE),
                           ),
+                          child: const Text('เลือกคำตอบใหม่'),
                         ),
-                        SizedBox(width: 15),
+                        const SizedBox(width: 15),
                         ElevatedButton(
                           onPressed: () {
                             Navigator.push(
@@ -166,7 +158,7 @@ class _RightPart_ProbListState extends State<RightPart_ProbList> {
                               ),
                             );
                           },
-                          child: Text('เฉลยคำตอบ'),
+                          child: const Text('เฉลยคำตอบ'),
                         ),
                       ],
                     ),
@@ -201,7 +193,7 @@ class _RightPart_ProbListState extends State<RightPart_ProbList> {
                       });
                     }
                   },
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Search',
                     suffixIcon: Icon(Icons.search),
                   ),
@@ -212,22 +204,18 @@ class _RightPart_ProbListState extends State<RightPart_ProbList> {
                     child: ListView.builder(
                       itemCount: _displayList.length,
                       itemBuilder: (context, index) {
-                        return Container(
-                          child: ListTile(
-                              tileColor: Color(0xFFE7F9FF),
-                              hoverColor: Color(0xFFA0E9FF),
-                              title: Text(_displayList[index].name),
-                              onTap: () {
-                                setState(() {
-                                  _selectedList.add(_displayList[index]);
-                                  _searchController.clear();
-                                  // _fullList.remove(_displayList[index]);
-                                  // _displayList = _fullList;
-                                  _displayList.remove(_displayList[index]);
-                                  _isListViewVisible = false;
-                                });
-                              }),
-                        );
+                        return ListTile(
+                            tileColor: const Color(0xFFE7F9FF),
+                            hoverColor: const Color(0xFFA0E9FF),
+                            title: Text(_displayList[index].name),
+                            onTap: () {
+                              setState(() {
+                                _selectedList.add(_displayList[index]);
+                                _searchController.clear();
+                                _displayList.remove(_displayList[index]);
+                                _isListViewVisible = false;
+                              });
+                            });
                       },
                     ),
                   ),
@@ -241,10 +229,9 @@ class _RightPart_ProbListState extends State<RightPart_ProbList> {
                         return ListTile(
                           title: Text(_selectedList[index].name),
                           trailing: IconButton(
-                            icon: Icon(Icons.remove),
+                            icon: const Icon(Icons.remove),
                             onPressed: () {
                               setState(() {
-                                // _fullList.add(_selectedList[index]);
                                 _displayList.add(_selectedList[index]);
                                 _selectedList.remove(_selectedList[index]);
                               });
@@ -288,16 +275,12 @@ class _RightPart_ProbListState extends State<RightPart_ProbList> {
                         ),
                       );
                     }
-                    // print(problemProvider.checkProbAns(widget.round));
-                    // problemProvider.checkProbAns(widget.round);
-                    // print(problemProvider.problemList1.map((e) => e.name).toList());
-                    // print(problemProvider.problemAnsList1.map((e) => e.name).toList());
                   },
-                  child: Text('ยืนยัน'),
+                  child: const Text('ยืนยัน'),
                 ),
               ],
             )
-          : SizedBox(
+          : const SizedBox(
               width: 10, child: Center(child: CircularProgressIndicator())),
     );
   }

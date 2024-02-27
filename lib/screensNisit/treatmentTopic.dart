@@ -3,7 +3,7 @@ import 'package:frontend/components/HoverColorListTile.dart';
 import 'package:frontend/components/splitScreenNisit.dart';
 import 'package:frontend/constants.dart';
 import 'package:frontend/screensNisit/treatmentDetail.dart';
-import 'package:frontend/components/appBar.dart';
+import 'package:frontend/components/appbar.dart';
 import 'package:frontend/models/treatmentObject.dart';
 import 'package:collection/collection.dart';
 import 'package:frontend/screensNisit/treatmentTotal.dart';
@@ -30,7 +30,7 @@ class TreatmentTopic extends StatelessWidget {
         Provider.of<SelectedDiagnosis>(context, listen: false);
 
     return Scaffold(
-      appBar: AppbarNisit(),
+      appBar: const AppbarNisit(),
       body: SplitScreenNisit(
         leftPart: LeftPartContent(
           questionObj: questionObj,
@@ -73,7 +73,7 @@ class TreatmentTopic extends StatelessWidget {
 class RightPart_TreatmentTopic extends StatefulWidget {
   QuestionObject questionObj;
 
-  RightPart_TreatmentTopic({required this.questionObj});
+  RightPart_TreatmentTopic({super.key, required this.questionObj});
 
   @override
   State<RightPart_TreatmentTopic> createState() =>
@@ -81,8 +81,6 @@ class RightPart_TreatmentTopic extends StatefulWidget {
 }
 
 class _RightPart_TreatmentTopicState extends State<RightPart_TreatmentTopic> {
-  // Map<String, List<TreatmentObject>> _groupedByType =
-  //     groupBy(preDefinedTreatmentAll, (e) => e.type);
   final Map<String, List<TreatmentObject>> _groupedByType =
       groupBy(treatmentListPreDefined, (e) => e.type);
 
@@ -92,14 +90,14 @@ class _RightPart_TreatmentTopicState extends State<RightPart_TreatmentTopic> {
       padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
       child: Column(
         children: [
-          Text(
+          const Text(
             'Treatment',
             style: kHeaderTextStyle,
           ),
           Expanded(
             child: ListView.separated(
               itemCount: _groupedByType.keys.length,
-              separatorBuilder: (context, index) => SizedBox(
+              separatorBuilder: (context, index) => const SizedBox(
                 height: 8,
               ),
               itemBuilder: (context, index) {
@@ -132,7 +130,7 @@ class _RightPart_TreatmentTopicState extends State<RightPart_TreatmentTopic> {
                 ),
               );
             },
-            child: Text('Treatment ที่เลือก'),
+            child: const Text('Treatment ที่เลือก'),
           ),
         ],
       ),

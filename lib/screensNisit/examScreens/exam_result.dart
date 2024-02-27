@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/components/appBar.dart';
+import 'package:frontend/components/appbar.dart';
 import 'package:frontend/models/examResultObject.dart';
 import 'package:frontend/components/splitScreenNisit.dart';
 import 'package:frontend/models/examinationPreDefinedObject.dart';
@@ -19,7 +19,8 @@ class ExamResult extends StatelessWidget {
   ExamResultObject result;
 
   ExamResult(
-      {required this.selectedExam,
+      {super.key,
+      required this.selectedExam,
       required this.round,
       required this.questionObj,
       required this.result});
@@ -30,10 +31,8 @@ class ExamResult extends StatelessWidget {
     SelectedProblem problemProvider =
         Provider.of<SelectedProblem>(context, listen: false);
 
-    // print(result == null);
-
     return Scaffold(
-      appBar: AppbarNisit(),
+      appBar: const AppbarNisit(),
       body: SplitScreenNisit(
         leftPart: round == 1
             ? LeftPartContent(
@@ -76,10 +75,10 @@ class ExamResult extends StatelessWidget {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Center(
+                        const Center(
                             child:
                                 Text('ผลการตรวจ', style: kSubHeaderTextStyle)),
-                        DividerWithSpace(),
+                        const DividerWithSpace(),
                         ResultContainer(
                             result: result, selectedExam: selectedExam),
                       ],
@@ -100,7 +99,7 @@ class ExamResult extends StatelessWidget {
                           ),
                         );
                       },
-                      child: Text('ผลการตรวจทั้งหมด'),
+                      child: const Text('ผลการตรวจทั้งหมด'),
                     ),
                   ],
                 )

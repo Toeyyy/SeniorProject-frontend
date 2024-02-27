@@ -24,6 +24,8 @@ import 'package:frontend/UIModels/nisit/selected_problem_provider.dart';
 import 'package:frontend/UIModels/nisit/selected_diagnosis_provider.dart';
 import 'package:frontend/screensNisit/returnPoint.dart';
 import 'package:frontend/screensNisit/showStats.dart';
+import 'package:frontend/screensGeneral/loginScreen.dart';
+import 'package:frontend/screensGeneral/registerScreen.dart';
 
 Future main() async {
   await dotenv.load(fileName: "assets/.env");
@@ -51,12 +53,16 @@ class MyApp extends StatelessWidget {
       theme: lightTheme,
       // initialRoute: '/Nisit/treatmentTotal',
       // initialRoute: '/mainShowQuestionNisit',
-      // initialRoute: '/mainShowQuestionTeacher',
+      initialRoute: '/mainShowQuestionTeacher',
+      // initialRoute: '/register',
+      // initialRoute: '/login',
       // initialRoute: '/Nisit/showStats',
-      initialRoute: '/Teacher/addQuesMenu',
+      // initialRoute: '/Teacher/addQuesMenu',
       // initialRoute: '/Nisit/ExamTopic',
       routes: {
         /////General/////
+        '/login': (context) => LoginScreen(),
+        '/register': (context) => RegisterScreen(),
         '/mainShowQuestionNisit': (context) => MainShowQuestion(
               role: 0,
             ),
@@ -89,11 +95,7 @@ class MyApp extends StatelessWidget {
 ThemeData lightTheme = ThemeData(
   brightness: Brightness.light,
   useMaterial3: true,
-  // textTheme: const TextTheme(
-  //   displayLarge: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
-  //   bodyLarge: TextStyle(fontSize: 18, color: Colors.black87),
-  // ),
-  scaffoldBackgroundColor: Color(0xFFF2F5F7),
+  scaffoldBackgroundColor: const Color(0xFFF2F5F7),
   appBarTheme: const AppBarTheme(
     color: Color(0xFF3DABF5),
     foregroundColor: Color(0xFFF2F5F7),
@@ -102,12 +104,12 @@ ThemeData lightTheme = ThemeData(
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: ButtonStyle(
       backgroundColor: MaterialStateProperty.all(
-        Color(0xFF42C2FF),
+        const Color(0xFF42C2FF),
       ),
       foregroundColor: MaterialStateProperty.resolveWith(
         (states) => states.contains(MaterialState.hovered)
-            ? Color(0xFF000411)
-            : Color(0xFFF2F5F7),
+            ? const Color(0xFF000411)
+            : const Color(0xFFF2F5F7),
       ),
       shape: MaterialStateProperty.all(
         RoundedRectangleBorder(

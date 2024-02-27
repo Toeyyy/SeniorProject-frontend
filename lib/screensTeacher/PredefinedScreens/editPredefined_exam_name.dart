@@ -2,10 +2,10 @@ import 'dart:convert';
 import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:frontend/components/appBar.dart';
+import 'package:frontend/components/appbar.dart';
 import 'package:frontend/constants.dart';
 import 'package:frontend/models/examinationPreDefinedObject.dart';
-import 'package:frontend/components/backButton.dart';
+import 'package:frontend/components/back_button.dart';
 import 'package:frontend/UIModels/teacher/predefinedExam_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
@@ -70,50 +70,54 @@ class _EditPredefinedExamNameState extends State<EditPredefinedExamName> {
   //////post///////
 
   Future<void> _postDeleteData() async {
-    try {
-      var data = deletedList.map((item) {
-        return {"id": item.id};
-      }).toList();
-      final http.Response response = await http.delete(
-        Uri.parse("${dotenv.env['API_PATH']}/exam"),
-        headers: {"Content-Type": "application/json"},
-        body: jsonEncode(data),
-      );
-      if ((response.statusCode >= 200 && response.statusCode < 300)) {
-        print("Posting complete");
-      } else {
-        print("Error: ${response.statusCode} - ${response.body}");
+    if (deletedList.isNotEmpty) {
+      try {
+        var data = deletedList.map((item) {
+          return {"id": item.id};
+        }).toList();
+        final http.Response response = await http.delete(
+          Uri.parse("${dotenv.env['API_PATH']}/exam"),
+          headers: {"Content-Type": "application/json"},
+          body: jsonEncode(data),
+        );
+        if ((response.statusCode >= 200 && response.statusCode < 300)) {
+          print("Posting complete");
+        } else {
+          print("Error: ${response.statusCode} - ${response.body}");
+        }
+      } catch (error) {
+        print('Error: $error');
       }
-    } catch (error) {
-      print('Error: $error');
     }
   }
 
   Future<void> _postUpdateData() async {
-    try {
-      var data = editedList.map((item) {
-        return {
-          "id": item.id,
-          "lab": item.lab,
-          "type": item.type,
-          "area": item.area,
-          "name": item.name,
-          "textDefault": item.defaultText,
-          "cost": item.cost
-        };
-      });
-      final http.Response response = await http.put(
-        Uri.parse("${dotenv.env['API_PATH']}/exam"),
-        headers: {"Content-Type": "application/json"},
-        body: jsonEncode(data),
-      );
-      if ((response.statusCode >= 200 && response.statusCode < 300)) {
-        print("Posting complete");
-      } else {
-        print("Error: ${response.statusCode} - ${response.body}");
+    if (editedList.isNotEmpty) {
+      try {
+        var data = editedList.map((item) {
+          return {
+            "id": item.id,
+            "lab": item.lab,
+            "type": item.type,
+            "area": item.area,
+            "name": item.name,
+            "textDefault": item.defaultText,
+            "cost": item.cost
+          };
+        });
+        final http.Response response = await http.put(
+          Uri.parse("${dotenv.env['API_PATH']}/exam"),
+          headers: {"Content-Type": "application/json"},
+          body: jsonEncode(data),
+        );
+        if ((response.statusCode >= 200 && response.statusCode < 300)) {
+          print("Posting complete");
+        } else {
+          print("Error: ${response.statusCode} - ${response.body}");
+        }
+      } catch (error) {
+        print('Error: $error');
       }
-    } catch (error) {
-      print('Error: $error');
     }
   }
 
@@ -132,12 +136,12 @@ class _EditPredefinedExamNameState extends State<EditPredefinedExamName> {
         areaFilterList(areaTextFieldController, areaList);
 
     return Scaffold(
-      appBar: AppbarTeacher(),
+      appBar: const AppbarTeacher(),
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
         child: SingleChildScrollView(
           child: Center(
-            child: Container(
+            child: SizedBox(
               width: MediaQuery.of(context).size.width * 0.7,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -148,8 +152,8 @@ class _EditPredefinedExamNameState extends State<EditPredefinedExamName> {
                       style: kSubHeaderTextStyle,
                     ),
                   ),
-                  DividerWithSpace(),
-                  Text('ชื่อการตรวจ', style: kSubHeaderTextStyle),
+                  const DividerWithSpace(),
+                  const Text('ชื่อการตรวจ', style: kSubHeaderTextStyle),
                   const SizedBox(height: 20),
                   TextField(
                     controller: nameTextFieldController,
@@ -160,7 +164,7 @@ class _EditPredefinedExamNameState extends State<EditPredefinedExamName> {
                             nameTextFieldController, groupedExam);
                       });
                     },
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       isDense: true,
                       border: OutlineInputBorder(),
                       hintText: "Exam name only",
@@ -190,7 +194,8 @@ class _EditPredefinedExamNameState extends State<EditPredefinedExamName> {
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
                                         IconButton(
-                                          icon: Icon(CupertinoIcons.pencil),
+                                          icon:
+                                              const Icon(CupertinoIcons.pencil),
                                           onPressed: () {
                                             setState(() {
                                               nameTextFieldController.text =
@@ -401,14 +406,11 @@ class _EditPredefinedExamNameState extends State<EditPredefinedExamName> {
                               child: const Text('บันทึกแก้ไข'))
                           : ElevatedButton(
                               onPressed: () async {
-                                if (editedList.isNotEmpty) {
-                                  await _postUpdateData();
-                                }
-                                if (deletedList.isNotEmpty) {
-                                  await _postDeleteData();
-                                }
+                                await _postUpdateData();
+                                await _postDeleteData()
+                                    .then((value) => Navigator.pop(context));
                               },
-                              child: Text('บันทึก'))
+                              child: const Text('บันทึก'))
                     ],
                   ),
                 ],

@@ -1,16 +1,11 @@
-import 'package:collection/collection.dart';
-import 'package:fl_chart/fl_chart.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:frontend/components/BoxesInAddQ.dart';
-import 'package:frontend/components/appBar.dart';
+import 'package:frontend/components/appbar.dart';
 import 'package:frontend/constants.dart';
 import 'package:frontend/models/fullQuestionObject.dart';
-import 'package:frontend/models/problemListObject.dart';
 import 'package:frontend/models/statModels/StatNisitObject.dart';
 import 'package:frontend/aboutData/getDataFunctions.dart';
-import 'package:frontend/components/backButton.dart';
+import 'package:frontend/components/back_button.dart';
 import 'package:frontend/screensTeacher/showStatDetail.dart';
 import 'package:frontend/screensTeacher/showEditHistory.dart';
 
@@ -140,7 +135,7 @@ class _ShowStatOverallState extends State<ShowStatOverall> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppbarTeacher(),
+      appBar: const AppbarTeacher(),
       body: SingleChildScrollView(
         child: Center(
           child: Container(
@@ -180,7 +175,7 @@ class _ShowStatOverallState extends State<ShowStatOverall> {
                                   );
                                 },
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: Color(0xFF3DABF5),
+                                  backgroundColor: const Color(0xFF3DABF5),
                                 ),
                                 child: const Text('ประวัติการแก้ไขโจทย์'),
                               )

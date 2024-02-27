@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/aboutData/getDataFunctions.dart';
 import 'package:frontend/constants.dart';
-import 'package:frontend/components/appBar.dart';
+import 'package:frontend/components/appbar.dart';
 import 'package:frontend/screensGeneral/fullQuestionCard.dart';
 import 'package:frontend/screensGeneral/questionCard.dart';
 import 'package:frontend/models/questionObject.dart';
@@ -29,7 +29,7 @@ class _MainShowQuestionState extends State<MainShowQuestion> {
   bool _isLoadData = false;
 
   void refreshScreen() {
-    print('refresh page');
+    // print('refresh page');
     setState(() {
       //refresh
     });
@@ -72,26 +72,29 @@ class _MainShowQuestionState extends State<MainShowQuestion> {
   @override
   Widget build(BuildContext context) {
     List<TagObject> selectedTags = [];
+    TextEditingController quesSearchController = TextEditingController();
 
     void updateTagList(List<TagObject> newList) {
       selectedTags = newList;
       setState(() {
         if (widget.role == 0) {
-          displayList = filterFromTagsNisit(questionObjList, selectedTags);
+          displayList = filterFromTags(questionObjList, selectedTags)
+              .cast<QuestionObject>();
         } else {
           teacherDisplayList =
-              filterFromTagsTeacher(teacherQuestionObjList, selectedTags);
+              filterFromTags(teacherQuestionObjList, selectedTags)
+                  .cast<FullQuestionObject>();
         }
       });
     }
 
     return Scaffold(
       appBar: widget.role == 0
-          ? AppbarNisit() as PreferredSizeWidget
-          : AppbarTeacher() as PreferredSizeWidget,
+          ? const AppbarNisit() as PreferredSizeWidget
+          : const AppbarTeacher() as PreferredSizeWidget,
       body: SingleChildScrollView(
         child: Center(
-          child: Container(
+          child: SizedBox(
             width: MediaQuery.of(context).size.width * 0.7,
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
@@ -102,34 +105,47 @@ class _MainShowQuestionState extends State<MainShowQuestion> {
                     padding: const EdgeInsets.only(bottom: 15),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
-                      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Row(
                           children: [
-                            Text(
+                            const Text(
                               'เลือกโจทย์',
                               style: kHeaderTextStyle,
                             ),
-                            SizedBox(
+                            const SizedBox(
                               width: 20,
                             ),
                             SizedBox(
                               width: 200,
                               child: TextField(
-                                decoration: InputDecoration(
+                                controller: quesSearchController,
+                                decoration: const InputDecoration(
                                   isDense: true,
                                   border: OutlineInputBorder(),
                                   labelText: 'ค้นหารหัสโจทย์',
                                   labelStyle: TextStyle(fontSize: 20),
                                 ),
+                                onEditingComplete: () {
+                                  if (widget.role == 0) {
+                                    setState(() {
+                                      displayList = filterFromQuesName(
+                                              questionObjList,
+                                              quesSearchController.text)
+                                          .cast<QuestionObject>();
+                                    });
+                                  } else {
+                                    setState(() {
+                                      teacherDisplayList = filterFromQuesName(
+                                              teacherQuestionList,
+                                              quesSearchController.text)
+                                          .cast<FullQuestionObject>();
+                                    });
+                                  }
+                                },
                               ),
                             ),
                           ],
                         ),
-                        // ElevatedButton(
-                        //   onPressed: () {},
-                        //   child: Text('โจทย์ยอดนิยม'),
-                        // ),
                       ],
                     ),
                   ),

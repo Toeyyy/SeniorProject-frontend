@@ -1,15 +1,11 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:frontend/components/appBar.dart';
+import 'package:frontend/components/appbar.dart';
 import 'package:frontend/constants.dart';
 import 'package:frontend/models/statModels/StatQuestionObject.dart';
 import 'package:frontend/aboutData/getDataFunctions.dart';
 import 'package:frontend/components/BoxesInAddQ.dart';
 import 'package:frontend/models/problemListObject.dart';
 import 'package:frontend/models/examinationPreDefinedObject.dart';
-import 'package:frontend/models/diagnosisObject.dart';
-import 'package:frontend/models/treatmentObject.dart';
 import 'package:collection/collection.dart';
 
 class ShowStatsForNisit extends StatefulWidget {
@@ -67,11 +63,11 @@ class _ShowStatsForNisitState extends State<ShowStatsForNisit> {
     }
 
     return Scaffold(
-      appBar: AppbarNisit(),
+      appBar: const AppbarNisit(),
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
         child: Center(
-          child: Container(
+          child: SizedBox(
             width: MediaQuery.of(context).size.width * 0.9,
             child: !_isLoadingData
                 ? Column(
@@ -189,7 +185,7 @@ class _ShowStatsForNisitState extends State<ShowStatsForNisit> {
                                                       "Problem List ครั้งที่ 1",
                                                       splitProblems['1']!);
                                                 },
-                                                icon: Icon(Icons.search)),
+                                                icon: const Icon(Icons.search)),
                                           ],
                                         ),
                                       ),
@@ -208,7 +204,7 @@ class _ShowStatsForNisitState extends State<ShowStatsForNisit> {
                                                   examModal(context, '1',
                                                       splitExams['1']!);
                                                 },
-                                                icon: Icon(Icons.search))
+                                                icon: const Icon(Icons.search))
                                           ],
                                         ),
                                       ),
@@ -229,7 +225,7 @@ class _ShowStatsForNisitState extends State<ShowStatsForNisit> {
                                                       "Problem List ครั้งที่ 2",
                                                       splitProblems['2']!);
                                                 },
-                                                icon: Icon(Icons.search)),
+                                                icon: const Icon(Icons.search)),
                                           ],
                                         ),
                                       ),
@@ -248,7 +244,7 @@ class _ShowStatsForNisitState extends State<ShowStatsForNisit> {
                                                   examModal(context, '2',
                                                       splitExams['2']!);
                                                 },
-                                                icon: Icon(Icons.search))
+                                                icon: const Icon(Icons.search))
                                           ],
                                         ),
                                       ),
@@ -270,7 +266,7 @@ class _ShowStatsForNisitState extends State<ShowStatsForNisit> {
                                                       statList[index]
                                                           .diagnostics);
                                                 },
-                                                icon: Icon(Icons.search)),
+                                                icon: const Icon(Icons.search)),
                                           ],
                                         ),
                                       ),
@@ -292,7 +288,7 @@ class _ShowStatsForNisitState extends State<ShowStatsForNisit> {
                                                       statList[index]
                                                           .treatments);
                                                 },
-                                                icon: Icon(Icons.search))
+                                                icon: const Icon(Icons.search))
                                           ],
                                         ),
                                       ),
