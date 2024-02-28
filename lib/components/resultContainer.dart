@@ -38,7 +38,7 @@ class ResultContainer extends StatelessWidget {
                   children: [
                     const SizedBox(height: 20),
                     Image.network(
-                      result.imgResult!,
+                      result.imgResult!.replaceFirst("Uploads", ""),
                       height: 200,
                       width: 300,
                       fit: BoxFit.fill,

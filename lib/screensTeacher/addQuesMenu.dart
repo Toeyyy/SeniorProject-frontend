@@ -9,6 +9,7 @@ import 'package:frontend/aboutData/getDataFunctions.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:http_parser/http_parser.dart';
 
 class AddQuesMenu extends StatelessWidget {
   AddQuesMenu({super.key});
@@ -27,7 +28,10 @@ class AddQuesMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     Future<void> postFile() async {
       final dio = Dio();
-      var formData = FormData.fromMap({"file": userFile!.files});
+      var formData = FormData.fromMap({
+        "file": MultipartFile.fromBytes(userFile!.files[0].bytes!.toList(),
+            filename: "question.xlsx")
+      });
       try {
         final response = await dio
             .post("${dotenv.env['API_PATH']}/question/upload", data: formData);
@@ -38,7 +42,7 @@ class AddQuesMenu extends StatelessWidget {
 
     Future<void> getFile() async {
       try {
-        final http.Response response = await http.post(
+        final http.Response response = await http.get(
           Uri.parse("${dotenv.env['API_PATH']}/question/template"),
           headers: {"Content-Type": "application/json"},
         );

@@ -210,7 +210,7 @@ class _AddQuestionState extends State<AddQuestion> {
           }
           index++;
         }
-        index = 0;
+
         for (var item in examContainers2) {
           if (item.imageResult != null) {
             formData.files.add(

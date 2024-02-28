@@ -410,15 +410,14 @@ class ShowExamContainer extends StatelessWidget {
                   children: [
                     const SizedBox(height: 15),
                     Padding(
-                        padding: const EdgeInsets.only(left: 10),
-                        child: Image.network(
-                          "${dotenv.env['RESOURCE_PATH']}${imagePath!.replaceFirst("upload/", "")}",
-                          height: 200,
-                          width: 300,
-                          fit: BoxFit.cover,
-                        )
-                        // child: Image.memory(imagePath!.bytes!),
-                        ),
+                      padding: const EdgeInsets.only(left: 10),
+                      child: Image.network(
+                        "${dotenv.env['RESOURCE_PATH']}${imagePath!.replaceFirst("upload/", "")}",
+                        height: 200,
+                        width: 300,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
                   ],
                 )
               : Container(),
