@@ -257,7 +257,7 @@ class ExamsButtonAndContainer extends StatelessWidget {
                 final int currentNub = examListProvider.nub;
                 examListProvider.addExamContainer(
                     ExamContainer(
-                        id: currentNub.toString(),
+                        id: groupedByLab.values.first.first.id,
                         key: ObjectKey(currentNub),
                         round: round,
                         selectedDepartment: groupedByLab.keys.first,

@@ -26,6 +26,9 @@ List<DiagnosisObject> filterDiagnosisList(
 List<String> filterTreatment(String topic) {
   Map<String, List<TreatmentObject>> splitTreatment =
       groupBy(treatmentListPreDefined, (e) => e.type);
+  if (topic == 'first') {
+    return splitTreatment.values.first.map((e) => e.name).toList();
+  }
   return splitTreatment[topic]!.map((e) => e.name).toList();
 }
 

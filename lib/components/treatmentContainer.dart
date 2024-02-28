@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/AllDataFile.dart';
 import 'package:frontend/components/BoxesInAddQ.dart';
 import 'package:frontend/components/functions.dart';
 import 'package:frontend/UIModels/teacher/treatmentContainer_provider.dart';
@@ -6,7 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:frontend/constants.dart';
 
 class TreatmentContainer extends StatefulWidget {
-  final String id;
+  String id;
   final Key key;
   String selectedTreatmentTopic;
   String selectedTreatmentDetail;
@@ -23,6 +24,17 @@ class TreatmentContainer extends StatefulWidget {
 }
 
 class _TreatmentContainerState extends State<TreatmentContainer> {
+  String findID() {
+    return treatmentListPreDefined
+        .where((item) {
+          return widget.selectedTreatmentTopic == item.type &&
+              widget.selectedTreatmentDetail == item.name;
+        })
+        .toList()
+        .first
+        .id;
+  }
+
   @override
   Widget build(BuildContext context) {
     TreatmentContainerProvider treatmentProvider =
@@ -49,6 +61,7 @@ class _TreatmentContainerState extends State<TreatmentContainer> {
                       widget.selectedTreatmentTopic = value.toString();
                       widget.selectedTreatmentDetail =
                           filterTreatment(widget.selectedTreatmentTopic).first;
+                      widget.id = findID();
                     });
                   }),
               IconButton(
@@ -67,6 +80,7 @@ class _TreatmentContainerState extends State<TreatmentContainer> {
               onChanged: (value) {
                 setState(() {
                   widget.selectedTreatmentDetail = value.toString();
+                  widget.id = findID();
                 });
               }),
         ],

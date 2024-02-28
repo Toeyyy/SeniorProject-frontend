@@ -142,7 +142,6 @@ class _AddQuestionState extends State<AddQuestion> {
       var diagnosis = selectedDiagnosisList.map((item) {
         return {"id": item.id};
       }).toList();
-      // print('diag list before json = $diagnosis');
 
       //exams
       var exam1 = examContainers1.map((item) {
@@ -442,7 +441,6 @@ class _AddQuestionState extends State<AddQuestion> {
                             style: kSubHeaderTextStyle),
                         ProbListMultiSelectDropDown(
                           selectedList: selectedProblemList2,
-                          // displayList: preDefinedProblem,
                           displayList: problemListPreDefined,
                           hintText: "เลือก Problem List ครั้งที่ 2",
                           round: 2,
@@ -462,7 +460,6 @@ class _AddQuestionState extends State<AddQuestion> {
                         DiagnosisMultiSelectDropDown(
                             selectedList: selectedDiagnosisList,
                             displayList: diagnosisListPreDefined,
-                            // displayList: preDefinedDiagnosis,
                             hintText: 'เลือก Diagnosis',
                             updateListCallback: updateDiagList),
                         const DividerWithSpace(),
@@ -478,12 +475,12 @@ class _AddQuestionState extends State<AddQuestion> {
                                 final int currentNub = treatmentProvider.nub;
                                 treatmentProvider.addContainer(
                                   TreatmentContainer(
-                                    id: currentNub.toString(),
+                                    id: treatmentListPreDefined.first.id,
                                     key: ObjectKey(currentNub),
                                     selectedTreatmentTopic:
                                         getTreatmentTopic().first,
                                     selectedTreatmentDetail:
-                                        filterTreatment('Medical').first,
+                                        filterTreatment('first').first,
                                   ),
                                 );
                               },
@@ -526,6 +523,7 @@ class _AddQuestionState extends State<AddQuestion> {
                                       setState(() {
                                         _isPosting = false;
                                       });
+                                      examListProvider.clearList();
                                       showModal(context);
                                     });
                                   }

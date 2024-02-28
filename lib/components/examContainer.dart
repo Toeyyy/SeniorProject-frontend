@@ -58,18 +58,39 @@ class _ExamContainerState extends State<ExamContainer> {
           groupedByLab[widget.selectedDepartment]!.toList(), (e) => e.type);
     }
 
-    void checkArea() {
-      List<ExamPreDefinedObject> groupedType =
-          groupedByType()[widget.selectedExamTopic]!;
-      setState(() {
-        widget.areaNull = true;
-      });
-      for (ExamPreDefinedObject item in groupedType) {
-        if (item.area != null) {
-          setState(() {
-            widget.areaNull = false;
-          });
-          break;
+    Map<String, List<ExamPreDefinedObject>> groupedByName() {
+      return groupBy(
+          groupedByType()[widget.selectedExamTopic]!.toList(), (e) => e.name);
+    }
+
+    void checkArea(String choice) {
+      if (choice == 'type') {
+        List<ExamPreDefinedObject> groupedType =
+            groupedByType()[widget.selectedExamTopic]!;
+        setState(() {
+          widget.areaNull = true;
+        });
+        for (ExamPreDefinedObject item in groupedType) {
+          if (item.area != null) {
+            setState(() {
+              widget.areaNull = false;
+            });
+            break;
+          }
+        }
+      } else if (choice == 'name') {
+        List<ExamPreDefinedObject> groupedName =
+            groupedByName()[widget.selectedExamName]!;
+        setState(() {
+          widget.areaNull = true;
+        });
+        for (ExamPreDefinedObject item in groupedName) {
+          if (item.area != null) {
+            setState(() {
+              widget.areaNull = false;
+            });
+            break;
+          }
         }
       }
     }
@@ -107,6 +128,19 @@ class _ExamContainerState extends State<ExamContainer> {
       }
     }
 
+    String findExamId() {
+      return examListPreDefined
+          .where((item) {
+            return widget.selectedDepartment == item.lab &&
+                widget.selectedExamTopic == item.type &&
+                widget.selectedArea == item.area &&
+                widget.selectedExamName == item.name;
+          })
+          .toList()
+          .first
+          .id;
+    }
+
     return Container(
       margin: const EdgeInsets.only(bottom: 15),
       padding: const EdgeInsets.all(10),
@@ -133,7 +167,7 @@ class _ExamContainerState extends State<ExamContainer> {
                           List<ExamPreDefinedObject>? newList =
                               groupedByLab[widget.selectedDepartment];
                           widget.selectedExamTopic = newList!.first.type;
-                          checkArea();
+                          checkArea('type');
                           widget.selectedExamName =
                               groupedByType()[widget.selectedExamTopic]!
                                   .first
@@ -144,6 +178,7 @@ class _ExamContainerState extends State<ExamContainer> {
                                     .first
                                     .area;
                           }
+                          widget.id = findExamId();
                         });
                       }),
                 ],
@@ -175,6 +210,30 @@ class _ExamContainerState extends State<ExamContainer> {
                                 .first
                                 .area;
                       }
+                      widget.id = findExamId();
+                    });
+                  }),
+            ],
+          ),
+          const SizedBox(height: 15),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              const Text("เลือกการตรวจ"),
+              DropDownButtonInAddQ(
+                  selectedValue: widget.selectedExamName,
+                  list: groupedByType()[widget.selectedExamTopic]!
+                      .map((e) => e.name)
+                      .toSet()
+                      .toList(),
+                  hintText: "เลือกการตรวจ",
+                  onChanged: (value) {
+                    setState(() {
+                      widget.selectedExamName = value.toString();
+                      checkArea('name');
+                      widget.selectedArea =
+                          groupedByName()[widget.selectedExamName]!.first.area;
+                      widget.id = findExamId();
                     });
                   }),
             ],
@@ -193,37 +252,19 @@ class _ExamContainerState extends State<ExamContainer> {
                               : null,
                           list: widget.areaNull == false
                               ? groupBy(
-                                  groupedByType()[widget.selectedExamTopic]!,
+                                  groupedByName()[widget.selectedExamName]!,
                                   (e) => e.area!).keys.toList()
                               : [],
                           hintText: "เลือกตัวอย่างการส่งตรวจ",
                           onChanged: (value) {
                             setState(() {
                               widget.selectedArea = value.toString();
+                              widget.id = findExamId();
                             });
                           }),
                     ],
                   )
                 : const SizedBox(),
-          ),
-          const SizedBox(height: 15),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              const Text("เลือกการตรวจ"),
-              DropDownButtonInAddQ(
-                  selectedValue: widget.selectedExamName,
-                  list: groupedByType()[widget.selectedExamTopic]!
-                      .map((e) => e.name)
-                      .toSet()
-                      .toList(),
-                  hintText: "เลือกการตรวจ",
-                  onChanged: (value) {
-                    setState(() {
-                      widget.selectedExamName = value.toString();
-                    });
-                  }),
-            ],
           ),
           const SizedBox(height: 10),
           TextBoxMultiLine(

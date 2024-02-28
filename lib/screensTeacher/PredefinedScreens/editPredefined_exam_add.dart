@@ -96,6 +96,8 @@ class _EditPreDefinedExamAddState extends State<EditPreDefinedExamAdd> {
   bool _checkEmpty() {
     return labTextController.text == '' &&
         typeTextController.text == '' &&
+        defaultTextController.text == '' &&
+        areaTextController.text == '' &&
         nameTextController.text == '' &&
         costTextController.text == '';
   }
@@ -404,7 +406,11 @@ class _EditPreDefinedExamAddState extends State<EditPreDefinedExamAdd> {
                       !_canSave
                           ? ElevatedButton(
                               onPressed: () {
-                                if (_isFormatCorrect && _checkEmpty()) {
+                                if (_isFormatCorrect &&
+                                    labTextController.text != '' &&
+                                    typeTextController.text != '' &&
+                                    nameTextController.text != '' &&
+                                    costTextController.text != '') {
                                   ExamPreDefinedObject newItem =
                                       ExamPreDefinedObject(
                                     id: 'X',
@@ -439,6 +445,7 @@ class _EditPreDefinedExamAddState extends State<EditPreDefinedExamAdd> {
                                     labDisplayList = labNameList;
                                     typeDisplayList = typeNameList;
                                     areaDisplayList = areaNameList;
+                                    nameDisplayList = nameList;
                                   });
                                   addedList.add(newItem);
                                   labTextController.clear();

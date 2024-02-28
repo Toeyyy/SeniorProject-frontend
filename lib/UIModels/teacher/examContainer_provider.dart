@@ -18,11 +18,7 @@ class ExamContainerProvider extends ChangeNotifier {
   }
 
   void deleteExamContainer(List<ExamContainer> containerList, Key key) {
-    // print('key = $key');
-    // print('item.key = ${containerList.map((e) => e.key)}');
     containerList.removeWhere((item) => item.key == key);
-    // print('hello');
-    // print('container len = ${containerList.length}');
     notifyListeners();
   }
 
