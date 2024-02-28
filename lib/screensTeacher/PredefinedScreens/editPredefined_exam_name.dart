@@ -253,7 +253,7 @@ class _EditPredefinedExamNameState extends State<EditPredefinedExamName> {
                                     costTextFieldController.text =
                                         selectedItem!.cost.toString();
                                     defaultTextFieldController.text =
-                                        selectedItem!.defaultText!;
+                                        (selectedItem?.defaultText ?? "");
                                   } else {
                                     selectedTileIndex = -1;
                                     selectedItem = null;

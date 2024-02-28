@@ -163,7 +163,7 @@
     "lab": "Ultrasound",
     "type": "Ultrasound",
     "name": "Eyes",
-    "textDefault": "default",
+    "textDefault": null,
     "cost": 100
   },
   {
