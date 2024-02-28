@@ -1,4 +1,4 @@
-import 'dart:convert';
+import 'dart:html' as html;
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/components/appbar.dart';
@@ -43,6 +43,18 @@ class AddQuesMenu extends StatelessWidget {
           headers: {"Content-Type": "application/json"},
         );
         if (response.statusCode >= 200 && response.statusCode < 300) {
+          final blob = html.Blob([response.bodyBytes]);
+          final url = html.Url.createObjectUrlFromBlob(blob);
+          final anchor = html.document.createElement('a') as html.AnchorElement
+            ..href = url
+            ..style.display = 'none'
+            ..download = "question_template.xlsx";
+          html.document.body?.children.add(anchor);
+
+          anchor.click();
+
+          html.document.body?.children.remove(anchor);
+          html.Url.revokeObjectUrl(url);
         } else {
           print("Error: ${response.statusCode} - ${response.body}");
         }
