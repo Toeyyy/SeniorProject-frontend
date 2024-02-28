@@ -74,7 +74,7 @@ class _EditPreDefinedExamAddState extends State<EditPreDefinedExamAdd> {
           "type": item.type,
           "area": item.area == '' ? null : item.area,
           "name": item.name,
-          "textDefault": item.defaultText,
+          "textDefault": item.defaultText == '' ? null : item.defaultText,
           "cost": item.cost
         };
       }).toList();
@@ -97,8 +97,7 @@ class _EditPreDefinedExamAddState extends State<EditPreDefinedExamAdd> {
     return labTextController.text == '' &&
         typeTextController.text == '' &&
         nameTextController.text == '' &&
-        costTextController.text == '' &&
-        defaultTextController.text == '';
+        costTextController.text == '';
   }
 
   @override
@@ -379,7 +378,8 @@ class _EditPreDefinedExamAddState extends State<EditPreDefinedExamAdd> {
                   ),
                   const DividerWithSpace(),
                   ////default////
-                  const Text('ค่าผลตรวจ Default', style: kSubHeaderTextStyle),
+                  const Text('ค่าผลตรวจ Default (Optional)',
+                      style: kSubHeaderTextStyle),
                   const SizedBox(height: 20),
                   TextField(
                     controller: defaultTextController,
@@ -392,7 +392,8 @@ class _EditPreDefinedExamAddState extends State<EditPreDefinedExamAdd> {
                     decoration: const InputDecoration(
                       contentPadding: EdgeInsets.all(8),
                       border: OutlineInputBorder(),
-                      hintText: "ค่าผลตรวจ Default",
+                      hintText:
+                          "ค่าผลตรวจ Default [ถ้าไม่ใส่จะมีค่าเป็น 'ค่าปกติ']",
                     ),
                   ),
                   const DividerWithSpace(),
@@ -403,12 +404,7 @@ class _EditPreDefinedExamAddState extends State<EditPreDefinedExamAdd> {
                       !_canSave
                           ? ElevatedButton(
                               onPressed: () {
-                                if (_isFormatCorrect &&
-                                    nameTextController.text != '' &&
-                                    typeTextController.text != '' &&
-                                    labTextController.text != '' &&
-                                    defaultTextController.text != '' &&
-                                    costTextController.text != '') {
+                                if (_isFormatCorrect && _checkEmpty()) {
                                   ExamPreDefinedObject newItem =
                                       ExamPreDefinedObject(
                                     id: 'X',

@@ -42,8 +42,7 @@ class _EditPredefinedExamNameState extends State<EditPredefinedExamName> {
 
   bool _checkNotEmpty() {
     return nameTextFieldController.text != '' &&
-        costTextFieldController.text != '' &&
-        defaultTextFieldController.text != '';
+        costTextFieldController.text != '';
   }
 
   List<ExamPreDefinedObject> nameFilterList(
@@ -99,9 +98,9 @@ class _EditPredefinedExamNameState extends State<EditPredefinedExamName> {
             "id": item.id,
             "lab": item.lab,
             "type": item.type,
-            "area": item.area,
+            "area": item.area != '' ? null : item.area,
             "name": item.name,
-            "textDefault": item.defaultText,
+            "textDefault": item.defaultText != '' ? null : item.defaultText,
             "cost": item.cost
           };
         });
@@ -276,7 +275,7 @@ class _EditPredefinedExamNameState extends State<EditPredefinedExamName> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text('ตัวอย่างที่ใช้ในการส่งตรวจ',
+                          const Text('ตัวอย่างที่ใช้ในการส่งตรวจ (Optional)',
                               style: kSubHeaderTextStyle),
                           const SizedBox(height: 20),
                           TextField(
@@ -292,7 +291,8 @@ class _EditPredefinedExamNameState extends State<EditPredefinedExamName> {
                             decoration: const InputDecoration(
                               isDense: true,
                               border: OutlineInputBorder(),
-                              hintText: "ชื่อตัวอย่างที่ใช้ในการส่งตรวจ",
+                              hintText:
+                                  "ชื่อตัวอย่างที่ใช้ในการส่งตรวจ เช่น Nasal Swab",
                             ),
                           ),
                           Visibility(
@@ -353,7 +353,7 @@ class _EditPredefinedExamNameState extends State<EditPredefinedExamName> {
                           ),
                           const DividerWithSpace(),
                           /////default/////
-                          const Text('ค่าผลตรวจ Default',
+                          const Text('ค่าผลตรวจ Default (Optional)',
                               style: kSubHeaderTextStyle),
                           const SizedBox(height: 20),
                           TextField(
@@ -363,7 +363,8 @@ class _EditPredefinedExamNameState extends State<EditPredefinedExamName> {
                             decoration: const InputDecoration(
                               isDense: true,
                               border: OutlineInputBorder(),
-                              hintText: "ค่าผลตรวจ Default",
+                              hintText:
+                                  "ค่าผลตรวจ Default [ถ้าไม่ใส่จะมีค่าเป็น 'ค่าปกติ']",
                             ),
                           ),
                         ],
