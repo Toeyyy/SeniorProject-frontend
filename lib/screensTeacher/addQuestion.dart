@@ -45,13 +45,6 @@ class _AddQuestionState extends State<AddQuestion> {
   /////
 
   @override
-  // void initState() {
-  //   super.initState();
-  //   Provider.of<ExamContainerProvider>(context).clearList();
-  //   Provider.of<TreatmentContainerProvider>(context).clearList();
-  // }
-
-  @override
   Widget build(BuildContext context) {
     List<ExamContainer> examContainers1 =
         Provider.of<ExamContainerProvider>(context).examContainers1;
@@ -183,61 +176,63 @@ class _AddQuestionState extends State<AddQuestion> {
         return {"id": item.id};
       }).toList();
 
-      // print(selectedTags.map((e) => "id = ${e.id}, name = ${e.name}"));
-
-      FormData formData = FormData.fromMap({
-        "clientComplains": clientComplainsController.text,
-        "historyTakingInfo": historyTakingController.text,
-        "generalInfo": generalResultsController.text,
-        "problems": probList1,
-        "examinations": exam1,
-        "treatments": treatment,
-        "diagnostics": diagnosis,
-        "tags": tag,
-        "signalment": {
-          "species": signalmentTypeValue,
-          "breed": signalmentBreedValue.text,
-          "gender": signalmentSexValue,
-          "sterilize": signalmentSterilizeStat,
-          "age": signalmentAgeValue.text,
-          "weight": signalmentWeightValue.text,
-        }
-      }, ListFormat.multiCompatible);
-      var index = 0;
-      for (var item in examContainers1) {
-        if (item.imageResult != null) {
-          formData.files.add(
-            MapEntry(
-              "examinations[$index].imgResult",
-              MultipartFile.fromBytes(
-                item.imageResult!.bytes!,
-                filename: "image1.png",
-                contentType: MediaType("image", "png"),
+      try {
+        FormData formData = FormData.fromMap({
+          "clientComplains": clientComplainsController.text,
+          "historyTakingInfo": historyTakingController.text,
+          "generalInfo": generalResultsController.text,
+          "problems": probList1,
+          "examinations": exam1,
+          "treatments": treatment,
+          "diagnostics": diagnosis,
+          "tags": tag,
+          "signalment": {
+            "species": signalmentTypeValue,
+            "breed": signalmentBreedValue.text,
+            "gender": signalmentSexValue,
+            "sterilize": signalmentSterilizeStat,
+            "age": signalmentAgeValue.text,
+            "weight": signalmentWeightValue.text,
+          }
+        }, ListFormat.multiCompatible);
+        var index = 0;
+        for (var item in examContainers1) {
+          if (item.imageResult != null) {
+            formData.files.add(
+              MapEntry(
+                "examinations[$index].imgResult",
+                MultipartFile.fromBytes(
+                  item.imageResult!.bytes!,
+                  filename: "image1.png",
+                  contentType: MediaType("image", "png"),
+                ),
               ),
-            ),
-          );
+            );
+          }
+          index++;
         }
-        index++;
-      }
-      index = 0;
-      for (var item in examContainers2) {
-        if (item.imageResult != null) {
-          formData.files.add(
-            MapEntry(
-              "examinations[$index].imgResult",
-              MultipartFile.fromBytes(
-                item.imageResult!.bytes!,
-                filename: "image1.png",
-                contentType: MediaType("image", "png"),
+        index = 0;
+        for (var item in examContainers2) {
+          if (item.imageResult != null) {
+            formData.files.add(
+              MapEntry(
+                "examinations[$index].imgResult",
+                MultipartFile.fromBytes(
+                  item.imageResult!.bytes!,
+                  filename: "image1.png",
+                  contentType: MediaType("image", "png"),
+                ),
               ),
-            ),
-          );
+            );
+          }
+          index++;
         }
-        index++;
-      }
 
-      final response =
-          await dio.post('${dotenv.env['API_PATH']}/question', data: formData);
+        final response = await dio.post('${dotenv.env['API_PATH']}/question',
+            data: formData);
+      } catch (error) {
+        print('Error: $error');
+      }
     }
 
     /////check if null///////
@@ -256,8 +251,6 @@ class _AddQuestionState extends State<AddQuestion> {
           examContainers2.isNotEmpty &&
           (signalmentBreedValue != null) &&
           (signalmentSexValue != null);
-
-      // print('state1 = $tmp');
 
       for (ExamContainer item in examContainers1) {
         if (item.examController.text.isEmpty) {

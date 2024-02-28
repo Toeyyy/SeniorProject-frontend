@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/components/appbar.dart';
 import 'package:frontend/constants.dart';
@@ -26,18 +26,11 @@ class AddQuesMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Future<void> postFile() async {
-      var data = userFile!.files;
+      final dio = Dio();
+      var formData = FormData.fromMap({"file": userFile!.files});
       try {
-        final http.Response response = await http.post(
-          Uri.parse("${dotenv.env['API_PATH']}/question/upload"),
-          headers: {"Content-Type": "application/json"},
-          body: jsonEncode(data),
-        );
-        if ((response.statusCode >= 200 && response.statusCode < 300)) {
-          print("Posting complete");
-        } else {
-          print("Error: ${response.statusCode} - ${response.body}");
-        }
+        final response = await dio
+            .post("${dotenv.env['API_PATH']}/question/upload", data: formData);
       } catch (error) {
         print('Error: $error');
       }

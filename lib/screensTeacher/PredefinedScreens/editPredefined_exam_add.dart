@@ -70,13 +70,12 @@ class _EditPreDefinedExamAddState extends State<EditPreDefinedExamAdd> {
     try {
       var data = addedList.map((item) {
         return {
-          "lab": labTextController.text,
-          "type": typeTextController.text,
-          "area":
-              areaTextController.text == '' ? null : areaTextController.text,
-          "name": nameTextController.text,
-          "textDefault": defaultTextController.text,
-          "cost": int.parse(costTextController.text)
+          "lab": item.lab,
+          "type": item.type,
+          "area": item.area == '' ? null : item.area,
+          "name": item.name,
+          "textDefault": item.defaultText,
+          "cost": item.cost
         };
       }).toList();
       final http.Response response = await http.post(
@@ -262,7 +261,7 @@ class _EditPreDefinedExamAddState extends State<EditPreDefinedExamAdd> {
                   ),
                   const DividerWithSpace(),
                   /////area/////
-                  const Text('ตัวอย่างที่ใช้ในการส่งตรวจ',
+                  const Text('ตัวอย่างที่ใช้ในการส่งตรวจ (Optional)',
                       style: kSubHeaderTextStyle),
                   const SizedBox(height: 20),
                   TextField(
@@ -430,8 +429,9 @@ class _EditPreDefinedExamAddState extends State<EditPreDefinedExamAdd> {
                                         groupBy(selectedLabList, (e) => e.type);
                                     typeNameList = groupedByType.keys.toList();
                                     groupedByArea = groupBy(
-                                        fullList
-                                            .where((item) => item.area != null),
+                                        fullList.where((item) =>
+                                            (item.area != null &&
+                                                item.area != '')),
                                         (e) => e.area!);
                                     areaNameList = groupedByArea.keys.toList();
                                     selectedTypeList =
@@ -440,6 +440,9 @@ class _EditPreDefinedExamAddState extends State<EditPreDefinedExamAdd> {
                                         .map((e) => e.name)
                                         .toList();
                                     _canSave = true;
+                                    labDisplayList = labNameList;
+                                    typeDisplayList = typeNameList;
+                                    areaDisplayList = areaNameList;
                                   });
                                   addedList.add(newItem);
                                   labTextController.clear();

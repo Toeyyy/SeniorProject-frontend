@@ -263,6 +263,7 @@ class _EditPreDefinedTreatmentAddState
                                         .map((e) => e.name)
                                         .toList();
                                     _isEditing = false;
+                                    typeDisplayList = typeNameList;
                                   });
                                   addedList.add(newItem);
                                   typeTextController.clear();
