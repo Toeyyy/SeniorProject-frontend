@@ -11,6 +11,7 @@ import 'package:collection/collection.dart';
 import 'package:frontend/AllDataFile.dart';
 import 'package:frontend/components/resultContainer.dart';
 import 'package:frontend/models/examResultObject.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class DropDownButtonInAddQ extends StatelessWidget {
   String? selectedValue;
@@ -432,7 +433,7 @@ class TitleAndExams extends StatelessWidget {
                       ? Padding(
                           padding: const EdgeInsets.only(left: 35),
                           child: Image.network(
-                            resultItem.imgResult!,
+                            "${dotenv.env['RESOURCE_PATH']}${resultItem.imgResult!.replaceFirst("Uploads", "")}",
                             width: 300,
                             height: 200,
                             fit: BoxFit.cover,

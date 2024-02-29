@@ -236,15 +236,15 @@ Future<List<StatNisitObject>> fetchStatForTeacher(String quesId) async {
   }
 
   //tmp-comment later
-  try {
-    final String jsonString =
-        await rootBundle.loadString("data/stat/tmpStatsQuestion.json");
-    final List<dynamic> jsonList = json.decode(jsonString);
-    return jsonList.map((data) => StatNisitObject.fromJson(data)).toList();
-  } catch (error) {
-    print('error fetching data: $error');
-    return [];
-  }
+  // try {
+  //   final String jsonString =
+  //       await rootBundle.loadString("data/stat/tmpStatsQuestion.json");
+  //   final List<dynamic> jsonList = json.decode(jsonString);
+  //   return jsonList.map((data) => StatNisitObject.fromJson(data)).toList();
+  // } catch (error) {
+  //   print('error fetching data: $error');
+  //   return [];
+  // }
 }
 
 /////get predefined/////

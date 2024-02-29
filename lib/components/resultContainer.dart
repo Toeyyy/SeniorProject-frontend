@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:frontend/models/examResultObject.dart';
 import 'package:frontend/models/examinationPreDefinedObject.dart';
 import 'package:frontend/constants.dart';
@@ -38,7 +39,7 @@ class ResultContainer extends StatelessWidget {
                   children: [
                     const SizedBox(height: 20),
                     Image.network(
-                      result.imgResult!.replaceFirst("Uploads", ""),
+                      "${dotenv.env['RESOURCE_PATH']}${result.imgResult!.replaceFirst("Uploads", "")}",
                       height: 200,
                       width: 300,
                       fit: BoxFit.fill,

@@ -61,10 +61,16 @@
     ],
     "treatments": [
       {
-        "id": "1",
-        "type" : "Medical",
-        "name" : "medical 1",
+        "id": "6",
+        "type": "Surgical",
+        "name": "surgical 1",
         "cost": 100
+      },
+      {
+        "id": "3",
+        "type": "Medical",
+        "name": "medical B 13",
+        "cost": 300
       }
     ],
     "diagnostics": [
@@ -91,7 +97,7 @@
         "lab": "lab 2",
         "area": "area 1",
         "type": "lab 2 type 2",
-        "name": "lab 2 type 1 exam 1",
+        "name": "lab 2 type 2 exam 1",
         "textResult" : "result 2",
         "round": 2
       }

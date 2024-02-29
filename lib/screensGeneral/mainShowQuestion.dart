@@ -28,10 +28,21 @@ class _MainShowQuestionState extends State<MainShowQuestion> {
 
   bool _isLoadData = false;
 
-  void refreshScreen() {
+  void refreshScreen() async {
     // print('refresh page');
     setState(() {
-      //refresh
+      _isLoadData = true;
+    });
+    await fetchPreDefinedProb();
+    await fetchPreDefinedDiag();
+    await fetchPreDefinedExam();
+    await fetchPreDefinedTag();
+    await fetchPreDefinedTreatment();
+    await fetchFullQuestionList();
+    setState(() {
+      teacherQuestionObjList = teacherQuestionList;
+      teacherDisplayList = teacherQuestionList;
+      _isLoadData = false;
     });
   }
 

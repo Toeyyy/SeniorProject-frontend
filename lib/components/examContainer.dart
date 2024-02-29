@@ -111,7 +111,7 @@ class _ExamContainerState extends State<ExamContainer> {
     Widget displayImage() {
       if (widget.imagePath != null && widget.imageResult == null) {
         return Image.network(
-          "${dotenv.env['RESOURCE_PATH']}${widget.imagePath!.replaceFirst("upload/", "")}",
+          "${dotenv.env['RESOURCE_PATH']}${widget.imagePath!.replaceFirst("Uploads", "")}",
           height: 200,
           width: 300,
           fit: BoxFit.cover,
@@ -412,7 +412,7 @@ class ShowExamContainer extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(left: 10),
                       child: Image.network(
-                        "${dotenv.env['RESOURCE_PATH']}${imagePath!.replaceFirst("upload/", "")}",
+                        "${dotenv.env['RESOURCE_PATH']}${imagePath!.replaceFirst("Uploads", "")}",
                         height: 200,
                         width: 300,
                         fit: BoxFit.cover,

@@ -21,7 +21,12 @@ class AppbarNisit extends StatelessWidget implements PreferredSizeWidget {
       actions: [
         TextButton(
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => MainShowQuestion(role: 0),
+              ),
+            );
           },
           child: const Text('โจทย์', style: KAppBarTextStyle),
         ),

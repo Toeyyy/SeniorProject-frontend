@@ -52,18 +52,25 @@ class _TreatmentContainerState extends State<TreatmentContainer> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              DropDownButtonInAddQ(
-                  selectedValue: widget.selectedTreatmentTopic,
-                  list: getTreatmentTopic(),
-                  hintText: "เลือกหัวข้อ Treatment",
-                  onChanged: (value) {
-                    setState(() {
-                      widget.selectedTreatmentTopic = value.toString();
-                      widget.selectedTreatmentDetail =
-                          filterTreatment(widget.selectedTreatmentTopic).first;
-                      widget.id = findID();
-                    });
-                  }),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  const Text('เลือกหัวข้อ Treatment'),
+                  DropDownButtonInAddQ(
+                      selectedValue: widget.selectedTreatmentTopic,
+                      list: getTreatmentTopic(),
+                      hintText: "เลือกหัวข้อ Treatment",
+                      onChanged: (value) {
+                        setState(() {
+                          widget.selectedTreatmentTopic = value.toString();
+                          widget.selectedTreatmentDetail =
+                              filterTreatment(widget.selectedTreatmentTopic)
+                                  .first;
+                          widget.id = findID();
+                        });
+                      }),
+                ],
+              ),
               IconButton(
                 onPressed: () {
                   treatmentProvider.deleteContainer(widget.key);
@@ -73,16 +80,22 @@ class _TreatmentContainerState extends State<TreatmentContainer> {
             ],
           ),
           const H20Sizedbox(),
-          DropDownButtonInAddQ(
-              selectedValue: widget.selectedTreatmentDetail,
-              list: filterTreatment(widget.selectedTreatmentTopic),
-              hintText: "เลือกรายละเอียด Treatment",
-              onChanged: (value) {
-                setState(() {
-                  widget.selectedTreatmentDetail = value.toString();
-                  widget.id = findID();
-                });
-              }),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              const Text('เลือกชื่อ Treatment'),
+              DropDownButtonInAddQ(
+                  selectedValue: widget.selectedTreatmentDetail,
+                  list: filterTreatment(widget.selectedTreatmentTopic),
+                  hintText: "เลือกรายละเอียด Treatment",
+                  onChanged: (value) {
+                    setState(() {
+                      widget.selectedTreatmentDetail = value.toString();
+                      widget.id = findID();
+                    });
+                  }),
+            ],
+          ),
         ],
       ),
     );
