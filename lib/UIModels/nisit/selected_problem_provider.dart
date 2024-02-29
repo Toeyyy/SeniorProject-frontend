@@ -17,17 +17,9 @@ class SelectedProblem extends ChangeNotifier {
     notifyListeners();
   }
 
-  // void assignAnswer(List<ProblemObject> ans1, List<ProblemObject> ans2) {
-  //   problemAnsList1 = ans1;
-  //   problemAnsList2 = ans2;
-  //   notifyListeners();
-  // }
-
   void assignAnswer(List<ProblemObject> ans, int round) {
     if (round == 1) {
       problemAnsList1 = ans;
-      // print('assign success');
-      // print(problemAnsList1.map((e) => e.name));
     } else {
       problemAnsList2 = ans;
     }
@@ -36,8 +28,14 @@ class SelectedProblem extends ChangeNotifier {
 
   void assignProblem(List<ProblemObject> list, int round) {
     if (round == 1) {
+      list = list.map((e) {
+        return ProblemObject(id: e.id, name: e.name, round: 1);
+      }).toList();
       problemList1 = list;
     } else {
+      list = list.map((e) {
+        return ProblemObject(id: e.id, name: e.name, round: 2);
+      }).toList();
       problemList2 = list;
     }
     notifyListeners();
@@ -56,13 +54,10 @@ class SelectedProblem extends ChangeNotifier {
     if (round == 1) {
       List<String> nameAnsList1 = problemAnsList1.map((e) => e.name).toList();
       if (problemList1.length != problemAnsList1.length) {
-        // print('case 1');
         return false;
       }
       for (var item in problemList1) {
-        // print(item.name);
         if (!nameAnsList1.contains(item.name)) {
-          // print('case 2');
           return false;
         }
       }

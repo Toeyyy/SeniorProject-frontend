@@ -251,7 +251,6 @@ class _RightPart_ProbListState extends State<RightPart_ProbList> {
                     if (!problemProvider.checkProbAns(widget.round)) {
                       problemProvider.reduceHeart(widget.round);
                       if (heart > 1) {
-                        // print('heart = $heart');
                         showModal(context);
                       } else {
                         Navigator.push(

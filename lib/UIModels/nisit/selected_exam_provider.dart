@@ -12,8 +12,10 @@ class SelectedExam extends ChangeNotifier {
 
   void addNewExam(ExamPreDefinedObject newItem, int round) {
     if (round == 1) {
+      newItem.round = 1;
       examList1.add(newItem);
     } else {
+      newItem.round = 2;
       examList2.add(newItem);
     }
     notifyListeners();

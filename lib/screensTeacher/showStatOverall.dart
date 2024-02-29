@@ -22,7 +22,7 @@ class _ShowStatOverallState extends State<ShowStatOverall> {
   late double averageCostExam2 = 0;
   late double averageCostTreatment = 0;
   late FullQuestionObject? questionObj;
-  late List<StatNisitObject> statList;
+  late List<StatNisitObject> statList = [];
   late Map<String, int> diagList = {};
   late Map<String, int> treatmentList = {};
   late Map<String, int> prob1List = {};
@@ -136,105 +136,120 @@ class _ShowStatOverallState extends State<ShowStatOverall> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const AppbarTeacher(),
-      body: SingleChildScrollView(
-        child: Center(
-          child: Container(
-            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
-            width: MediaQuery.of(context).size.width * 0.7,
-            child: (!_loadData)
-                ? Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text('สถิตินิสิต', style: kSubHeaderTextStyle),
-                          Row(
-                            children: [
-                              ElevatedButton(
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          ShowStatDetail(statList: statList),
-                                    ),
-                                  );
-                                },
-                                child: const Text('สถิตินิสิตรายบุคคล'),
+      body: Center(
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
+          width: MediaQuery.of(context).size.width * 0.9,
+          child: (!_loadData)
+              ? Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text('สถิตินิสิต', style: kSubHeaderTextStyle),
+                        Row(
+                          children: [
+                            ElevatedButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        ShowStatDetail(statList: statList),
+                                  ),
+                                );
+                              },
+                              child: const Text('สถิตินิสิตรายบุคคล'),
+                            ),
+                            const SizedBox(width: 15),
+                            ElevatedButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => ShowEditHistory(
+                                        logList: questionObj!.logs),
+                                  ),
+                                );
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xFF3DABF5),
                               ),
-                              const SizedBox(width: 15),
-                              ElevatedButton(
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => ShowEditHistory(
-                                          logList: questionObj!.logs),
-                                    ),
-                                  );
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: const Color(0xFF3DABF5),
-                                ),
-                                child: const Text('ประวัติการแก้ไขโจทย์'),
-                              )
-                            ],
-                          ),
-                        ],
-                      ),
-                      const DividerWithSpace(),
-                      /////prob/////
-                      StatBarGraph(
-                          statList: prob1List,
-                          title:
-                              'กราฟแสดงการเลือก Problem List ครั้งที่ 1 ของนิสิตทั้งหมด'),
-                      StatBarGraph(
-                          statList: prob2List,
-                          title:
-                              'กราฟแสดงการเลือก Problem List ครั้งที่ 2 ของนิสิตทั้งหมด'),
-                      /////exam/////
-                      StatBarGraph(
-                          statList: exam1List,
-                          title:
-                              'กราฟแสดงการเลือก Examination ครั้งที่ 1 ของนิสิตทั้งหมด'),
-                      StatBarGraph(
-                          statList: exam2List,
-                          title:
-                              'กราฟแสดงการเลือก Examination ครั้งที่ 2 ของนิสิตทั้งหมด'),
-                      /////diag/////
-                      StatBarGraph(
-                          statList: diagList,
-                          title: 'กราฟแสดงการเลือก Diagnosis ของนิสิตทั้งหมด'),
-                      /////treatment/////
-                      StatBarGraph(
-                          statList: treatmentList,
-                          title: 'กราฟแสดงการเลือก Treatment ของนิสิตทั้งหมด'),
-                      ListTile(
-                        title: Text(
-                            'ราคาที่ใช้ในส่วน Examination ครั้งที่ 1 โดยเฉลี่ยของนิสิตทั้งหมด: ${averageCostExam1.toInt()} บาท',
-                            style: kNormalTextStyle),
-                        leading: const Icon(Icons.circle, size: 15),
-                      ),
-                      ListTile(
-                        title: Text(
-                            'ราคาที่ใช้ในส่วน Examination ครั้งที่ 2 โดยเฉลี่ยของนิสิตทั้งหมด: ${averageCostExam2.toInt()} บาท',
-                            style: kNormalTextStyle),
-                        leading: const Icon(Icons.circle, size: 15),
-                      ),
-                      ListTile(
-                        title: Text(
-                            'ราคาที่ใช้ในส่วน Treatment โดยเฉลี่ยของนิสิตทั้งหมด: ${averageCostTreatment.toInt()} บาท',
-                            style: kNormalTextStyle),
-                        leading: const Icon(Icons.circle, size: 15),
-                      ),
-                      Center(child: MyBackButton(myContext: context)),
-                    ],
-                  )
-                : const SizedBox(
-                    width: 10,
-                    child: Center(child: CircularProgressIndicator())),
-          ),
+                              child: const Text('ประวัติการแก้ไขโจทย์'),
+                            )
+                          ],
+                        ),
+                      ],
+                    ),
+                    statList.isNotEmpty
+                        ? Expanded(
+                            child: SingleChildScrollView(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const DividerWithSpace(),
+                                  /////prob/////
+                                  StatBarGraph(
+                                      statList: prob1List,
+                                      title:
+                                          'กราฟแสดงการเลือก Problem List ครั้งที่ 1 ของนิสิตทั้งหมด'),
+                                  StatBarGraph(
+                                      statList: prob2List,
+                                      title:
+                                          'กราฟแสดงการเลือก Problem List ครั้งที่ 2 ของนิสิตทั้งหมด'),
+                                  /////exam/////
+                                  StatBarGraph(
+                                      statList: exam1List,
+                                      title:
+                                          'กราฟแสดงการเลือก Examination ครั้งที่ 1 ของนิสิตทั้งหมด'),
+                                  StatBarGraph(
+                                      statList: exam2List,
+                                      title:
+                                          'กราฟแสดงการเลือก Examination ครั้งที่ 2 ของนิสิตทั้งหมด'),
+                                  /////diag/////
+                                  StatBarGraph(
+                                      statList: diagList,
+                                      title:
+                                          'กราฟแสดงการเลือก Diagnosis ของนิสิตทั้งหมด'),
+                                  /////treatment/////
+                                  StatBarGraph(
+                                      statList: treatmentList,
+                                      title:
+                                          'กราฟแสดงการเลือก Treatment ของนิสิตทั้งหมด'),
+                                  ListTile(
+                                    title: Text(
+                                        'ราคาที่ใช้ในส่วน Examination ครั้งที่ 1 โดยเฉลี่ยของนิสิตทั้งหมด: ${averageCostExam1.toInt()} บาท',
+                                        style: kNormalTextStyle),
+                                    leading: const Icon(Icons.circle, size: 15),
+                                  ),
+                                  ListTile(
+                                    title: Text(
+                                        'ราคาที่ใช้ในส่วน Examination ครั้งที่ 2 โดยเฉลี่ยของนิสิตทั้งหมด: ${averageCostExam2.toInt()} บาท',
+                                        style: kNormalTextStyle),
+                                    leading: const Icon(Icons.circle, size: 15),
+                                  ),
+                                  ListTile(
+                                    title: Text(
+                                        'ราคาที่ใช้ในส่วน Treatment โดยเฉลี่ยของนิสิตทั้งหมด: ${averageCostTreatment.toInt()} บาท',
+                                        style: kNormalTextStyle),
+                                    leading: const Icon(Icons.circle, size: 15),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          )
+                        : const SizedBox(),
+                    Column(
+                      children: [
+                        const SizedBox(height: 20),
+                        Center(child: MyBackButton(myContext: context)),
+                      ],
+                    ),
+                  ],
+                )
+              : const SizedBox(
+                  width: 10, child: Center(child: CircularProgressIndicator())),
         ),
       ),
     );
