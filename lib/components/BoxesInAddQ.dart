@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/constants.dart';
@@ -198,13 +200,15 @@ class ProbListMultiSelectDropDown extends StatelessWidget {
 class DiagnosisMultiSelectDropDown extends StatelessWidget {
   List<DiagnosisObject> selectedList;
   final List<DiagnosisObject> displayList;
+  String type;
   String hintText;
-  Function(List<DiagnosisObject>) updateListCallback;
+  Function(List<DiagnosisObject>, String) updateListCallback;
 
   DiagnosisMultiSelectDropDown(
       {super.key,
       required this.selectedList,
       required this.displayList,
+      required this.type,
       required this.hintText,
       required this.updateListCallback});
 
@@ -216,10 +220,16 @@ class DiagnosisMultiSelectDropDown extends StatelessWidget {
         chipConfig: const ChipConfig(
             backgroundColor: Color(0xFF42C2FF), wrapType: WrapType.wrap),
         onOptionSelected: (List<ValueItem> selectedOptions) {
-          updateListCallback(selectedOptions.map((item) {
-            return DiagnosisObject(id: item.value, name: item.label);
-          }).toList());
+          updateListCallback(
+              selectedOptions.map((item) {
+                return DiagnosisObject(
+                    id: item.value, type: type, name: item.label);
+              }).toList(),
+              type);
         },
+        selectedOptions: selectedList.map((item) {
+          return ValueItem(label: item.name, value: item.id);
+        }).toList(),
         options: displayList.map<ValueItem<String>>((DiagnosisObject item) {
           return ValueItem(label: item.name, value: item.id);
         }).toList());
@@ -229,15 +239,13 @@ class DiagnosisMultiSelectDropDown extends StatelessWidget {
 class ExamsButtonAndContainer extends StatelessWidget {
   List<ExamContainer> examContainers;
   ExamContainerProvider examListProvider;
-  int round;
 
   TextEditingController examController = TextEditingController();
 
   ExamsButtonAndContainer(
       {super.key,
       required this.examContainers,
-      required this.examListProvider,
-      required this.round});
+      required this.examListProvider});
 
   Map<String, List<ExamPreDefinedObject>> groupedByLab =
       groupBy(examListPreDefined, (e) => e.lab);
@@ -248,8 +256,8 @@ class ExamsButtonAndContainer extends StatelessWidget {
       children: [
         Row(
           children: [
-            Text(
-              'ผลการส่งตรวจครั้งที่ $round',
+            const Text(
+              'ผลการส่งตรวจ',
               style: kSubHeaderTextStyle,
             ),
             const SizedBox(width: 20),
@@ -260,7 +268,6 @@ class ExamsButtonAndContainer extends StatelessWidget {
                     ExamContainer(
                         id: groupedByLab.values.first.first.id,
                         key: ObjectKey(currentNub),
-                        round: round,
                         selectedDepartment: groupedByLab.keys.first,
                         selectedExamTopic: groupedByLab.values.first.first.type,
                         selectedExamName: groupedByLab.values.first.first.name,
@@ -429,9 +436,20 @@ class TitleAndExams extends StatelessWidget {
                       ),
                     ),
                   ),
+                  const Padding(
+                    padding: EdgeInsets.only(left: 50, top: 5),
+                    child: Text(
+                      'ผลการตรวจ',
+                      style: TextStyle(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 15,
+                          decoration: TextDecoration.underline),
+                    ),
+                  ),
+                  const SizedBox(height: 15),
                   resultItem.imgResult != null
                       ? Padding(
-                          padding: const EdgeInsets.only(left: 35),
+                          padding: const EdgeInsets.only(left: 50),
                           child: Image.network(
                             "${dotenv.env['RESOURCE_PATH']}${resultItem.imgResult!.replaceFirst("Uploads", "")}",
                             width: 300,
@@ -439,6 +457,17 @@ class TitleAndExams extends StatelessWidget {
                             fit: BoxFit.cover,
                             alignment: Alignment.topLeft,
                           ),
+                        )
+                      : const SizedBox(),
+                  resultItem.textResult != null
+                      ? Column(
+                          children: [
+                            const SizedBox(height: 15),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 50),
+                              child: Text(resultItem.textResult!),
+                            ),
+                          ],
                         )
                       : const SizedBox(),
                 ],
@@ -503,8 +532,7 @@ void probDiagTreatmentModal(
       });
 }
 
-void examModal(
-    BuildContext context, String round, List<ExamPreDefinedObject> examList) {
+void examModal(BuildContext context, List<ExamPreDefinedObject> examList) {
   showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -523,7 +551,7 @@ void examModal(
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('Examination ครั้งที่ $round',
+                    const Text('Examination',
                         style: kSubHeaderTextStyleInLeftPart),
                     IconButton(
                       onPressed: () {

@@ -75,12 +75,14 @@
     ],
     "diagnostics": [
       {
-        "id": "1",
-        "name": "Diag 1"
+        "id": "12",
+        "type": "tentative",
+        "name":"tentative Diag 12"
       },
       {
-        "id": "2",
-        "name": "Diag 2"
+        "id": "4",
+        "type": "differential",
+        "name":"diff Diag 4"
       }
     ],
     "examinations" : [
@@ -89,8 +91,7 @@
         "lab": "lab 1",
         "type": "lab 1 type 2",
         "name": "lab 1 type 2 exam 2",
-        "textResult" : "result 1",
-        "round": 1
+        "textResult" : "result 1"
       },
       {
         "id": "7",
@@ -98,11 +99,11 @@
         "area": "area 1",
         "type": "lab 2 type 2",
         "name": "lab 2 type 2 exam 1",
-        "textResult" : "result 2",
-        "round": 2
+        "textResult" : "result 2"
       }
     ],
     "modified": true,
+    "status": true,
     "logs": [
       {
         "id": "9bc52d59-e5c9-42ae-95f1-71cce6c6113c",

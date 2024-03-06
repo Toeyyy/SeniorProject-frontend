@@ -15,8 +15,8 @@ class ReturnPoint extends StatelessWidget {
 
   late Map<String, List<ProblemObject>> splitProblems =
       groupBy(stat!.problems, (e) => e.round.toString());
-  late Map<String, List<ExamPreDefinedObject>> splitExams =
-      groupBy(stat!.examinations, (e) => e.round.toString());
+  // late Map<String, List<ExamPreDefinedObject>> splitExams =
+  //     groupBy(stat!.examinations, (e) => e.round.toString());
 
   @override
   Widget build(BuildContext context) {
@@ -72,15 +72,15 @@ class ReturnPoint extends StatelessWidget {
                           },
                         ),
                         Text(
-                          'Examination ครั้งที่ 1, คะแนนที่ได้: ${stat!.examination1Score} คะแนน',
+                          'Examination, คะแนนที่ได้: ${stat!.examinationScore} คะแนน',
                           style: kSubHeaderTextStyleInLeftPart,
                         ),
                         const SizedBox(height: 15),
                         ListView.builder(
                             shrinkWrap: true,
-                            itemCount: splitExams['1']!.length,
+                            itemCount: stat!.examinations.length,
                             itemBuilder: (context, index) {
-                              var item = splitExams['1']![index];
+                              var item = stat!.examinations[index];
                               return ShowExamContainer(
                                   lab: item.lab,
                                   type: item.type,
@@ -107,26 +107,10 @@ class ReturnPoint extends StatelessWidget {
                             );
                           },
                         ),
-                        Text(
-                          'Examination ครั้งที่ 2, คะแนนที่ได้: ${stat!.examination2Score} คะแนน',
-                          style: kSubHeaderTextStyleInLeftPart,
-                        ),
-                        const SizedBox(height: 15),
-                        ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: splitExams['2']!.length,
-                            itemBuilder: (context, index) {
-                              var item = splitExams['2']![index];
-                              return ShowExamContainer(
-                                  lab: item.lab,
-                                  type: item.type,
-                                  area: item.area,
-                                  name: item.name);
-                            }),
                         const DividerWithSpace(),
                         /////diag/////
                         Text(
-                          'Diagnosis, คะแนนที่ได้: ${stat!.diagnosticScore} คะแนน',
+                          'Diagnosis, คะแนนที่ได้: ${stat!.diffDiagScore} คะแนน',
                           style: kSubHeaderTextStyleInLeftPart,
                         ),
                         const SizedBox(height: 10),
@@ -165,7 +149,7 @@ class ReturnPoint extends StatelessWidget {
                         ),
                         const DividerWithSpace(),
                         Text(
-                          'คะแนนรวม: ${stat!.problem1Score + stat!.problem2Score + stat!.examination1Score + stat!.examination2Score + stat!.diagnosticScore + stat!.treatmentScore} คะแนน',
+                          'คะแนนรวม: ${stat!.problem1Score + stat!.problem2Score + stat!.examinationScore + stat!.diffDiagScore + stat!.treatmentScore} คะแนน',
                           style: kSubHeaderTextStyleInLeftPart,
                         ),
                         Text(

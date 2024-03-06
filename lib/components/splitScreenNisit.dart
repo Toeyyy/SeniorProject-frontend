@@ -42,6 +42,8 @@ class LeftPartContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    List<String> generalList = questionObj.generalInfo.split(',');
+
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(20),
@@ -109,14 +111,17 @@ class LeftPartContent extends StatelessWidget {
             ),
             ListView.builder(
               shrinkWrap: true,
-              itemCount: questionObj.generalInfo.split(',').length,
+              itemCount: generalList.length,
               itemBuilder: (context, index) {
+                if (generalList[index].trim() == '') {
+                  return null;
+                }
                 return ListTile(
                   leading: const Icon(
                     Icons.circle,
                     size: 15,
                   ),
-                  title: Text(questionObj.generalInfo.split(',')[index].trim()),
+                  title: Text(generalList[index].trim()),
                 );
               },
             ),

@@ -10,6 +10,7 @@ import 'package:frontend/models/tagObject.dart';
 import 'package:frontend/models/fullQuestionObject.dart';
 import 'package:frontend/components/functions.dart';
 import 'package:frontend/AllDataFile.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 class MainShowQuestion extends StatefulWidget {
   int role;
@@ -173,39 +174,31 @@ class _MainShowQuestionState extends State<MainShowQuestion> {
                   _isLoadData == false
                       ? widget.role == 0
                           ? displayList.isNotEmpty
-                              ? GridView.builder(
+                              ? MasonryGridView.count(
                                   shrinkWrap: true,
-                                  gridDelegate:
-                                      const SliverGridDelegateWithFixedCrossAxisCount(
-                                          crossAxisCount: 2,
-                                          mainAxisSpacing: 8,
-                                          crossAxisSpacing: 8),
+                                  crossAxisCount: 2,
+                                  mainAxisSpacing: 2,
+                                  crossAxisSpacing: 2,
                                   itemCount: displayList.length,
                                   itemBuilder: (context, index) {
                                     return QuestionCard(
-                                      questionObj: displayList[index],
-                                      role: widget.role,
-                                    );
-                                  },
-                                )
+                                        questionObj: displayList[index],
+                                        role: widget.role);
+                                  })
                               : const SizedBox()
                           : teacherDisplayList.isNotEmpty
-                              ? GridView.builder(
+                              ? MasonryGridView.count(
                                   shrinkWrap: true,
-                                  gridDelegate:
-                                      const SliverGridDelegateWithFixedCrossAxisCount(
-                                          crossAxisCount: 2,
-                                          mainAxisSpacing: 8,
-                                          crossAxisSpacing: 8),
+                                  crossAxisCount: 2,
+                                  mainAxisSpacing: 2,
+                                  crossAxisSpacing: 2,
                                   itemCount: teacherDisplayList.length,
                                   itemBuilder: (context, index) {
                                     return FullQuestionCard(
-                                      questionObj: teacherDisplayList[index],
-                                      role: widget.role,
-                                      refreshCallBack: refreshScreen,
-                                    );
-                                  },
-                                )
+                                        questionObj: teacherDisplayList[index],
+                                        role: widget.role,
+                                        refreshCallBack: refreshScreen);
+                                  })
                               : const SizedBox()
                       : const Center(child: CircularProgressIndicator()),
                 ],

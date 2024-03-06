@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/components/appbar.dart';
 import 'package:frontend/components/examContainer.dart';
 import 'package:frontend/constants.dart';
+import 'package:frontend/models/diagnosisObject.dart';
 import 'package:frontend/models/problemListObject.dart';
 import 'package:frontend/screensTeacher/editQuestion.dart';
 import 'package:frontend/components/tag_box.dart';
@@ -30,12 +31,11 @@ class _ShowAndEditQuestionState extends State<ShowAndEditQuestion> {
   bool initialized = false;
 
   late FullQuestionObject? questionObj = null;
-  late Map<String, List<ExaminationObject>> splitExams = {};
   late Map<String, List<ProblemObject>> splitProblems = {};
+  late Map<String, List<DiagnosisObject>> splitDiagnosis = {};
 
-  List<ShowExamContainer>? accessExamList(String round) {
-    List<ExaminationObject>? list = splitExams[round];
-    return list?.map((item) {
+  List<ShowExamContainer>? accessExamList() {
+    return questionObj!.examinations.map((item) {
       return ShowExamContainer(
           lab: item.type,
           type: item.type,
@@ -53,10 +53,9 @@ class _ShowAndEditQuestionState extends State<ShowAndEditQuestion> {
       setState(() {
         questionObj = widget.questionObj;
         if (questionObj != null) {
-          splitExams =
-              groupBy(questionObj!.examinations, (obj) => obj.round.toString());
           splitProblems =
               groupBy(questionObj!.problems, (e) => e.round.toString());
+          splitDiagnosis = groupBy(questionObj!.diagnostics, (e) => e.type);
         }
       });
     });
@@ -268,18 +267,26 @@ class _ShowAndEditQuestionState extends State<ShowAndEditQuestion> {
                                   .map((item) => item.name)
                                   .toList()
                               : []),
-                      const Text('ผลการส่งตรวจครั้งที่ 1',
+                      const H20Sizedbox(),
+                      const Text('Differential Diagnosis',
                           style: kSubHeaderTextStyle),
+                      DottedListView(
+                          showList: splitDiagnosis['differential']!
+                                  .map((item) => item.name)
+                                  .toList() ??
+                              []),
+                      const H20Sizedbox(),
+                      const Text('ผลการส่งตรวจ', style: kSubHeaderTextStyle),
                       const H20Sizedbox(),
                       ListView.builder(
                         shrinkWrap: true,
-                        itemCount: accessExamList('1')?.length,
+                        itemCount: accessExamList()?.length,
                         itemBuilder: (context, index) {
-                          return accessExamList('1')?[index];
+                          return accessExamList()?[index];
                         },
                       ),
-                      const DividerWithSpace(),
-                      //prob&exam2
+                      const H20Sizedbox(),
+                      //prob2
                       const Text('Problem List ครั้งที่ 2',
                           style: kSubHeaderTextStyle),
                       DottedListView(
@@ -288,24 +295,15 @@ class _ShowAndEditQuestionState extends State<ShowAndEditQuestion> {
                                   .map((item) => item.name)
                                   .toList()
                               : []),
-                      const Text('ผลการส่งตรวจครั้งที่ 2',
-                          style: kSubHeaderTextStyle),
                       const H20Sizedbox(),
-                      ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: accessExamList('2')?.length,
-                        itemBuilder: (context, index) {
-                          return accessExamList('2')![index];
-                        },
-                      ),
-                      const DividerWithSpace(),
-                      const Text('Diagnosis List', style: kSubHeaderTextStyle),
+                      const Text('Definitive/Tentative Diagnosis',
+                          style: kSubHeaderTextStyle),
                       DottedListView(
-                          showList: questionObj?.diagnostics
+                          showList: splitDiagnosis['tentative']!
                                   .map((item) => item.name)
                                   .toList() ??
                               []),
-                      const DividerWithSpace(),
+                      const H20Sizedbox(),
                       const Text('Treatment', style: kSubHeaderTextStyle),
                       ListView.builder(
                           shrinkWrap: true,

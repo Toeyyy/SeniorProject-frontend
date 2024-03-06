@@ -144,17 +144,15 @@ class FullQuestionCard extends StatelessWidget {
                   Text(
                       'ชนิดสัตว์: ${questionObj.signalment.species}, พันธุ์: ${questionObj.signalment.breed}',
                       style: kNormalTextStyle),
-                  const SizedBox(height: 5),
-                  Container(
-                    child: Wrap(
-                      spacing: 2,
-                      runSpacing: 2,
-                      children: questionObj.tags
-                          .map(
-                            (e) => TagBox(text: e.name),
-                          )
-                          .toList(),
-                    ),
+                  const SizedBox(height: 10),
+                  Wrap(
+                    spacing: 2,
+                    runSpacing: 2,
+                    children: questionObj.tags
+                        .map(
+                          (e) => TagBox(text: e.name),
+                        )
+                        .toList(),
                   ),
                 ],
               ),

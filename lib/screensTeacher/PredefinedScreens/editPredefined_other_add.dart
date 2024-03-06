@@ -35,7 +35,8 @@ class _EditPreDefinedOtherAddState extends State<EditPreDefinedOtherAdd> {
           headers: {"Content-Type": "application/json"},
           body: jsonEncode(data),
         );
-      } else if (title == 'Diagnosis List') {
+      } else if (title == 'Differential Diagnosis' ||
+          title == 'Tentative/Definitive Diagnosis') {
         final http.Response response = await http.post(
           Uri.parse("${dotenv.env['API_PATH']}/diagnostic"),
           headers: {"Content-Type": "application/json"},
@@ -89,9 +90,19 @@ class _EditPreDefinedOtherAddState extends State<EditPreDefinedOtherAdd> {
                                 id: 'X', name: textFieldController.text);
                             fullList.add(newItem);
                             addedList.add(newItem);
-                          } else if (widget.title == 'Diagnosis List') {
+                          } else if (widget.title ==
+                              'Tentative/Definitive Diagnosis') {
                             DiagnosisObject newItem = DiagnosisObject(
-                                id: 'X', name: textFieldController.text);
+                                id: 'X',
+                                type: "tentative",
+                                name: textFieldController.text);
+                            fullList.add(newItem);
+                            addedList.add(newItem);
+                          } else if (widget.title == 'Differential Diagnosis') {
+                            DiagnosisObject newItem = DiagnosisObject(
+                                id: 'X',
+                                type: "differential",
+                                name: textFieldController.text);
                             fullList.add(newItem);
                             addedList.add(newItem);
                           } else if (widget.title == 'Tag List') {

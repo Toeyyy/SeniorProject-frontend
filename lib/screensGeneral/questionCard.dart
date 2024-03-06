@@ -136,39 +136,35 @@ class QuestionCard extends StatelessWidget {
       onTap: () {
         _showModal(context);
       },
-      child: Column(
-        children: [
-          Card(
-            elevation: 5,
-            color: const Color(0xFFA0E9FF),
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    'รหัสโจทย์: ${questionObj.name}',
-                    style: kSubHeaderTextStyle,
-                  ),
-                  Text(
-                      'ชนิดสัตว์: ${questionObj.signalment.species}, พันธุ์: ${questionObj.signalment.breed}',
-                      style: kNormalTextStyle),
-                  const SizedBox(height: 5),
-                  Wrap(
-                    spacing: 2,
-                    runSpacing: 2,
-                    children: questionObj.tags
-                        .map(
-                          (e) => TagBox(text: e.name),
-                        )
-                        .toList(),
-                  ),
-                ],
+      child: Card(
+        elevation: 5,
+        color: const Color(0xFFA0E9FF),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'รหัสโจทย์: ${questionObj.name}',
+                style: kSubHeaderTextStyle,
               ),
-            ),
+              Text(
+                  'ชนิดสัตว์: ${questionObj.signalment.species}, พันธุ์: ${questionObj.signalment.breed}',
+                  style: kNormalTextStyle),
+              const SizedBox(height: 10),
+              Wrap(
+                spacing: 2,
+                runSpacing: 2,
+                children: questionObj.tags
+                    .map(
+                      (e) => TagBox(text: e.name),
+                    )
+                    .toList(),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

@@ -12,7 +12,6 @@ import 'package:frontend/AllDataFile.dart';
 
 class ExamContainer extends StatefulWidget {
   String id;
-  int round;
   Key key;
   String selectedExamTopic;
   String selectedDepartment;
@@ -27,7 +26,6 @@ class ExamContainer extends StatefulWidget {
   ExamContainer(
       {required this.id,
       required this.key,
-      required this.round,
       required this.selectedDepartment,
       required this.selectedExamTopic,
       required this.selectedExamName,
@@ -47,9 +45,7 @@ class _ExamContainerState extends State<ExamContainer> {
   Widget build(BuildContext context) {
     ExamContainerProvider examProvider =
         Provider.of<ExamContainerProvider>(context);
-    List<ExamContainer> examList = widget.round == 1
-        ? examProvider.examContainers1
-        : examProvider.examContainers2;
+    List<ExamContainer> examList = examProvider.examContainers;
     Map<String, List<ExamPreDefinedObject>> groupedByLab =
         groupBy(examListPreDefined, (e) => e.lab);
 
@@ -124,7 +120,7 @@ class _ExamContainerState extends State<ExamContainer> {
           fit: BoxFit.cover,
         );
       } else {
-        return const Text('No Image Selected');
+        return const SizedBox();
       }
     }
 
@@ -420,7 +416,7 @@ class ShowExamContainer extends StatelessWidget {
                     ),
                   ],
                 )
-              : Container(),
+              : const SizedBox(),
         ],
       ),
     );

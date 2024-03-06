@@ -1,6 +1,6 @@
 class ExamResultObject {
   String id;
-  String textResult;
+  String? textResult;
   String? imgResult;
 
   ExamResultObject(
@@ -9,7 +9,7 @@ class ExamResultObject {
   factory ExamResultObject.fromJson(Map<String, dynamic> json) {
     return ExamResultObject(
         id: json['id'] ?? "",
-        textResult: json['textResult'] ?? "",
+        textResult: json['textResult'],
         imgResult: json['imgResult']);
   }
 }

@@ -45,20 +45,15 @@ class TreatmentTotal extends StatelessWidget {
                       .map((e) => e.name)
                       .toList()),
               TitleAndExams(
-                title: 'Examination ครั้งที่ 1',
-                showList: examProvider.examList1,
-                resultList: examProvider.resultList1,
+                title: 'Examination',
+                showList: examProvider.examList,
+                resultList: examProvider.resultList,
               ),
               TitleAndDottedListView(
                   title: 'Problem List ครั้งที่ 2',
                   showList: problemProvider.problemAnsList2
                       .map((e) => e.name)
                       .toList()),
-              TitleAndExams(
-                title: 'Examination ครั้งที่ 2',
-                showList: examProvider.examList2,
-                resultList: examProvider.resultList2,
-              ),
               TitleAndDottedListView(
                   title: 'Diagnosis',
                   showList: diagProvider.diagList.map((e) => e.name).toList()),
@@ -88,10 +83,10 @@ class _RightPart_TreatmentTotalState extends State<RightPart_TreatmentTotal> {
   bool _isSendingData = false;
 
   Future getData(String questionID) async {
-    List<StatQuestionObject> loadedData = await fetchStatQuestion(questionID);
+    StatQuestionObject loadedData = await fetchStatQuestion(questionID);
 
     setState(() {
-      stat = loadedData.first;
+      stat = loadedData;
     });
   }
 
@@ -117,13 +112,9 @@ class _RightPart_TreatmentTotalState extends State<RightPart_TreatmentTotal> {
       probList1.addAll(probList2);
 
       //exams
-      var exam1 = examProvider.examList1.map((item) {
-        return {"id": item.id, "round": item.round};
+      var exam = examProvider.examList.map((item) {
+        return {"id": item.id};
       }).toList();
-      var exam2 = examProvider.examList2.map((item) {
-        return {"id": item.id, "round": item.round};
-      }).toList();
-      exam1.addAll(exam2);
 
       //treatment
       var treatment = treatmentProvider.treatmentList.map((item) {
@@ -137,7 +128,7 @@ class _RightPart_TreatmentTotalState extends State<RightPart_TreatmentTotal> {
 
       Map<String, dynamic> data = {
         "problems": probList1,
-        "examinations": exam1,
+        "examinations": exam,
         "treatments": treatment,
         "diagnostics": diag,
         "heartProblem1": problemProvider.heart1,

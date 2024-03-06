@@ -4,23 +4,24 @@
     "lab": "lab 1",
     "type": "lab 1 type 1",
     "name": "lab 1 type 1 exam 1",
-    "textDefault": "default",
+    "textDefault": "default1",
+    "imgPath": "https://www.science.org/do/10.1126/science.aba2340/full/dogs_1280p_0-1646693398990.jpg",
     "cost": 100
   },
   {
-  "id": "2",
-  "lab": "lab 1",
-  "type": "lab 1 type 1",
-  "name": "lab 1 type 1 exam 2",
-  "textDefault": "default",
-  "cost": 100
+    "id": "2",
+    "lab": "lab 1",
+    "type": "lab 1 type 1",
+    "name": "lab 1 type 1 exam 2",
+    "textDefault": "default2",
+    "cost": 100
   },
   {
     "id": "3",
     "lab": "lab 1",
     "type": "lab 1 type 1",
     "name": "lab 1 type 1 exam 3",
-    "textDefault": "default",
+    "textDefault": "default3",
     "cost": 100
   },
   {

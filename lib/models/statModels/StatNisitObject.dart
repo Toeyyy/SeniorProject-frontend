@@ -12,10 +12,10 @@ class StatNisitObject {
   List<DiagnosisObject> diagnostics;
   int problem1Score;
   int problem2Score;
-  int examination1Score;
-  int examination2Score;
+  int examinationScore;
   int treatmentScore;
-  int diagnosticScore;
+  int diffDiagScore;
+  int tenDiagScore;
 
   StatNisitObject(
       {required this.userId,
@@ -26,10 +26,10 @@ class StatNisitObject {
       required this.diagnostics,
       required this.problem1Score,
       required this.problem2Score,
-      required this.examination1Score,
-      required this.examination2Score,
+      required this.examinationScore,
       required this.treatmentScore,
-      required this.diagnosticScore});
+      required this.diffDiagScore,
+      required this.tenDiagScore});
 
   factory StatNisitObject.fromJson(Map<String, dynamic> json) {
     return StatNisitObject(
@@ -53,10 +53,10 @@ class StatNisitObject {
           [],
       problem1Score: json['problem1_Score'] ?? 0,
       problem2Score: json['problem2_Score'] ?? 0,
-      examination1Score: json['examination1_Score'] ?? 0,
-      examination2Score: json['examination2_Score'] ?? 0,
+      examinationScore: json['examination_Score'] ?? 0,
       treatmentScore: json['treatment_Score'] ?? 0,
-      diagnosticScore: json['diagnostic_Score'] ?? 0,
+      diffDiagScore: json['diffDiag_Score'] ?? 0,
+      tenDiagScore: json['tenDiag_Score'] ?? 0,
     );
   }
 }

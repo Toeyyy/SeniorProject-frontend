@@ -14,7 +14,7 @@ class EditPredefinedTreatmentDetail extends StatefulWidget {
   String selectedType;
 
   EditPredefinedTreatmentDetail(
-      {required this.groupedByType, required this.selectedType});
+      {super.key, required this.groupedByType, required this.selectedType});
 
   @override
   State<EditPredefinedTreatmentDetail> createState() =>
@@ -44,7 +44,7 @@ class _EditPredefinedTreatmentDetailState
     if (selectedTileIndex == -1) {
       String query = searchController.text.toLowerCase();
       return listForSearch
-          .where((item) => item.name.toLowerCase().startsWith(query))
+          .where((item) => item.name.toLowerCase().contains(query))
           .toList();
     } else {
       return listForSearch;
@@ -192,6 +192,7 @@ class _EditPredefinedTreatmentDetailState
                                                 a.name.compareTo(b.name));
                                             displayList = fullList;
                                             textFieldController.clear();
+                                            costTextFieldController.clear();
                                             selectedTileIndex = -1;
                                           });
                                         },

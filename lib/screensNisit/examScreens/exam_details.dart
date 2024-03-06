@@ -61,8 +61,8 @@ class ExamDetail_Type extends StatelessWidget {
                             .toList()),
                     TitleAndExams(
                       title: 'Examination ครั้งที่ 1',
-                      showList: examProvider.examList1,
-                      resultList: examProvider.resultList1,
+                      showList: examProvider.examList,
+                      resultList: examProvider.resultList,
                     ),
                     TitleAndDottedListView(
                         title: 'Problem List ครั้งที่ 2',
@@ -186,8 +186,8 @@ class _ExamDetail_NameState extends State<ExamDetail_Name> {
                             .toList()),
                     TitleAndExams(
                       title: 'Examination ครั้งที่ 1',
-                      showList: examProvider.examList1,
-                      resultList: examProvider.resultList1,
+                      showList: examProvider.examList,
+                      resultList: examProvider.resultList,
                     ),
                     TitleAndDottedListView(
                         title: 'Problem List ครั้งที่ 2',

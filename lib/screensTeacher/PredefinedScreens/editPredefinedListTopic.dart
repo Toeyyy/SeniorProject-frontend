@@ -14,7 +14,8 @@ class EditPredefinedListTopic extends StatelessWidget {
   Widget build(BuildContext context) {
     List<String> editPredefinedTopicList = [
       'Problem List',
-      'Diagnosis List',
+      'Differential Diagnosis',
+      'Tentative/Definitive Diagnosis',
       'Treatment List',
       'Examination List',
       'Tag List',

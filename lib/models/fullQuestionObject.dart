@@ -19,6 +19,7 @@ class FullQuestionObject {
   List<DiagnosisObject> diagnostics;
   List<ExaminationObject> examinations;
   bool modified;
+  bool status;
   List<LogObject> logs;
 
   FullQuestionObject(
@@ -34,6 +35,7 @@ class FullQuestionObject {
       required this.diagnostics,
       required this.examinations,
       required this.modified,
+      required this.status,
       required this.logs});
 
   factory FullQuestionObject.fromJson(Map<String, dynamic> json) {
@@ -67,6 +69,7 @@ class FullQuestionObject {
               .toList() ??
           [],
       modified: json['modified'] ?? false,
+      status: json['status'] ?? false,
       logs: (json['logs'] as List<dynamic>)
               .map((jsonItem) => LogObject.fromJson(jsonItem))
               .toList() ??

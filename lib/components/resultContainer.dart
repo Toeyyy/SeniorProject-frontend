@@ -45,19 +45,23 @@ class ResultContainer extends StatelessWidget {
                       fit: BoxFit.fill,
                     ),
                     const SizedBox(height: 15),
-                    Text(
-                      result.textResult,
-                      style: const TextStyle(fontSize: 18),
-                    ),
+                    result.textResult != null
+                        ? Text(
+                            result.textResult!,
+                            style: const TextStyle(fontSize: 18),
+                          )
+                        : const SizedBox(),
                   ],
                 ),
               )
             : Padding(
                 padding: const EdgeInsets.only(left: 50),
-                child: Text(
-                  result.textResult,
-                  style: const TextStyle(fontSize: 18),
-                ),
+                child: result.textResult != null
+                    ? Text(
+                        result.textResult!,
+                        style: const TextStyle(fontSize: 18),
+                      )
+                    : const SizedBox(),
               ),
       ],
     );

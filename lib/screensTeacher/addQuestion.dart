@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/components/appbar.dart';
 import 'package:frontend/constants.dart';
@@ -37,8 +38,11 @@ class _AddQuestionState extends State<AddQuestion> {
   TextEditingController generalResultsController = TextEditingController();
   List<ProblemObject> selectedProblemList1 = [];
   List<ProblemObject> selectedProblemList2 = [];
-  List<DiagnosisObject> selectedDiagnosisList = [];
+  List<DiagnosisObject> selectedDiffDiag = [];
+  List<DiagnosisObject> selectedTentativeDiag = [];
   List<TagObject> selectedTags = [];
+  Map<String, List<DiagnosisObject>> splitDiagnosis =
+      groupBy(diagnosisListPreDefined, (e) => e.type);
 
   bool _isPosting = false;
 
@@ -46,10 +50,8 @@ class _AddQuestionState extends State<AddQuestion> {
 
   @override
   Widget build(BuildContext context) {
-    List<ExamContainer> examContainers1 =
-        Provider.of<ExamContainerProvider>(context).examContainers1;
-    List<ExamContainer> examContainers2 =
-        Provider.of<ExamContainerProvider>(context).examContainers2;
+    List<ExamContainer> examContainers =
+        Provider.of<ExamContainerProvider>(context).examContainers;
     ExamContainerProvider examListProvider =
         Provider.of<ExamContainerProvider>(context);
 
@@ -139,36 +141,26 @@ class _AddQuestionState extends State<AddQuestion> {
       }).toList();
 
       //diagnosis
-      var diagnosis = selectedDiagnosisList.map((item) {
+      var diagnosis = selectedDiffDiag.map((item) {
         return {"id": item.id};
       }).toList();
+      var tentative = selectedTentativeDiag.map((item) {
+        return {"id": item.id};
+      }).toList();
+      diagnosis.addAll(tentative);
 
       //exams
-      var exam1 = examContainers1.map((item) {
+      var exam = examContainers.map((item) {
         return {
           "id": item.id,
-          "textResult": item.examController.text,
+          "textResult":
+              item.examController.text == '' ? null : item.examController.text,
           "imgResult": item.imageResult == null
               ? null
               : MultipartFile.fromBytes(item.imageResult!.bytes!,
                   filename: "image", contentType: MediaType("image", "png")),
-          "round": item.round
         };
       }).toList();
-
-      var exam2 = examContainers2.map((item) {
-        return {
-          "id": item.id,
-          "textResult": item.examController.text,
-          "imgResult": item.imageResult == null
-              ? null
-              : MultipartFile.fromBytes(item.imageResult!.bytes!,
-                  filename: "image", contentType: MediaType("image", "png")),
-          "round": item.round
-        };
-      }).toList();
-
-      exam1.addAll(exam2);
 
       //tags
       var tag = selectedTags.map((item) {
@@ -181,7 +173,7 @@ class _AddQuestionState extends State<AddQuestion> {
           "historyTakingInfo": historyTakingController.text,
           "generalInfo": generalResultsController.text,
           "problems": probList1,
-          "examinations": exam1,
+          "examinations": exam,
           "treatments": treatment,
           "diagnostics": diagnosis,
           "tags": tag,
@@ -195,23 +187,7 @@ class _AddQuestionState extends State<AddQuestion> {
           }
         }, ListFormat.multiCompatible);
         var index = 0;
-        for (var item in examContainers1) {
-          if (item.imageResult != null) {
-            formData.files.add(
-              MapEntry(
-                "examinations[$index].imgResult",
-                MultipartFile.fromBytes(
-                  item.imageResult!.bytes!,
-                  filename: "image1.png",
-                  contentType: MediaType("image", "png"),
-                ),
-              ),
-            );
-          }
-          index++;
-        }
-
-        for (var item in examContainers2) {
+        for (var item in examContainers) {
           if (item.imageResult != null) {
             formData.files.add(
               MapEntry(
@@ -229,6 +205,8 @@ class _AddQuestionState extends State<AddQuestion> {
 
         final response = await dio.post('${dotenv.env['API_PATH']}/question',
             data: formData);
+
+        print('Response: ${response.statusCode} - ${response.data}');
       } catch (error) {
         print('Error: $error');
       }
@@ -242,29 +220,15 @@ class _AddQuestionState extends State<AddQuestion> {
           generalResultsController.text.isNotEmpty &&
           selectedProblemList1.isNotEmpty &&
           selectedProblemList2.isNotEmpty &&
-          selectedDiagnosisList.isNotEmpty &&
+          selectedDiffDiag.isNotEmpty &&
+          selectedTentativeDiag.isNotEmpty &&
           selectedTags.isNotEmpty &&
           signalmentAgeValue.text.isNotEmpty &&
           signalmentWeightValue.text.isNotEmpty &&
-          examContainers1.isNotEmpty &&
-          examContainers2.isNotEmpty &&
-          (signalmentBreedValue != null) &&
-          (signalmentSexValue != null);
+          examContainers.isNotEmpty &&
+          signalmentBreedValue != null &&
+          signalmentSexValue != null;
 
-      for (ExamContainer item in examContainers1) {
-        if (item.examController.text.isEmpty) {
-          tmp = false;
-          break;
-        }
-      }
-      // print('state2 = $tmp');
-      for (ExamContainer item in examContainers2) {
-        if (item.examController.text.isEmpty) {
-          tmp = false;
-          break;
-        }
-      }
-      // print('state3 = $tmp');
       for (TreatmentContainer item in treatmentContainer) {
         if (item.selectedTreatmentDetail == '') {
           tmp = false;
@@ -276,7 +240,6 @@ class _AddQuestionState extends State<AddQuestion> {
 
     ////Update functions/////
     void updateProbList(List<ProblemObject> newList, int round) {
-      // print('round = $round');
       if (round == 1) {
         selectedProblemList1 = newList;
       } else {
@@ -284,8 +247,12 @@ class _AddQuestionState extends State<AddQuestion> {
       }
     }
 
-    void updateDiagList(List<DiagnosisObject> newList) {
-      selectedDiagnosisList = newList;
+    void updateDiagList(List<DiagnosisObject> newList, String type) {
+      if (type == 'differential') {
+        selectedDiffDiag = newList;
+      } else {
+        selectedTentativeDiag = newList;
+      }
     }
 
     void updateTagList(List<TagObject> newList) {
@@ -431,12 +398,23 @@ class _AddQuestionState extends State<AddQuestion> {
                           updateListCallback: updateProbList,
                         ),
                         const H20Sizedbox(),
+                        //diff diag
+                        const Text('Differential Diagnosis',
+                            style: kSubHeaderTextStyle),
+                        DiagnosisMultiSelectDropDown(
+                            selectedList: selectedDiffDiag,
+                            displayList: splitDiagnosis['differential']!,
+                            type: 'differential',
+                            hintText: "เลือก Differential Diagnosis",
+                            updateListCallback: updateDiagList),
+                        const H20Sizedbox(),
+                        //exam
                         ExamsButtonAndContainer(
-                          examContainers: examContainers1,
+                          examContainers: examContainers,
                           examListProvider: examListProvider,
-                          round: 1,
                         ),
-                        const DividerWithSpace(),
+                        const H20Sizedbox(),
+                        //prob2
                         const Text('Problem List ครั้งที่ 2',
                             style: kSubHeaderTextStyle),
                         ProbListMultiSelectDropDown(
@@ -447,22 +425,16 @@ class _AddQuestionState extends State<AddQuestion> {
                           updateListCallback: updateProbList,
                         ),
                         const H20Sizedbox(),
-                        ExamsButtonAndContainer(
-                          examContainers: examContainers2,
-                          examListProvider: examListProvider,
-                          round: 2,
-                        ),
-                        const DividerWithSpace(),
-                        const Text(
-                          'Diagnosis',
-                          style: kSubHeaderTextStyle,
-                        ),
+                        //tentative diag
+                        const Text('Definitive/Tentative Diagnosis',
+                            style: kSubHeaderTextStyle),
                         DiagnosisMultiSelectDropDown(
-                            selectedList: selectedDiagnosisList,
-                            displayList: diagnosisListPreDefined,
-                            hintText: 'เลือก Diagnosis',
+                            selectedList: selectedTentativeDiag,
+                            displayList: splitDiagnosis['tentative']!,
+                            type: 'tentative',
+                            hintText: "เลือก Definitive/Tentative Diagnosis",
                             updateListCallback: updateDiagList),
-                        const DividerWithSpace(),
+                        const H20Sizedbox(),
                         Row(
                           children: [
                             const Text(

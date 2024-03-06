@@ -42,20 +42,15 @@ class TreatmentTopic extends StatelessWidget {
                       .map((e) => e.name)
                       .toList()),
               TitleAndExams(
-                title: 'Examination ครั้งที่ 1',
-                showList: examProvider.examList1,
-                resultList: examProvider.resultList1,
+                title: 'Examination',
+                showList: examProvider.examList,
+                resultList: examProvider.resultList,
               ),
               TitleAndDottedListView(
                   title: 'Problem List ครั้งที่ 2',
                   showList: problemProvider.problemAnsList2
                       .map((e) => e.name)
                       .toList()),
-              TitleAndExams(
-                title: 'Examination ครั้งที่ 2',
-                showList: examProvider.examList2,
-                resultList: examProvider.resultList2,
-              ),
               TitleAndDottedListView(
                   title: 'Diagnosis',
                   showList: diagProvider.diagList.map((e) => e.name).toList()),

@@ -97,7 +97,7 @@ class _EditPredefinedOtherEditState extends State<EditPredefinedOtherEdit> {
     if (selectedTileIndex == -1) {
       String query = searchController.text.toLowerCase();
       return listForSearch
-          .where((item) => item.name.toLowerCase().startsWith(query))
+          .where((item) => item.name.toLowerCase().contains(query))
           .toList();
     } else {
       return listForSearch;

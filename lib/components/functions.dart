@@ -10,7 +10,7 @@ List<ProblemObject> filterProblemList(
     TextEditingController searchController, List<ProblemObject> listForSearch) {
   String query = searchController.text.toLowerCase();
   return listForSearch
-      .where((item) => item.name.toLowerCase().startsWith(query))
+      .where((item) => item.name.toLowerCase().contains(query))
       .toList();
 }
 
@@ -19,7 +19,7 @@ List<DiagnosisObject> filterDiagnosisList(
     List<DiagnosisObject> listForSearch) {
   String query = searchController.text.toLowerCase();
   return listForSearch
-      .where((item) => item.name.toLowerCase().startsWith(query))
+      .where((item) => item.name.toLowerCase().contains(query))
       .toList();
 }
 
@@ -41,8 +41,14 @@ List<String> getTreatmentTopic() {
 List<dynamic> filterEditTopicList(String value) {
   if (value == 'Problem List') {
     return problemListPreDefined;
-  } else if (value == 'Diagnosis List') {
-    return diagnosisListPreDefined;
+  } else if (value == 'Differential Diagnosis' ||
+      value == 'Tentative/Definitive Diagnosis') {
+    var groupedByType = groupBy(diagnosisListPreDefined, (e) => e.type);
+    if (value == 'Differential Diagnosis') {
+      return groupedByType['differential']!.cast<dynamic>();
+    } else {
+      return groupedByType['tentative']!.cast<dynamic>();
+    }
   } else {
     return tagListPreDefined;
   }
@@ -52,7 +58,7 @@ List<dynamic> filterList(
     TextEditingController searchController, List<dynamic> listForSearch) {
   String query = searchController.text.toLowerCase();
   return listForSearch
-      .where((item) => item.name.toLowerCase().startsWith(query))
+      .where((item) => item.name.toLowerCase().contains(query))
       .toList();
 }
 
@@ -60,7 +66,7 @@ List<String> filterStringList(
     TextEditingController searchController, List<String> listForSearch) {
   String query = searchController.text.toLowerCase();
   return listForSearch
-      .where((item) => item.toLowerCase().startsWith(query))
+      .where((item) => item.toLowerCase().contains(query))
       .toList();
 }
 

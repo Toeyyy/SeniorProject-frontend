@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/components/appbar.dart';
 import 'package:frontend/constants.dart';
+import 'package:frontend/models/diagnosisObject.dart';
 import 'package:frontend/models/statModels/StatNisitObject.dart';
 import 'package:frontend/components/BoxesInAddQ.dart';
 import 'package:frontend/models/problemListObject.dart';
@@ -14,7 +15,7 @@ class ShowStatDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Map<String, List<ProblemObject>> splitProblems;
-    Map<String, List<ExamPreDefinedObject>> splitExams;
+    Map<String, List<DiagnosisObject>> splitDiag;
 
     int findTotalCost(StatNisitObject stat) {
       int res = 0;
@@ -31,9 +32,9 @@ class ShowStatDetail extends StatelessWidget {
       int res = 0;
       res = stat.problem1Score +
           stat.problem2Score +
-          stat.examination1Score +
-          stat.examination1Score +
-          stat.diagnosticScore +
+          stat.examinationScore +
+          stat.diffDiagScore +
+          stat.tenDiagScore +
           stat.treatmentScore;
       return res;
     }
@@ -83,7 +84,12 @@ class ShowStatDetail extends StatelessWidget {
                           ),
                           DataColumn(
                             label: Expanded(
-                              child: Text('คะแนน Examination ครั้งที่ 1'),
+                              child: Text('คะแนน Differential Diagnosis'),
+                            ),
+                          ),
+                          DataColumn(
+                            label: Expanded(
+                              child: Text('คะแนน Examination'),
                             ),
                           ),
                           DataColumn(
@@ -93,12 +99,8 @@ class ShowStatDetail extends StatelessWidget {
                           ),
                           DataColumn(
                             label: Expanded(
-                              child: Text('คะแนน Examination ครั้งที่ 2'),
-                            ),
-                          ),
-                          DataColumn(
-                            label: Expanded(
-                              child: Text('คะแนน Diagnosis'),
+                              child:
+                                  Text('คะแนน Definitive/Tentative Diagnosis'),
                             ),
                           ),
                           DataColumn(
@@ -110,8 +112,8 @@ class ShowStatDetail extends StatelessWidget {
                         rows: List.generate(statList.length, (index) {
                           splitProblems = groupBy(statList[index].problems,
                               (e) => e.round.toString());
-                          splitExams = groupBy(statList[index].examinations,
-                              (e) => e.round.toString());
+                          splitDiag = groupBy(
+                              statList[index].diagnostics, (e) => e.type);
                           return DataRow(
                               color: MaterialStateColor.resolveWith(
                                   (states) => const Color(0xFFE7F9FF)),
@@ -157,13 +159,33 @@ class ShowStatDetail extends StatelessWidget {
                                     children: [
                                       Text(
                                         statList[index]
-                                            .examination1Score
+                                            .diffDiagScore
                                             .toString(),
                                       ),
                                       IconButton(
                                           onPressed: () {
-                                            examModal(
-                                                context, '1', splitExams['1']!);
+                                            probDiagTreatmentModal(
+                                                context,
+                                                "Differential Diagnosis",
+                                                splitDiag['differential']!);
+                                          },
+                                          icon: const Icon(Icons.search)),
+                                    ],
+                                  ),
+                                ),
+                                DataCell(
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        statList[index]
+                                            .examinationScore
+                                            .toString(),
+                                      ),
+                                      IconButton(
+                                          onPressed: () {
+                                            examModal(context,
+                                                statList[index].examinations);
                                           },
                                           icon: const Icon(Icons.search))
                                     ],
@@ -194,34 +216,14 @@ class ShowStatDetail extends StatelessWidget {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Text(
-                                        statList[index]
-                                            .examination2Score
-                                            .toString(),
-                                      ),
-                                      IconButton(
-                                          onPressed: () {
-                                            examModal(
-                                                context, '2', splitExams['2']!);
-                                          },
-                                          icon: const Icon(Icons.search))
-                                    ],
-                                  ),
-                                ),
-                                DataCell(
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        statList[index]
-                                            .diagnosticScore
-                                            .toString(),
+                                        statList[index].tenDiagScore.toString(),
                                       ),
                                       IconButton(
                                           onPressed: () {
                                             probDiagTreatmentModal(
                                                 context,
-                                                "Diagnosis",
-                                                statList[index].diagnostics);
+                                                "Definitive/Tentative Diagnosis",
+                                                splitDiag['tentative']!);
                                           },
                                           icon: const Icon(Icons.search)),
                                     ],

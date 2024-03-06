@@ -1,12 +1,15 @@
+import 'package:file_picker/file_picker.dart';
+
 class ExamPreDefinedObject {
   String id;
   String lab;
   String type;
   String? area;
   String name;
-  String? defaultText;
+  String? textDefault;
+  String? imgPath;
+  PlatformFile? imgDefault;
   int cost;
-  int? round;
 
   ExamPreDefinedObject(
       {required this.id,
@@ -14,9 +17,10 @@ class ExamPreDefinedObject {
       required this.type,
       this.area,
       required this.name,
-      this.defaultText,
-      required this.cost,
-      this.round});
+      this.textDefault,
+      this.imgPath,
+      this.imgDefault,
+      required this.cost});
 
   factory ExamPreDefinedObject.fromJson(Map<String, dynamic> json) {
     return ExamPreDefinedObject(
@@ -25,8 +29,9 @@ class ExamPreDefinedObject {
         type: json['type'] ?? json['lab'],
         area: json['area'],
         name: json['name'] ?? "",
-        defaultText: json['textDefault'],
-        cost: json['cost'] ?? 0,
-        round: json['round'] as int?);
+        textDefault: json['textDefault'],
+        imgPath: json['imgPath'],
+        imgDefault: json['imgDefault'],
+        cost: json['cost'] ?? 0);
   }
 }

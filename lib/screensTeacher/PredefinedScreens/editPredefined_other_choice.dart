@@ -18,7 +18,8 @@ class EditPreDefinedOtherChoice extends StatelessWidget {
   Future<void> getData(String title) async {
     if (title == 'Problem List') {
       await fetchPreDefinedProb();
-    } else if (title == 'Diagnosis List') {
+    } else if (title == 'Tentative/Definitive Diagnosis' ||
+        title == 'Differential Diagnosis') {
       await fetchPreDefinedDiag();
     } else {
       await fetchPreDefinedTag();

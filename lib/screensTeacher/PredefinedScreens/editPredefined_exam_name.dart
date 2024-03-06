@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'dart:typed_data';
 import 'package:collection/collection.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/components/appbar.dart';
@@ -7,15 +9,17 @@ import 'package:frontend/constants.dart';
 import 'package:frontend/models/examinationPreDefinedObject.dart';
 import 'package:frontend/components/back_button.dart';
 import 'package:frontend/UIModels/teacher/predefinedExam_provider.dart';
+import 'package:http_parser/http_parser.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 import 'package:frontend/components/BoxesInAddQ.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:frontend/AllDataFile.dart';
+import 'package:dio/dio.dart';
 
 class EditPredefinedExamName extends StatefulWidget {
   String selectedType;
-  EditPredefinedExamName({required this.selectedType});
+  EditPredefinedExamName({super.key, required this.selectedType});
 
   @override
   State<EditPredefinedExamName> createState() => _EditPredefinedExamNameState();
@@ -26,6 +30,8 @@ class _EditPredefinedExamNameState extends State<EditPredefinedExamName> {
   TextEditingController areaTextFieldController = TextEditingController();
   TextEditingController costTextFieldController = TextEditingController();
   TextEditingController defaultTextFieldController = TextEditingController();
+  String? imagePath;
+  PlatformFile? imageDefault;
   int selectedTileIndex = -1;
   bool _isEditing = false;
   bool _isOtherPartVisible = false;
@@ -51,7 +57,7 @@ class _EditPredefinedExamNameState extends State<EditPredefinedExamName> {
     if (selectedTileIndex == -1) {
       String query = searchController.text.toLowerCase();
       return listForSearch
-          .where((item) => item.name.toLowerCase().startsWith(query))
+          .where((item) => item.name.toLowerCase().contains(query))
           .toList();
     } else {
       return listForSearch;
@@ -62,7 +68,7 @@ class _EditPredefinedExamNameState extends State<EditPredefinedExamName> {
       TextEditingController searchController, List<String> listForSearch) {
     String query = searchController.text.toLowerCase();
     return listForSearch
-        .where((item) => item.toLowerCase().startsWith(query))
+        .where((item) => item.toLowerCase().contains(query))
         .toList();
   }
 
@@ -92,6 +98,7 @@ class _EditPredefinedExamNameState extends State<EditPredefinedExamName> {
 
   Future<void> _postUpdateData() async {
     if (editedList.isNotEmpty) {
+      final dio = Dio();
       try {
         var data = editedList.map((item) {
           return {
@@ -100,20 +107,40 @@ class _EditPredefinedExamNameState extends State<EditPredefinedExamName> {
             "type": item.type,
             "area": item.area != '' ? null : item.area,
             "name": item.name,
-            "textDefault": item.defaultText != '' ? null : item.defaultText,
+            "textDefault": item.textDefault != '' ? null : item.textDefault,
+            "imgDefault": item.imgDefault != null
+                ? MultipartFile.fromBytes(item.imgDefault!.bytes!,
+                    filename: "image", contentType: MediaType("image", "png"))
+                : null,
+            "imgPath": item.imgPath != null ? imagePath : null,
             "cost": item.cost
           };
         });
-        final http.Response response = await http.put(
-          Uri.parse("${dotenv.env['API_PATH']}/exam"),
-          headers: {"Content-Type": "application/json"},
-          body: jsonEncode(data),
-        );
-        if ((response.statusCode >= 200 && response.statusCode < 300)) {
-          print("Posting complete");
-        } else {
-          print("Error: ${response.statusCode} - ${response.body}");
+
+        FormData formData = FormData.fromMap({
+          "examinations": data,
+        }, ListFormat.multiCompatible);
+
+        var index = 0;
+        for (var item in editedList) {
+          if (item.imgDefault != null) {
+            formData.files.add(
+              MapEntry(
+                "examinations[$index].imgDefault",
+                MultipartFile.fromBytes(
+                  item.imgDefault!.bytes!,
+                  filename: "image1.png",
+                  contentType: MediaType("image", "png"),
+                ),
+              ),
+            );
+          }
+          index++;
         }
+
+        final response =
+            await dio.put("${dotenv.env['API_PATH']}/exam", data: formData);
+        print('Response: ${response.statusCode} - ${response.data}');
       } catch (error) {
         print('Error: $error');
       }
@@ -121,6 +148,38 @@ class _EditPredefinedExamNameState extends State<EditPredefinedExamName> {
   }
 
   /////
+
+  Future<void> pickImage() async {
+    FilePickerResult? result =
+        await FilePicker.platform.pickFiles(type: FileType.image);
+
+    if (result != null) {
+      setState(() {
+        imageDefault = result.files.first;
+        imagePath = null;
+      });
+    }
+  }
+
+  Widget displayImage() {
+    if (imagePath != null && imageDefault == null) {
+      return Image.network(
+        "${dotenv.env['RESOURCE_PATH']}${imagePath!.replaceFirst("Uploads", "")}",
+        height: 200,
+        width: 300,
+        fit: BoxFit.cover,
+      );
+    } else if (imageDefault != null) {
+      return Image.memory(
+        Uint8List.fromList(imageDefault!.bytes!),
+        height: 200,
+        width: 300,
+        fit: BoxFit.cover,
+      );
+    } else {
+      return const SizedBox();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -147,7 +206,7 @@ class _EditPredefinedExamNameState extends State<EditPredefinedExamName> {
                 children: [
                   Center(
                     child: Text(
-                      groupedExam.first.type,
+                      widget.selectedType,
                       style: kSubHeaderTextStyle,
                     ),
                   ),
@@ -169,103 +228,121 @@ class _EditPredefinedExamNameState extends State<EditPredefinedExamName> {
                       hintText: "Exam name only",
                     ),
                   ),
-                  Card(
-                    color: const Color(0xFFF2F5F7),
-                    elevation: 0,
-                    margin: const EdgeInsets.symmetric(horizontal: 15),
-                    child: ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: nameDisplayList.length,
-                        itemBuilder: (context, index) {
-                          return Container(
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                  color: const Color(0xFFB5C1BE), width: 1.0),
-                            ),
-                            child: ListTile(
-                              tileColor: selectedTileIndex == index
-                                  ? const Color(0xFFA0E9FF)
-                                  : const Color(0xFFE7F9FF),
-                              hoverColor: const Color(0xFFA0E9FF),
-                              trailing: index == selectedTileIndex
-                                  ? Row(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        IconButton(
-                                          icon:
-                                              const Icon(CupertinoIcons.pencil),
-                                          onPressed: () {
-                                            setState(() {
-                                              nameTextFieldController.text =
-                                                  nameDisplayList[index].name;
-                                              nameDisplayList = nameFilterList(
-                                                  nameTextFieldController,
-                                                  groupedExam);
-                                              selectedTileIndex =
-                                                  nameDisplayList
-                                                      .indexOf(selectedItem!);
-                                              _isEditing = true;
-                                            });
-                                          },
-                                        ),
-                                        IconButton(
-                                          icon:
-                                              const Icon(CupertinoIcons.delete),
-                                          onPressed: () {
-                                            setState(() {
-                                              examProvider
-                                                  .deleteItem(selectedItem!);
-                                              deletedList.add(selectedItem!);
-                                              groupedExam.remove(selectedItem);
-                                              nameDisplayList = groupedExam;
-                                              nameTextFieldController.clear();
-                                              costTextFieldController.clear();
-                                              defaultTextFieldController
-                                                  .clear();
-                                              areaTextFieldController.clear();
-                                              selectedTileIndex = -1;
-                                            });
-                                          },
-                                        ),
-                                      ],
-                                    )
-                                  : null,
-                              title: nameDisplayList[index].area != null
-                                  ? Text(
-                                      '${nameDisplayList[index].name}, ${nameDisplayList[index].area}')
-                                  : Text(nameDisplayList[index].name),
-                              onTap: () {
-                                setState(() {
-                                  if (selectedTileIndex == -1 ||
-                                      selectedTileIndex != index) {
-                                    selectedItem = nameDisplayList[index];
-                                    if (groupedExam == nameDisplayList) {
-                                      selectedTileIndex = index;
-                                    } else {
-                                      selectedTileIndex = nameDisplayList
-                                          .indexOf(selectedItem!);
-                                    }
-                                    _isEditing = false;
-                                    _isOtherPartVisible = true;
-                                    areaTextFieldController.text =
-                                        (selectedItem?.area ?? "");
-                                    costTextFieldController.text =
-                                        selectedItem!.cost.toString();
-                                    defaultTextFieldController.text =
-                                        (selectedItem?.defaultText ?? "");
-                                  } else {
-                                    selectedTileIndex = -1;
-                                    selectedItem = null;
-                                    _isEditing = false;
-                                    _isOtherPartVisible = false;
-                                  }
-                                });
-                              },
-                            ),
-                          );
-                        }),
-                  ),
+                  nameDisplayList.isNotEmpty
+                      ? Card(
+                          color: const Color(0xFFF2F5F7),
+                          elevation: 0,
+                          margin: const EdgeInsets.symmetric(horizontal: 15),
+                          child: ListView.builder(
+                              shrinkWrap: true,
+                              itemCount: nameDisplayList.length,
+                              itemBuilder: (context, index) {
+                                return Container(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                        color: const Color(0xFFB5C1BE),
+                                        width: 1.0),
+                                  ),
+                                  child: ListTile(
+                                    tileColor: selectedTileIndex == index
+                                        ? const Color(0xFFA0E9FF)
+                                        : const Color(0xFFE7F9FF),
+                                    hoverColor: const Color(0xFFA0E9FF),
+                                    trailing: index == selectedTileIndex
+                                        ? Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.end,
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              IconButton(
+                                                icon: const Icon(
+                                                    CupertinoIcons.pencil),
+                                                onPressed: () {
+                                                  setState(() {
+                                                    nameTextFieldController
+                                                            .text =
+                                                        nameDisplayList[index]
+                                                            .name;
+                                                    nameDisplayList =
+                                                        nameFilterList(
+                                                            nameTextFieldController,
+                                                            groupedExam);
+                                                    selectedTileIndex =
+                                                        nameDisplayList.indexOf(
+                                                            selectedItem!);
+                                                    _isEditing = true;
+                                                  });
+                                                },
+                                              ),
+                                              IconButton(
+                                                icon: const Icon(
+                                                    CupertinoIcons.delete),
+                                                onPressed: () {
+                                                  setState(() {
+                                                    examProvider.deleteItem(
+                                                        selectedItem!);
+                                                    deletedList
+                                                        .add(selectedItem!);
+                                                    groupedExam
+                                                        .remove(selectedItem);
+                                                    nameDisplayList =
+                                                        groupedExam;
+                                                    nameTextFieldController
+                                                        .clear();
+                                                    costTextFieldController
+                                                        .clear();
+                                                    defaultTextFieldController
+                                                        .clear();
+                                                    imagePath = null;
+                                                    imageDefault = null;
+                                                    areaTextFieldController
+                                                        .clear();
+                                                    selectedTileIndex = -1;
+                                                  });
+                                                },
+                                              ),
+                                            ],
+                                          )
+                                        : null,
+                                    title: nameDisplayList[index].area != null
+                                        ? Text(
+                                            '${nameDisplayList[index].name}, ${nameDisplayList[index].area}')
+                                        : Text(nameDisplayList[index].name),
+                                    onTap: () {
+                                      setState(() {
+                                        if (selectedTileIndex == -1 ||
+                                            selectedTileIndex != index) {
+                                          selectedItem = nameDisplayList[index];
+                                          if (groupedExam == nameDisplayList) {
+                                            selectedTileIndex = index;
+                                          } else {
+                                            selectedTileIndex = nameDisplayList
+                                                .indexOf(selectedItem!);
+                                          }
+                                          _isEditing = false;
+                                          _isOtherPartVisible = true;
+                                          areaTextFieldController.text =
+                                              (selectedItem?.area ?? "");
+                                          costTextFieldController.text =
+                                              selectedItem!.cost.toString();
+                                          defaultTextFieldController.text =
+                                              (selectedItem?.textDefault ?? "");
+                                          imagePath = selectedItem?.imgPath;
+                                          imageDefault =
+                                              selectedItem?.imgDefault;
+                                        } else {
+                                          selectedTileIndex = -1;
+                                          selectedItem = null;
+                                          _isEditing = false;
+                                          _isOtherPartVisible = false;
+                                        }
+                                      });
+                                    },
+                                  ),
+                                );
+                              }),
+                        )
+                      : const SizedBox(),
                   const DividerWithSpace(),
                   /////area/////
                   Visibility(
@@ -367,6 +444,38 @@ class _EditPredefinedExamNameState extends State<EditPredefinedExamName> {
                                   "ค่าผลตรวจ Default [ถ้าไม่ใส่จะมีค่าเป็น 'ค่าปกติ']",
                             ),
                           ),
+                          const SizedBox(height: 15),
+                          Visibility(
+                            visible: _isEditing,
+                            child: Row(
+                              children: [
+                                ElevatedButton(
+                                  onPressed: pickImage,
+                                  child:
+                                      const Text('เพิ่มรูป Default (Optional)'),
+                                ),
+                                const SizedBox(width: 20),
+                                Visibility(
+                                  visible:
+                                      imagePath != null || imageDefault != null,
+                                  child: ElevatedButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        imagePath = null;
+                                        imageDefault = null;
+                                      });
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: const Color(0xFF8B72BE),
+                                    ),
+                                    child: const Text('ลบรูป'),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 15),
+                          displayImage(),
                         ],
                       ),
                     ),
@@ -388,8 +497,10 @@ class _EditPredefinedExamNameState extends State<EditPredefinedExamName> {
                                           : areaTextFieldController.text;
                                   selectedItem!.cost =
                                       int.parse(costTextFieldController.text);
-                                  selectedItem!.defaultText =
+                                  selectedItem!.textDefault =
                                       defaultTextFieldController.text;
+                                  selectedItem!.imgDefault = imageDefault;
+                                  selectedItem!.imgPath = imagePath;
                                   editedList.add(selectedItem!);
                                   setState(() {
                                     _isEditing = false;
@@ -397,6 +508,8 @@ class _EditPredefinedExamNameState extends State<EditPredefinedExamName> {
                                     areaTextFieldController.clear();
                                     costTextFieldController.clear();
                                     defaultTextFieldController.clear();
+                                    imagePath = null;
+                                    imageDefault = null;
                                     selectedTileIndex = -1;
                                     groupedExam.sort(
                                         (a, b) => a.name.compareTo(b.name));

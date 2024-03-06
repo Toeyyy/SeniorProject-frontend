@@ -8,6 +8,7 @@ import 'package:frontend/screensTeacher/PredefinedScreens/editPredefined_exam_na
 import 'package:provider/provider.dart';
 import 'package:frontend/UIModels/teacher/predefinedExam_provider.dart';
 import 'package:frontend/AllDataFile.dart';
+import 'package:frontend/aboutData/getDataFunctions.dart';
 
 class EditPredefinedExamLab extends StatelessWidget {
   const EditPredefinedExamLab({super.key});
@@ -97,6 +98,9 @@ class EditPreDefinedExamType extends StatefulWidget {
 class _EditPreDefinedExamTypeState extends State<EditPreDefinedExamType> {
   @override
   Widget build(BuildContext context) {
+    PreDefinedExamProvider examProvider =
+        Provider.of<PreDefinedExamProvider>(context);
+
     return Scaffold(
       appBar: const AppbarTeacher(),
       body: Padding(
@@ -116,33 +120,33 @@ class _EditPreDefinedExamTypeState extends State<EditPreDefinedExamType> {
                     separatorBuilder: (context, index) =>
                         const SizedBox(height: 8),
                     itemCount: widget.groupedByType.length,
-                    // itemCount: groupedExam,
                     itemBuilder: (context, index) {
                       String title = widget.groupedByType.keys.toList()[index];
                       return ListTile(
                         tileColor: const Color(0xFFA0E9FF),
                         hoverColor: const Color(0xFF42C2FF),
-                        // title: Text(groupedByType.keys.elementAt(index)),
                         title: Text(
                           title,
                           style: const TextStyle(
                               fontWeight: FontWeight.w500, fontSize: 20),
                         ),
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => EditPredefinedExamName(
-                                selectedType: title,
+                        onTap: () async {
+                          await fetchPreDefinedExam().then((value) {
+                            examProvider.updateGroupedList(widget.selectedLab);
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => EditPredefinedExamName(
+                                  selectedType: title,
+                                ),
                               ),
-                            ),
-                          );
+                            );
+                          });
                         },
                       );
                     },
                   ),
                 ),
-                // MyBackButton(myContext: context),
                 ElevatedButton(
                   onPressed: () {
                     Navigator.pop(context);

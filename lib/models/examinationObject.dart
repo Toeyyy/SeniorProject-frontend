@@ -6,10 +6,9 @@ class ExaminationObject {
   String type;
   String? area;
   String name;
-  String textResult;
+  String? textResult;
   String? imgPath;
   PlatformFile? imgResult;
-  int round;
 
   ExaminationObject(
       {required this.id,
@@ -19,8 +18,7 @@ class ExaminationObject {
       required this.name,
       required this.textResult,
       this.imgPath,
-      this.imgResult,
-      required this.round});
+      this.imgResult});
 
   factory ExaminationObject.fromJson(Map<String, dynamic> json) {
     return ExaminationObject(
@@ -29,9 +27,8 @@ class ExaminationObject {
         type: json['type'] ?? "",
         area: json['area'],
         name: json['name'] ?? "",
-        textResult: json['textResult'] ?? "",
+        textResult: json['textResult'],
         imgPath: json['imgPath'],
-        imgResult: json['imgResult'],
-        round: json['round'] ?? 0);
+        imgResult: json['imgResult']);
   }
 }

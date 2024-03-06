@@ -6,10 +6,15 @@ import 'package:frontend/models/treatmentObject.dart';
 import 'package:frontend/components/back_button.dart';
 import 'package:frontend/screensTeacher/PredefinedScreens/editPredefined_treatment_detail.dart';
 import 'package:frontend/AllDataFile.dart';
+import 'package:frontend/aboutData/getDataFunctions.dart';
 
 class EditPredefinedTreatmentType extends StatelessWidget {
   Map<String, List<TreatmentObject>> groupedByType =
       groupBy(treatmentListPreDefined, (e) => e.type);
+
+  Future<void> getData() async {
+    await fetchPreDefinedTreatment();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,16 +47,20 @@ class EditPredefinedTreatmentType extends StatelessWidget {
                           style: const TextStyle(
                               fontWeight: FontWeight.w500, fontSize: 20),
                         ),
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  EditPredefinedTreatmentDetail(
-                                      groupedByType: groupedByType,
-                                      selectedType: title),
-                            ),
-                          );
+                        onTap: () async {
+                          await getData().then((value) {
+                            groupedByType =
+                                groupBy(treatmentListPreDefined, (e) => e.type);
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    EditPredefinedTreatmentDetail(
+                                        groupedByType: groupedByType,
+                                        selectedType: title),
+                              ),
+                            );
+                          });
                         },
                       );
                     },

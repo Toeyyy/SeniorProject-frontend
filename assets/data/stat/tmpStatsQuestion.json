@@ -8,8 +8,7 @@
         "lab": "lab 1",
         "type": "lab 1 type 2",
         "name": "lab 1 type 2 exam 2",
-        "cost": 100,
-        "round": 1
+        "cost": 100
       },
       {
         "id": "7",
@@ -17,8 +16,7 @@
         "area": "area 1",
         "type": "lab 2 type 2",
         "name": "lab 2 type 1 exam 1",
-        "cost": 150,
-        "round": 2
+        "cost": 150
       }
     ],
     "problems": [
@@ -53,112 +51,32 @@
     ],
     "diagnostics" : [
       {
-        "id": "1",
-        "name": "Diag 1"
-      },
-      {
         "id": "4",
-        "name": "Diag 4"
-      },
-      {
-        "id": "2",
-        "name": "Diag 2"
-      },
-      {
-        "id": "3",
-        "name": "Diag cccccccccccc3"
+        "type": "differential",
+        "name":"diff Diag 4"
       },
       {
         "id": "5",
-        "name": "Diag 5"
-      },
-      {
-        "id": "6",
-        "name": "Diag 6"
-      },
-      {
-        "id": "7",
-        "name": "Diag 7"
-      },
-      {
-        "id": "8",
-        "name": "Diag 8"
-      },
-      {
-        "id": "9",
-        "name": "Diag 9"
-      },
-      {
-        "id": "10",
-        "name": "Diag 10"
-      },
-      {
-        "id": "11",
-        "name": "Diag 11"
-      },
-      {
-        "id": "12",
-        "name": "Diag 12"
+        "type": "differential",
+        "name":"diff Diag 5"
       },
       {
         "id": "13",
-        "name": "Diag 13"
-      },
-      {
-        "id": "14",
-        "name": "Diagdddddddddddddd 14"
-      },
-      {
-        "id": "15",
-        "name": "Diagvvvvvvvvvv 15"
+        "type": "tentative",
+        "name":"tentative Diag 13"
       },
       {
         "id": "16",
-        "name": "Diag wwwwwwwwwwwwwwwww16"
-      },
-      {
-        "id": "17",
-        "name": "Diagwwwwwwwwwww 17"
-      },
-      {
-        "id": "18",
-        "name": "Diag rrrrrrrrrrrrrrr18"
-      },
-      {
-        "id": "19",
-        "name": "Diag 19"
-      },
-      {
-        "id": "20",
-        "name": "Diag 20"
-      },
-      {
-        "id": "21",
-        "name": "Diag 21"
-      },
-      {
-        "id": "22",
-        "name": "Diag 22"
-      },
-      {
-        "id": "23",
-        "name": "Diag fffffffffff23"
-      },
-      {
-        "id": "24",
-        "name": "Diagfffffff 24"
-      },
-      {
-        "id": "25",
-        "name": "Diagafffaf 25"
+        "type": "tentative",
+        "name":"tentative Diag 16"
       }
     ],
     "problem1_Score": 10,
     "problem2_Score": 15,
-    "examination1_Score": 20,
-    "examination2_Score": 25,
+    "examination_Score": 20,
     "treatment_Score": 5,
-    "diagnostic_Score": 10
+    "diffDiag_Score": 10,
+    "tenDiag_Score": 16
   },
   {
     "userId": "ID_2",
@@ -169,8 +87,7 @@
         "lab": "Ultrasound",
         "type": "Ultrasound",
         "name": "Liver",
-        "cost": 100,
-        "round": 1
+        "cost": 100
       },
       {
         "id": "23",
@@ -178,8 +95,7 @@
         "type": "lab 3 type 2",
         "area": "area 2",
         "name": "lab 3 type 2 exam 3",
-        "cost": 100,
-        "round": 1
+        "cost": 100
       },
       {
         "id": "25",
@@ -187,8 +103,7 @@
         "type": "lab 3 type 2",
         "area": "area 3",
         "name": "lab 3 type 2 exam 2",
-        "cost": 100,
-        "round": 1
+        "cost": 100
       },
       {
         "id": "18",
@@ -196,8 +111,7 @@
         "type": "lab 3 type 2",
         "area": "area 3",
         "name": "lab 3 type 2 exam 3",
-        "cost": 100,
-        "round": 1
+        "cost": 100
       },
       {
         "id": "7",
@@ -205,8 +119,7 @@
         "area": "area 1",
         "type": "lab 2 type 2",
         "name": "lab 2 type 1 exam 1",
-        "cost": 150,
-        "round": 2
+        "cost": 150
       }
     ],
     "problems": [
@@ -247,20 +160,27 @@
     ],
     "diagnostics" : [
       {
-        "id": "7",
-        "name": "Diag 7"
+        "id": "12",
+        "type": "tentative",
+        "name":"tentative Diag 12"
       },
       {
-        "id": "4",
-        "name": "Diag 4"
+        "id": "15",
+        "type": "tentative",
+        "name":"tentative Diag 15"
+      },
+      {
+        "id": "1",
+        "type": "differential",
+        "name":"diff Diag 1"
       }
     ],
     "problem1_Score": 8,
     "problem2_Score": 12,
-    "examination1_Score": 11,
-    "examination2_Score": 3,
+    "examination_Score": 11,
     "treatment_Score": 12,
-    "diagnostic_Score": 9
+    "diffDiag_Score": 9,
+    "tenDiag_Score": 18
   },
   {
     "userId": "ID_3",
@@ -271,8 +191,7 @@
         "lab": "Ultrasound",
         "type": "Ultrasound",
         "name": "Liver",
-        "cost": 100,
-        "round": 1
+        "cost": 100
       },
       {
         "id": "23",
@@ -280,8 +199,7 @@
         "type": "lab 3 type 2",
         "area": "area 2",
         "name": "lab 3 type 2 exam 3",
-        "cost": 100,
-        "round": 1
+        "cost": 100
       },
       {
         "id": "25",
@@ -289,8 +207,7 @@
         "type": "lab 3 type 2",
         "area": "area 3",
         "name": "lab 3 type 2 exam 2",
-        "cost": 100,
-        "round": 1
+        "cost": 100
       },
       {
         "id": "18",
@@ -298,8 +215,7 @@
         "type": "lab 3 type 2",
         "area": "area 3",
         "name": "lab 3 type 2 exam 3",
-        "cost": 100,
-        "round": 1
+        "cost": 100
       },
       {
         "id": "7",
@@ -307,8 +223,7 @@
         "area": "area 1",
         "type": "lab 2 type 2",
         "name": "lab 2 type 1 exam 1",
-        "cost": 150,
-        "round": 2
+        "cost": 150
       }
     ],
     "problems": [
@@ -349,121 +264,26 @@
     ],
     "diagnostics" : [
       {
-        "id": "8",
-        "name": "Diag 8"
+        "id": "12",
+        "type": "tentative",
+        "name":"tentative Diag 12"
+      },
+      {
+        "id": "15",
+        "type": "tentative",
+        "name":"tentative Diag 15"
       },
       {
         "id": "1",
-        "name": "Diag 1"
+        "type": "differential",
+        "name":"diff Diag 1"
       }
     ],
     "problem1_Score": 8,
     "problem2_Score": 12,
-    "examination1_Score": 11,
-    "examination2_Score": 3,
+    "examination_Score": 11,
     "treatment_Score": 12,
-    "diagnostic_Score": 9
-  },
-  {
-    "userId": "ID_4",
-    "userName": "name 4",
-    "examinations" : [
-      {
-        "id": "19",
-        "lab": "Ultrasound",
-        "type": "Ultrasound",
-        "name": "Liver",
-        "cost": 100,
-        "round": 1
-      },
-      {
-        "id": "23",
-        "lab": "lab 3",
-        "type": "lab 3 type 2",
-        "area": "area 2",
-        "name": "lab 3 type 2 exam 3",
-        "cost": 100,
-        "round": 1
-      },
-      {
-        "id": "25",
-        "lab": "lab 3",
-        "type": "lab 3 type 2",
-        "area": "area 3",
-        "name": "lab 3 type 2 exam 2",
-        "cost": 100,
-        "round": 1
-      },
-      {
-        "id": "18",
-        "lab": "lab 3",
-        "type": "lab 3 type 2",
-        "area": "area 3",
-        "name": "lab 3 type 2 exam 3",
-        "cost": 100,
-        "round": 1
-      },
-      {
-        "id": "7",
-        "lab": "lab 2",
-        "area": "area 1",
-        "type": "lab 2 type 2",
-        "name": "lab 2 type 1 exam 1",
-        "cost": 150,
-        "round": 2
-      }
-    ],
-    "problems": [
-      {
-        "id": "4",
-        "name": "problem 4",
-        "round": 1
-      },
-      {
-        "id": "9",
-        "name": "problem 9",
-        "round": 1
-      },
-      {
-        "id": "1",
-        "name": "problem 1",
-        "round": 2
-      },
-      {
-        "id": "5",
-        "name": "problem 5",
-        "round": 2
-      }
-    ],
-    "treatments": [
-      {
-        "id": "13",
-        "type": "Nutritional support",
-        "name": "nutrition 3",
-        "cost": 100
-      },
-      {
-        "id": "8",
-        "type": "Surgical",
-        "name": "surgical 3",
-        "cost": 100
-      }
-    ],
-    "diagnostics" : [
-      {
-        "id": "2",
-        "name": "Diag 2"
-      },
-      {
-        "id": "1",
-        "name": "Diag 1"
-      }
-    ],
-    "problem1_Score": 8,
-    "problem2_Score": 12,
-    "examination1_Score": 11,
-    "examination2_Score": 3,
-    "treatment_Score": 12,
-    "diagnostic_Score": 9
+    "diffDiag_Score": 9,
+    "tenDiag_Score": 15
   }
 ]

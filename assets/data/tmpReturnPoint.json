@@ -1,5 +1,4 @@
-[
-  {
+{
     "questionId": "ID_1",
     "questionName": "1",
     "examinations" : [
@@ -8,8 +7,7 @@
         "lab": "lab 1",
         "type": "lab 1 type 2",
         "name": "lab 1 type 2 exam 2",
-        "cost": 100,
-        "round": 1
+        "cost": 100
       },
       {
         "id": "7",
@@ -17,8 +15,7 @@
         "area": "area 1",
         "type": "lab 2 type 2",
         "name": "lab 2 type 1 exam 1",
-        "cost": 150,
-        "round": 2
+        "cost": 150
       }
     ],
     "problems": [
@@ -63,15 +60,19 @@
     ],
     "diagnostics" : [
       {
-        "id": "1",
-        "name": "Diag 1"
+        "id": "3",
+        "type": "differential",
+        "name":"diff Diag 3"
+      },
+      {
+        "id": "14",
+        "type": "tentative",
+        "name":"tentative Diag 14"
       }
     ],
     "problem1_Score": 10,
     "problem2_Score": 15,
-    "examination1_Score": 10,
-    "examination2_Score": 15,
+    "examination_Score": 10,
     "treatment_Score": 5,
     "diagnostic_Score": 10
   }
-]

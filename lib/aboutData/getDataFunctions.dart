@@ -19,72 +19,72 @@ import 'package:http/http.dart' as http;
 
 Future<List<QuestionObject>> fetchQuestionList() async {
   //real
-  final String apiUrl = "${dotenv.env['API_PATH']}/question";
-  final headers = {"Content-Type": "application/json"};
-  try {
-    final response = await http.get(Uri.parse(apiUrl), headers: headers);
-
-    if (response.statusCode >= 200 && response.statusCode < 300) {
-      List<dynamic> jsonList = jsonDecode(response.body);
-      return jsonList.map((data) => QuestionObject.fromJson(data)).toList();
-    } else {
-      print("Error: ${response.statusCode} - ${response.body}");
-      return [];
-    }
-  } catch (error) {
-    print("Error: $error");
-    return [];
-  }
-
-  //tmp-comment later
+  // final String apiUrl = "${dotenv.env['API_PATH']}/question";
+  // final headers = {"Content-Type": "application/json"};
   // try {
-  //   final String jsonString =
-  //       await rootBundle.loadString("data/tmpNisitQuestion.json");
-  //   final List<dynamic> jsonList = json.decode(jsonString);
-  //   return jsonList.map((data) => QuestionObject.fromJson(data)).toList();
+  //   final response = await http.get(Uri.parse(apiUrl), headers: headers);
+  //
+  //   if (response.statusCode >= 200 && response.statusCode < 300) {
+  //     List<dynamic> jsonList = jsonDecode(response.body);
+  //     return jsonList.map((data) => QuestionObject.fromJson(data)).toList();
+  //   } else {
+  //     print("Error: ${response.statusCode} - ${response.body}");
+  //     return [];
+  //   }
   // } catch (error) {
-  //   print('Error fetching data: $error');
+  //   print("Error: $error");
   //   return [];
   // }
+
+  //tmp-comment later
+  try {
+    final String jsonString =
+        await rootBundle.loadString("data/tmpNisitQuestion.json");
+    final List<dynamic> jsonList = json.decode(jsonString);
+    return jsonList.map((data) => QuestionObject.fromJson(data)).toList();
+  } catch (error) {
+    print('Error fetching data: $error');
+    return [];
+  }
 }
 
 Future<List<ProblemObject>> fetchProblemAns(String quesId, int round) async {
   //real
-  final String apiUrl =
-      "${dotenv.env['API_PATH']}/question/solution/problem/$round/$quesId";
-  final headers = {"Content-Type": "application/json"};
-  try {
-    final response = await http.get(Uri.parse(apiUrl), headers: headers);
-
-    if (response.statusCode >= 200 && response.statusCode < 300) {
-      List<dynamic> jsonList = jsonDecode(response.body);
-      return jsonList.map((data) => ProblemObject.fromJson(data)).toList();
-    } else {
-      print("Error: ${response.statusCode} - ${response.body}");
-      return [];
-    }
-  } catch (error) {
-    print("Error: $error");
-    return [];
-  }
-
-  //tmp-comment later
+  // final String apiUrl =
+  //     "${dotenv.env['API_PATH']}/question/solution/problem/$round/$quesId";
+  // final headers = {"Content-Type": "application/json"};
   // try {
-  //   String jsonString;
-  //   if (round == 1) {
-  //     jsonString = await rootBundle.loadString("data/tmpNisitProblemAns1.json");
+  //   final response = await http.get(Uri.parse(apiUrl), headers: headers);
+  //
+  //   if (response.statusCode >= 200 && response.statusCode < 300) {
+  //     List<dynamic> jsonList = jsonDecode(response.body);
+  //     return jsonList.map((data) => ProblemObject.fromJson(data)).toList();
   //   } else {
-  //     jsonString = await rootBundle.loadString("data/tmpNisitProblemAns2.json");
+  //     print("Error: ${response.statusCode} - ${response.body}");
+  //     return [];
   //   }
-  //   final List<dynamic> jsonList = json.decode(jsonString)[0]['problems'];
-  //   // print('jsonList = $jsonList');
-  //   // print(
-  //   //     'object data = ${jsonList.map((data) => ProblemObject.fromJson(data)).toList()}');
-  //   return jsonList.map((data) => ProblemObject.fromJson(data)).toList();
   // } catch (error) {
-  //   print('Error fetching data: $error');
+  //   print("Error: $error");
   //   return [];
   // }
+
+  //tmp-comment later
+  try {
+    String jsonString;
+    if (round == 1) {
+      jsonString = await rootBundle.loadString("data/tmpNisitProblemAns1.json");
+    } else {
+      jsonString = await rootBundle.loadString("data/tmpNisitProblemAns2.json");
+    }
+    final List<dynamic> jsonList = json.decode(jsonString)[0]['problems'];
+    // print('jsonList = $jsonList');
+    // print(
+    //     'object data = ${jsonList.map((data) => ProblemObject.fromJson(data)).toList()}');
+    return jsonList.map((data) => ProblemObject.fromJson(data)).toList();
+  } catch (error) {
+    print('Error fetching data: $error');
+    return [];
+  }
 }
 
 Future<void> fetchFullQuestionList() async {
@@ -120,41 +120,41 @@ Future<void> fetchFullQuestionList() async {
 
 Future<List<ExamResultObject>> fetchResult(String examID, String quesID) async {
   //real
-  final String apiUrl =
-      "${dotenv.env['API_PATH']}/question/$quesID/examinationresult";
-  List<Map<String, dynamic>> body = [
-    {"examinationId": examID}
-  ];
-  final headers = {"Content-Type": "application/json"};
-  try {
-    final response = await http.post(Uri.parse(apiUrl),
-        headers: headers, body: jsonEncode(body));
-
-    if (response.statusCode >= 200 && response.statusCode < 300) {
-      List<dynamic> jsonList = jsonDecode(response.body);
-      return jsonList.map((data) => ExamResultObject.fromJson(data)).toList();
-    } else {
-      print("Error: ${response.statusCode} - ${response.body}");
-      return [];
-    }
-  } catch (error) {
-    print("Error: $error");
-    return [];
-  }
-
-  //tmp-comment later
+  // final String apiUrl =
+  //     "${dotenv.env['API_PATH']}/question/$quesID/examinationresult";
+  // List<Map<String, dynamic>> body = [
+  //   {"examinationId": examID}
+  // ];
+  // final headers = {"Content-Type": "application/json"};
   // try {
-  //   final String jsonString =
-  //       await rootBundle.loadString("data/tmpResultData.json");
-  //   final List<dynamic> jsonList = json.decode(jsonString);
-  //   return jsonList.map((data) => ExamResultObject.fromJson(data)).toList();
+  //   final response = await http.post(Uri.parse(apiUrl),
+  //       headers: headers, body: jsonEncode(body));
+  //
+  //   if (response.statusCode >= 200 && response.statusCode < 300) {
+  //     List<dynamic> jsonList = jsonDecode(response.body);
+  //     return jsonList.map((data) => ExamResultObject.fromJson(data)).toList();
+  //   } else {
+  //     print("Error: ${response.statusCode} - ${response.body}");
+  //     return [];
+  //   }
   // } catch (error) {
-  //   print('error fetching data: $error');
+  //   print("Error: $error");
   //   return [];
   // }
+
+  //tmp-comment later
+  try {
+    final String jsonString =
+        await rootBundle.loadString("data/tmpResultData.json");
+    final List<dynamic> jsonList = json.decode(jsonString);
+    return jsonList.map((data) => ExamResultObject.fromJson(data)).toList();
+  } catch (error) {
+    print('error fetching data: $error');
+    return [];
+  }
 }
 
-Future<List<StatQuestionObject>> fetchStatQuestion(String quesId) async {
+Future<StatQuestionObject> fetchStatQuestion(String quesId) async {
   //real
   final String apiUrl = "${dotenv.env['API_PATH']}/$quesId/stats";
   final headers = {"Content-Type": "application/json"};
@@ -162,26 +162,26 @@ Future<List<StatQuestionObject>> fetchStatQuestion(String quesId) async {
     final response = await http.get(Uri.parse(apiUrl), headers: headers);
 
     if (response.statusCode >= 200 && response.statusCode < 300) {
-      List<dynamic> jsonList = jsonDecode(response.body);
-      return jsonList.map((data) => StatQuestionObject.fromJson(data)).toList();
+      dynamic jsonList = jsonDecode(response.body);
+      return StatQuestionObject.fromJson(jsonList);
     } else {
       print("Error: ${response.statusCode} - ${response.body}");
-      return [];
+      return StatQuestionObject.fromJson({});
     }
   } catch (error) {
     print("Error: $error");
-    return [];
+    return StatQuestionObject.fromJson({});
   }
 
   //tmp-comment later
   // try {
   //   final String jsonString =
   //       await rootBundle.loadString("data/tmpReturnPoint.json");
-  //   final List<dynamic> jsonList = json.decode(jsonString);
-  //   return jsonList.map((data) => StatQuestionObject.fromJson(data)).toList();
+  //   final dynamic jsonList = json.decode(jsonString);
+  //   return StatQuestionObject.fromJson(jsonList);
   // } catch (error) {
   //   print('error fetching data: $error');
-  //   return [];
+  //   return StatQuestionObject.fromJson({});
   // }
 }
 

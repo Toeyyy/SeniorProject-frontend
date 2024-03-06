@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/components/appbar.dart';
@@ -9,6 +10,9 @@ import 'package:frontend/components/back_button.dart';
 import 'package:http/http.dart' as http;
 import 'package:frontend/AllDataFile.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:dio/dio.dart';
+import 'package:http_parser/http_parser.dart';
 
 class EditPreDefinedExamAdd extends StatefulWidget {
   const EditPreDefinedExamAdd({super.key});
@@ -56,17 +60,19 @@ class _EditPreDefinedExamAddState extends State<EditPreDefinedExamAdd> {
   late List<String> nameDisplayList = filterList(nameTextController, nameList);
 
   bool _canSave = true;
+  PlatformFile? imageDefault;
 
   List<String> filterList(
       TextEditingController searchController, List<String> listForSearch) {
     String query = searchController.text.toLowerCase();
     return listForSearch
-        .where((item) => item.toLowerCase().startsWith(query))
+        .where((item) => item.toLowerCase().contains(query))
         .toList();
   }
 
   /////post/////
   Future<void> _postAddData() async {
+    final dio = Dio();
     try {
       var data = addedList.map((item) {
         return {
@@ -74,20 +80,40 @@ class _EditPreDefinedExamAddState extends State<EditPreDefinedExamAdd> {
           "type": item.type,
           "area": item.area == '' ? null : item.area,
           "name": item.name,
-          "textDefault": item.defaultText == '' ? null : item.defaultText,
+          "textDefault": item.textDefault == '' ? null : item.textDefault,
+          "imgDefault": item.imgDefault != null
+              ? MultipartFile.fromBytes(item.imgDefault!.bytes!,
+                  filename: "image", contentType: MediaType("image", "png"))
+              : null,
           "cost": item.cost
         };
       }).toList();
-      final http.Response response = await http.post(
-        Uri.parse("${dotenv.env['API_PATH']}/exam"),
-        headers: {"Content-Type": "application/json"},
-        body: jsonEncode(data),
-      );
-      if ((response.statusCode >= 200 && response.statusCode < 300)) {
-        print("Posting complete");
-      } else {
-        print("Error: ${response.statusCode} - ${response.body}");
+
+      FormData formData = FormData.fromMap({
+        "examinations": data,
+      }, ListFormat.multiCompatible);
+
+      var index = 0;
+      for (var item in addedList) {
+        if (item.imgDefault != null) {
+          formData.files.add(
+            MapEntry(
+              "examinations[$index].imgDefault",
+              MultipartFile.fromBytes(
+                item.imgDefault!.bytes!,
+                filename: "image1.png",
+                contentType: MediaType("image", "png"),
+              ),
+            ),
+          );
+        }
+        index++;
       }
+
+      final response =
+          await dio.post("${dotenv.env['API_PATH']}/exam", data: formData);
+
+      print('Response: ${response.statusCode} - ${response.data}');
     } catch (error) {
       print('Error: $error');
     }
@@ -100,6 +126,17 @@ class _EditPreDefinedExamAddState extends State<EditPreDefinedExamAdd> {
         areaTextController.text == '' &&
         nameTextController.text == '' &&
         costTextController.text == '';
+  }
+
+  Future<void> pickImage() async {
+    FilePickerResult? result =
+        await FilePicker.platform.pickFiles(type: FileType.image);
+
+    if (result != null) {
+      setState(() {
+        imageDefault = result.files.first;
+      });
+    }
   }
 
   @override
@@ -136,6 +173,7 @@ class _EditPreDefinedExamAddState extends State<EditPreDefinedExamAdd> {
                             nameTextController.clear();
                             defaultTextController.clear();
                             setState(() {
+                              imageDefault = null;
                               _canSave = true;
                             });
                           },
@@ -204,7 +242,8 @@ class _EditPreDefinedExamAddState extends State<EditPreDefinedExamAdd> {
                   ),
                   const DividerWithSpace(),
                   /////type//////
-                  const Text('หัวข้อการตรวจ', style: kSubHeaderTextStyle),
+                  const Text('หัวข้อการตรวจ (Optional)',
+                      style: kSubHeaderTextStyle),
                   const SizedBox(height: 20),
                   TextField(
                     controller: typeTextController,
@@ -219,7 +258,8 @@ class _EditPreDefinedExamAddState extends State<EditPreDefinedExamAdd> {
                     decoration: const InputDecoration(
                       contentPadding: EdgeInsets.all(8),
                       border: OutlineInputBorder(),
-                      hintText: "หัวข้อการตรวจ",
+                      hintText:
+                          "หัวข้อการตรวจ [ถ้าไม่ใส่จะมีค่าเหมือนกับแผนกการตรวจ]",
                     ),
                   ),
                   Card(
@@ -398,6 +438,41 @@ class _EditPreDefinedExamAddState extends State<EditPreDefinedExamAdd> {
                           "ค่าผลตรวจ Default [ถ้าไม่ใส่จะมีค่าเป็น 'ค่าปกติ']",
                     ),
                   ),
+                  const H20Sizedbox(),
+                  Row(
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          pickImage();
+                        },
+                        child: const Text('เพิ่มรูป Default (Optional)'),
+                      ),
+                      const SizedBox(width: 20),
+                      Visibility(
+                        visible: imageDefault != null,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            setState(() {
+                              imageDefault = null;
+                            });
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF8B72BE),
+                          ),
+                          child: const Text('ลบรูป'),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 15),
+                  imageDefault != null
+                      ? Image.memory(
+                          Uint8List.fromList(imageDefault!.bytes!),
+                          height: 200,
+                          width: 300,
+                          fit: BoxFit.cover,
+                        )
+                      : const SizedBox(),
                   const DividerWithSpace(),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -408,17 +483,19 @@ class _EditPreDefinedExamAddState extends State<EditPreDefinedExamAdd> {
                               onPressed: () {
                                 if (_isFormatCorrect &&
                                     labTextController.text != '' &&
-                                    typeTextController.text != '' &&
                                     nameTextController.text != '' &&
                                     costTextController.text != '') {
                                   ExamPreDefinedObject newItem =
                                       ExamPreDefinedObject(
                                     id: 'X',
                                     lab: labTextController.text,
-                                    type: typeTextController.text,
+                                    type: typeTextController.text == ''
+                                        ? labTextController.text
+                                        : typeTextController.text,
                                     area: areaTextController.text,
                                     name: nameTextController.text,
-                                    defaultText: defaultTextController.text,
+                                    textDefault: defaultTextController.text,
+                                    imgDefault: imageDefault,
                                     cost: int.parse(costTextController.text),
                                   );
                                   setState(() {
@@ -454,6 +531,7 @@ class _EditPreDefinedExamAddState extends State<EditPreDefinedExamAdd> {
                                   nameTextController.clear();
                                   defaultTextController.clear();
                                   costTextController.clear();
+                                  imageDefault = null;
                                 }
                               },
                               child: const Text('เพิ่ม'),

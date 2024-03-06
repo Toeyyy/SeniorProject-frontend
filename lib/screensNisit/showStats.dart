@@ -19,7 +19,6 @@ class _ShowStatsForNisitState extends State<ShowStatsForNisit> {
   late List<StatQuestionObject> statList;
   bool _isLoadingData = false;
   late Map<String, List<ProblemObject>> splitProblems = {};
-  late Map<String, List<ExamPreDefinedObject>> splitExams = {};
 
   @override
   void initState() {
@@ -55,9 +54,8 @@ class _ShowStatsForNisitState extends State<ShowStatsForNisit> {
       int res = 0;
       res = stat.problem1Score +
           stat.problem2Score +
-          stat.examination1Score +
-          stat.examination1Score +
-          stat.diagnosticScore +
+          stat.examinationScore +
+          stat.diffDiagScore +
           stat.treatmentScore;
       return res;
     }
@@ -120,11 +118,6 @@ class _ShowStatsForNisitState extends State<ShowStatsForNisit> {
                                 ),
                                 DataColumn(
                                   label: Expanded(
-                                    child: Text('คะแนน Examination ครั้งที่ 2'),
-                                  ),
-                                ),
-                                DataColumn(
-                                  label: Expanded(
                                     child: Text('คะแนน Diagnosis'),
                                   ),
                                 ),
@@ -140,9 +133,6 @@ class _ShowStatsForNisitState extends State<ShowStatsForNisit> {
                                   setState(() {
                                     splitProblems = groupBy(
                                         statList[index].problems,
-                                        (e) => e.round.toString());
-                                    splitExams = groupBy(
-                                        statList[index].examinations,
                                         (e) => e.round.toString());
                                   });
                                   return DataRow(
@@ -196,13 +186,15 @@ class _ShowStatsForNisitState extends State<ShowStatsForNisit> {
                                           children: [
                                             Text(
                                               statList[index]
-                                                  .examination1Score
+                                                  .examinationScore
                                                   .toString(),
                                             ),
                                             IconButton(
                                                 onPressed: () {
-                                                  examModal(context, '1',
-                                                      splitExams['1']!);
+                                                  examModal(
+                                                      context,
+                                                      statList[index]
+                                                          .examinations);
                                                 },
                                                 icon: const Icon(Icons.search))
                                           ],
@@ -236,26 +228,7 @@ class _ShowStatsForNisitState extends State<ShowStatsForNisit> {
                                           children: [
                                             Text(
                                               statList[index]
-                                                  .examination2Score
-                                                  .toString(),
-                                            ),
-                                            IconButton(
-                                                onPressed: () {
-                                                  examModal(context, '2',
-                                                      splitExams['2']!);
-                                                },
-                                                icon: const Icon(Icons.search))
-                                          ],
-                                        ),
-                                      ),
-                                      DataCell(
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Text(
-                                              statList[index]
-                                                  .diagnosticScore
+                                                  .diffDiagScore
                                                   .toString(),
                                             ),
                                             IconButton(

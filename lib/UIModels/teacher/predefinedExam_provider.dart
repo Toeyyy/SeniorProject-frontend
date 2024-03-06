@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/AllDataFile.dart';
 import 'package:frontend/models/examinationPreDefinedObject.dart';
 import 'package:collection/collection.dart';
 
@@ -12,7 +13,7 @@ class PreDefinedExamProvider extends ChangeNotifier {
   late Map<String, Map<String, List<ExamPreDefinedObject>>> groupedByType;
 
   void assignItem(List<ExamPreDefinedObject> itemList) {
-    examList.addAll(itemList);
+    examList = itemList;
     ChangeNotifier();
   }
 
@@ -42,6 +43,12 @@ class PreDefinedExamProvider extends ChangeNotifier {
   void deleteItem(ExamPreDefinedObject item) {
     examList.remove(item);
     groupedByLab[item.lab]!.remove(item);
+    ChangeNotifier();
+  }
+
+  void updateGroupedList(String labName) {
+    groupedByLab = groupBy(examList, (exam) => exam.lab);
+    currentLabList = groupBy(groupedByLab[labName]!, (e) => e.type);
     ChangeNotifier();
   }
 }
