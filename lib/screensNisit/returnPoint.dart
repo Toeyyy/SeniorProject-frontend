@@ -6,6 +6,7 @@ import 'package:frontend/components/BoxesInAddQ.dart';
 import 'package:frontend/models/problemListObject.dart';
 import 'package:collection/collection.dart';
 import 'package:frontend/components/examContainer.dart';
+import 'package:frontend/models/diagnosisObject.dart';
 import 'package:frontend/models/examinationPreDefinedObject.dart';
 
 class ReturnPoint extends StatelessWidget {
@@ -15,8 +16,8 @@ class ReturnPoint extends StatelessWidget {
 
   late Map<String, List<ProblemObject>> splitProblems =
       groupBy(stat!.problems, (e) => e.round.toString());
-  // late Map<String, List<ExamPreDefinedObject>> splitExams =
-  //     groupBy(stat!.examinations, (e) => e.round.toString());
+  late Map<String, List<DiagnosisObject>> splitDiag =
+      groupBy(stat!.diagnostics, (e) => e.type);
 
   @override
   Widget build(BuildContext context) {
@@ -71,6 +72,29 @@ class ReturnPoint extends StatelessWidget {
                             );
                           },
                         ),
+                        const DividerWithSpace(),
+                        /////ten diag/////
+                        Text(
+                          'Differential Diagnosis, คะแนนที่ได้: ${stat!.diffDiagScore} คะแนน',
+                          style: kSubHeaderTextStyleInLeftPart,
+                        ),
+                        const SizedBox(height: 10),
+                        ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: splitDiag['differential']!.length,
+                          itemBuilder: (context, index) {
+                            return ListTile(
+                              title:
+                                  Text(splitDiag['differential']![index].name),
+                              leading: const Icon(
+                                Icons.circle,
+                                size: 15,
+                              ),
+                            );
+                          },
+                        ),
+                        const DividerWithSpace(),
+                        //exam
                         Text(
                           'Examination, คะแนนที่ได้: ${stat!.examinationScore} คะแนน',
                           style: kSubHeaderTextStyleInLeftPart,
@@ -88,7 +112,7 @@ class ReturnPoint extends StatelessWidget {
                                   name: item.name);
                             }),
                         const DividerWithSpace(),
-                        /////prob&exam2/////
+                        /////prob2/////
                         Text(
                           'Problem List ครั้งที่ 2, คะแนนที่ได้: ${stat!.problem2Score} คะแนน',
                           style: kSubHeaderTextStyleInLeftPart,
@@ -108,18 +132,18 @@ class ReturnPoint extends StatelessWidget {
                           },
                         ),
                         const DividerWithSpace(),
-                        /////diag/////
+                        /////ten diag/////
                         Text(
-                          'Diagnosis, คะแนนที่ได้: ${stat!.diffDiagScore} คะแนน',
+                          'Definitive/Tentative Diagnosis, คะแนนที่ได้: ${stat!.tenDiagScore} คะแนน',
                           style: kSubHeaderTextStyleInLeftPart,
                         ),
                         const SizedBox(height: 10),
                         ListView.builder(
                           shrinkWrap: true,
-                          itemCount: stat!.diagnostics.length,
+                          itemCount: splitDiag['tentative']!.length,
                           itemBuilder: (context, index) {
                             return ListTile(
-                              title: Text(stat!.diagnostics[index].name),
+                              title: Text(splitDiag['tentative']![index].name),
                               leading: const Icon(
                                 Icons.circle,
                                 size: 15,

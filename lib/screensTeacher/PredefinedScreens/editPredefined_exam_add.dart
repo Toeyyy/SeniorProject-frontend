@@ -43,9 +43,11 @@ class _EditPreDefinedExamAddState extends State<EditPreDefinedExamAdd> {
   late List<ExamPreDefinedObject> selectedLabList = groupedByLab.values.first;
   late Map<String, List<ExamPreDefinedObject>> groupedByType =
       groupBy(selectedLabList, (e) => e.type);
-  late List<String> typeNameList = groupedByType.keys.toList();
-  late List<String> typeDisplayList =
-      filterList(typeTextController, typeNameList);
+  // late List<String> typeNameList = groupedByType.keys.toList();
+  // late List<String>? typeDisplayList =
+  //     filterList(typeTextController, typeNameList);
+  late List<String> typeNameList = [];
+  late List<String> typeDisplayList = [];
 
   /////area/////
   late Map<String, List<ExamPreDefinedObject>> groupedByArea =
@@ -56,14 +58,19 @@ class _EditPreDefinedExamAddState extends State<EditPreDefinedExamAdd> {
 
   /////name/////
   late List<ExamPreDefinedObject> selectedTypeList = groupedByType.values.first;
-  late List<String> nameList = selectedTypeList.map((e) => e.name).toList();
-  late List<String> nameDisplayList = filterList(nameTextController, nameList);
+  // late List<String> nameList = selectedTypeList.map((e) => e.name).toList();
+  // late List<String> nameDisplayList = filterList(nameTextController, nameList);
+  late List<String> nameList = [];
+  late List<String> nameDisplayList = [];
 
   bool _canSave = true;
   PlatformFile? imageDefault;
 
   List<String> filterList(
       TextEditingController searchController, List<String> listForSearch) {
+    if (listForSearch.isEmpty) {
+      return [];
+    }
     String query = searchController.text.toLowerCase();
     return listForSearch
         .where((item) => item.toLowerCase().contains(query))

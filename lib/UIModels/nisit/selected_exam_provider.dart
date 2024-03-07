@@ -8,17 +8,17 @@ class SelectedExam extends ChangeNotifier {
 
   List<ResultContainer> resultList = [];
 
-  void addNewExam(ExamPreDefinedObject newItem, int round) {
+  void addNewExam(ExamPreDefinedObject newItem) {
     examList.add(newItem);
     notifyListeners();
   }
 
-  void addNewResult(ResultContainer newItem, int round) {
+  void addNewResult(ResultContainer newItem) {
     resultList.add(newItem);
     notifyListeners();
   }
 
-  List<ResultContainer> getResultList(int round) {
+  List<ResultContainer> getResultList() {
     return resultList;
   }
 

@@ -2,15 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:frontend/models/diagnosisObject.dart';
 
 class SelectedDiagnosis extends ChangeNotifier {
-  List<DiagnosisObject> diagList = [];
+  List<DiagnosisObject> diffDiagList = [];
+  List<DiagnosisObject> tenDiagList = [];
 
-  void assignList(List<DiagnosisObject> list) {
-    diagList = list;
+  void assignList(List<DiagnosisObject> list, String type) {
+    if (type == 'diff') {
+      diffDiagList = list;
+    } else {
+      tenDiagList = list;
+    }
     notifyListeners();
   }
 
   void clearList() {
-    diagList.clear();
+    diffDiagList.clear();
+    tenDiagList.clear();
     notifyListeners();
   }
 }

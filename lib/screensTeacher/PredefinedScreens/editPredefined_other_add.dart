@@ -37,6 +37,9 @@ class _EditPreDefinedOtherAddState extends State<EditPreDefinedOtherAdd> {
         );
       } else if (title == 'Differential Diagnosis' ||
           title == 'Tentative/Definitive Diagnosis') {
+        data = addedList.map((item) {
+          return {"type": item.type, "name": item.name};
+        }).toList();
         final http.Response response = await http.post(
           Uri.parse("${dotenv.env['API_PATH']}/diagnostic"),
           headers: {"Content-Type": "application/json"},

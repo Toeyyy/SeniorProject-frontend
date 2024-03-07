@@ -42,6 +42,10 @@ class TreatmentDetail extends StatelessWidget {
                     showList: problemProvider.problemAnsList1
                         .map((e) => e.name)
                         .toList()),
+                TitleAndDottedListView(
+                    title: 'Differential Diagnosis',
+                    showList:
+                        diagProvider.diffDiagList.map((e) => e.name).toList()),
                 TitleAndExams(
                   title: 'Examination',
                   showList: examProvider.examList,
@@ -53,9 +57,9 @@ class TreatmentDetail extends StatelessWidget {
                         .map((e) => e.name)
                         .toList()),
                 TitleAndDottedListView(
-                    title: 'Diagnosis',
+                    title: 'Definitive/Tentative Diagnosis',
                     showList:
-                        diagProvider.diagList.map((e) => e.name).toList()),
+                        diagProvider.tenDiagList.map((e) => e.name).toList()),
               ],
             ),
           ),

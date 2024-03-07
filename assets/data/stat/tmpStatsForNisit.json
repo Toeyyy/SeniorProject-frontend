@@ -75,7 +75,8 @@
     "problem2_Score": 15,
     "examination_Score": 20,
     "treatment_Score": 5,
-    "diagnostic_Score": 10
+    "diffDiag_Score": 10,
+    "tenDiag_Score" : 16
   },
   {
     "questionId": "ID_2",
@@ -173,6 +174,7 @@
     "problem2_Score": 12,
     "examination_Score": 11,
     "treatment_Score": 12,
-    "diagnostic_Score": 9
+    "diffDiag_Score": 9,
+    "tenDiag_Score": 15
   }
 ]

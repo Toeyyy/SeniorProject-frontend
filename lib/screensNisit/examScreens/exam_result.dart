@@ -11,17 +11,16 @@ import 'package:frontend/components/resultContainer.dart';
 import 'package:frontend/screensNisit/examScreens/exam_total.dart';
 import 'package:frontend/models/questionObject.dart';
 import 'package:frontend/UIModels/nisit/selected_problem_provider.dart';
+import 'package:frontend/UIModels/nisit/selected_diagnosis_provider.dart';
 
 class ExamResult extends StatelessWidget {
   ExamPreDefinedObject selectedExam;
-  int round;
   QuestionObject questionObj;
   ExamResultObject result;
 
   ExamResult(
       {super.key,
       required this.selectedExam,
-      required this.round,
       required this.questionObj,
       required this.result});
 
@@ -30,42 +29,28 @@ class ExamResult extends StatelessWidget {
     SelectedExam examProvider = Provider.of<SelectedExam>(context);
     SelectedProblem problemProvider =
         Provider.of<SelectedProblem>(context, listen: false);
+    SelectedDiagnosis diagProvider =
+        Provider.of<SelectedDiagnosis>(context, listen: false);
 
     return Scaffold(
       appBar: const AppbarNisit(),
       body: SplitScreenNisit(
-        leftPart: round == 1
-            ? LeftPartContent(
-                questionObj: questionObj,
-                addedContent: TitleAndDottedListView(
+        leftPart: LeftPartContent(
+          questionObj: questionObj,
+          addedContent: Column(
+            children: [
+              TitleAndDottedListView(
                   title: 'Problem List ครั้งที่ 1',
                   showList: problemProvider.problemAnsList1
                       .map((e) => e.name)
-                      .toList(),
-                ),
-              )
-            : LeftPartContent(
-                questionObj: questionObj,
-                addedContent: Column(
-                  children: [
-                    TitleAndDottedListView(
-                        title: 'Problem List ครั้งที่ 1',
-                        showList: problemProvider.problemAnsList1
-                            .map((e) => e.name)
-                            .toList()),
-                    TitleAndExams(
-                      title: 'Examination ครั้งที่ 1',
-                      showList: examProvider.examList,
-                      resultList: examProvider.resultList,
-                    ),
-                    TitleAndDottedListView(
-                        title: 'Problem List ครั้งที่ 2',
-                        showList: problemProvider.problemAnsList2
-                            .map((e) => e.name)
-                            .toList()),
-                  ],
-                ),
-              ),
+                      .toList()),
+              TitleAndDottedListView(
+                  title: 'Differential Diagnosis',
+                  showList:
+                      diagProvider.diffDiagList.map((e) => e.name).toList()),
+            ],
+          ),
+        ),
         rightPart: Padding(
           padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
           child: result != null
@@ -85,15 +70,12 @@ class ExamResult extends StatelessWidget {
                     ),
                     ElevatedButton(
                       onPressed: () {
-                        examProvider.addNewResult(
-                            ResultContainer(
-                                result: result, selectedExam: selectedExam),
-                            round);
+                        examProvider.addNewResult(ResultContainer(
+                            result: result, selectedExam: selectedExam));
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => ExamTotal(
-                              round: round,
                               questionObj: questionObj,
                             ),
                           ),

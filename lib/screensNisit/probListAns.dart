@@ -5,10 +5,12 @@ import 'package:frontend/constants.dart';
 import 'package:frontend/models/problemListObject.dart';
 import 'package:frontend/UIModels/nisit/selected_problem_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:frontend/screensNisit/examScreens/exam_topics.dart';
 import 'package:frontend/models/questionObject.dart';
 import 'package:frontend/UIModels/nisit/selected_exam_provider.dart';
 import 'package:frontend/components/BoxesInAddQ.dart';
+import 'package:frontend/screensNisit/diffDiag.dart';
+import 'package:frontend/screensNisit/tenDiag.dart';
+import 'package:frontend/UIModels/nisit/selected_diagnosis_provider.dart';
 
 class ProbListAns extends StatelessWidget {
   int round;
@@ -58,6 +60,8 @@ class ProbListAns extends StatelessWidget {
         Provider.of<SelectedExam>(context, listen: false);
     SelectedProblem problemProvider =
         Provider.of<SelectedProblem>(context, listen: false);
+    SelectedDiagnosis diagProvider =
+        Provider.of<SelectedDiagnosis>(context, listen: false);
 
     List<ProblemObject> correctProblem = round == 1
         ? problemProvider.problemAnsList1
@@ -80,8 +84,13 @@ class ProbListAns extends StatelessWidget {
                         showList: problemProvider.problemAnsList1
                             .map((e) => e.name)
                             .toList()),
+                    TitleAndDottedListView(
+                        title: 'Differential Diagnosis',
+                        showList: diagProvider.diffDiagList
+                            .map((e) => e.name)
+                            .toList()),
                     TitleAndExams(
-                      title: 'Examination ครั้งที่ 1',
+                      title: 'Examination',
                       showList: examProvider.examList,
                       resultList: examProvider.resultList,
                     ),
@@ -117,21 +126,33 @@ class ProbListAns extends StatelessWidget {
               Expanded(
                 child: showAnsProbList(correctProblem, userProblem),
               ),
-              ElevatedButton(
-                onPressed: () {
-                  //go to exam
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ExamTopic(
-                        round: round,
-                        questionObj: questionObj,
-                      ),
-                    ),
-                  );
-                },
-                child: const Text('ส่งตรวจ'),
-              )
+              round == 1
+                  ? ElevatedButton(
+                      onPressed: () {
+                        //go to diff diag
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                DiffDiag(questionObj: questionObj),
+                          ),
+                        );
+                      },
+                      child: const Text('Differential Diagnosis'),
+                    )
+                  : ElevatedButton(
+                      onPressed: () {
+                        //go to ten diag
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                TentativeDiag(questionObj: questionObj),
+                          ),
+                        );
+                      },
+                      child: const Text('Definitive/Tentative Diagnosis'),
+                    )
             ],
           ),
         ),

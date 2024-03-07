@@ -14,6 +14,8 @@ class SelectedProblem extends ChangeNotifier {
     problemList2.clear();
     problemAnsList1.clear();
     problemAnsList2.clear();
+    heart1 = 5;
+    heart2 = 5;
     notifyListeners();
   }
 

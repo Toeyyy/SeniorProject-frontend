@@ -54,7 +54,7 @@ class StatQuestionObject {
           [],
       problem1Score: json['problem1_Score'] ?? 0,
       problem2Score: json['problem2_Score'] ?? 0,
-      examinationScore: json['examination1_Score'] ?? 0,
+      examinationScore: json['examination_Score'] ?? 0,
       treatmentScore: json['treatment_Score'] ?? 0,
       diffDiagScore: json['diffDiag_Score'] ?? 0,
       tenDiagScore: json['tenDiag_Score'] ?? 0,

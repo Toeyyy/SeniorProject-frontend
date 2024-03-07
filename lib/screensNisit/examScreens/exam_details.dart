@@ -13,18 +13,17 @@ import 'package:frontend/models/questionObject.dart';
 import 'package:frontend/models/examResultObject.dart';
 import 'package:frontend/aboutData/getDataFunctions.dart';
 import 'package:frontend/UIModels/nisit/selected_problem_provider.dart';
+import 'package:frontend/UIModels/nisit/selected_diagnosis_provider.dart';
 
 class ExamDetail_Type extends StatelessWidget {
   List<ExamPreDefinedObject> list;
   String title;
-  int round;
   QuestionObject questionObj;
 
   ExamDetail_Type(
       {super.key,
       required this.list,
       required this.title,
-      required this.round,
       required this.questionObj});
 
   late Map<String, List<ExamPreDefinedObject>> groupedByType =
@@ -36,42 +35,28 @@ class ExamDetail_Type extends StatelessWidget {
         Provider.of<SelectedProblem>(context, listen: false);
     SelectedExam examProvider =
         Provider.of<SelectedExam>(context, listen: false);
+    SelectedDiagnosis diagProvider =
+        Provider.of<SelectedDiagnosis>(context, listen: false);
 
     return Scaffold(
       appBar: const AppbarNisit(),
       body: SplitScreenNisit(
-        leftPart: round == 1
-            ? LeftPartContent(
-                questionObj: questionObj,
-                addedContent: TitleAndDottedListView(
+        leftPart: LeftPartContent(
+          questionObj: questionObj,
+          addedContent: Column(
+            children: [
+              TitleAndDottedListView(
                   title: 'Problem List ครั้งที่ 1',
                   showList: problemProvider.problemAnsList1
                       .map((e) => e.name)
-                      .toList(),
-                ),
-              )
-            : LeftPartContent(
-                questionObj: questionObj,
-                addedContent: Column(
-                  children: [
-                    TitleAndDottedListView(
-                        title: 'Problem List ครั้งที่ 1',
-                        showList: problemProvider.problemAnsList1
-                            .map((e) => e.name)
-                            .toList()),
-                    TitleAndExams(
-                      title: 'Examination ครั้งที่ 1',
-                      showList: examProvider.examList,
-                      resultList: examProvider.resultList,
-                    ),
-                    TitleAndDottedListView(
-                        title: 'Problem List ครั้งที่ 2',
-                        showList: problemProvider.problemAnsList2
-                            .map((e) => e.name)
-                            .toList()),
-                  ],
-                ),
-              ),
+                      .toList()),
+              TitleAndDottedListView(
+                  title: 'Differential Diagnosis',
+                  showList:
+                      diagProvider.diffDiagList.map((e) => e.name).toList()),
+            ],
+          ),
+        ),
         rightPart: Padding(
           padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
           child: Column(
@@ -95,7 +80,6 @@ class ExamDetail_Type extends StatelessWidget {
                             builder: (context) => ExamDetail_Name(
                               list: groupedByType.values.toList()[index],
                               title: groupedByType.keys.toList()[index],
-                              round: round,
                               questionObj: questionObj,
                             ),
                           ),
@@ -117,14 +101,12 @@ class ExamDetail_Type extends StatelessWidget {
 class ExamDetail_Name extends StatefulWidget {
   List<ExamPreDefinedObject> list;
   String title;
-  int round;
   QuestionObject questionObj;
 
   ExamDetail_Name(
       {super.key,
       required this.list,
       required this.title,
-      required this.round,
       required this.questionObj});
 
   @override
@@ -165,38 +147,28 @@ class _ExamDetail_NameState extends State<ExamDetail_Name> {
     return Scaffold(
       appBar: const AppbarNisit(),
       body: SplitScreenNisit(
-        leftPart: widget.round == 1
-            ? LeftPartContent(
-                questionObj: widget.questionObj,
-                addedContent: TitleAndDottedListView(
+        leftPart: LeftPartContent(
+          questionObj: widget.questionObj,
+          addedContent: Column(
+            children: [
+              TitleAndDottedListView(
                   title: 'Problem List ครั้งที่ 1',
                   showList: problemProvider.problemAnsList1
                       .map((e) => e.name)
-                      .toList(),
-                ),
-              )
-            : LeftPartContent(
-                questionObj: widget.questionObj,
-                addedContent: Column(
-                  children: [
-                    TitleAndDottedListView(
-                        title: 'Problem List ครั้งที่ 1',
-                        showList: problemProvider.problemAnsList1
-                            .map((e) => e.name)
-                            .toList()),
-                    TitleAndExams(
-                      title: 'Examination ครั้งที่ 1',
-                      showList: examProvider.examList,
-                      resultList: examProvider.resultList,
-                    ),
-                    TitleAndDottedListView(
-                        title: 'Problem List ครั้งที่ 2',
-                        showList: problemProvider.problemAnsList2
-                            .map((e) => e.name)
-                            .toList()),
-                  ],
-                ),
+                      .toList()),
+              TitleAndExams(
+                title: 'Examination ครั้งที่ 1',
+                showList: examProvider.examList,
+                resultList: examProvider.resultList,
               ),
+              TitleAndDottedListView(
+                  title: 'Problem List ครั้งที่ 2',
+                  showList: problemProvider.problemAnsList2
+                      .map((e) => e.name)
+                      .toList()),
+            ],
+          ),
+        ),
         rightPart: Padding(
           padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
           child: Column(
@@ -279,14 +251,13 @@ class _ExamDetail_NameState extends State<ExamDetail_Name> {
                       MyBackButton(myContext: context),
                       ElevatedButton(
                         onPressed: () async {
-                          examProvider.addNewExam(selectedItem!, widget.round);
+                          examProvider.addNewExam(selectedItem!);
                           await getData(selectedItem!.id).then((value) {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => ExamResult(
                                   selectedExam: selectedItem!,
-                                  round: widget.round,
                                   questionObj: widget.questionObj,
                                   result: result!,
                                 ),

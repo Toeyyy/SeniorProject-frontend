@@ -42,7 +42,8 @@ class _EditPredefinedOtherEditState extends State<EditPredefinedOtherEdit> {
             headers: {"Content-Type": "application/json"},
             body: jsonEncode(data),
           );
-        } else if (title == 'Diagnosis List') {
+        } else if (title == 'Differential Diagnosis' ||
+            title == 'Tentative/Definitive Diagnosis') {
           final http.Response response = await http.delete(
             Uri.parse("${dotenv.env['API_PATH']}/diagnostic"),
             headers: {"Content-Type": "application/json"},

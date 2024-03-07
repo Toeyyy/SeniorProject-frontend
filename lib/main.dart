@@ -4,7 +4,7 @@ import 'package:frontend/UIModels/nisit/selected_treatment_provider.dart';
 import 'package:frontend/UIModels/teacher/examContainer_provider.dart';
 import 'package:frontend/UIModels/teacher/treatmentContainer_provider.dart';
 import 'package:frontend/UIModels/teacher/predefinedExam_provider.dart';
-import 'package:frontend/screensNisit/diagnosis.dart';
+import 'package:frontend/screensNisit/tenDiag.dart';
 import 'package:frontend/screensNisit/probListAns.dart';
 import 'package:frontend/screensNisit/treatmentTopic.dart';
 import 'package:frontend/screensNisit/treatmentTotal.dart';

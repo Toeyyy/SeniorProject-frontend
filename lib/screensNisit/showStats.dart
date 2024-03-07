@@ -5,7 +5,7 @@ import 'package:frontend/models/statModels/StatQuestionObject.dart';
 import 'package:frontend/aboutData/getDataFunctions.dart';
 import 'package:frontend/components/BoxesInAddQ.dart';
 import 'package:frontend/models/problemListObject.dart';
-import 'package:frontend/models/examinationPreDefinedObject.dart';
+import 'package:frontend/models/diagnosisObject.dart';
 import 'package:collection/collection.dart';
 
 class ShowStatsForNisit extends StatefulWidget {
@@ -19,6 +19,7 @@ class _ShowStatsForNisitState extends State<ShowStatsForNisit> {
   late List<StatQuestionObject> statList;
   bool _isLoadingData = false;
   late Map<String, List<ProblemObject>> splitProblems = {};
+  late Map<String, List<DiagnosisObject>> splitDiag = {};
 
   @override
   void initState() {
@@ -56,6 +57,7 @@ class _ShowStatsForNisitState extends State<ShowStatsForNisit> {
           stat.problem2Score +
           stat.examinationScore +
           stat.diffDiagScore +
+          stat.tenDiagScore +
           stat.treatmentScore;
       return res;
     }
@@ -107,7 +109,12 @@ class _ShowStatsForNisitState extends State<ShowStatsForNisit> {
                                 ),
                                 DataColumn(
                                   label: Expanded(
-                                    child: Text('คะแนน Examination ครั้งที่ 1'),
+                                    child: Text('คะแนน Differential Diagnosis'),
+                                  ),
+                                ),
+                                DataColumn(
+                                  label: Expanded(
+                                    child: Text('คะแนน Examination'),
                                   ),
                                 ),
                                 DataColumn(
@@ -118,7 +125,8 @@ class _ShowStatsForNisitState extends State<ShowStatsForNisit> {
                                 ),
                                 DataColumn(
                                   label: Expanded(
-                                    child: Text('คะแนน Diagnosis'),
+                                    child: Text(
+                                        'คะแนน Definitive/Tentative Diagnosis'),
                                   ),
                                 ),
                                 DataColumn(
@@ -134,6 +142,9 @@ class _ShowStatsForNisitState extends State<ShowStatsForNisit> {
                                     splitProblems = groupBy(
                                         statList[index].problems,
                                         (e) => e.round.toString());
+                                    splitDiag = groupBy(
+                                        statList[index].diagnostics,
+                                        (e) => e.type);
                                   });
                                   return DataRow(
                                     color: MaterialStateColor.resolveWith(
@@ -174,6 +185,28 @@ class _ShowStatsForNisitState extends State<ShowStatsForNisit> {
                                                       context,
                                                       "Problem List ครั้งที่ 1",
                                                       splitProblems['1']!);
+                                                },
+                                                icon: const Icon(Icons.search)),
+                                          ],
+                                        ),
+                                      ),
+                                      DataCell(
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              statList[index]
+                                                  .diffDiagScore
+                                                  .toString(),
+                                            ),
+                                            IconButton(
+                                                onPressed: () {
+                                                  probDiagTreatmentModal(
+                                                      context,
+                                                      "Differential Diagnosis",
+                                                      splitDiag[
+                                                          'differential']!);
                                                 },
                                                 icon: const Icon(Icons.search)),
                                           ],
@@ -235,9 +268,8 @@ class _ShowStatsForNisitState extends State<ShowStatsForNisit> {
                                                 onPressed: () {
                                                   probDiagTreatmentModal(
                                                       context,
-                                                      "Diagnosis",
-                                                      statList[index]
-                                                          .diagnostics);
+                                                      "Definitive/Tentative Diagnosis",
+                                                      splitDiag['tentative']!);
                                                 },
                                                 icon: const Icon(Icons.search)),
                                           ],

@@ -12,6 +12,7 @@ import 'package:frontend/AllDataFile.dart';
 import 'package:frontend/UIModels/nisit/selected_exam_provider.dart';
 import 'package:frontend/components/BoxesInAddQ.dart';
 import 'package:frontend/aboutData/getDataFunctions.dart';
+import 'package:frontend/UIModels/nisit/selected_diagnosis_provider.dart';
 
 class ProbList extends StatelessWidget {
   int round;
@@ -25,6 +26,9 @@ class ProbList extends StatelessWidget {
         Provider.of<SelectedExam>(context, listen: false);
     SelectedProblem problemProvider =
         Provider.of<SelectedProblem>(context, listen: false);
+    SelectedDiagnosis diagProvider =
+        Provider.of<SelectedDiagnosis>(context, listen: false);
+
     return Scaffold(
       appBar: const AppbarNisit(),
       body: SplitScreenNisit(
@@ -39,8 +43,13 @@ class ProbList extends StatelessWidget {
                         showList: problemProvider.problemAnsList1
                             .map((e) => e.name)
                             .toList()),
+                    TitleAndDottedListView(
+                        title: 'Differential Diagnosis',
+                        showList: diagProvider.diffDiagList
+                            .map((e) => e.name)
+                            .toList()),
                     TitleAndExams(
-                      title: 'Examination ครั้งที่ 1',
+                      title: 'Examination',
                       showList: examProvider.examList,
                       resultList: examProvider.resultList,
                     ),

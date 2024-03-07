@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/components/splitScreenNisit.dart';
 import 'package:frontend/components/appbar.dart';
@@ -12,11 +13,12 @@ import 'package:frontend/AllDataFile.dart';
 import 'package:frontend/UIModels/nisit/selected_problem_provider.dart';
 import 'package:frontend/UIModels/nisit/selected_exam_provider.dart';
 import 'package:frontend/components/BoxesInAddQ.dart';
+import 'package:frontend/UIModels/nisit/selected_diagnosis_provider.dart';
 
-class Diagnosis extends StatelessWidget {
+class TentativeDiag extends StatelessWidget {
   QuestionObject questionObj;
 
-  Diagnosis({super.key, required this.questionObj});
+  TentativeDiag({super.key, required this.questionObj});
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +26,9 @@ class Diagnosis extends StatelessWidget {
         Provider.of<SelectedExam>(context, listen: false);
     SelectedProblem problemProvider =
         Provider.of<SelectedProblem>(context, listen: false);
+    SelectedDiagnosis diagProvider =
+        Provider.of<SelectedDiagnosis>(context, listen: false);
+
     return Scaffold(
       appBar: const AppbarNisit(),
       body: SplitScreenNisit(
@@ -36,8 +41,12 @@ class Diagnosis extends StatelessWidget {
                   showList: problemProvider.problemAnsList1
                       .map((e) => e.name)
                       .toList()),
+              TitleAndDottedListView(
+                  title: 'Differential Diagnosis',
+                  showList:
+                      diagProvider.diffDiagList.map((e) => e.name).toList()),
               TitleAndExams(
-                title: 'Examination ครั้งที่ 1',
+                title: 'Examination',
                 showList: examProvider.examList,
                 resultList: examProvider.resultList,
               ),
@@ -49,7 +58,7 @@ class Diagnosis extends StatelessWidget {
             ],
           ),
         ),
-        rightPart: RightPart_Diagnosis(
+        rightPart: RightPart_TenDiagnosis(
           questionObj: questionObj,
         ),
       ),
@@ -57,19 +66,20 @@ class Diagnosis extends StatelessWidget {
   }
 }
 
-class RightPart_Diagnosis extends StatefulWidget {
+class RightPart_TenDiagnosis extends StatefulWidget {
   QuestionObject questionObj;
 
-  RightPart_Diagnosis({super.key, required this.questionObj});
+  RightPart_TenDiagnosis({super.key, required this.questionObj});
 
   @override
-  State<RightPart_Diagnosis> createState() => _RightPart_DiagnosisState();
+  State<RightPart_TenDiagnosis> createState() => _RightPart_TenDiagnosisState();
 }
 
-class _RightPart_DiagnosisState extends State<RightPart_Diagnosis> {
-  TextEditingController _searchController = TextEditingController();
+class _RightPart_TenDiagnosisState extends State<RightPart_TenDiagnosis> {
+  final TextEditingController _searchController = TextEditingController();
   List<DiagnosisObject> _displayList = [];
-  final List<DiagnosisObject> _fullList = diagnosisListPreDefined;
+  final List<DiagnosisObject> _fullList =
+      groupBy(diagnosisListPreDefined, (e) => e.type)['tentative']!;
   List<DiagnosisObject> _selectedList = [];
   bool _isListViewVisible = false;
 
@@ -120,7 +130,6 @@ class _RightPart_DiagnosisState extends State<RightPart_Diagnosis> {
                         _selectedList.add(_displayList[index]);
                         _searchController.clear();
                         setState(() {
-                          // _fullList.remove(_displayList[index]);
                           _displayList.remove(_displayList[index]);
                           _isListViewVisible = false;
                         });
@@ -141,9 +150,7 @@ class _RightPart_DiagnosisState extends State<RightPart_Diagnosis> {
                       icon: const Icon(Icons.remove),
                       onPressed: () {
                         setState(() {
-                          // _fullList.add(_selectedList[index]);
                           _displayList.add(_selectedList[index]);
-                          // diagnosisList.add(_selectedList[index]);
                           _selectedList.remove(_selectedList[index]);
                         });
                       },
@@ -156,7 +163,7 @@ class _RightPart_DiagnosisState extends State<RightPart_Diagnosis> {
           ElevatedButton(
             onPressed: () {
               //go to treatment
-              diagProvider.assignList(_selectedList);
+              diagProvider.assignList(_selectedList, 'ten');
               Navigator.pop(context);
               Navigator.push(
                 context,

@@ -45,9 +45,9 @@ List<dynamic> filterEditTopicList(String value) {
       value == 'Tentative/Definitive Diagnosis') {
     var groupedByType = groupBy(diagnosisListPreDefined, (e) => e.type);
     if (value == 'Differential Diagnosis') {
-      return groupedByType['differential']!.cast<dynamic>();
+      return groupedByType['differential']?.cast<dynamic>() ?? [];
     } else {
-      return groupedByType['tentative']!.cast<dynamic>();
+      return groupedByType['tentative']?.cast<dynamic>() ?? [];
     }
   } else {
     return tagListPreDefined;
@@ -64,6 +64,9 @@ List<dynamic> filterList(
 
 List<String> filterStringList(
     TextEditingController searchController, List<String> listForSearch) {
+  if (listForSearch.isEmpty) {
+    return [];
+  }
   String query = searchController.text.toLowerCase();
   return listForSearch
       .where((item) => item.toLowerCase().contains(query))

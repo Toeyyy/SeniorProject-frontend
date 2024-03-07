@@ -36,9 +36,11 @@ class _EditPreDefinedTreatmentAddState
 
   /////name//////
   late String selectedType = groupedByType.values.first.first.type;
-  late List<String> nameList =
-      groupedByType[selectedType]!.map((e) => e.name).toList();
-  late List nameDisplayList = filterStringList(nameTextController, nameList);
+  // late List<String> nameList =
+  //     groupedByType[selectedType]!.map((e) => e.name).toList();
+  // late List nameDisplayList = filterStringList(nameTextController, nameList);
+  late List<String> nameList = [];
+  late List nameDisplayList = [];
 
   List<TreatmentObject> addedList = [];
   bool _isEditing = false;
