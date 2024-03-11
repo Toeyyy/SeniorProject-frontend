@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/AllDataFile.dart';
 import 'package:frontend/components/appbar.dart';
 import 'package:frontend/constants.dart';
 import 'package:frontend/models/statModels/StatQuestionObject.dart';
@@ -31,6 +32,8 @@ class ReturnPoint extends StatelessWidget {
       }
       return res;
     }
+
+    currentQuestion = null;
 
     return Scaffold(
       appBar: const AppbarNisit(),

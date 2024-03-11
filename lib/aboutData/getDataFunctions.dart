@@ -77,9 +77,6 @@ Future<List<ProblemObject>> fetchProblemAns(String quesId, int round) async {
   //     jsonString = await rootBundle.loadString("data/tmpNisitProblemAns2.json");
   //   }
   //   final List<dynamic> jsonList = json.decode(jsonString)[0]['problems'];
-  //   // print('jsonList = $jsonList');
-  //   // print(
-  //   //     'object data = ${jsonList.map((data) => ProblemObject.fromJson(data)).toList()}');
   //   return jsonList.map((data) => ProblemObject.fromJson(data)).toList();
   // } catch (error) {
   //   print('Error fetching data: $error');
@@ -106,6 +103,7 @@ Future<void> fetchFullQuestionList() async {
   }
 
   //tmp-comment later
+  // print('fetch questions');
   // try {
   //   final String jsonString =
   //       await rootBundle.loadString("data/tmpTeacherQuestion.json");

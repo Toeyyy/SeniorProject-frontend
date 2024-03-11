@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/AllDataFile.dart';
 import 'package:frontend/components/splitScreenNisit.dart';
 import 'package:frontend/components/appbar.dart';
 import 'package:frontend/UIModels/nisit/selected_exam_provider.dart';
@@ -14,9 +15,9 @@ import 'package:frontend/UIModels/nisit/selected_problem_provider.dart';
 import 'package:frontend/UIModels/nisit/selected_diagnosis_provider.dart';
 
 class ExamTotal extends StatelessWidget {
-  QuestionObject questionObj;
+  // QuestionObject questionObj;
 
-  ExamTotal({super.key, required this.questionObj});
+  ExamTotal({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +32,7 @@ class ExamTotal extends StatelessWidget {
       appBar: const AppbarNisit(),
       body: SplitScreenNisit(
         leftPart: LeftPartContent(
-          questionObj: questionObj,
+          questionObj: currentQuestion!,
           addedContent: Column(
             children: [
               TitleAndDottedListView(
@@ -82,8 +83,7 @@ class ExamTotal extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) =>
-                                  ExamTopic(questionObj: questionObj),
+                              builder: (context) => ExamTopic(),
                             ),
                           );
                         },
@@ -100,7 +100,6 @@ class ExamTotal extends StatelessWidget {
                             MaterialPageRoute(
                               builder: (context) => ProbList(
                                 round: 2,
-                                questionObj: questionObj,
                               ),
                             ),
                           );

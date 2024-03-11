@@ -104,26 +104,7 @@ class _AddQuestionState extends State<AddQuestion> {
           });
     }
 
-    void alertModal(BuildContext context) {
-      showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return Dialog(
-              child: SizedBox(
-                width: MediaQuery.of(context).size.height * 0.5,
-                height: MediaQuery.of(context).size.height * 0.2,
-                child: const Center(
-                  child: Text(
-                    'กรุณากรอกข้อมูลให้ครบ',
-                    style: kSubHeaderTextStyle,
-                  ),
-                ),
-              ),
-            );
-          });
-    }
-
-    Future<void> postQuestion(BuildContext context) async {
+    Future<void> postQuestion(BuildContext context, bool status) async {
       final dio = Dio();
 
       //prob List
@@ -184,7 +165,8 @@ class _AddQuestionState extends State<AddQuestion> {
             "sterilize": signalmentSterilizeStat,
             "age": signalmentAgeValue.text,
             "weight": signalmentWeightValue.text,
-          }
+          },
+          "status": status
         }, ListFormat.multiCompatible);
         var index = 0;
         for (var item in examContainers) {
@@ -483,30 +465,60 @@ class _AddQuestionState extends State<AddQuestion> {
                                 'ยกเลิก',
                               ),
                             ),
-                            ElevatedButton(
-                                onPressed: () async {
-                                  if (!checkNotEmpty()) {
-                                    alertModal(context);
-                                  } else {
+                            Row(
+                              children: [
+                                ElevatedButton(
+                                  //draft
+                                  onPressed: () async {
                                     setState(() {
                                       _isPosting = true;
                                     });
-                                    await postQuestion(context).then((value) {
+                                    await postQuestion(context, false)
+                                        .then((value) {
                                       setState(() {
                                         _isPosting = false;
                                       });
                                       examListProvider.clearList();
                                       showModal(context);
                                     });
-                                  }
-                                },
-                                child: const Text('บันทึก')),
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: const Color(0xFFA0E9FF),
+                                  ),
+                                  child: const Text(
+                                    'Save as draft',
+                                    style: TextStyle(color: Colors.black),
+                                  ),
+                                ),
+                                const SizedBox(width: 10),
+                                ElevatedButton(
+                                    onPressed: () async {
+                                      if (!checkNotEmpty()) {
+                                        alertModal(context);
+                                      } else {
+                                        setState(() {
+                                          _isPosting = true;
+                                        });
+                                        await postQuestion(context, true)
+                                            .then((value) {
+                                          setState(() {
+                                            _isPosting = false;
+                                          });
+                                          examListProvider.clearList();
+                                          showModal(context);
+                                        });
+                                      }
+                                    },
+                                    child: const Text('บันทึก')),
+                              ],
+                            ),
                           ],
                         )
                       ],
                     )
                   : const SizedBox(
-                      width: 10,
+                      width: 100,
+                      height: 100,
                       child: Center(child: CircularProgressIndicator())),
             ),
           ),

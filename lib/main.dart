@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:frontend/AllDataFile.dart';
 import 'package:frontend/UIModels/nisit/selected_treatment_provider.dart';
 import 'package:frontend/UIModels/teacher/examContainer_provider.dart';
 import 'package:frontend/UIModels/teacher/treatmentContainer_provider.dart';
@@ -26,6 +27,7 @@ import 'package:frontend/screensNisit/returnPoint.dart';
 import 'package:frontend/screensNisit/showStats.dart';
 import 'package:frontend/screensGeneral/loginScreen.dart';
 import 'package:frontend/screensGeneral/registerScreen.dart';
+import 'package:frontend/go_router.dart';
 
 Future main() async {
   await dotenv.load(fileName: "assets/.env");
@@ -49,41 +51,30 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    // return MaterialApp.router(
+    //   theme: lightTheme,
+    //   routerConfig: myRouterConfig,
+    // );
+    //role 0 = nisit, role 1 = teacher
+    //เค้าเปลี่ยนเป็นเซ็ต role ใส่ใน userRole ตรงนี้นะ ถ้าอยากเปิดหน้านรก็เปลี่ยนเป็น 0
+    userRole = 1;
     return MaterialApp(
       theme: lightTheme,
       // initialRoute: '/Nisit/treatmentTotal',
-      // initialRoute: '/mainShowQuestionNisit',
-      initialRoute: '/mainShowQuestionTeacher',
+      // initialRoute: '/mainShowQuestion',
+      initialRoute: '/mainShowQuestion',
       // initialRoute: '/register',
-      // initialRoute: '/login',
-      // initialRoute: '/Nisit/showStats',
       // initialRoute: '/Teacher/addQuesMenu',
-      // initialRoute: '/Nisit/ExamTopic',
+      // onGenerateRoute: RouteGenerator.generateRoute,
       routes: {
         /////General/////
         '/login': (context) => LoginScreen(),
         '/register': (context) => RegisterScreen(),
-        '/mainShowQuestionNisit': (context) => MainShowQuestion(
-              role: 0,
-            ),
-        '/mainShowQuestionTeacher': (context) => MainShowQuestion(
-              role: 1,
-            ),
-        /////Nisit/////
-        // '/Nisit/probList': (context) => ProbList(round: '1'),
-        // '/Nisit/probListAns': (context) => ProbListAns(round: '1'),
-        // '/Nisit/ExamTopic': (context) => ExamTopic(round: '1'),
-        // '/Nisit/diagnosis': (context) => Diagnosis(),
-        // '/Nisit/treatmentTopic': (context) => TreatmentTopic(),
-        // '/Nisit/treatmentTotal': (context) =>
-        //     TreatmentTotal(questionObj: tmpQues),
-        // '/Nisit/returnPoint': (context) => ReturnPoint(),
+        '/mainShowQuestion': (context) => const MainShowQuestion(),
         '/Nisit/showStats': (context) => ShowStatsForNisit(),
         /////Teacher/////
         '/Teacher/addQuestion': (context) => AddQuestion(),
         '/Teacher/editPredefined': (context) => EditPredefinedListTopic(),
-        // '/Teacher/showAndEditQuestion': (context) => ShowAndEditQuestion(),
-        // '/Teacher/editQuestion': (context) => EditQuestion(),
         '/Teacher/addQuesMenu': (context) => AddQuesMenu(),
         'Teacher/editPreDefined/exams_topic': (context) =>
             EditPreDefinedExamChoice(),

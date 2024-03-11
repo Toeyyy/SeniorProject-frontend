@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:frontend/AllDataFile.dart';
 import 'package:frontend/components/splitScreenNisit.dart';
 import 'package:frontend/components/appbar.dart';
 import 'package:frontend/constants.dart';
@@ -18,13 +19,8 @@ import 'package:frontend/UIModels/nisit/selected_diagnosis_provider.dart';
 class ExamDetail_Type extends StatelessWidget {
   List<ExamPreDefinedObject> list;
   String title;
-  QuestionObject questionObj;
 
-  ExamDetail_Type(
-      {super.key,
-      required this.list,
-      required this.title,
-      required this.questionObj});
+  ExamDetail_Type({super.key, required this.list, required this.title});
 
   late Map<String, List<ExamPreDefinedObject>> groupedByType =
       groupBy(list, (e) => e.type);
@@ -42,7 +38,7 @@ class ExamDetail_Type extends StatelessWidget {
       appBar: const AppbarNisit(),
       body: SplitScreenNisit(
         leftPart: LeftPartContent(
-          questionObj: questionObj,
+          questionObj: currentQuestion!,
           addedContent: Column(
             children: [
               TitleAndDottedListView(
@@ -80,7 +76,6 @@ class ExamDetail_Type extends StatelessWidget {
                             builder: (context) => ExamDetail_Name(
                               list: groupedByType.values.toList()[index],
                               title: groupedByType.keys.toList()[index],
-                              questionObj: questionObj,
                             ),
                           ),
                         );
@@ -101,13 +96,8 @@ class ExamDetail_Type extends StatelessWidget {
 class ExamDetail_Name extends StatefulWidget {
   List<ExamPreDefinedObject> list;
   String title;
-  QuestionObject questionObj;
 
-  ExamDetail_Name(
-      {super.key,
-      required this.list,
-      required this.title,
-      required this.questionObj});
+  ExamDetail_Name({super.key, required this.list, required this.title});
 
   @override
   State<ExamDetail_Name> createState() => _ExamDetail_NameState();
@@ -131,7 +121,7 @@ class _ExamDetail_NameState extends State<ExamDetail_Name> {
       isLoadingData = true;
     });
     List<ExamResultObject> loadedData =
-        await fetchResult(examID, widget.questionObj.id);
+        await fetchResult(examID, currentQuestion!.id);
     setState(() {
       result = loadedData.first;
       isLoadingData = false;
@@ -143,12 +133,14 @@ class _ExamDetail_NameState extends State<ExamDetail_Name> {
     SelectedExam examProvider = Provider.of<SelectedExam>(context);
     SelectedProblem problemProvider =
         Provider.of<SelectedProblem>(context, listen: false);
+    SelectedDiagnosis diagProvider =
+        Provider.of<SelectedDiagnosis>(context, listen: false);
 
     return Scaffold(
       appBar: const AppbarNisit(),
       body: SplitScreenNisit(
         leftPart: LeftPartContent(
-          questionObj: widget.questionObj,
+          questionObj: currentQuestion!,
           addedContent: Column(
             children: [
               TitleAndDottedListView(
@@ -156,16 +148,10 @@ class _ExamDetail_NameState extends State<ExamDetail_Name> {
                   showList: problemProvider.problemAnsList1
                       .map((e) => e.name)
                       .toList()),
-              TitleAndExams(
-                title: 'Examination ครั้งที่ 1',
-                showList: examProvider.examList,
-                resultList: examProvider.resultList,
-              ),
               TitleAndDottedListView(
-                  title: 'Problem List ครั้งที่ 2',
-                  showList: problemProvider.problemAnsList2
-                      .map((e) => e.name)
-                      .toList()),
+                  title: 'Differential Diagnosis',
+                  showList:
+                      diagProvider.diffDiagList.map((e) => e.name).toList()),
             ],
           ),
         ),
@@ -258,7 +244,6 @@ class _ExamDetail_NameState extends State<ExamDetail_Name> {
                               MaterialPageRoute(
                                 builder: (context) => ExamResult(
                                   selectedExam: selectedItem!,
-                                  questionObj: widget.questionObj,
                                   result: result!,
                                 ),
                               ),

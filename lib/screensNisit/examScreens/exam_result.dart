@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/AllDataFile.dart';
 import 'package:frontend/components/appbar.dart';
 import 'package:frontend/models/examResultObject.dart';
 import 'package:frontend/components/splitScreenNisit.dart';
@@ -15,14 +16,9 @@ import 'package:frontend/UIModels/nisit/selected_diagnosis_provider.dart';
 
 class ExamResult extends StatelessWidget {
   ExamPreDefinedObject selectedExam;
-  QuestionObject questionObj;
   ExamResultObject result;
 
-  ExamResult(
-      {super.key,
-      required this.selectedExam,
-      required this.questionObj,
-      required this.result});
+  ExamResult({super.key, required this.selectedExam, required this.result});
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +32,7 @@ class ExamResult extends StatelessWidget {
       appBar: const AppbarNisit(),
       body: SplitScreenNisit(
         leftPart: LeftPartContent(
-          questionObj: questionObj,
+          questionObj: currentQuestion!,
           addedContent: Column(
             children: [
               TitleAndDottedListView(
@@ -75,9 +71,7 @@ class ExamResult extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => ExamTotal(
-                              questionObj: questionObj,
-                            ),
+                            builder: (context) => ExamTotal(),
                           ),
                         );
                       },

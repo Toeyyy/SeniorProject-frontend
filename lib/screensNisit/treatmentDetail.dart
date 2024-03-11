@@ -17,9 +17,8 @@ import 'package:frontend/UIModels/nisit/selected_exam_provider.dart';
 
 class TreatmentDetail extends StatelessWidget {
   final String topic;
-  QuestionObject questionObj;
 
-  TreatmentDetail(this.topic, {super.key, required this.questionObj});
+  const TreatmentDetail(this.topic, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +33,7 @@ class TreatmentDetail extends StatelessWidget {
       appBar: const AppbarNisit(),
       body: SplitScreenNisit(
           leftPart: LeftPartContent(
-            questionObj: questionObj,
+            questionObj: currentQuestion!,
             addedContent: Column(
               children: [
                 TitleAndDottedListView(
@@ -65,7 +64,6 @@ class TreatmentDetail extends StatelessWidget {
           ),
           rightPart: RightPart_TreatmentDetail(
             topic: topic,
-            questionObj: questionObj,
           )),
     );
   }
@@ -73,10 +71,8 @@ class TreatmentDetail extends StatelessWidget {
 
 class RightPart_TreatmentDetail extends StatefulWidget {
   final String topic;
-  QuestionObject questionObj;
 
-  RightPart_TreatmentDetail(
-      {super.key, required this.topic, required this.questionObj});
+  const RightPart_TreatmentDetail({super.key, required this.topic});
 
   @override
   State<RightPart_TreatmentDetail> createState() =>
@@ -114,7 +110,6 @@ class _RightPart_TreatmentDetailState extends State<RightPart_TreatmentDetail> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
       child: Column(
-        // mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           Text(
             widget.topic,
@@ -163,8 +158,7 @@ class _RightPart_TreatmentDetailState extends State<RightPart_TreatmentDetail> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => TreatmentTotal(
-                                    questionObj: widget.questionObj),
+                                builder: (context) => TreatmentTotal(),
                               ),
                             );
                           }),

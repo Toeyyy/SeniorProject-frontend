@@ -160,7 +160,7 @@ class _ShowStatOverallState extends State<ShowStatOverall> {
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => ShowEditHistory(
-                                        logList: questionObj!.logs),
+                                        logList: questionObj!.logs!),
                                   ),
                                 );
                               },

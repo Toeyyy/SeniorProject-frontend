@@ -7,6 +7,7 @@ import 'package:frontend/components/BoxesInAddQ.dart';
 import 'package:frontend/models/problemListObject.dart';
 import 'package:frontend/models/diagnosisObject.dart';
 import 'package:collection/collection.dart';
+import 'package:intl/intl.dart';
 
 class ShowStatsForNisit extends StatefulWidget {
   const ShowStatsForNisit({super.key});
@@ -134,6 +135,16 @@ class _ShowStatsForNisitState extends State<ShowStatsForNisit> {
                                     child: Text('คะแนน Treatment'),
                                   ),
                                 ),
+                                DataColumn(
+                                  label: Expanded(
+                                    child: Text('วันที่ที่ทำโจทย์'),
+                                  ),
+                                ),
+                                DataColumn(
+                                  label: Expanded(
+                                    child: Text('เวลา'),
+                                  ),
+                                ),
                               ],
                               rows: List.generate(
                                 statList.length,
@@ -146,6 +157,12 @@ class _ShowStatsForNisitState extends State<ShowStatsForNisit> {
                                         statList[index].diagnostics,
                                         (e) => e.type);
                                   });
+                                  String date =
+                                      statList[index].dateTime.substring(0, 10);
+                                  String time = statList[index]
+                                      .dateTime
+                                      .substring(11, 16);
+                                  DateTime dateInType = DateTime.parse(date);
                                   return DataRow(
                                     color: MaterialStateColor.resolveWith(
                                         (states) => const Color(0xFFE7F9FF)),
@@ -296,6 +313,17 @@ class _ShowStatsForNisitState extends State<ShowStatsForNisit> {
                                                 icon: const Icon(Icons.search))
                                           ],
                                         ),
+                                      ),
+                                      DataCell(
+                                        Center(
+                                          child: Text(
+                                            DateFormat('dd/MM/yyyy')
+                                                .format(dateInType),
+                                          ),
+                                        ),
+                                      ),
+                                      DataCell(
+                                        Center(child: Text(time)),
                                       ),
                                     ],
                                   );

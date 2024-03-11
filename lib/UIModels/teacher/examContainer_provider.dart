@@ -27,23 +27,25 @@ class ExamContainerProvider extends ChangeNotifier {
 
   void getInfo(List<ExaminationObject> importedList) {
     clearList();
-    for (ExaminationObject item in importedList) {
-      TextEditingController myController = TextEditingController();
-      myController.text = item.textResult ?? '';
-      examContainers.add(
-        ExamContainer(
-            id: item.id,
-            key: ObjectKey(item.id),
-            selectedDepartment: item.lab,
-            selectedExamTopic: item.type,
-            selectedExamName: item.name,
-            selectedArea: item.area,
-            areaNull: item.area == null,
-            examController: myController,
-            imagePath: item.imgPath,
-            imageResult: item.imgResult,
-            haveImage: item.imgResult == null),
-      );
+    if (importedList != []) {
+      for (ExaminationObject item in importedList) {
+        TextEditingController myController = TextEditingController();
+        myController.text = item.textResult ?? '';
+        examContainers.add(
+          ExamContainer(
+              id: item.id,
+              key: ObjectKey(item.id),
+              selectedDepartment: item.lab,
+              selectedExamTopic: item.type,
+              selectedExamName: item.name,
+              selectedArea: item.area,
+              areaNull: item.area == null,
+              examController: myController,
+              imagePath: item.imgPath,
+              imageResult: item.imgResult,
+              haveImage: item.imgResult == null),
+        );
+      }
     }
   }
 }

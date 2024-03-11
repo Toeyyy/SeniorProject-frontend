@@ -295,10 +295,29 @@ class ExamsButtonAndContainer extends StatelessWidget {
   }
 }
 
+void alertModal(BuildContext context) {
+  showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          child: SizedBox(
+            width: MediaQuery.of(context).size.height * 0.5,
+            height: MediaQuery.of(context).size.height * 0.2,
+            child: const Center(
+              child: Text(
+                'กรุณากรอกข้อมูลให้ครบ',
+                style: kSubHeaderTextStyle,
+              ),
+            ),
+          ),
+        );
+      });
+}
+
 //////////////////////For ShowAndEdit Page/////////////////////
 
 class DottedListView extends StatelessWidget {
-  List<String> showList;
+  List<String>? showList;
 
   DottedListView({super.key, required this.showList});
 
@@ -307,10 +326,13 @@ class DottedListView extends StatelessWidget {
     return showList != []
         ? ListView.builder(
             shrinkWrap: true,
-            itemCount: showList.length,
+            itemCount: showList!.length,
             itemBuilder: (context, index) {
+              if (showList![index].trim() == '') {
+                return null;
+              }
               return ListTile(
-                title: Text(showList[index]),
+                title: Text(showList![index]),
                 leading: const Icon(Icons.circle, size: 15),
               );
             })
@@ -353,10 +375,10 @@ class TitleAndDottedListView extends StatelessWidget {
 }
 
 class TitleAndExams extends StatelessWidget {
-  String title;
-  List<ExamPreDefinedObject> showList;
-  List<ResultContainer> resultList;
-  TitleAndExams(
+  final String title;
+  final List<ExamPreDefinedObject> showList;
+  final List<ResultContainer> resultList;
+  const TitleAndExams(
       {super.key,
       required this.title,
       required this.showList,
@@ -446,7 +468,7 @@ class TitleAndExams extends StatelessWidget {
                           decoration: TextDecoration.underline),
                     ),
                   ),
-                  const SizedBox(height: 15),
+                  // const SizedBox(height: 15),
                   resultItem.imgResult != null
                       ? Padding(
                           padding: const EdgeInsets.only(left: 50),

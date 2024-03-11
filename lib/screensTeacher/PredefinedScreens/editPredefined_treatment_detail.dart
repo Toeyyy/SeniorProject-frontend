@@ -179,7 +179,7 @@ class _EditPredefinedTreatmentDetailState
                                             isEditing = true;
                                           });
                                         },
-                                        icon: const Icon(CupertinoIcons.pencil),
+                                        icon: const Icon(Icons.edit),
                                       ),
                                       IconButton(
                                         onPressed: () {

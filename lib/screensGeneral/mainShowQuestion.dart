@@ -13,9 +13,9 @@ import 'package:frontend/AllDataFile.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 class MainShowQuestion extends StatefulWidget {
-  int role;
+  // int role;
   //0 = nisit, 1 = teacher
-  MainShowQuestion({super.key, required this.role});
+  const MainShowQuestion({super.key});
 
   @override
   State<MainShowQuestion> createState() => _MainShowQuestionState();
@@ -26,6 +26,8 @@ class _MainShowQuestionState extends State<MainShowQuestion> {
   List<QuestionObject> displayList = [];
   List<FullQuestionObject> teacherQuestionObjList = [];
   List<FullQuestionObject> teacherDisplayList = [];
+  List<TagObject> selectedTags = [];
+  bool _draftCheckBoxStatus = false;
 
   bool _isLoadData = false;
 
@@ -63,7 +65,7 @@ class _MainShowQuestionState extends State<MainShowQuestion> {
     await fetchPreDefinedExam();
     await fetchPreDefinedTag();
     await fetchPreDefinedTreatment();
-    if (widget.role == 0) {
+    if (userRole == 0) {
       List<QuestionObject> loadedData = await fetchQuestionList();
       setState(() {
         questionObjList = loadedData;
@@ -83,25 +85,38 @@ class _MainShowQuestionState extends State<MainShowQuestion> {
 
   @override
   Widget build(BuildContext context) {
-    List<TagObject> selectedTags = [];
     TextEditingController quesSearchController = TextEditingController();
 
     void updateTagList(List<TagObject> newList) {
       selectedTags = newList;
       setState(() {
-        if (widget.role == 0) {
-          displayList = filterFromTags(questionObjList, selectedTags)
-              .cast<QuestionObject>();
+        _draftCheckBoxStatus = false;
+        if (userRole == 0) {
+          displayList =
+              filterFromTags(questionObjList, newList).cast<QuestionObject>();
         } else {
-          teacherDisplayList =
-              filterFromTags(teacherQuestionObjList, selectedTags)
-                  .cast<FullQuestionObject>();
+          teacherDisplayList = filterFromTags(teacherQuestionObjList, newList)
+              .cast<FullQuestionObject>();
         }
       });
     }
 
+    void updateDraft(bool checkBoxStat) {
+      if (checkBoxStat == true) {
+        setState(() {
+          teacherDisplayList = teacherDisplayList
+              .where((element) => element.status == false)
+              .toList();
+        });
+      } else {
+        setState(() {
+          updateTagList(selectedTags);
+        });
+      }
+    }
+
     return Scaffold(
-      appBar: widget.role == 0
+      appBar: userRole == 0
           ? const AppbarNisit() as PreferredSizeWidget
           : const AppbarTeacher() as PreferredSizeWidget,
       body: SingleChildScrollView(
@@ -112,6 +127,7 @@ class _MainShowQuestionState extends State<MainShowQuestion> {
               padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(bottom: 15),
@@ -138,7 +154,7 @@ class _MainShowQuestionState extends State<MainShowQuestion> {
                                   labelStyle: TextStyle(fontSize: 20),
                                 ),
                                 onEditingComplete: () {
-                                  if (widget.role == 0) {
+                                  if (userRole == 0) {
                                     setState(() {
                                       displayList = filterFromQuesName(
                                               questionObjList,
@@ -161,6 +177,19 @@ class _MainShowQuestionState extends State<MainShowQuestion> {
                       ],
                     ),
                   ),
+                  userRole == 1
+                      ? Row(
+                          children: [
+                            Checkbox(
+                                value: _draftCheckBoxStatus,
+                                onChanged: (newValue) {
+                                  _draftCheckBoxStatus = newValue!;
+                                  updateDraft(newValue);
+                                }),
+                            const Text('Show only draft questions'),
+                          ],
+                        )
+                      : const SizedBox(),
                   const Divider(),
                   const SizedBox(
                     height: 20,
@@ -172,7 +201,7 @@ class _MainShowQuestionState extends State<MainShowQuestion> {
                     height: 20,
                   ),
                   _isLoadData == false
-                      ? widget.role == 0
+                      ? userRole == 0
                           ? displayList.isNotEmpty
                               ? MasonryGridView.count(
                                   shrinkWrap: true,
@@ -182,8 +211,7 @@ class _MainShowQuestionState extends State<MainShowQuestion> {
                                   itemCount: displayList.length,
                                   itemBuilder: (context, index) {
                                     return QuestionCard(
-                                        questionObj: displayList[index],
-                                        role: widget.role);
+                                        questionObj: displayList[index]);
                                   })
                               : const SizedBox()
                           : teacherDisplayList.isNotEmpty
@@ -196,7 +224,6 @@ class _MainShowQuestionState extends State<MainShowQuestion> {
                                   itemBuilder: (context, index) {
                                     return FullQuestionCard(
                                         questionObj: teacherDisplayList[index],
-                                        role: widget.role,
                                         refreshCallBack: refreshScreen);
                                   })
                               : const SizedBox()

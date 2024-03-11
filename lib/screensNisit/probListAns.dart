@@ -11,12 +11,12 @@ import 'package:frontend/components/BoxesInAddQ.dart';
 import 'package:frontend/screensNisit/diffDiag.dart';
 import 'package:frontend/screensNisit/tenDiag.dart';
 import 'package:frontend/UIModels/nisit/selected_diagnosis_provider.dart';
+import 'package:frontend/AllDataFile.dart';
 
 class ProbListAns extends StatelessWidget {
   int round;
-  QuestionObject questionObj;
 
-  ProbListAns({super.key, required this.round, required this.questionObj});
+  ProbListAns({super.key, required this.round});
 
   ListView showAnsProbList(
       List<ProblemObject> ansList, List<ProblemObject> actualList) {
@@ -74,9 +74,9 @@ class ProbListAns extends StatelessWidget {
       appBar: const AppbarNisit(),
       body: SplitScreenNisit(
         leftPart: round == 1
-            ? LeftPartContent(questionObj: questionObj)
+            ? LeftPartContent(questionObj: currentQuestion!)
             : LeftPartContent(
-                questionObj: questionObj,
+                questionObj: currentQuestion!,
                 addedContent: Column(
                   children: [
                     TitleAndDottedListView(
@@ -133,8 +133,7 @@ class ProbListAns extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) =>
-                                DiffDiag(questionObj: questionObj),
+                            builder: (context) => DiffDiag(),
                           ),
                         );
                       },
@@ -146,8 +145,7 @@ class ProbListAns extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) =>
-                                TentativeDiag(questionObj: questionObj),
+                            builder: (context) => TentativeDiag(),
                           ),
                         );
                       },

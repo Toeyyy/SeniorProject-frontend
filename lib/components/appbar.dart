@@ -24,7 +24,7 @@ class AppbarNisit extends StatelessWidget implements PreferredSizeWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => MainShowQuestion(role: 0),
+                builder: (context) => MainShowQuestion(),
               ),
             );
           },
@@ -78,7 +78,7 @@ class AppbarTeacher extends StatelessWidget implements PreferredSizeWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => MainShowQuestion(role: 1),
+                builder: (context) => MainShowQuestion(),
               ),
             );
           },

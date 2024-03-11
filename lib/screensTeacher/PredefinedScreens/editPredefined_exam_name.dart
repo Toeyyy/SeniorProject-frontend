@@ -255,8 +255,7 @@ class _EditPredefinedExamNameState extends State<EditPredefinedExamName> {
                                             mainAxisSize: MainAxisSize.min,
                                             children: [
                                               IconButton(
-                                                icon: const Icon(
-                                                    CupertinoIcons.pencil),
+                                                icon: const Icon(Icons.edit),
                                                 onPressed: () {
                                                   setState(() {
                                                     nameTextFieldController

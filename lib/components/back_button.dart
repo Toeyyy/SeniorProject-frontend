@@ -20,17 +20,3 @@ class MyBackButton extends StatelessWidget {
     );
   }
 }
-
-// ElevatedButton BackButton(BuildContext myContext){
-//   return ElevatedButton(
-//     onPressed: () {
-//       Navigator.pop(myContext);
-//     },
-//     child: Text(
-//       'ยกเลิก',
-//     ),
-//     style: ElevatedButton.styleFrom(
-//       backgroundColor: Color(0xFF8B72BE),
-//     ),
-//   );
-// }

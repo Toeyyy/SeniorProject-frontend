@@ -16,7 +16,7 @@ class StatQuestionObject {
   int treatmentScore;
   int diffDiagScore;
   int tenDiagScore;
-  // String dateTime;
+  String dateTime;
 
   StatQuestionObject(
       {required this.questionId,
@@ -30,7 +30,8 @@ class StatQuestionObject {
       required this.examinationScore,
       required this.treatmentScore,
       required this.diffDiagScore,
-      required this.tenDiagScore});
+      required this.tenDiagScore,
+      required this.dateTime});
 
   factory StatQuestionObject.fromJson(Map<String, dynamic> json) {
     return StatQuestionObject(
@@ -58,6 +59,7 @@ class StatQuestionObject {
       treatmentScore: json['treatment_Score'] ?? 0,
       diffDiagScore: json['diffDiag_Score'] ?? 0,
       tenDiagScore: json['tenDiag_Score'] ?? 0,
+      dateTime: json['dateTime'] ?? "",
     );
   }
 }

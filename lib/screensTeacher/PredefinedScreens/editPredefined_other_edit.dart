@@ -194,7 +194,7 @@ class _EditPredefinedOtherEditState extends State<EditPredefinedOtherEdit> {
                                             isEditing = true;
                                           });
                                         },
-                                        icon: const Icon(CupertinoIcons.pencil),
+                                        icon: const Icon(Icons.edit),
                                       ),
                                       IconButton(
                                         onPressed: () {

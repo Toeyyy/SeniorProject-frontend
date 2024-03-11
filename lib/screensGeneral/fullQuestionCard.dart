@@ -1,19 +1,17 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/components/tag_box.dart';
 import 'package:frontend/constants.dart';
 import 'package:frontend/models/fullQuestionObject.dart';
 import 'package:frontend/screensTeacher/showAndEditQuestion.dart';
+import 'package:frontend/screensTeacher/editQuestion.dart';
 
 class FullQuestionCard extends StatelessWidget {
   final FullQuestionObject questionObj;
   VoidCallback refreshCallBack;
-  int role;
 
   FullQuestionCard(
-      {super.key,
-      required this.questionObj,
-      required this.role,
-      required this.refreshCallBack});
+      {super.key, required this.questionObj, required this.refreshCallBack});
 
   void _showModal(BuildContext context) {
     showDialog(
@@ -52,15 +50,17 @@ class FullQuestionCard extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 15),
-                  Wrap(
-                    spacing: 2,
-                    runSpacing: 5,
-                    children: questionObj.tags
-                        .map(
-                          (e) => TagBox(text: e.name, textSize: 20),
+                  questionObj.tags != []
+                      ? Wrap(
+                          spacing: 2,
+                          runSpacing: 5,
+                          children: questionObj.tags!
+                              .map(
+                                (e) => TagBox(text: e.name, textSize: 20),
+                              )
+                              .toList(),
                         )
-                        .toList(),
-                  ),
+                      : const SizedBox(),
                   const SizedBox(height: 15),
                   Text(
                     'สายพันธุ์: ${questionObj.signalment.breed}, อายุ: ${questionObj.signalment.age}, น้ำหนัก: ${questionObj.signalment.weight}',
@@ -120,6 +120,44 @@ class FullQuestionCard extends StatelessWidget {
         });
   }
 
+  void _modifiedModal(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return Dialog(
+            child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+              decoration: BoxDecoration(
+                color: const Color(0xFFBBF5FF),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text('ข้อมูล Predefined ที่ใช้ในโจทย์มีการลบหรือแก้ไข',
+                      style: kNormalTextStyle.copyWith(
+                          fontWeight: FontWeight.w700)),
+                  const SizedBox(height: 15),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => EditQuestion(
+                              questionObj: questionObj,
+                              refreshCallBack: refreshCallBack),
+                        ),
+                      );
+                    },
+                    child: const Text('แก้ไขโจทย์'),
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -137,23 +175,61 @@ class FullQuestionCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(
-                    'รหัสโจทย์: ${questionObj.name}',
-                    style: kSubHeaderTextStyle,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'รหัสโจทย์: ${questionObj.name}',
+                        style: kSubHeaderTextStyle,
+                      ),
+                      Row(
+                        children: [
+                          questionObj.status == false
+                              ? IconButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => EditQuestion(
+                                            questionObj: questionObj,
+                                            refreshCallBack: refreshCallBack),
+                                      ),
+                                    );
+                                  },
+                                  icon: const Icon(Icons.edit),
+                                  tooltip: "แก้ไข draft",
+                                )
+                              : const SizedBox(),
+                          questionObj.modified == true
+                              ? IconButton(
+                                  onPressed: () {
+                                    _modifiedModal(context);
+                                  },
+                                  icon: const Icon(
+                                    CupertinoIcons.exclamationmark_circle_fill,
+                                    color: Color(0xFFDC493A),
+                                  ),
+                                )
+                              : const SizedBox(),
+                        ],
+                      ),
+                    ],
                   ),
                   Text(
                       'ชนิดสัตว์: ${questionObj.signalment.species}, พันธุ์: ${questionObj.signalment.breed}',
                       style: kNormalTextStyle),
                   const SizedBox(height: 10),
-                  Wrap(
-                    spacing: 2,
-                    runSpacing: 2,
-                    children: questionObj.tags
-                        .map(
-                          (e) => TagBox(text: e.name),
+                  questionObj.tags != []
+                      ? Wrap(
+                          spacing: 2,
+                          runSpacing: 2,
+                          children: questionObj.tags!
+                              .map(
+                                (e) => TagBox(text: e.name),
+                              )
+                              .toList(),
                         )
-                        .toList(),
-                  ),
+                      : const SizedBox(),
                 ],
               ),
             ),

@@ -14,9 +14,7 @@ import 'package:frontend/UIModels/nisit/selected_problem_provider.dart';
 import 'package:frontend/components/BoxesInAddQ.dart';
 
 class DiffDiag extends StatelessWidget {
-  QuestionObject questionObj;
-
-  DiffDiag({super.key, required this.questionObj});
+  const DiffDiag({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -27,23 +25,20 @@ class DiffDiag extends StatelessWidget {
       appBar: const AppbarNisit(),
       body: SplitScreenNisit(
           leftPart: LeftPartContent(
-            questionObj: questionObj,
+            questionObj: currentQuestion!,
             addedContent: TitleAndDottedListView(
                 title: 'Problem List ครั้งที่ 1',
                 showList: problemProvider.problemAnsList1
                     .map((e) => e.name)
                     .toList()),
           ),
-          rightPart: RightPart_DiffDiag(
-            questionObj: questionObj,
-          )),
+          rightPart: const RightPart_DiffDiag()),
     );
   }
 }
 
 class RightPart_DiffDiag extends StatefulWidget {
-  QuestionObject questionObj;
-  RightPart_DiffDiag({super.key, required this.questionObj});
+  const RightPart_DiffDiag({super.key});
 
   @override
   State<RightPart_DiffDiag> createState() => _RightPart_DiffDiagState();
@@ -141,8 +136,7 @@ class _RightPart_DiffDiagState extends State<RightPart_DiffDiag> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) =>
-                      ExamTopic(questionObj: widget.questionObj),
+                  builder: (context) => ExamTopic(),
                 ),
               );
             },

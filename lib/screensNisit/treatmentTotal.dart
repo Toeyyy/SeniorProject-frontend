@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/AllDataFile.dart';
 import 'package:frontend/aboutData/getDataFunctions.dart';
 import 'package:frontend/components/splitScreenNisit.dart';
 import 'package:frontend/components/appbar.dart';
@@ -19,9 +20,7 @@ import 'package:frontend/components/BoxesInAddQ.dart';
 import 'package:frontend/UIModels/nisit/selected_exam_provider.dart';
 
 class TreatmentTotal extends StatelessWidget {
-  QuestionObject questionObj;
-
-  TreatmentTotal({super.key, required this.questionObj});
+  TreatmentTotal({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +35,7 @@ class TreatmentTotal extends StatelessWidget {
       appBar: const AppbarNisit(),
       body: SplitScreenNisit(
         leftPart: LeftPartContent(
-          questionObj: questionObj,
+          questionObj: currentQuestion!,
           addedContent: Column(
             children: [
               TitleAndDottedListView(
@@ -65,18 +64,14 @@ class TreatmentTotal extends StatelessWidget {
             ],
           ),
         ),
-        rightPart: RightPart_TreatmentTotal(
-          questionObj: questionObj,
-        ),
+        rightPart: RightPart_TreatmentTotal(),
       ),
     );
   }
 }
 
 class RightPart_TreatmentTotal extends StatefulWidget {
-  QuestionObject questionObj;
-
-  RightPart_TreatmentTotal({super.key, required this.questionObj});
+  RightPart_TreatmentTotal({super.key});
 
   @override
   State<RightPart_TreatmentTotal> createState() =>
@@ -140,7 +135,7 @@ class _RightPart_TreatmentTotalState extends State<RightPart_TreatmentTotal> {
         "heartProblem2": problemProvider.heart2,
       };
 
-      await postSelectedItemNisit(data, widget.questionObj.id);
+      await postSelectedItemNisit(data, currentQuestion!.id);
     }
 
     return Padding(
@@ -172,9 +167,7 @@ class _RightPart_TreatmentTotalState extends State<RightPart_TreatmentTotal> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => TreatmentTopic(
-                              questionObj: widget.questionObj,
-                            ),
+                            builder: (context) => const TreatmentTopic(),
                           ),
                         );
                       },
@@ -191,7 +184,7 @@ class _RightPart_TreatmentTotalState extends State<RightPart_TreatmentTotal> {
                         //post answer//
                         await postStat(context);
                         ////get stat////
-                        await getData(widget.questionObj.id).then((value) {
+                        await getData(currentQuestion!.id).then((value) {
                           setState(() {
                             _isSendingData = false;
                           });

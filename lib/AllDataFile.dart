@@ -4,6 +4,7 @@ import 'package:frontend/models/problemListObject.dart';
 import 'package:frontend/models/treatmentObject.dart';
 import 'package:frontend/models/examinationPreDefinedObject.dart';
 import 'package:frontend/models/fullQuestionObject.dart';
+import 'package:frontend/models/questionObject.dart';
 
 /////predefined/////
 List<DiagnosisObject> diagnosisListPreDefined = [];
@@ -14,3 +15,9 @@ List<ExamPreDefinedObject> examListPreDefined = [];
 
 /////question List/////
 List<FullQuestionObject> teacherQuestionList = [];
+
+/////nisit selected question/////
+QuestionObject? currentQuestion;
+
+/////role/////
+late int userRole;

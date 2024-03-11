@@ -16,9 +16,8 @@ import 'package:frontend/UIModels/nisit/selected_diagnosis_provider.dart';
 
 class ProbList extends StatelessWidget {
   int round;
-  QuestionObject questionObj;
 
-  ProbList({super.key, required this.round, required this.questionObj});
+  ProbList({super.key, required this.round});
 
   @override
   Widget build(BuildContext context) {
@@ -33,9 +32,9 @@ class ProbList extends StatelessWidget {
       appBar: const AppbarNisit(),
       body: SplitScreenNisit(
         leftPart: round == 1
-            ? LeftPartContent(questionObj: questionObj)
+            ? LeftPartContent(questionObj: currentQuestion!)
             : LeftPartContent(
-                questionObj: questionObj,
+                questionObj: currentQuestion!,
                 addedContent: Column(
                   children: [
                     TitleAndDottedListView(
@@ -58,7 +57,7 @@ class ProbList extends StatelessWidget {
               ),
         rightPart: RightPart_ProbList(
           round: round,
-          questionObj: questionObj,
+          // questionObj: currentQuestion,
         ),
       ),
     );
@@ -67,10 +66,8 @@ class ProbList extends StatelessWidget {
 
 class RightPart_ProbList extends StatefulWidget {
   int round;
-  QuestionObject questionObj;
 
-  RightPart_ProbList(
-      {super.key, required this.round, required this.questionObj});
+  RightPart_ProbList({super.key, required this.round});
 
   @override
   State<RightPart_ProbList> createState() => _RightPart_ProbListState();
@@ -108,7 +105,7 @@ class _RightPart_ProbListState extends State<RightPart_ProbList> {
       isLoadingData = false;
     });
     List<ProblemObject> loadedData =
-        await fetchProblemAns(widget.questionObj.id, widget.round);
+        await fetchProblemAns(currentQuestion!.id, widget.round);
     setState(() {
       probAnsList = loadedData;
       problemProvider.assignAnswer(loadedData, widget.round);
@@ -118,65 +115,64 @@ class _RightPart_ProbListState extends State<RightPart_ProbList> {
     });
   }
 
+  void showModal(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return Dialog(
+            child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+              decoration: BoxDecoration(
+                color: const Color(0xFFBBF5FF),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text('คำตอบไม่ถูกต้อง ต้องการเลือกใหม่หรือไม่',
+                      style: kNormalTextStyle.copyWith(
+                          fontWeight: FontWeight.w700)),
+                  const SizedBox(height: 15),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF8B72BE),
+                        ),
+                        child: const Text('เลือกคำตอบใหม่'),
+                      ),
+                      const SizedBox(width: 15),
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ProbListAns(
+                                round: widget.round,
+                                // questionObj: widget.questionObj,
+                              ),
+                            ),
+                          );
+                        },
+                        child: const Text('เฉลยคำตอบ'),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     SelectedProblem problemProvider = Provider.of<SelectedProblem>(context);
-
-    void showModal(BuildContext context) {
-      showDialog(
-          context: context,
-          builder: (context) {
-            return Dialog(
-              child: Container(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFBBF5FF),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text('คำตอบไม่ถูกต้อง ต้องการเลือกใหม่หรือไม่',
-                        style: kNormalTextStyle.copyWith(
-                            fontWeight: FontWeight.w700)),
-                    const SizedBox(height: 15),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF8B72BE),
-                          ),
-                          child: const Text('เลือกคำตอบใหม่'),
-                        ),
-                        const SizedBox(width: 15),
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ProbListAns(
-                                  round: widget.round,
-                                  questionObj: widget.questionObj,
-                                ),
-                              ),
-                            );
-                          },
-                          child: const Text('เฉลยคำตอบ'),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            );
-          });
-    }
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
@@ -267,7 +263,7 @@ class _RightPart_ProbListState extends State<RightPart_ProbList> {
                           MaterialPageRoute(
                             builder: (context) => ProbListAns(
                               round: widget.round,
-                              questionObj: widget.questionObj,
+                              // questionObj: widget.questionObj,
                             ),
                           ),
                         );
@@ -278,7 +274,7 @@ class _RightPart_ProbListState extends State<RightPart_ProbList> {
                         MaterialPageRoute(
                           builder: (context) => ProbListAns(
                             round: widget.round,
-                            questionObj: widget.questionObj,
+                            // questionObj: widget.questionObj,
                           ),
                         ),
                       );

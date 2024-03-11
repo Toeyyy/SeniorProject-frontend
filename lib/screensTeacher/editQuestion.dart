@@ -100,33 +100,48 @@ class _EditQuestionState extends State<EditQuestion> {
         if (questionObj != null) {
           id = questionObj!.id;
           name = questionObj!.name;
-          signalmentTypeValue = questionObj!.signalment.species;
+          signalmentTypeValue = questionObj!.signalment.species == ''
+              ? 'สุนัข'
+              : questionObj!.signalment.species;
           signalmentBreedValue.text = questionObj!.signalment.breed;
           signalmentSterilizeValue = questionObj!.signalment.sterilize;
-          signalmentSexValue = questionObj!.signalment.gender;
+          signalmentSexValue = questionObj!.signalment.gender == ''
+              ? 'ผู้'
+              : questionObj!.signalment.gender;
           signalmentAgeValue.text = questionObj!.signalment.age;
           signalmentWeightValue.text = questionObj!.signalment.weight;
           clientComplainsController.text = questionObj!.clientComplains;
           historyTakingController.text = questionObj!.historyTakingInfo;
           generalResultsController.text = questionObj!.generalInfo;
-          selectedTags = questionObj!.tags;
+          selectedTags = questionObj!.tags ?? [];
           /////
-          splitProblems =
-              groupBy(questionObj!.problems, (e) => e.round.toString());
-          selectedProblemList1 = splitProblems['1']!
-              .map(
-                (e) => ProblemObject(id: e.id, name: e.name),
-              )
-              .toList();
-          selectedProblemList2 = splitProblems['2']!
-              .map(
-                (e) => ProblemObject(id: e.id, name: e.name),
-              )
-              .toList();
+          splitProblems = questionObj!.problems != []
+              ? groupBy(questionObj!.problems!, (e) => e.round.toString())
+              : {};
+          selectedProblemList1 = splitProblems.containsKey('1')
+              ? splitProblems['1']!
+                  .map(
+                    (e) => ProblemObject(id: e.id, name: e.name),
+                  )
+                  .toList()
+              : [];
+          selectedProblemList2 = splitProblems.containsKey('2')
+              ? splitProblems['2']!
+                  .map(
+                    (e) => ProblemObject(id: e.id, name: e.name),
+                  )
+                  .toList()
+              : [];
           /////
-          splitDiagnosis = groupBy(questionObj!.diagnostics, (e) => e.type);
-          selectedDiffDiag = splitDiagnosis['differential']!;
-          selectedTentativeDiag = splitDiagnosis['tentative']!;
+          splitDiagnosis = questionObj!.diagnostics != []
+              ? groupBy(questionObj!.diagnostics!, (e) => e.type)
+              : {};
+          selectedDiffDiag = splitDiagnosis.containsKey('differential')
+              ? splitDiagnosis['differential']!
+              : [];
+          selectedTentativeDiag = splitDiagnosis.containsKey('tentative')
+              ? splitDiagnosis['tentative']!
+              : [];
           splitFullDiag = groupBy(diagnosisListPreDefined, (e) => e.type);
           /////
           treatmentProvider =
@@ -134,9 +149,9 @@ class _EditQuestionState extends State<EditQuestion> {
           examProvider =
               Provider.of<ExamContainerProvider>(context, listen: false);
           Provider.of<TreatmentContainerProvider>(context, listen: false)
-              .getInfo(questionObj!.treatments);
+              .getInfo(questionObj!.treatments!);
           Provider.of<ExamContainerProvider>(context, listen: false)
-              .getInfo(questionObj!.examinations);
+              .getInfo(questionObj!.examinations!);
 
           treatmentContainer = treatmentProvider.treatmentContainerList;
 
@@ -155,7 +170,7 @@ class _EditQuestionState extends State<EditQuestion> {
     examContainers = examProvider.examContainers;
 
     //post function
-    Future<void> postQuestion(BuildContext context) async {
+    Future<void> postQuestion(BuildContext context, bool status) async {
       try {
         final dio = Dio();
 
@@ -218,7 +233,8 @@ class _EditQuestionState extends State<EditQuestion> {
             "sterilize": signalmentSterilizeValue,
             "age": signalmentAgeValue.text,
             "weight": signalmentWeightValue.text,
-          }
+          },
+          "status": status
         }, ListFormat.multiCompatible);
         var index = 0;
         for (var item in examContainers) {
@@ -271,10 +287,10 @@ class _EditQuestionState extends State<EditQuestion> {
                     ElevatedButton(
                       onPressed: () {
                         callbackFunction();
-                        Navigator.pop(context);
-                        Navigator.pop(context);
-                        Navigator.pop(context);
-                        Navigator.pop(context);
+                        Navigator.popUntil(
+                          context,
+                          ModalRoute.withName('/mainShowQuestionTeacher'),
+                        );
                       },
                       child: const Text('กลับ'),
                     ),
@@ -283,6 +299,31 @@ class _EditQuestionState extends State<EditQuestion> {
               ),
             );
           });
+    }
+
+    bool checkNotEmpty() {
+      bool tmp = clientComplainsController.text.isNotEmpty &&
+          historyTakingController.text.isNotEmpty &&
+          generalResultsController.text.isNotEmpty &&
+          selectedProblemList1.isNotEmpty &&
+          selectedProblemList2.isNotEmpty &&
+          selectedDiffDiag.isNotEmpty &&
+          selectedTentativeDiag.isNotEmpty &&
+          selectedTags.isNotEmpty &&
+          signalmentAgeValue.text.isNotEmpty &&
+          signalmentWeightValue.text.isNotEmpty &&
+          examContainers.isNotEmpty &&
+          signalmentBreedValue != null &&
+          signalmentSexValue != null &&
+          treatmentContainer.isNotEmpty;
+
+      for (TreatmentContainer item in treatmentContainer) {
+        if (item.selectedTreatmentDetail == '') {
+          tmp = false;
+          break;
+        }
+      }
+      return tmp;
     }
 
     return Scaffold(
@@ -498,27 +539,73 @@ class _EditQuestionState extends State<EditQuestion> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   MyBackButton(myContext: context),
-                                  ElevatedButton(
-                                    onPressed: () {
-                                      //send data
-                                      postQuestion(context).then((value) {
-                                        showModal(
-                                            context, widget.refreshCallBack);
-                                      });
-                                    },
-                                    child: const Text('บันทึก'),
+                                  Row(
+                                    children: [
+                                      ElevatedButton(
+                                        onPressed: () async {
+                                          //draft
+                                          setState(() {
+                                            _isPosting = true;
+                                          });
+                                          await postQuestion(context, false)
+                                              .then((value) {
+                                            setState(() {
+                                              _isPosting = false;
+                                            });
+                                            treatmentProvider.clearList();
+                                            examProvider.clearList();
+                                            showModal(context,
+                                                widget.refreshCallBack);
+                                          });
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor:
+                                              const Color(0xFFA0E9FF),
+                                        ),
+                                        child: const Text(
+                                          'Save as draft',
+                                          style: TextStyle(color: Colors.black),
+                                        ),
+                                      ),
+                                      const SizedBox(width: 10),
+                                      ElevatedButton(
+                                        onPressed: () async {
+                                          //send data
+                                          if (!checkNotEmpty()) {
+                                            alertModal(context);
+                                          } else {
+                                            setState(() {
+                                              _isPosting = true;
+                                            });
+                                            await postQuestion(context, true)
+                                                .then((value) {
+                                              setState(() {
+                                                _isPosting = false;
+                                              });
+                                              treatmentProvider.clearList();
+                                              examProvider.clearList();
+                                              showModal(context,
+                                                  widget.refreshCallBack);
+                                            });
+                                          }
+                                        },
+                                        child: const Text('บันทึก'),
+                                      ),
+                                    ],
                                   ),
                                 ],
                               ),
                             ],
                           )
                         : const SizedBox(
-                            width: 10,
+                            height: 100,
+                            width: 100,
                             child: Center(child: CircularProgressIndicator()),
                           ),
                   )
                 : const SizedBox(
-                    width: 10,
+                    height: 100,
+                    width: 100,
                     child: Center(child: CircularProgressIndicator())),
           ),
         ),

@@ -16,9 +16,7 @@ import 'package:frontend/UIModels/nisit/selected_diagnosis_provider.dart';
 import 'package:frontend/components/BoxesInAddQ.dart';
 
 class TreatmentTopic extends StatelessWidget {
-  QuestionObject questionObj;
-
-  TreatmentTopic({super.key, required this.questionObj});
+  const TreatmentTopic({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +31,7 @@ class TreatmentTopic extends StatelessWidget {
       appBar: const AppbarNisit(),
       body: SplitScreenNisit(
         leftPart: LeftPartContent(
-          questionObj: questionObj,
+          questionObj: currentQuestion!,
           addedContent: Column(
             children: [
               TitleAndDottedListView(
@@ -62,18 +60,14 @@ class TreatmentTopic extends StatelessWidget {
             ],
           ),
         ),
-        rightPart: RightPart_TreatmentTopic(
-          questionObj: questionObj,
-        ),
+        rightPart: const RightPart_TreatmentTopic(),
       ),
     );
   }
 }
 
 class RightPart_TreatmentTopic extends StatefulWidget {
-  QuestionObject questionObj;
-
-  RightPart_TreatmentTopic({super.key, required this.questionObj});
+  const RightPart_TreatmentTopic({super.key});
 
   @override
   State<RightPart_TreatmentTopic> createState() =>
@@ -102,7 +96,7 @@ class _RightPart_TreatmentTopicState extends State<RightPart_TreatmentTopic> {
               ),
               itemBuilder: (context, index) {
                 return HoverColorListTile(
-                  hoverColor: Color(0xFF42C2FF),
+                  hoverColor: const Color(0xFF42C2FF),
                   title: Text(_groupedByType.keys.toList()[index]),
                   onTap: () {
                     Navigator.push(
@@ -110,7 +104,6 @@ class _RightPart_TreatmentTopicState extends State<RightPart_TreatmentTopic> {
                       MaterialPageRoute(
                         builder: (context) => TreatmentDetail(
                           _groupedByType.keys.toList()[index],
-                          questionObj: widget.questionObj,
                         ),
                       ),
                     );
@@ -124,9 +117,7 @@ class _RightPart_TreatmentTopicState extends State<RightPart_TreatmentTopic> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => TreatmentTotal(
-                    questionObj: widget.questionObj,
-                  ),
+                  builder: (context) => TreatmentTotal(),
                 ),
               );
             },

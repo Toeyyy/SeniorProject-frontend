@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/components/BoxesInAddQ.dart';
+import 'package:frontend/screensGeneral/mainShowQuestion.dart';
+import 'package:go_router/go_router.dart';
+import 'package:frontend/AllDataFile.dart';
 
 class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});
@@ -53,7 +56,12 @@ class LoginScreen extends StatelessWidget {
                   width: double.infinity,
                   height: 45,
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      //go to mainShowQuestion
+                      //TODO tmp-delete later
+                      userRole = int.parse(emailController.text);
+                      context.goNamed('mainShowQuestion');
+                    },
                     style: ButtonStyle(
                       shape: MaterialStateProperty.all(
                         const RoundedRectangleBorder(

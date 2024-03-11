@@ -29,12 +29,14 @@ class TreatmentContainerProvider extends ChangeNotifier {
 
   void getInfo(List<TreatmentObject> importedList) {
     clearList();
-    for (TreatmentObject item in importedList) {
-      addContainer(TreatmentContainer(
-          id: item.id,
-          key: ObjectKey(item.id),
-          selectedTreatmentTopic: item.type,
-          selectedTreatmentDetail: item.name));
+    if (importedList != []) {
+      for (TreatmentObject item in importedList) {
+        addContainer(TreatmentContainer(
+            id: item.id,
+            key: ObjectKey(item.id),
+            selectedTreatmentTopic: item.type,
+            selectedTreatmentDetail: item.name));
+      }
     }
   }
 }

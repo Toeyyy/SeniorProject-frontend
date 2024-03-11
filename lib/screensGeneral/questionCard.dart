@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/AllDataFile.dart';
 import 'package:frontend/components/tag_box.dart';
 import 'package:frontend/constants.dart';
 import 'package:frontend/models/questionObject.dart';
@@ -11,10 +12,8 @@ import 'package:frontend/UIModels/nisit/selected_treatment_provider.dart';
 
 class QuestionCard extends StatelessWidget {
   final QuestionObject questionObj;
-  final int role;
 
-  const QuestionCard(
-      {super.key, required this.questionObj, required this.role});
+  const QuestionCard({super.key, required this.questionObj});
 
   void _showModal(BuildContext context) {
     SelectedProblem problemProvider = Provider.of(context, listen: false);
@@ -109,12 +108,13 @@ class QuestionCard extends StatelessWidget {
                           treatmentProvider.clearList();
                           diagProvider.clearList();
                           //go to prob list page
+                          currentQuestion = questionObj;
                           Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (context) => ProbList(
                                 round: 1,
-                                questionObj: questionObj,
+                                // questionObj: questionObj,
                               ),
                             ),
                           );

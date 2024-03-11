@@ -76,7 +76,8 @@
     "examination_Score": 20,
     "treatment_Score": 5,
     "diffDiag_Score": 10,
-    "tenDiag_Score" : 16
+    "tenDiag_Score" : 16,
+    "dateTime": "2024-01-10T08:39:52.0181364"
   },
   {
     "questionId": "ID_2",
@@ -175,6 +176,7 @@
     "examination_Score": 11,
     "treatment_Score": 12,
     "diffDiag_Score": 9,
-    "tenDiag_Score": 15
+    "tenDiag_Score": 15,
+    "dateTime": "2024-03-09T08:39:52.0181364"
   }
 ]
