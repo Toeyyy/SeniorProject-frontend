@@ -10,8 +10,8 @@ import 'package:frontend/screensTeacher/showStatDetail.dart';
 import 'package:frontend/screensTeacher/showEditHistory.dart';
 
 class ShowStatOverall extends StatefulWidget {
-  FullQuestionObject? questionObj;
-  ShowStatOverall({super.key, required this.questionObj});
+  String quesId;
+  ShowStatOverall({super.key, required this.quesId});
 
   @override
   State<ShowStatOverall> createState() => _ShowStatOverallState();
@@ -109,7 +109,10 @@ class _ShowStatOverallState extends State<ShowStatOverall> {
   Future<void> getData() async {
     setState(() {
       _loadData = true;
-      questionObj = widget.questionObj;
+    });
+    var loadedQues = await fetchFullQuestionFromId(widget.quesId);
+    setState(() {
+      questionObj = loadedQues;
     });
     List<StatNisitObject> loadedData =
         await fetchStatForTeacher(questionObj!.id);

@@ -5,6 +5,39 @@ import 'package:frontend/components/back_button.dart';
 import 'package:frontend/aboutData/getDataFunctions.dart';
 import 'package:frontend/screensTeacher/PredefinedScreens/editPredefined_other_add.dart';
 import 'package:frontend/screensTeacher/PredefinedScreens/editPredefined_other_edit.dart';
+import 'package:go_router/go_router.dart';
+
+class EditOtherInit extends StatefulWidget {
+  String title;
+  EditOtherInit({super.key, required this.title});
+
+  @override
+  State<EditOtherInit> createState() => _EditOtherInitState();
+}
+
+class _EditOtherInitState extends State<EditOtherInit> {
+  bool _isLoadData = true;
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      _isLoadData = true;
+    });
+    getProbDiagTag(widget.title);
+    setState(() {
+      _isLoadData = false;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return _isLoadData
+        ? const Center(
+            child: SizedBox(width: 30, child: CircularProgressIndicator()))
+        : EditPreDefinedOtherChoice(title: widget.title);
+  }
+}
 
 class EditPreDefinedOtherChoice extends StatelessWidget {
   final String title;
@@ -14,17 +47,6 @@ class EditPreDefinedOtherChoice extends StatelessWidget {
     'เพิ่ม',
     'แก้ไข/ลบ',
   ];
-
-  Future<void> getData(String title) async {
-    if (title == 'Problem List') {
-      await fetchPreDefinedProb();
-    } else if (title == 'Tentative/Definitive Diagnosis' ||
-        title == 'Differential Diagnosis') {
-      await fetchPreDefinedDiag();
-    } else {
-      await fetchPreDefinedTag();
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +81,7 @@ class EditPreDefinedOtherChoice extends StatelessWidget {
                         ),
                         onTap: () async {
                           if (_topicList[index] == 'เพิ่ม') {
-                            await getData(title).then((value) {
+                            await getProbDiagTag(title).then((value) {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -68,8 +90,12 @@ class EditPreDefinedOtherChoice extends StatelessWidget {
                                 ),
                               );
                             });
+                            // context.goNamed(
+                            //   'addOther',
+                            //   pathParameters: {'title': title},
+                            // );
                           } else if (_topicList[index] == 'แก้ไข/ลบ') {
-                            await getData(title).then((value) {
+                            await getProbDiagTag(title).then((value) {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -78,6 +104,10 @@ class EditPreDefinedOtherChoice extends StatelessWidget {
                                 ),
                               );
                             });
+                            // context.goNamed(
+                            //   'editOther',
+                            //   pathParameters: {'title': title},
+                            // );
                           }
                         },
                       );

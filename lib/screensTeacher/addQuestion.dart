@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:frontend/aboutData/getDataFunctions.dart';
 import 'package:frontend/components/appbar.dart';
 import 'package:frontend/constants.dart';
 import 'package:frontend/models/diagnosisObject.dart';
@@ -8,6 +9,7 @@ import 'package:frontend/UIModels/teacher/examContainer_provider.dart';
 import 'package:frontend/models/tagObject.dart';
 import 'package:frontend/components/treatmentContainer.dart';
 import 'package:frontend/UIModels/teacher/treatmentContainer_provider.dart';
+import 'package:go_router/go_router.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:frontend/components/BoxesInAddQ.dart';
 import 'package:frontend/components/functions.dart';
@@ -47,6 +49,11 @@ class _AddQuestionState extends State<AddQuestion> {
   bool _isPosting = false;
 
   /////
+  @override
+  void initState() {
+    super.initState();
+    fetchPreDefined();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -385,7 +392,10 @@ class _AddQuestionState extends State<AddQuestion> {
                             style: kSubHeaderTextStyle),
                         DiagnosisMultiSelectDropDown(
                             selectedList: selectedDiffDiag,
-                            displayList: splitDiagnosis['differential']!,
+                            displayList:
+                                splitDiagnosis.containsKey('differential')
+                                    ? splitDiagnosis['differential']!
+                                    : [],
                             type: 'differential',
                             hintText: "เลือก Differential Diagnosis",
                             updateListCallback: updateDiagList),
@@ -412,7 +422,9 @@ class _AddQuestionState extends State<AddQuestion> {
                             style: kSubHeaderTextStyle),
                         DiagnosisMultiSelectDropDown(
                             selectedList: selectedTentativeDiag,
-                            displayList: splitDiagnosis['tentative']!,
+                            displayList: splitDiagnosis.containsKey('tentative')
+                                ? splitDiagnosis['tentative']!
+                                : [],
                             type: 'tentative',
                             hintText: "เลือก Definitive/Tentative Diagnosis",
                             updateListCallback: updateDiagList),
@@ -456,7 +468,7 @@ class _AddQuestionState extends State<AddQuestion> {
                           children: [
                             ElevatedButton(
                               onPressed: () {
-                                Navigator.maybePop(context);
+                                context.pop();
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: const Color(0xFF8B72BE),

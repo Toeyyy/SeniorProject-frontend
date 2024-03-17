@@ -14,9 +14,10 @@ import 'package:frontend/UIModels/nisit/selected_diagnosis_provider.dart';
 import 'package:frontend/AllDataFile.dart';
 
 class ProbListAns extends StatelessWidget {
+  QuestionObject questionObj;
   int round;
 
-  ProbListAns({super.key, required this.round});
+  ProbListAns({super.key, required this.questionObj, required this.round});
 
   ListView showAnsProbList(
       List<ProblemObject> ansList, List<ProblemObject> actualList) {
@@ -62,6 +63,7 @@ class ProbListAns extends StatelessWidget {
         Provider.of<SelectedProblem>(context, listen: false);
     SelectedDiagnosis diagProvider =
         Provider.of<SelectedDiagnosis>(context, listen: false);
+    // SelectedQuestion questionProvider = Provider.of(context, listen: false);
 
     List<ProblemObject> correctProblem = round == 1
         ? problemProvider.problemAnsList1
@@ -74,9 +76,9 @@ class ProbListAns extends StatelessWidget {
       appBar: const AppbarNisit(),
       body: SplitScreenNisit(
         leftPart: round == 1
-            ? LeftPartContent(questionObj: currentQuestion!)
+            ? LeftPartContent(questionObj: questionObj)
             : LeftPartContent(
-                questionObj: currentQuestion!,
+                questionObj: questionObj,
                 addedContent: Column(
                   children: [
                     TitleAndDottedListView(
@@ -133,7 +135,9 @@ class ProbListAns extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => DiffDiag(),
+                            builder: (context) => DiffDiag(
+                              questionObj: questionObj,
+                            ),
                           ),
                         );
                       },
@@ -145,7 +149,9 @@ class ProbListAns extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => TentativeDiag(),
+                            builder: (context) => TentativeDiag(
+                              questionObj: questionObj,
+                            ),
                           ),
                         );
                       },

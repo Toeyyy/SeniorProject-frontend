@@ -6,6 +6,37 @@ import 'package:frontend/aboutData/getDataFunctions.dart';
 import 'package:frontend/screensTeacher/PredefinedScreens/editPredefined_treatment_add.dart';
 import 'package:frontend/screensTeacher/PredefinedScreens/editPredefined_treatment_topics.dart';
 
+class EditTreatmentInit extends StatefulWidget {
+  const EditTreatmentInit({super.key});
+
+  @override
+  State<EditTreatmentInit> createState() => _EditTreatmentInitState();
+}
+
+class _EditTreatmentInitState extends State<EditTreatmentInit> {
+  bool _isLoadData = true;
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      _isLoadData = true;
+    });
+    getTreatment();
+    setState(() {
+      _isLoadData = false;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return _isLoadData
+        ? const Center(
+            child: SizedBox(width: 30, child: CircularProgressIndicator()))
+        : EditPreDefinedTreatmentChoice();
+  }
+}
+
 class EditPreDefinedTreatmentChoice extends StatelessWidget {
   EditPreDefinedTreatmentChoice({super.key});
 

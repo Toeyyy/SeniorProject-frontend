@@ -1,5 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:frontend/aboutData/getDataFunctions.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:frontend/components/appbar.dart';
 import 'package:frontend/constants.dart';
@@ -21,11 +23,10 @@ import 'package:frontend/models/fullQuestionObject.dart';
 import 'package:frontend/AllDataFile.dart';
 
 class EditQuestion extends StatefulWidget {
-  FullQuestionObject questionObj;
-  VoidCallback refreshCallBack;
+  // FullQuestionObject questionObj;
+  String quesId;
 
-  EditQuestion(
-      {super.key, required this.questionObj, required this.refreshCallBack});
+  EditQuestion({super.key, required this.quesId});
 
   @override
   State<EditQuestion> createState() => _EditQuestionState();
@@ -57,7 +58,6 @@ class _EditQuestionState extends State<EditQuestion> {
   late List<DiagnosisObject> selectedDiffDiag = [];
   late List<DiagnosisObject> selectedTentativeDiag = [];
   late List<TagObject> selectedTags = [];
-  late Map<String, List<DiagnosisObject>> splitFullDiag = {};
 
   late TreatmentContainerProvider treatmentProvider;
   late List<TreatmentContainer> treatmentContainer = [];
@@ -68,6 +68,7 @@ class _EditQuestionState extends State<EditQuestion> {
   List<String> signalmentTypeList = ["สุนัข", "แมว", "นก"];
 
   bool _isPosting = false;
+  bool _isLoadData = true;
 
   //Update List/////
   void updateProbList(List<ProblemObject> newList, int round) {
@@ -93,71 +94,77 @@ class _EditQuestionState extends State<EditQuestion> {
   @override
   void initState() {
     super.initState();
+    getData();
+  }
 
-    Future.delayed(Duration.zero, () {
-      setState(() {
-        questionObj = widget.questionObj;
-        if (questionObj != null) {
-          id = questionObj!.id;
-          name = questionObj!.name;
-          signalmentTypeValue = questionObj!.signalment.species == ''
-              ? 'สุนัข'
-              : questionObj!.signalment.species;
-          signalmentBreedValue.text = questionObj!.signalment.breed;
-          signalmentSterilizeValue = questionObj!.signalment.sterilize;
-          signalmentSexValue = questionObj!.signalment.gender == ''
-              ? 'ผู้'
-              : questionObj!.signalment.gender;
-          signalmentAgeValue.text = questionObj!.signalment.age;
-          signalmentWeightValue.text = questionObj!.signalment.weight;
-          clientComplainsController.text = questionObj!.clientComplains;
-          historyTakingController.text = questionObj!.historyTakingInfo;
-          generalResultsController.text = questionObj!.generalInfo;
-          selectedTags = questionObj!.tags ?? [];
-          /////
-          splitProblems = questionObj!.problems != []
-              ? groupBy(questionObj!.problems!, (e) => e.round.toString())
-              : {};
-          selectedProblemList1 = splitProblems.containsKey('1')
-              ? splitProblems['1']!
-                  .map(
-                    (e) => ProblemObject(id: e.id, name: e.name),
-                  )
-                  .toList()
-              : [];
-          selectedProblemList2 = splitProblems.containsKey('2')
-              ? splitProblems['2']!
-                  .map(
-                    (e) => ProblemObject(id: e.id, name: e.name),
-                  )
-                  .toList()
-              : [];
-          /////
-          splitDiagnosis = questionObj!.diagnostics != []
-              ? groupBy(questionObj!.diagnostics!, (e) => e.type)
-              : {};
-          selectedDiffDiag = splitDiagnosis.containsKey('differential')
-              ? splitDiagnosis['differential']!
-              : [];
-          selectedTentativeDiag = splitDiagnosis.containsKey('tentative')
-              ? splitDiagnosis['tentative']!
-              : [];
-          splitFullDiag = groupBy(diagnosisListPreDefined, (e) => e.type);
-          /////
-          treatmentProvider =
-              Provider.of<TreatmentContainerProvider>(context, listen: false);
-          examProvider =
-              Provider.of<ExamContainerProvider>(context, listen: false);
-          Provider.of<TreatmentContainerProvider>(context, listen: false)
-              .getInfo(questionObj!.treatments!);
-          Provider.of<ExamContainerProvider>(context, listen: false)
-              .getInfo(questionObj!.examinations!);
+  Future getData() async {
+    setState(() {
+      _isLoadData = true;
+    });
+    var loadedData = await fetchFullQuestionFromId(widget.quesId);
+    fetchPreDefined();
+    setState(() {
+      questionObj = loadedData;
+      if (questionObj != null) {
+        id = questionObj!.id;
+        name = questionObj!.name;
+        signalmentTypeValue = questionObj!.signalment?.species == ''
+            ? 'สุนัข'
+            : questionObj!.signalment!.species;
+        signalmentBreedValue.text = questionObj!.signalment?.breed ?? '';
+        signalmentSterilizeValue = questionObj!.signalment?.sterilize ?? false;
+        signalmentSexValue = questionObj!.signalment?.gender == ''
+            ? 'ผู้'
+            : questionObj!.signalment!.gender;
+        signalmentAgeValue.text = questionObj!.signalment?.age ?? '';
+        signalmentWeightValue.text = questionObj!.signalment?.weight ?? '';
+        clientComplainsController.text = questionObj!.clientComplains;
+        historyTakingController.text = questionObj!.historyTakingInfo;
+        generalResultsController.text = questionObj!.generalInfo;
+        selectedTags = questionObj!.tags ?? [];
+        /////
+        splitProblems = questionObj!.problems != []
+            ? groupBy(questionObj!.problems!, (e) => e.round.toString())
+            : {};
+        selectedProblemList1 = splitProblems.containsKey('1')
+            ? splitProblems['1']!
+                .map(
+                  (e) => ProblemObject(id: e.id, name: e.name),
+                )
+                .toList()
+            : [];
+        selectedProblemList2 = splitProblems.containsKey('2')
+            ? splitProblems['2']!
+                .map(
+                  (e) => ProblemObject(id: e.id, name: e.name),
+                )
+                .toList()
+            : [];
+        /////
+        splitDiagnosis = questionObj!.diagnostics != []
+            ? groupBy(questionObj!.diagnostics!, (e) => e.type)
+            : {};
+        selectedDiffDiag = splitDiagnosis.containsKey('differential')
+            ? splitDiagnosis['differential']!
+            : [];
+        selectedTentativeDiag = splitDiagnosis.containsKey('tentative')
+            ? splitDiagnosis['tentative']!
+            : [];
+        /////
+        treatmentProvider =
+            Provider.of<TreatmentContainerProvider>(context, listen: false);
+        examProvider =
+            Provider.of<ExamContainerProvider>(context, listen: false);
+        Provider.of<TreatmentContainerProvider>(context, listen: false)
+            .getInfo(questionObj!.treatments ?? []);
+        Provider.of<ExamContainerProvider>(context, listen: false)
+            .getInfo(questionObj!.examinations ?? []);
 
-          treatmentContainer = treatmentProvider.treatmentContainerList;
+        treatmentContainer = treatmentProvider.treatmentContainerList;
+        examContainers = examProvider.examContainers;
 
-          examContainers = examProvider.examContainers;
-        }
-      });
+        _isLoadData = false;
+      }
     });
   }
 
@@ -261,7 +268,7 @@ class _EditQuestionState extends State<EditQuestion> {
       }
     }
 
-    void showModal(BuildContext context, VoidCallback callbackFunction) {
+    void showModal(BuildContext context) {
       showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -286,11 +293,7 @@ class _EditQuestionState extends State<EditQuestion> {
                     ),
                     ElevatedButton(
                       onPressed: () {
-                        callbackFunction();
-                        Navigator.popUntil(
-                          context,
-                          ModalRoute.withName('/mainShowQuestionTeacher'),
-                        );
+                        context.go('/mainShowQuestion');
                       },
                       child: const Text('กลับ'),
                     ),
@@ -331,283 +334,298 @@ class _EditQuestionState extends State<EditQuestion> {
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
-          child: Center(
-            child: !_isPosting
-                ? SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.7,
-                    child: questionObj != null
-                        ? Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Center(
-                                child: Text(
-                                  'แก้ไขโจทย์ $name',
-                                  style: kHeaderTextStyle.copyWith(
-                                      fontWeight: FontWeight.w900),
-                                ),
-                              ),
-                              const H20Sizedbox(),
-                              TagMultiSelectDropDown(
-                                  selectedList: selectedTags,
-                                  displayList: tagListPreDefined,
-                                  hintText: 'Select tags',
-                                  updateListCallback: updateTagList),
-                              const H20Sizedbox(),
-                              //Signalment
-                              const Text(
-                                'ข้อมูลทั่วไป',
-                                style: kSubHeaderTextStyle,
-                              ),
-                              Row(
-                                children: [
-                                  const Text('ประเภท'),
-                                  const SizedBox(width: 2),
-                                  DropDownButtonInAddQ(
-                                      selectedValue: signalmentTypeValue,
-                                      list: signalmentTypeList,
-                                      hintText: "เลือกประเภทสัตว์",
-                                      onChanged: (value) {
-                                        setState(() {
-                                          signalmentTypeValue =
-                                              value.toString();
-                                        });
-                                      }),
-                                ],
-                              ),
-                              TextAndTextfield(
-                                  title: "สายพันธุ์",
-                                  myController: signalmentBreedValue),
-                              const SizedBox(
-                                height: 5,
-                              ),
-                              Row(
-                                children: [
-                                  const Text('เพศ'),
-                                  const SizedBox(width: 2),
-                                  DropDownButtonInAddQ(
-                                      selectedValue: signalmentSexValue,
-                                      list: const ['ผู้', 'เมีย'],
-                                      hintText: "เลือกเพศสัตว์",
-                                      onChanged: (value) {
-                                        setState(() {
-                                          signalmentSexValue = value!;
-                                        });
-                                      }),
-                                ],
-                              ),
-                              ListTile(
-                                contentPadding: const EdgeInsets.only(left: 0),
-                                title: const Text('ทำหมันแล้ว'),
-                                leading: Checkbox(
-                                  value: signalmentSterilizeValue,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      signalmentSterilizeValue = value!;
-                                    });
-                                  },
-                                ),
-                              ),
-                              TextAndTextfield(
-                                  title: "อายุ",
-                                  myController: signalmentAgeValue),
-                              const SizedBox(
-                                height: 5,
-                              ),
-                              TextAndTextfield(
-                                  title: "น้ำหนัก",
-                                  myController: signalmentWeightValue),
-                              const H20Sizedbox(),
-                              //Client Complain
-                              TextBoxMultiLine(
-                                myController: clientComplainsController,
-                                hintText: "ข้อมูล Client Complains",
-                                titleText: 'Client Complains',
-                                maxLine: 4,
-                                boxColor: const Color(0xFFDFE4E0),
-                              ),
-                              const H20Sizedbox(),
-                              //History Taking
-                              TextBoxMultiLine(
-                                myController: historyTakingController,
-                                hintText: "ข้อมูล History Taking",
-                                titleText: "History Taking",
-                                maxLine: 4,
-                                boxColor: const Color(0xFFDFE4E0),
-                              ),
-                              const H20Sizedbox(),
-                              TextBoxMultiLine(
-                                myController: generalResultsController,
-                                hintText: "ผลตรวจ 1, ผลตรวจ 2, ผลตรวจ 3",
-                                titleText:
-                                    "ผลตรวจร่างกาย [คั่นด้วยเครื่องหมาย , ]",
-                                maxLine: 4,
-                                boxColor: const Color(0xFFDFE4E0),
-                              ),
-                              const DividerWithSpace(),
-                              //Answer
-                              Text(
-                                'เฉลย',
-                                style:
-                                    kSubHeaderTextStyle.copyWith(fontSize: 35),
-                              ),
-                              const H20Sizedbox(),
-                              const Text('Problem List ครั้งที่ 1',
-                                  style: kSubHeaderTextStyle),
-                              ProbListMultiSelectDropDown(
-                                selectedList: selectedProblemList1,
-                                displayList: problemListPreDefined,
-                                hintText: "เลือก Problem List ครั้งที่ 1",
-                                round: 1,
-                                updateListCallback: updateProbList,
-                              ),
-                              const H20Sizedbox(),
-                              //diff diag
-                              const Text('Differential Diagnosis',
-                                  style: kSubHeaderTextStyle),
-                              DiagnosisMultiSelectDropDown(
-                                  selectedList: selectedDiffDiag,
-                                  displayList: splitFullDiag['differential']!,
-                                  type: 'differential',
-                                  hintText: "เลือก Differential Diagnosis",
-                                  updateListCallback: updateDiagList),
-                              const H20Sizedbox(),
-                              //exam
-                              ExamsButtonAndContainer(
-                                  examContainers: examProvider.examContainers,
-                                  examListProvider: examProvider),
-                              const H20Sizedbox(),
-                              //prob2
-                              const Text('Problem List ครั้งที่ 2',
-                                  style: kSubHeaderTextStyle),
-                              ProbListMultiSelectDropDown(
-                                  selectedList: selectedProblemList2,
-                                  displayList: problemListPreDefined,
-                                  hintText: "เลือก Problem List ครั้งที่ 2",
-                                  round: 2,
-                                  updateListCallback: updateProbList),
-                              const H20Sizedbox(),
-                              //tentative diag
-                              const Text('Definitive/Tentative Diagnosis',
-                                  style: kSubHeaderTextStyle),
-                              DiagnosisMultiSelectDropDown(
-                                  selectedList: selectedTentativeDiag,
-                                  displayList: splitFullDiag['tentative']!,
-                                  type: 'tentative',
-                                  hintText:
-                                      "เลือก Definitive/Tentative Diagnosis",
-                                  updateListCallback: updateDiagList),
-                              const H20Sizedbox(),
-                              Row(
-                                children: [
-                                  const Text(
-                                    'Treatment',
-                                    style: kSubHeaderTextStyle,
-                                  ),
-                                  const SizedBox(width: 20),
-                                  ElevatedButton(
-                                    onPressed: () {
-                                      final int currentNub =
-                                          treatmentProvider.nub;
-                                      treatmentProvider.addContainer(
-                                        TreatmentContainer(
-                                          id: currentNub.toString(),
-                                          key: ObjectKey(currentNub),
-                                          selectedTreatmentTopic:
-                                              getTreatmentTopic().first,
-                                          selectedTreatmentDetail:
-                                              filterTreatment('Medical').first,
-                                        ),
-                                      );
-                                    },
-                                    child: const Text('เพิ่ม Treatment'),
-                                  ),
-                                ],
-                              ),
-                              const H20Sizedbox(),
-                              treatmentContainer.isEmpty
-                                  ? const SizedBox()
-                                  : ListView.builder(
-                                      shrinkWrap: true,
-                                      itemCount: treatmentContainer.length,
-                                      itemBuilder: (context, index) {
-                                        return treatmentContainer[index];
-                                      },
+          child: !_isLoadData
+              ? Center(
+                  child: !_isPosting
+                      ? SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.7,
+                          child: questionObj != null
+                              ? Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Center(
+                                      child: Text(
+                                        'แก้ไขโจทย์ $name',
+                                        style: kHeaderTextStyle.copyWith(
+                                            fontWeight: FontWeight.w900),
+                                      ),
                                     ),
-                              const H20Sizedbox(),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  MyBackButton(myContext: context),
-                                  Row(
-                                    children: [
-                                      ElevatedButton(
-                                        onPressed: () async {
-                                          //draft
-                                          setState(() {
-                                            _isPosting = true;
-                                          });
-                                          await postQuestion(context, false)
-                                              .then((value) {
-                                            setState(() {
-                                              _isPosting = false;
-                                            });
-                                            treatmentProvider.clearList();
-                                            examProvider.clearList();
-                                            showModal(context,
-                                                widget.refreshCallBack);
-                                          });
-                                        },
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor:
-                                              const Color(0xFFA0E9FF),
-                                        ),
-                                        child: const Text(
-                                          'Save as draft',
-                                          style: TextStyle(color: Colors.black),
-                                        ),
-                                      ),
-                                      const SizedBox(width: 10),
-                                      ElevatedButton(
-                                        onPressed: () async {
-                                          //send data
-                                          if (!checkNotEmpty()) {
-                                            alertModal(context);
-                                          } else {
-                                            setState(() {
-                                              _isPosting = true;
-                                            });
-                                            await postQuestion(context, true)
-                                                .then((value) {
+                                    const H20Sizedbox(),
+                                    TagMultiSelectDropDown(
+                                        selectedList: selectedTags,
+                                        displayList: tagListPreDefined,
+                                        hintText: 'Select tags',
+                                        updateListCallback: updateTagList),
+                                    const H20Sizedbox(),
+                                    //Signalment
+                                    const Text(
+                                      'ข้อมูลทั่วไป',
+                                      style: kSubHeaderTextStyle,
+                                    ),
+                                    Row(
+                                      children: [
+                                        const Text('ประเภท'),
+                                        const SizedBox(width: 2),
+                                        DropDownButtonInAddQ(
+                                            selectedValue: signalmentTypeValue,
+                                            list: signalmentTypeList,
+                                            hintText: "เลือกประเภทสัตว์",
+                                            onChanged: (value) {
                                               setState(() {
-                                                _isPosting = false;
+                                                signalmentTypeValue =
+                                                    value.toString();
                                               });
-                                              treatmentProvider.clearList();
-                                              examProvider.clearList();
-                                              showModal(context,
-                                                  widget.refreshCallBack);
-                                            });
-                                          }
+                                            }),
+                                      ],
+                                    ),
+                                    TextAndTextfield(
+                                        title: "สายพันธุ์",
+                                        myController: signalmentBreedValue),
+                                    const SizedBox(
+                                      height: 5,
+                                    ),
+                                    Row(
+                                      children: [
+                                        const Text('เพศ'),
+                                        const SizedBox(width: 2),
+                                        DropDownButtonInAddQ(
+                                            selectedValue: signalmentSexValue,
+                                            list: const ['ผู้', 'เมีย'],
+                                            hintText: "เลือกเพศสัตว์",
+                                            onChanged: (value) {
+                                              setState(() {
+                                                signalmentSexValue = value!;
+                                              });
+                                            }),
+                                      ],
+                                    ),
+                                    ListTile(
+                                      contentPadding:
+                                          const EdgeInsets.only(left: 0),
+                                      title: const Text('ทำหมันแล้ว'),
+                                      leading: Checkbox(
+                                        value: signalmentSterilizeValue,
+                                        onChanged: (value) {
+                                          setState(() {
+                                            signalmentSterilizeValue = value!;
+                                          });
                                         },
-                                        child: const Text('บันทึก'),
                                       ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ],
-                          )
-                        : const SizedBox(
-                            height: 100,
-                            width: 100,
-                            child: Center(child: CircularProgressIndicator()),
-                          ),
-                  )
-                : const SizedBox(
-                    height: 100,
-                    width: 100,
-                    child: Center(child: CircularProgressIndicator())),
-          ),
+                                    ),
+                                    TextAndTextfield(
+                                        title: "อายุ",
+                                        myController: signalmentAgeValue),
+                                    const SizedBox(
+                                      height: 5,
+                                    ),
+                                    TextAndTextfield(
+                                        title: "น้ำหนัก",
+                                        myController: signalmentWeightValue),
+                                    const H20Sizedbox(),
+                                    //Client Complain
+                                    TextBoxMultiLine(
+                                      myController: clientComplainsController,
+                                      hintText: "ข้อมูล Client Complains",
+                                      titleText: 'Client Complains',
+                                      maxLine: 4,
+                                      boxColor: const Color(0xFFDFE4E0),
+                                    ),
+                                    const H20Sizedbox(),
+                                    //History Taking
+                                    TextBoxMultiLine(
+                                      myController: historyTakingController,
+                                      hintText: "ข้อมูล History Taking",
+                                      titleText: "History Taking",
+                                      maxLine: 4,
+                                      boxColor: const Color(0xFFDFE4E0),
+                                    ),
+                                    const H20Sizedbox(),
+                                    TextBoxMultiLine(
+                                      myController: generalResultsController,
+                                      hintText: "ผลตรวจ 1, ผลตรวจ 2, ผลตรวจ 3",
+                                      titleText:
+                                          "ผลตรวจร่างกาย [คั่นด้วยเครื่องหมาย , ]",
+                                      maxLine: 4,
+                                      boxColor: const Color(0xFFDFE4E0),
+                                    ),
+                                    const DividerWithSpace(),
+                                    //Answer
+                                    Text(
+                                      'เฉลย',
+                                      style: kSubHeaderTextStyle.copyWith(
+                                          fontSize: 35),
+                                    ),
+                                    const H20Sizedbox(),
+                                    const Text('Problem List ครั้งที่ 1',
+                                        style: kSubHeaderTextStyle),
+                                    ProbListMultiSelectDropDown(
+                                      selectedList: selectedProblemList1,
+                                      displayList: problemListPreDefined,
+                                      hintText: "เลือก Problem List ครั้งที่ 1",
+                                      round: 1,
+                                      updateListCallback: updateProbList,
+                                    ),
+                                    const H20Sizedbox(),
+                                    //diff diag
+                                    const Text('Differential Diagnosis',
+                                        style: kSubHeaderTextStyle),
+                                    DiagnosisMultiSelectDropDown(
+                                        selectedList: selectedDiffDiag,
+                                        displayList: diagnosisListPreDefined,
+                                        type: 'differential',
+                                        hintText:
+                                            "เลือก Differential Diagnosis",
+                                        updateListCallback: updateDiagList),
+                                    const H20Sizedbox(),
+                                    //exam
+                                    ExamsButtonAndContainer(
+                                        examContainers:
+                                            examProvider.examContainers,
+                                        examListProvider: examProvider),
+                                    const H20Sizedbox(),
+                                    //prob2
+                                    const Text('Problem List ครั้งที่ 2',
+                                        style: kSubHeaderTextStyle),
+                                    ProbListMultiSelectDropDown(
+                                        selectedList: selectedProblemList2,
+                                        displayList: problemListPreDefined,
+                                        hintText:
+                                            "เลือก Problem List ครั้งที่ 2",
+                                        round: 2,
+                                        updateListCallback: updateProbList),
+                                    const H20Sizedbox(),
+                                    //tentative diag
+                                    const Text('Definitive/Tentative Diagnosis',
+                                        style: kSubHeaderTextStyle),
+                                    DiagnosisMultiSelectDropDown(
+                                        selectedList: selectedTentativeDiag,
+                                        displayList: diagnosisListPreDefined,
+                                        type: 'tentative',
+                                        hintText:
+                                            "เลือก Definitive/Tentative Diagnosis",
+                                        updateListCallback: updateDiagList),
+                                    const H20Sizedbox(),
+                                    Row(
+                                      children: [
+                                        const Text(
+                                          'Treatment',
+                                          style: kSubHeaderTextStyle,
+                                        ),
+                                        const SizedBox(width: 20),
+                                        ElevatedButton(
+                                          onPressed: () {
+                                            final int currentNub =
+                                                treatmentProvider.nub;
+                                            treatmentProvider.addContainer(
+                                              TreatmentContainer(
+                                                id: currentNub.toString(),
+                                                key: ObjectKey(currentNub),
+                                                selectedTreatmentTopic:
+                                                    getTreatmentTopic().first,
+                                                selectedTreatmentDetail:
+                                                    filterTreatment('Medical')
+                                                        .first,
+                                              ),
+                                            );
+                                          },
+                                          child: const Text('เพิ่ม Treatment'),
+                                        ),
+                                      ],
+                                    ),
+                                    const H20Sizedbox(),
+                                    treatmentContainer.isEmpty
+                                        ? const SizedBox()
+                                        : ListView.builder(
+                                            shrinkWrap: true,
+                                            itemCount:
+                                                treatmentContainer.length,
+                                            itemBuilder: (context, index) {
+                                              return treatmentContainer[index];
+                                            },
+                                          ),
+                                    const H20Sizedbox(),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        MyBackButton(myContext: context),
+                                        Row(
+                                          children: [
+                                            ElevatedButton(
+                                              onPressed: () async {
+                                                //draft
+                                                setState(() {
+                                                  _isPosting = true;
+                                                });
+                                                await postQuestion(
+                                                        context, false)
+                                                    .then((value) {
+                                                  setState(() {
+                                                    _isPosting = false;
+                                                  });
+                                                  treatmentProvider.clearList();
+                                                  examProvider.clearList();
+                                                  showModal(context);
+                                                });
+                                              },
+                                              style: ElevatedButton.styleFrom(
+                                                backgroundColor:
+                                                    const Color(0xFFA0E9FF),
+                                              ),
+                                              child: const Text(
+                                                'Save as draft',
+                                                style: TextStyle(
+                                                    color: Colors.black),
+                                              ),
+                                            ),
+                                            const SizedBox(width: 10),
+                                            ElevatedButton(
+                                              onPressed: () async {
+                                                //send data
+                                                if (!checkNotEmpty()) {
+                                                  alertModal(context);
+                                                } else {
+                                                  setState(() {
+                                                    _isPosting = true;
+                                                  });
+                                                  await postQuestion(
+                                                          context, true)
+                                                      .then((value) {
+                                                    setState(() {
+                                                      _isPosting = false;
+                                                    });
+                                                    treatmentProvider
+                                                        .clearList();
+                                                    examProvider.clearList();
+                                                    showModal(context);
+                                                  });
+                                                }
+                                              },
+                                              child: const Text('บันทึก'),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                )
+                              : const SizedBox(
+                                  height: 100,
+                                  width: 100,
+                                  child: Center(
+                                      child: CircularProgressIndicator()),
+                                ),
+                        )
+                      : const SizedBox(
+                          height: 100,
+                          width: 100,
+                          child: Center(child: CircularProgressIndicator())),
+                )
+              : const Center(
+                  child: SizedBox(
+                      width: 30,
+                      height: 30,
+                      child: CircularProgressIndicator())),
         ),
       ),
     );

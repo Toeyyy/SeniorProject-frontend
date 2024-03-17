@@ -31,23 +31,23 @@ class _MainShowQuestionState extends State<MainShowQuestion> {
 
   bool _isLoadData = false;
 
-  void refreshScreen() async {
-    // print('refresh page');
-    setState(() {
-      _isLoadData = true;
-    });
-    await fetchPreDefinedProb();
-    await fetchPreDefinedDiag();
-    await fetchPreDefinedExam();
-    await fetchPreDefinedTag();
-    await fetchPreDefinedTreatment();
-    await fetchFullQuestionList();
-    setState(() {
-      teacherQuestionObjList = teacherQuestionList;
-      teacherDisplayList = teacherQuestionList;
-      _isLoadData = false;
-    });
-  }
+  // void refreshScreen() async {
+  //   // print('refresh page');
+  //   setState(() {
+  //     _isLoadData = true;
+  //   });
+  //   await fetchPreDefinedProb();
+  //   await fetchPreDefinedDiag();
+  //   await fetchPreDefinedExam();
+  //   await fetchPreDefinedTag();
+  //   await fetchPreDefinedTreatment();
+  //   await fetchFullQuestionList();
+  //   setState(() {
+  //     teacherQuestionObjList = teacherQuestionList;
+  //     teacherDisplayList = teacherQuestionList;
+  //     _isLoadData = false;
+  //   });
+  // }
 
   @override
   void initState() {
@@ -68,6 +68,7 @@ class _MainShowQuestionState extends State<MainShowQuestion> {
     if (userRole == 0) {
       List<QuestionObject> loadedData = await fetchQuestionList();
       setState(() {
+        nisitQuestionList = loadedData;
         questionObjList = loadedData;
         displayList = loadedData;
       });
@@ -223,8 +224,8 @@ class _MainShowQuestionState extends State<MainShowQuestion> {
                                   itemCount: teacherDisplayList.length,
                                   itemBuilder: (context, index) {
                                     return FullQuestionCard(
-                                        questionObj: teacherDisplayList[index],
-                                        refreshCallBack: refreshScreen);
+                                      questionObj: teacherDisplayList[index],
+                                    );
                                   })
                               : const SizedBox()
                       : const Center(child: CircularProgressIndicator()),

@@ -8,7 +8,38 @@ import 'package:frontend/models/problemListObject.dart';
 import 'package:collection/collection.dart';
 import 'package:frontend/components/examContainer.dart';
 import 'package:frontend/models/diagnosisObject.dart';
-import 'package:frontend/models/examinationPreDefinedObject.dart';
+import 'package:go_router/go_router.dart';
+import 'package:frontend/aboutData/getDataFunctions.dart';
+
+class ReturnPointInit extends StatefulWidget {
+  String quesId;
+  ReturnPointInit({super.key, required this.quesId});
+
+  @override
+  State<ReturnPointInit> createState() => _ReturnPointInitState();
+}
+
+class _ReturnPointInitState extends State<ReturnPointInit> {
+  StatQuestionObject? stat;
+
+  Future getData() async {
+    var loadedData = await fetchStatQuestion(widget.quesId);
+    setState(() {
+      stat = loadedData;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getData();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ReturnPoint(stat: stat);
+  }
+}
 
 class ReturnPoint extends StatelessWidget {
   late StatQuestionObject? stat;
@@ -32,8 +63,6 @@ class ReturnPoint extends StatelessWidget {
       }
       return res;
     }
-
-    currentQuestion = null;
 
     return Scaffold(
       appBar: const AppbarNisit(),
@@ -186,10 +215,7 @@ class ReturnPoint extends StatelessWidget {
                         Center(
                           child: ElevatedButton(
                             onPressed: () {
-                              Navigator.popUntil(
-                                context,
-                                ModalRoute.withName('/mainShowQuestionNisit'),
-                              );
+                              context.go('/mainShowQuestion');
                             },
                             child: const Text('หน้าแรก'),
                           ),
@@ -198,10 +224,13 @@ class ReturnPoint extends StatelessWidget {
                     ),
                   ),
                 )
-              : const SizedBox(
-                  width: 10,
-                  child: Center(
-                    child: CircularProgressIndicator(),
+              : const Center(
+                  child: SizedBox(
+                    width: 30,
+                    height: 30,
+                    child: CircularProgressIndicator(
+                      color: Color(0xFF42C2FF),
+                    ),
                   ),
                 ),
         ),

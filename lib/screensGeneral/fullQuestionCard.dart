@@ -5,13 +5,12 @@ import 'package:frontend/constants.dart';
 import 'package:frontend/models/fullQuestionObject.dart';
 import 'package:frontend/screensTeacher/showAndEditQuestion.dart';
 import 'package:frontend/screensTeacher/editQuestion.dart';
+import 'package:go_router/go_router.dart';
 
 class FullQuestionCard extends StatelessWidget {
   final FullQuestionObject questionObj;
-  VoidCallback refreshCallBack;
 
-  FullQuestionCard(
-      {super.key, required this.questionObj, required this.refreshCallBack});
+  FullQuestionCard({super.key, required this.questionObj});
 
   void _showModal(BuildContext context) {
     showDialog(
@@ -63,7 +62,7 @@ class FullQuestionCard extends StatelessWidget {
                       : const SizedBox(),
                   const SizedBox(height: 15),
                   Text(
-                    'สายพันธุ์: ${questionObj.signalment.breed}, อายุ: ${questionObj.signalment.age}, น้ำหนัก: ${questionObj.signalment.weight}',
+                    'สายพันธุ์: ${questionObj.signalment?.breed}, อายุ: ${questionObj.signalment?.age}, น้ำหนัก: ${questionObj.signalment?.weight}',
                     style: kNormalTextStyle,
                   ),
                   const SizedBox(height: 15),
@@ -99,14 +98,17 @@ class FullQuestionCard extends StatelessWidget {
                       ElevatedButton(
                         onPressed: () {
                           //go to showQues
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ShowAndEditQuestion(
-                                questionObj: questionObj,
-                                refreshCallBack: refreshCallBack,
-                              ),
-                            ),
+                          // Navigator.push(
+                          //   context,
+                          //   MaterialPageRoute(
+                          //     builder: (context) => ShowAndEditQuestion(
+                          //       questionObj: questionObj,
+                          //     ),
+                          //   ),
+                          // );
+                          context.goNamed(
+                            'showQuestion',
+                            queryParameters: {"id": questionObj.id},
                           );
                         },
                         child: const Text('ดูโจทย์'),
@@ -140,13 +142,17 @@ class FullQuestionCard extends StatelessWidget {
                   const SizedBox(height: 15),
                   ElevatedButton(
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => EditQuestion(
-                              questionObj: questionObj,
-                              refreshCallBack: refreshCallBack),
-                        ),
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(
+                      //     builder: (context) => EditQuestion(
+                      //       questionObj: questionObj,
+                      //     ),
+                      //   ),
+                      // );
+                      context.goNamed(
+                        'editQuestion',
+                        queryParameters: {"id": questionObj.id},
                       );
                     },
                     child: const Text('แก้ไขโจทย์'),
@@ -187,13 +193,17 @@ class FullQuestionCard extends StatelessWidget {
                           questionObj.status == false
                               ? IconButton(
                                   onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => EditQuestion(
-                                            questionObj: questionObj,
-                                            refreshCallBack: refreshCallBack),
-                                      ),
+                                    // Navigator.push(
+                                    //   context,
+                                    //   MaterialPageRoute(
+                                    //     builder: (context) => EditQuestion(
+                                    //       questionObj: questionObj,
+                                    //     ),
+                                    //   ),
+                                    // );
+                                    context.goNamed(
+                                      'editQuestion',
+                                      queryParameters: {"id": questionObj.id},
                                     );
                                   },
                                   icon: const Icon(Icons.edit),
@@ -216,7 +226,7 @@ class FullQuestionCard extends StatelessWidget {
                     ],
                   ),
                   Text(
-                      'ชนิดสัตว์: ${questionObj.signalment.species}, พันธุ์: ${questionObj.signalment.breed}',
+                      'ชนิดสัตว์: ${questionObj.signalment?.species}, พันธุ์: ${questionObj.signalment?.breed}',
                       style: kNormalTextStyle),
                   const SizedBox(height: 10),
                   questionObj.tags != []

@@ -16,7 +16,8 @@ import 'package:frontend/components/BoxesInAddQ.dart';
 import 'package:frontend/UIModels/nisit/selected_diagnosis_provider.dart';
 
 class TentativeDiag extends StatelessWidget {
-  const TentativeDiag({super.key});
+  QuestionObject questionObj;
+  TentativeDiag({super.key, required this.questionObj});
 
   @override
   Widget build(BuildContext context) {
@@ -26,12 +27,13 @@ class TentativeDiag extends StatelessWidget {
         Provider.of<SelectedProblem>(context, listen: false);
     SelectedDiagnosis diagProvider =
         Provider.of<SelectedDiagnosis>(context, listen: false);
+    // SelectedQuestion questionProvider = Provider.of(context, listen: false);
 
     return Scaffold(
       appBar: const AppbarNisit(),
       body: SplitScreenNisit(
         leftPart: LeftPartContent(
-          questionObj: currentQuestion!,
+          questionObj: questionObj,
           addedContent: Column(
             children: [
               TitleAndDottedListView(
@@ -56,14 +58,18 @@ class TentativeDiag extends StatelessWidget {
             ],
           ),
         ),
-        rightPart: RightPart_TenDiagnosis(),
+        rightPart: RightPart_TenDiagnosis(
+          questionObj: questionObj,
+        ),
       ),
     );
   }
 }
 
 class RightPart_TenDiagnosis extends StatefulWidget {
-  const RightPart_TenDiagnosis({super.key});
+  QuestionObject questionObj;
+
+  RightPart_TenDiagnosis({super.key, required this.questionObj});
 
   @override
   State<RightPart_TenDiagnosis> createState() => _RightPart_TenDiagnosisState();
@@ -162,7 +168,9 @@ class _RightPart_TenDiagnosisState extends State<RightPart_TenDiagnosis> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const TreatmentTopic(),
+                  builder: (context) => TreatmentTopic(
+                    questionObj: widget.questionObj,
+                  ),
                 ),
               );
             },

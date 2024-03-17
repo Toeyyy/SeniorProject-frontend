@@ -5,19 +5,54 @@ import 'package:frontend/components/splitScreenNisit.dart';
 import 'package:frontend/components/functions.dart';
 import 'package:frontend/models/problemListObject.dart';
 import 'package:frontend/UIModels/nisit/selected_problem_provider.dart';
+import 'package:frontend/models/questionObject.dart';
+import 'package:frontend/models/signalmentObject.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:frontend/screensNisit/probListAns.dart';
-import 'package:frontend/models/questionObject.dart';
 import 'package:frontend/AllDataFile.dart';
 import 'package:frontend/UIModels/nisit/selected_exam_provider.dart';
 import 'package:frontend/components/BoxesInAddQ.dart';
 import 'package:frontend/aboutData/getDataFunctions.dart';
 import 'package:frontend/UIModels/nisit/selected_diagnosis_provider.dart';
+import 'dart:html' as html;
 
-class ProbList extends StatelessWidget {
+class ProbList extends StatefulWidget {
+  // QuestionObject questionObj;
+  String quesId;
   int round;
 
-  ProbList({super.key, required this.round});
+  ProbList({super.key, required this.quesId, required this.round});
+
+  @override
+  State<ProbList> createState() => _ProbListState();
+}
+
+class _ProbListState extends State<ProbList> {
+  late QuestionObject questionObj;
+  bool _isLoadData = true;
+
+  @override
+  void initState() {
+    super.initState();
+    getData();
+  }
+
+  Future getData() async {
+    setState(() {
+      _isLoadData = true;
+    });
+    var loadedData = await fetchQuestionFromId(widget.quesId);
+    await fetchPreDefinedExam();
+    await fetchPreDefinedTreatment();
+    await fetchPreDefinedTag();
+    await fetchPreDefinedDiag();
+    await fetchPreDefinedProb();
+    setState(() {
+      questionObj = loadedData;
+      _isLoadData = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,46 +63,65 @@ class ProbList extends StatelessWidget {
     SelectedDiagnosis diagProvider =
         Provider.of<SelectedDiagnosis>(context, listen: false);
 
+    html.window.onBeforeUnload.listen((event) async {
+      String confirmationMessage = 'Changes that you made may not be saved.';
+      (event as html.BeforeUnloadEvent).returnValue = confirmationMessage;
+    });
+
     return Scaffold(
       appBar: const AppbarNisit(),
-      body: SplitScreenNisit(
-        leftPart: round == 1
-            ? LeftPartContent(questionObj: currentQuestion!)
-            : LeftPartContent(
-                questionObj: currentQuestion!,
-                addedContent: Column(
-                  children: [
-                    TitleAndDottedListView(
-                        title: 'Problem List ครั้งที่ 1',
-                        showList: problemProvider.problemAnsList1
-                            .map((e) => e.name)
-                            .toList()),
-                    TitleAndDottedListView(
-                        title: 'Differential Diagnosis',
-                        showList: diagProvider.diffDiagList
-                            .map((e) => e.name)
-                            .toList()),
-                    TitleAndExams(
-                      title: 'Examination',
-                      showList: examProvider.examList,
-                      resultList: examProvider.resultList,
+      body: (!_isLoadData && questionObj != null)
+          ? SplitScreenNisit(
+              leftPart: widget.round == 1
+                  ? LeftPartContent(
+                      questionObj: questionObj,
+                    )
+                  : LeftPartContent(
+                      questionObj: questionObj,
+                      addedContent: Column(
+                        children: [
+                          TitleAndDottedListView(
+                              title: 'Problem List ครั้งที่ 1',
+                              showList: problemProvider.problemAnsList1
+                                  .map((e) => e.name)
+                                  .toList()),
+                          TitleAndDottedListView(
+                              title: 'Differential Diagnosis',
+                              showList: diagProvider.diffDiagList
+                                  .map((e) => e.name)
+                                  .toList()),
+                          TitleAndExams(
+                            title: 'Examination',
+                            showList: examProvider.examList,
+                            resultList: examProvider.resultList,
+                          ),
+                        ],
+                      ),
                     ),
-                  ],
-                ),
+              rightPart: RightPart_ProbList(
+                quesId: widget.quesId,
+                questionObj: questionObj,
+                round: widget.round,
               ),
-        rightPart: RightPart_ProbList(
-          round: round,
-          // questionObj: currentQuestion,
-        ),
-      ),
+            )
+          : const Center(
+              child: SizedBox(
+                  width: 30, height: 30, child: CircularProgressIndicator()),
+            ),
     );
   }
 }
 
 class RightPart_ProbList extends StatefulWidget {
+  String quesId;
+  QuestionObject questionObj;
   int round;
 
-  RightPart_ProbList({super.key, required this.round});
+  RightPart_ProbList(
+      {super.key,
+      required this.quesId,
+      required this.questionObj,
+      required this.round});
 
   @override
   State<RightPart_ProbList> createState() => _RightPart_ProbListState();
@@ -84,11 +138,7 @@ class _RightPart_ProbListState extends State<RightPart_ProbList> {
   late SelectedProblem problemProvider;
   late int heart;
   late List<ProblemObject> probAnsList;
-  bool isLoadingData = false;
-
-  void updateList(List<ProblemObject> newList, int round) {
-    _selectedList = newList;
-  }
+  bool isLoadingData = true;
 
   @override
   void initState() {
@@ -105,7 +155,7 @@ class _RightPart_ProbListState extends State<RightPart_ProbList> {
       isLoadingData = false;
     });
     List<ProblemObject> loadedData =
-        await fetchProblemAns(currentQuestion!.id, widget.round);
+        await fetchProblemAns(widget.quesId, widget.round);
     setState(() {
       probAnsList = loadedData;
       problemProvider.assignAnswer(loadedData, widget.round);
@@ -153,11 +203,12 @@ class _RightPart_ProbListState extends State<RightPart_ProbList> {
                             context,
                             MaterialPageRoute(
                               builder: (context) => ProbListAns(
+                                questionObj: widget.questionObj,
                                 round: widget.round,
-                                // questionObj: widget.questionObj,
                               ),
                             ),
                           );
+                          // context.goNamed('problemListAns');
                         },
                         child: const Text('เฉลยคำตอบ'),
                       ),
@@ -176,7 +227,7 @@ class _RightPart_ProbListState extends State<RightPart_ProbList> {
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
-      child: isLoadingData
+      child: (isLoadingData && widget.questionObj != null)
           ? Column(
               children: [
                 Text(
@@ -262,22 +313,24 @@ class _RightPart_ProbListState extends State<RightPart_ProbList> {
                           context,
                           MaterialPageRoute(
                             builder: (context) => ProbListAns(
+                              questionObj: widget.questionObj,
                               round: widget.round,
-                              // questionObj: widget.questionObj,
                             ),
                           ),
                         );
+                        // context.goNamed('problemListAns');
                       }
                     } else {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => ProbListAns(
+                            questionObj: widget.questionObj,
                             round: widget.round,
-                            // questionObj: widget.questionObj,
                           ),
                         ),
                       );
+                      // context.goNamed('problemListAns');
                     }
                   },
                   child: const Text('ยืนยัน'),

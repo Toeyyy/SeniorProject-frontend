@@ -19,8 +19,13 @@ import 'package:frontend/UIModels/nisit/selected_diagnosis_provider.dart';
 class ExamDetail_Type extends StatelessWidget {
   List<ExamPreDefinedObject> list;
   String title;
+  QuestionObject questionObj;
 
-  ExamDetail_Type({super.key, required this.list, required this.title});
+  ExamDetail_Type(
+      {super.key,
+      required this.list,
+      required this.title,
+      required this.questionObj});
 
   late Map<String, List<ExamPreDefinedObject>> groupedByType =
       groupBy(list, (e) => e.type);
@@ -33,12 +38,13 @@ class ExamDetail_Type extends StatelessWidget {
         Provider.of<SelectedExam>(context, listen: false);
     SelectedDiagnosis diagProvider =
         Provider.of<SelectedDiagnosis>(context, listen: false);
+    // SelectedQuestion questionProvider = Provider.of(context, listen: false);
 
     return Scaffold(
       appBar: const AppbarNisit(),
       body: SplitScreenNisit(
         leftPart: LeftPartContent(
-          questionObj: currentQuestion!,
+          questionObj: questionObj,
           addedContent: Column(
             children: [
               TitleAndDottedListView(
@@ -76,6 +82,8 @@ class ExamDetail_Type extends StatelessWidget {
                             builder: (context) => ExamDetail_Name(
                               list: groupedByType.values.toList()[index],
                               title: groupedByType.keys.toList()[index],
+                              quesId: questionObj.id,
+                              questionObj: questionObj,
                             ),
                           ),
                         );
@@ -96,8 +104,15 @@ class ExamDetail_Type extends StatelessWidget {
 class ExamDetail_Name extends StatefulWidget {
   List<ExamPreDefinedObject> list;
   String title;
+  String quesId;
+  QuestionObject questionObj;
 
-  ExamDetail_Name({super.key, required this.list, required this.title});
+  ExamDetail_Name(
+      {super.key,
+      required this.list,
+      required this.title,
+      required this.quesId,
+      required this.questionObj});
 
   @override
   State<ExamDetail_Name> createState() => _ExamDetail_NameState();
@@ -121,7 +136,7 @@ class _ExamDetail_NameState extends State<ExamDetail_Name> {
       isLoadingData = true;
     });
     List<ExamResultObject> loadedData =
-        await fetchResult(examID, currentQuestion!.id);
+        await fetchResult(examID, widget.quesId);
     setState(() {
       result = loadedData.first;
       isLoadingData = false;
@@ -135,12 +150,13 @@ class _ExamDetail_NameState extends State<ExamDetail_Name> {
         Provider.of<SelectedProblem>(context, listen: false);
     SelectedDiagnosis diagProvider =
         Provider.of<SelectedDiagnosis>(context, listen: false);
+    // SelectedQuestion questionProvider = Provider.of(context, listen: false);
 
     return Scaffold(
       appBar: const AppbarNisit(),
       body: SplitScreenNisit(
         leftPart: LeftPartContent(
-          questionObj: currentQuestion!,
+          questionObj: widget.questionObj,
           addedContent: Column(
             children: [
               TitleAndDottedListView(
@@ -245,6 +261,7 @@ class _ExamDetail_NameState extends State<ExamDetail_Name> {
                                 builder: (context) => ExamResult(
                                   selectedExam: selectedItem!,
                                   result: result!,
+                                  questionObj: widget.questionObj,
                                 ),
                               ),
                             );

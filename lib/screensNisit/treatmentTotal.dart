@@ -5,6 +5,7 @@ import 'package:frontend/components/splitScreenNisit.dart';
 import 'package:frontend/components/appbar.dart';
 import 'package:frontend/UIModels/nisit/selected_treatment_provider.dart';
 import 'package:frontend/constants.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:frontend/screensNisit/treatmentTopic.dart';
 import 'package:frontend/screensNisit/returnPoint.dart';
@@ -20,7 +21,9 @@ import 'package:frontend/components/BoxesInAddQ.dart';
 import 'package:frontend/UIModels/nisit/selected_exam_provider.dart';
 
 class TreatmentTotal extends StatelessWidget {
-  TreatmentTotal({super.key});
+  QuestionObject questionObj;
+
+  TreatmentTotal({super.key, required this.questionObj});
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +38,7 @@ class TreatmentTotal extends StatelessWidget {
       appBar: const AppbarNisit(),
       body: SplitScreenNisit(
         leftPart: LeftPartContent(
-          questionObj: currentQuestion!,
+          questionObj: questionObj,
           addedContent: Column(
             children: [
               TitleAndDottedListView(
@@ -64,14 +67,20 @@ class TreatmentTotal extends StatelessWidget {
             ],
           ),
         ),
-        rightPart: RightPart_TreatmentTotal(),
+        rightPart: RightPart_TreatmentTotal(
+          quesId: questionObj.id,
+          questionObj: questionObj,
+        ),
       ),
     );
   }
 }
 
 class RightPart_TreatmentTotal extends StatefulWidget {
-  RightPart_TreatmentTotal({super.key});
+  String quesId;
+  QuestionObject questionObj;
+  RightPart_TreatmentTotal(
+      {super.key, required this.quesId, required this.questionObj});
 
   @override
   State<RightPart_TreatmentTotal> createState() =>
@@ -79,16 +88,16 @@ class RightPart_TreatmentTotal extends StatefulWidget {
 }
 
 class _RightPart_TreatmentTotalState extends State<RightPart_TreatmentTotal> {
-  late StatQuestionObject stat;
+  // late StatQuestionObject stat;
   bool _isSendingData = false;
 
-  Future getData(String questionID) async {
-    StatQuestionObject loadedData = await fetchStatQuestion(questionID);
-
-    setState(() {
-      stat = loadedData;
-    });
-  }
+  // Future getData(String questionID) async {
+  //   StatQuestionObject loadedData = await fetchStatQuestion(questionID);
+  //
+  //   setState(() {
+  //     stat = loadedData;
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -135,7 +144,7 @@ class _RightPart_TreatmentTotalState extends State<RightPart_TreatmentTotal> {
         "heartProblem2": problemProvider.heart2,
       };
 
-      await postSelectedItemNisit(data, currentQuestion!.id);
+      await postSelectedItemNisit(data, widget.quesId);
     }
 
     return Padding(
@@ -167,7 +176,9 @@ class _RightPart_TreatmentTotalState extends State<RightPart_TreatmentTotal> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const TreatmentTopic(),
+                            builder: (context) => TreatmentTopic(
+                              questionObj: widget.questionObj,
+                            ),
                           ),
                         );
                       },
@@ -182,9 +193,7 @@ class _RightPart_TreatmentTotalState extends State<RightPart_TreatmentTotal> {
                           _isSendingData = true;
                         });
                         //post answer//
-                        await postStat(context);
-                        ////get stat////
-                        await getData(currentQuestion!.id).then((value) {
+                        await postStat(context).then((value) {
                           setState(() {
                             _isSendingData = false;
                           });
@@ -193,14 +202,8 @@ class _RightPart_TreatmentTotalState extends State<RightPart_TreatmentTotal> {
                           problemProvider.clearList();
                           examProvider.clearList();
                           diagProvider.clearList();
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ReturnPoint(
-                                stat: stat,
-                              ),
-                            ),
-                          );
+                          context.goNamed('returnPoint',
+                              queryParameters: {"id": widget.quesId});
                         });
                       },
                       child: const Text('ส่งคำตอบ'),

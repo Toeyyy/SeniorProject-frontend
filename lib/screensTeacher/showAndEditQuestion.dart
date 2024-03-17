@@ -14,15 +14,16 @@ import 'package:collection/collection.dart';
 import 'package:frontend/models/fullQuestionObject.dart';
 import 'package:frontend/components/back_button.dart';
 import 'package:frontend/screensTeacher/showStatOverall.dart';
+import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:frontend/aboutData/getDataFunctions.dart';
 
 class ShowAndEditQuestion extends StatefulWidget {
-  FullQuestionObject questionObj;
-  VoidCallback refreshCallBack;
+  // FullQuestionObject questionObj;
+  String quesId;
 
-  ShowAndEditQuestion(
-      {super.key, required this.questionObj, required this.refreshCallBack});
+  ShowAndEditQuestion({super.key, required this.quesId});
 
   @override
   State<ShowAndEditQuestion> createState() => _ShowAndEditQuestionState();
@@ -71,20 +72,25 @@ class _ShowAndEditQuestionState extends State<ShowAndEditQuestion> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration.zero, () {
-      setState(() {
-        _loadData = true;
-        questionObj = widget.questionObj;
-        if (questionObj != null) {
-          splitProblems = questionObj!.problems != []
-              ? groupBy(questionObj!.problems!, (e) => e.round.toString())
-              : {};
-          splitDiagnosis = questionObj!.diagnostics != []
-              ? groupBy(questionObj!.diagnostics!, (e) => e.type)
-              : {};
-        }
-        _loadData = false;
-      });
+    getData();
+  }
+
+  Future getData() async {
+    setState(() {
+      _loadData = true;
+    });
+    var loadedData = await fetchFullQuestionFromId(widget.quesId);
+    setState(() {
+      questionObj = loadedData;
+      if (questionObj != null) {
+        splitProblems = questionObj!.problems != []
+            ? groupBy(questionObj!.problems!, (e) => e.round.toString())
+            : {};
+        splitDiagnosis = questionObj!.diagnostics != []
+            ? groupBy(questionObj!.diagnostics!, (e) => e.type)
+            : {};
+      }
+      _loadData = false;
     });
   }
 
@@ -125,10 +131,7 @@ class _ShowAndEditQuestionState extends State<ShowAndEditQuestion> {
                         ElevatedButton(
                             onPressed: () {
                               deleteQuestion().then((value) {
-                                Navigator.pop(context);
-                                Navigator.pop(context);
-                                Navigator.pop(context);
-                                widget.refreshCallBack();
+                                context.go('/mainShowQuestion');
                               });
                             },
                             child: const Text('ยืนยัน')),
@@ -170,13 +173,11 @@ class _ShowAndEditQuestionState extends State<ShowAndEditQuestion> {
                                     ElevatedButton(
                                       onPressed: () {
                                         //go to stat
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                ShowStatOverall(
-                                                    questionObj: questionObj!),
-                                          ),
+                                        context.goNamed(
+                                          'statOverall',
+                                          queryParameters: {
+                                            "id": questionObj!.id
+                                          },
                                         );
                                       },
                                       child: const Text('ดูสถิติ'),
@@ -184,14 +185,11 @@ class _ShowAndEditQuestionState extends State<ShowAndEditQuestion> {
                                     const SizedBox(width: 15),
                                     ElevatedButton(
                                       onPressed: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => EditQuestion(
-                                                questionObj: questionObj!,
-                                                refreshCallBack:
-                                                    widget.refreshCallBack),
-                                          ),
+                                        context.goNamed(
+                                          'editQuestion',
+                                          queryParameters: {
+                                            "id": questionObj!.id
+                                          },
                                         );
                                       },
                                       child: const Text('แก้ไขโจทย์'),
@@ -230,23 +228,23 @@ class _ShowAndEditQuestionState extends State<ShowAndEditQuestion> {
                               style: kSubHeaderTextStyle,
                             ),
                             Text(
-                                'ชนิดสัตว์: ${questionObj?.signalment.species ?? 'สุนัข'}',
+                                'ชนิดสัตว์: ${questionObj?.signalment?.species ?? 'สุนัข'}',
                                 style: kNormalTextStyle),
                             Text(
-                                'พันธุ์: ${questionObj?.signalment.breed ?? 'Chihuahua'}',
+                                'พันธุ์: ${questionObj?.signalment?.breed ?? 'Chihuahua'}',
                                 style: kNormalTextStyle),
                             Text(
-                                'เพศ: ${questionObj?.signalment.gender ?? 'ผู้'}',
+                                'เพศ: ${questionObj?.signalment?.gender ?? 'ผู้'}',
                                 style: kNormalTextStyle),
                             Text(
-                                questionObj!.signalment.sterilize
+                                questionObj!.signalment!.sterilize
                                     ? 'ทำหมันแล้ว'
                                     : 'ยังไม่ได้ทำหมัน',
                                 style: kNormalTextStyle),
-                            Text('อายุ: ${questionObj?.signalment.age ?? '0'}',
+                            Text('อายุ: ${questionObj?.signalment?.age ?? '0'}',
                                 style: kNormalTextStyle),
                             Text(
-                                'น้ำหนัก: ${questionObj?.signalment.weight ?? '0'}',
+                                'น้ำหนัก: ${questionObj?.signalment?.weight ?? '0'}',
                                 style: kNormalTextStyle),
                             const SizedBox(height: 20),
                             //Client Complains
@@ -363,7 +361,13 @@ class _ShowAndEditQuestionState extends State<ShowAndEditQuestion> {
                           width: 10,
                           child: Center(child: CircularProgressIndicator())),
                 )
-              : const SizedBox(height: 10, child: CircularProgressIndicator()),
+              : const Padding(
+                  padding: EdgeInsets.only(top: 30),
+                  child: SizedBox(
+                      width: 30,
+                      height: 30,
+                      child: CircularProgressIndicator()),
+                ),
         ),
       ),
     );

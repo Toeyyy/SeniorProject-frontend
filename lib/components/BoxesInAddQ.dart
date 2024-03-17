@@ -230,11 +230,16 @@ class DiagnosisMultiSelectDropDown extends StatelessWidget {
         selectedOptions: selectedList.map((item) {
           return ValueItem(label: item.name, value: item.id);
         }).toList(),
-        options: displayList.map<ValueItem<String>>((DiagnosisObject item) {
+        options: displayList
+            .where((e) => e.type == type)
+            .map<ValueItem<String>>((DiagnosisObject item) {
           return ValueItem(label: item.name, value: item.id);
         }).toList());
   }
 }
+
+// displayList.map<ValueItem<String>>((DiagnosisObject item) {
+// return ValueItem(label: item.name, value: item.id);
 
 class ExamsButtonAndContainer extends StatelessWidget {
   List<ExamContainer> examContainers;

@@ -17,8 +17,13 @@ import 'package:frontend/UIModels/nisit/selected_diagnosis_provider.dart';
 class ExamResult extends StatelessWidget {
   ExamPreDefinedObject selectedExam;
   ExamResultObject result;
+  QuestionObject questionObj;
 
-  ExamResult({super.key, required this.selectedExam, required this.result});
+  ExamResult(
+      {super.key,
+      required this.selectedExam,
+      required this.result,
+      required this.questionObj});
 
   @override
   Widget build(BuildContext context) {
@@ -27,12 +32,13 @@ class ExamResult extends StatelessWidget {
         Provider.of<SelectedProblem>(context, listen: false);
     SelectedDiagnosis diagProvider =
         Provider.of<SelectedDiagnosis>(context, listen: false);
+    // SelectedQuestion questionProvider = Provider.of(context, listen: false);
 
     return Scaffold(
       appBar: const AppbarNisit(),
       body: SplitScreenNisit(
         leftPart: LeftPartContent(
-          questionObj: currentQuestion!,
+          questionObj: questionObj,
           addedContent: Column(
             children: [
               TitleAndDottedListView(
@@ -71,7 +77,9 @@ class ExamResult extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => ExamTotal(),
+                            builder: (context) => ExamTotal(
+                              questionObj: questionObj,
+                            ),
                           ),
                         );
                       },

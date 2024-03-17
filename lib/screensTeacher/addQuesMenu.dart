@@ -7,6 +7,7 @@ import 'package:frontend/screensTeacher/addQuestion.dart';
 import 'package:frontend/screensTeacher/PredefinedScreens/editPredefinedListTopic.dart';
 import 'package:frontend/aboutData/getDataFunctions.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http_parser/http_parser.dart';
@@ -15,14 +16,6 @@ class AddQuesMenu extends StatelessWidget {
   AddQuesMenu({super.key});
 
   FilePickerResult? userFile;
-
-  Future<void> fetchPreDefined() async {
-    await fetchPreDefinedProb();
-    await fetchPreDefinedDiag();
-    await fetchPreDefinedExam();
-    await fetchPreDefinedTag();
-    await fetchPreDefinedTreatment();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -196,12 +189,7 @@ class AddQuesMenu extends StatelessWidget {
               ),
               ElevatedButton(
                 onPressed: () {
-                  fetchPreDefined().then((value) => {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const AddQuestion()))
-                      });
+                  context.go('/questionMenu/addQuestion');
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF8B72BE),
@@ -218,6 +206,7 @@ class AddQuesMenu extends StatelessWidget {
                                 builder: (context) =>
                                     const EditPredefinedListTopic()))
                       });
+                  context.go('/questionMenu/editPredefined');
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF694873),

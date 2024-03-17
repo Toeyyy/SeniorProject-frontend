@@ -48,6 +48,68 @@ Future<List<QuestionObject>> fetchQuestionList() async {
   // }
 }
 
+Future<QuestionObject> fetchQuestionFromId(String quesId) async {
+  //real
+  final String apiUrl = "${dotenv.env['API_PATH']}/question/$quesId";
+  final headers = {"Content-Type": "application/json"};
+  try {
+    final response = await http.get(Uri.parse(apiUrl), headers: headers);
+
+    if (response.statusCode >= 200 && response.statusCode < 300) {
+      dynamic jsonFile = jsonDecode(response.body);
+      return QuestionObject.fromJson(jsonFile);
+    } else {
+      print("Error: ${response.statusCode} - ${response.body}");
+      return QuestionObject.fromJson({});
+    }
+  } catch (error) {
+    print("Error: $error");
+    return QuestionObject.fromJson({});
+  }
+
+  //tmp-comment later
+  // try {
+  //   final String jsonString =
+  //       await rootBundle.loadString("data/tmpNisitQues12.json");
+  //   final dynamic jsonFile = json.decode(jsonString);
+  //   return QuestionObject.fromJson(jsonFile);
+  // } catch (error) {
+  //   print('Error fetching data: $error');
+  //   return QuestionObject.fromJson({});
+  // }
+}
+
+Future<FullQuestionObject> fetchFullQuestionFromId(String quesId) async {
+  //real
+  final String apiUrl = "${dotenv.env['API_PATH']}/question/solution/$quesId";
+  final headers = {"Content-Type": "application/json"};
+  try {
+    final response = await http.get(Uri.parse(apiUrl), headers: headers);
+
+    if (response.statusCode >= 200 && response.statusCode < 300) {
+      dynamic jsonFile = jsonDecode(response.body);
+      return FullQuestionObject.fromJson(jsonFile);
+    } else {
+      print("Error: ${response.statusCode} - ${response.body}");
+      return FullQuestionObject.fromJson({});
+    }
+  } catch (error) {
+    print("Error: $error");
+    return FullQuestionObject.fromJson({});
+  }
+
+  //tmp-comment later
+  // try {
+  //   final String jsonString =
+  //       await rootBundle.loadString("data/tmpTeacherQues14.json");
+  //   final dynamic jsonFile = json.decode(jsonString);
+  //   return FullQuestionObject.fromJson(jsonFile);
+  // } catch (error) {
+  //   print('Error fetching data: $error');
+  //   return FullQuestionObject.fromJson({});
+  // }
+}
+
 Future<List<ProblemObject>> fetchProblemAns(String quesId, int round) async {
   //real
   final String apiUrl =
@@ -406,4 +468,33 @@ Future<void> fetchPreDefinedExam() async {
   // } catch (error) {
   //   print('error fetching data: $error');
   // }
+}
+
+/////functions for fetch predefined/////
+
+Future<void> fetchPreDefined() async {
+  await fetchPreDefinedProb();
+  await fetchPreDefinedDiag();
+  await fetchPreDefinedExam();
+  await fetchPreDefinedTag();
+  await fetchPreDefinedTreatment();
+}
+
+Future<void> getTreatment() async {
+  await fetchPreDefinedTreatment();
+}
+
+Future<void> getExams() async {
+  await fetchPreDefinedExam();
+}
+
+Future<void> getProbDiagTag(String title) async {
+  if (title == 'Problem') {
+    await fetchPreDefinedProb();
+  } else if (title == 'Tentative/Definitive Diagnosis' ||
+      title == 'Differential Diagnosis') {
+    await fetchPreDefinedDiag();
+  } else {
+    await fetchPreDefinedTag();
+  }
 }

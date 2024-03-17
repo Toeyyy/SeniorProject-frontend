@@ -16,7 +16,9 @@ import 'package:frontend/UIModels/nisit/selected_diagnosis_provider.dart';
 import 'package:frontend/components/BoxesInAddQ.dart';
 
 class TreatmentTopic extends StatelessWidget {
-  const TreatmentTopic({super.key});
+  QuestionObject questionObj;
+
+  TreatmentTopic({super.key, required this.questionObj});
 
   @override
   Widget build(BuildContext context) {
@@ -26,12 +28,13 @@ class TreatmentTopic extends StatelessWidget {
         Provider.of<SelectedExam>(context, listen: false);
     SelectedDiagnosis diagProvider =
         Provider.of<SelectedDiagnosis>(context, listen: false);
+    // SelectedQuestion questionProvider = Provider.of(context, listen: false);
 
     return Scaffold(
       appBar: const AppbarNisit(),
       body: SplitScreenNisit(
         leftPart: LeftPartContent(
-          questionObj: currentQuestion!,
+          questionObj: questionObj,
           addedContent: Column(
             children: [
               TitleAndDottedListView(
@@ -60,14 +63,18 @@ class TreatmentTopic extends StatelessWidget {
             ],
           ),
         ),
-        rightPart: const RightPart_TreatmentTopic(),
+        rightPart: RightPart_TreatmentTopic(
+          questionObj: questionObj,
+        ),
       ),
     );
   }
 }
 
 class RightPart_TreatmentTopic extends StatefulWidget {
-  const RightPart_TreatmentTopic({super.key});
+  QuestionObject questionObj;
+
+  RightPart_TreatmentTopic({super.key, required this.questionObj});
 
   @override
   State<RightPart_TreatmentTopic> createState() =>
@@ -104,6 +111,7 @@ class _RightPart_TreatmentTopicState extends State<RightPart_TreatmentTopic> {
                       MaterialPageRoute(
                         builder: (context) => TreatmentDetail(
                           _groupedByType.keys.toList()[index],
+                          questionObj: widget.questionObj,
                         ),
                       ),
                     );
@@ -117,7 +125,9 @@ class _RightPart_TreatmentTopicState extends State<RightPart_TreatmentTopic> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => TreatmentTotal(),
+                  builder: (context) => TreatmentTotal(
+                    questionObj: widget.questionObj,
+                  ),
                 ),
               );
             },

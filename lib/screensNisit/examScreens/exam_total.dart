@@ -15,9 +15,9 @@ import 'package:frontend/UIModels/nisit/selected_problem_provider.dart';
 import 'package:frontend/UIModels/nisit/selected_diagnosis_provider.dart';
 
 class ExamTotal extends StatelessWidget {
-  // QuestionObject questionObj;
+  QuestionObject questionObj;
 
-  ExamTotal({super.key});
+  ExamTotal({super.key, required this.questionObj});
 
   @override
   Widget build(BuildContext context) {
@@ -27,12 +27,13 @@ class ExamTotal extends StatelessWidget {
         Provider.of<SelectedProblem>(context, listen: false);
     SelectedDiagnosis diagProvider =
         Provider.of<SelectedDiagnosis>(context, listen: false);
+    // SelectedQuestion questionProvider = Provider.of(context, listen: false);
 
     return Scaffold(
       appBar: const AppbarNisit(),
       body: SplitScreenNisit(
         leftPart: LeftPartContent(
-          questionObj: currentQuestion!,
+          questionObj: questionObj,
           addedContent: Column(
             children: [
               TitleAndDottedListView(
@@ -83,7 +84,9 @@ class ExamTotal extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => ExamTopic(),
+                              builder: (context) => ExamTopic(
+                                questionObj: questionObj,
+                              ),
                             ),
                           );
                         },
@@ -95,10 +98,12 @@ class ExamTotal extends StatelessWidget {
                       ElevatedButton(
                         onPressed: () {
                           //go to prob list 2
+                          problemProvider.setRound(2);
                           Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (context) => ProbList(
+                                quesId: questionObj.id,
                                 round: 2,
                               ),
                             ),

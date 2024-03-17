@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/AllDataFile.dart';
 import 'package:frontend/components/tag_box.dart';
 import 'package:frontend/constants.dart';
 import 'package:frontend/models/questionObject.dart';
-import 'package:frontend/screensNisit/problemList.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:frontend/UIModels/nisit/selected_problem_provider.dart';
 import 'package:frontend/UIModels/nisit/selected_diagnosis_provider.dart';
@@ -104,19 +103,14 @@ class QuestionCard extends StatelessWidget {
                       ElevatedButton(
                         onPressed: () {
                           problemProvider.clearList();
+                          problemProvider.setRound(1);
                           examProvider.clearList();
                           treatmentProvider.clearList();
                           diagProvider.clearList();
                           //go to prob list page
-                          currentQuestion = questionObj;
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ProbList(
-                                round: 1,
-                                // questionObj: questionObj,
-                              ),
-                            ),
+                          context.goNamed(
+                            'questionStart',
+                            queryParameters: {"id": questionObj.id},
                           );
                         },
                         child: const Text('ยืนยัน'),

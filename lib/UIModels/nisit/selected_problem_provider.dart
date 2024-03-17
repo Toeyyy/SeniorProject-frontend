@@ -8,6 +8,7 @@ class SelectedProblem extends ChangeNotifier {
   List<ProblemObject> problemAnsList2 = [];
   int heart1 = 5;
   int heart2 = 5;
+  int currentRound = 1;
 
   void clearList() {
     problemList1.clear();
@@ -75,5 +76,10 @@ class SelectedProblem extends ChangeNotifier {
       }
     }
     return true;
+  }
+
+  void setRound(int newRound) {
+    currentRound = newRound;
+    notifyListeners();
   }
 }

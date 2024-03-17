@@ -130,20 +130,7 @@
   {
     "id" : "ID_4",
     "name" : "17",
-    "tags" : [
-      {
-        "id" : "1",
-        "name" : "สุนัข"
-      },
-      {
-        "id" : "6",
-        "name" : "ปี 3"
-      },
-      {
-        "id" : "10",
-        "name" : "ระบบไหลเวียนเลือด"
-      }
-    ],
+    "clientComplains": "xxx",
     "modified": true,
     "status": false
   }

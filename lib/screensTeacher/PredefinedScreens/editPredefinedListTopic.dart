@@ -6,6 +6,38 @@ import 'package:frontend/screensTeacher/PredefinedScreens/editPredefined_exam_ch
 import 'package:frontend/aboutData/getDataFunctions.dart';
 import 'package:frontend/screensTeacher/PredefinedScreens/editPredefined_other_choice.dart';
 import 'package:frontend/screensTeacher/PredefinedScreens/editPredefined_treatment_choice.dart';
+import 'package:go_router/go_router.dart';
+
+class EditPredefinedInit extends StatefulWidget {
+  const EditPredefinedInit({super.key});
+
+  @override
+  State<EditPredefinedInit> createState() => _EditPredefinedInitState();
+}
+
+class _EditPredefinedInitState extends State<EditPredefinedInit> {
+  bool _isLoadData = true;
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      _isLoadData = true;
+    });
+    fetchPreDefined();
+    setState(() {
+      _isLoadData = false;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return _isLoadData
+        ? const Center(
+            child: SizedBox(width: 30, child: CircularProgressIndicator()))
+        : const EditPredefinedListTopic();
+  }
+}
 
 class EditPredefinedListTopic extends StatelessWidget {
   const EditPredefinedListTopic({super.key});
@@ -13,21 +45,13 @@ class EditPredefinedListTopic extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<String> editPredefinedTopicList = [
-      'Problem List',
+      'Problem',
       'Differential Diagnosis',
       'Tentative/Definitive Diagnosis',
-      'Treatment List',
-      'Examination List',
-      'Tag List',
+      'Treatment',
+      'Examination',
+      'Tag',
     ];
-
-    Future<void> getTreatment() async {
-      await fetchPreDefinedTreatment();
-    }
-
-    Future<void> getExams() async {
-      await fetchPreDefinedExam();
-    }
 
     return Scaffold(
       appBar: const AppbarTeacher(),
@@ -56,33 +80,28 @@ class EditPredefinedListTopic extends StatelessWidget {
                               fontWeight: FontWeight.w500, fontSize: 20),
                         ),
                         onTap: () {
-                          if (editPredefinedTopicList[index] ==
-                              'Examination List') {
-                            getExams();
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    EditPreDefinedExamChoice(),
-                              ),
-                            );
+                          if (editPredefinedTopicList[index] == 'Examination') {
+                            context.go('/questionMenu/editPredefined/exam');
                           } else if (editPredefinedTopicList[index] ==
-                              'Treatment List') {
-                            getTreatment();
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    EditPreDefinedTreatmentChoice(),
-                              ),
-                            );
+                              'Treatment') {
+                            context
+                                .go('/questionMenu/editPredefined/treatment');
                           } else {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => EditPreDefinedOtherChoice(
-                                    title: editPredefinedTopicList[index]),
-                              ),
+                            String myTitle = '';
+                            if (editPredefinedTopicList[index] ==
+                                'Differential Diagnosis') {
+                              myTitle = 'Differential';
+                            } else if (editPredefinedTopicList[index] ==
+                                'Tentative/Definitive Diagnosis') {
+                              myTitle = 'TentativeAndDefinitive';
+                            } else {
+                              myTitle = editPredefinedTopicList[index];
+                            }
+                            context.goNamed(
+                              'editPredefinedOther',
+                              pathParameters: {
+                                'title': myTitle,
+                              },
                             );
                           }
                         },
@@ -94,7 +113,18 @@ class EditPredefinedListTopic extends StatelessWidget {
                     ),
                   ),
                 ),
-                MyBackButton(myContext: context),
+                ElevatedButton(
+                  onPressed: () {
+                    context.pop();
+                    context.pop();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF8B72BE),
+                  ),
+                  child: const Text(
+                    'ยกเลิก',
+                  ),
+                ),
               ],
             ),
           ),

@@ -3,6 +3,7 @@ import 'package:frontend/constants.dart';
 import 'package:frontend/screensTeacher/addQuesMenu.dart';
 import 'package:frontend/screensGeneral/mainShowQuestion.dart';
 import 'package:frontend/screensNisit/showStats.dart';
+import 'package:go_router/go_router.dart';
 
 class AppbarNisit extends StatelessWidget implements PreferredSizeWidget {
   const AppbarNisit({super.key});
@@ -21,25 +22,14 @@ class AppbarNisit extends StatelessWidget implements PreferredSizeWidget {
       actions: [
         TextButton(
           onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => MainShowQuestion(),
-              ),
-            );
+            context.go('/mainShowQuestion');
           },
           child: const Text('โจทย์', style: KAppBarTextStyle),
         ),
         kVerticalDividerInAppBar,
         TextButton(
           onPressed: () {
-            //statistic page
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const ShowStatsForNisit(),
-              ),
-            );
+            context.go('/showStats');
           },
           child: const Text('สถิติ', style: KAppBarTextStyle),
         ),
@@ -75,24 +65,14 @@ class AppbarTeacher extends StatelessWidget implements PreferredSizeWidget {
       actions: [
         TextButton(
           onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => MainShowQuestion(),
-              ),
-            );
+            context.go('/mainShowQuestion');
           },
           child: const Text('โจทย์', style: KAppBarTextStyle),
         ),
         kVerticalDividerInAppBar,
         TextButton(
           onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => AddQuesMenu(),
-              ),
-            );
+            context.go('/questionMenu');
           },
           child: const Text('เพิ่มโจทย์', style: KAppBarTextStyle),
         ),

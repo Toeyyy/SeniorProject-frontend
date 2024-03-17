@@ -13,7 +13,7 @@ class FullQuestionObject {
   String historyTakingInfo;
   String generalInfo;
   List<TagObject>? tags;
-  SignalmentObject signalment;
+  SignalmentObject? signalment;
   List<ProblemObject>? problems;
   List<TreatmentObject>? treatments;
   List<DiagnosisObject>? diagnostics;

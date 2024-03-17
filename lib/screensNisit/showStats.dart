@@ -137,7 +137,7 @@ class _ShowStatsForNisitState extends State<ShowStatsForNisit> {
                                 ),
                                 DataColumn(
                                   label: Expanded(
-                                    child: Text('วันที่ที่ทำโจทย์'),
+                                    child: Text('วันที่ทำโจทย์'),
                                   ),
                                 ),
                                 DataColumn(

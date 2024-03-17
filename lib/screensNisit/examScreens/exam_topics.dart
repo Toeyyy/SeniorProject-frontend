@@ -13,9 +13,9 @@ import 'package:provider/provider.dart';
 import 'package:frontend/UIModels/nisit/selected_diagnosis_provider.dart';
 
 class ExamTopic extends StatelessWidget {
-  // QuestionObject questionObj;
+  QuestionObject questionObj;
 
-  ExamTopic({super.key});
+  ExamTopic({super.key, required this.questionObj});
 
   @override
   Widget build(BuildContext context) {
@@ -23,12 +23,13 @@ class ExamTopic extends StatelessWidget {
         Provider.of<SelectedProblem>(context, listen: false);
     SelectedDiagnosis diagProvider =
         Provider.of<SelectedDiagnosis>(context, listen: false);
+    // SelectedQuestion questionProvider = Provider.of(context, listen: false);
 
     return Scaffold(
       appBar: const AppbarNisit(),
       body: SplitScreenNisit(
         leftPart: LeftPartContent(
-          questionObj: currentQuestion!,
+          questionObj: questionObj,
           addedContent: Column(
             children: [
               TitleAndDottedListView(
@@ -43,16 +44,18 @@ class ExamTopic extends StatelessWidget {
             ],
           ),
         ),
-        rightPart: RightPart_ExamTopic(),
+        rightPart: RightPart_ExamTopic(
+          questionObj: questionObj,
+        ),
       ),
     );
   }
 }
 
 class RightPart_ExamTopic extends StatelessWidget {
-  // QuestionObject questionObj;
+  QuestionObject questionObj;
 
-  RightPart_ExamTopic({super.key});
+  RightPart_ExamTopic({super.key, required this.questionObj});
 
   Map<String, List<ExamPreDefinedObject>> groupedByLab =
       groupBy(examListPreDefined, (e) => e.lab);
@@ -82,6 +85,7 @@ class RightPart_ExamTopic extends StatelessWidget {
                         builder: (context) => ExamDetail_Type(
                           list: groupedByLab[labName]!,
                           title: labName,
+                          questionObj: questionObj,
                         ),
                       ),
                     );

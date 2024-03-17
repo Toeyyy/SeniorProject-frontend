@@ -39,7 +39,7 @@ List<String> getTreatmentTopic() {
 /////predefined//////
 
 List<dynamic> filterEditTopicList(String value) {
-  if (value == 'Problem List') {
+  if (value == 'Problem') {
     return problemListPreDefined;
   } else if (value == 'Differential Diagnosis' ||
       value == 'Tentative/Definitive Diagnosis') {

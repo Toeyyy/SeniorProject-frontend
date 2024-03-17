@@ -6,6 +6,37 @@ import 'package:frontend/components/back_button.dart';
 import 'package:frontend/screensTeacher/PredefinedScreens/editPredefined_exam_detail.dart';
 import 'package:frontend/aboutData/getDataFunctions.dart';
 
+class EditExamInit extends StatefulWidget {
+  const EditExamInit({super.key});
+
+  @override
+  State<EditExamInit> createState() => _EditExamInitState();
+}
+
+class _EditExamInitState extends State<EditExamInit> {
+  bool _isLoadData = true;
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      _isLoadData = true;
+    });
+    getExams();
+    setState(() {
+      _isLoadData = false;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return _isLoadData
+        ? const Center(
+            child: SizedBox(width: 30, child: CircularProgressIndicator()))
+        : EditPreDefinedExamChoice();
+  }
+}
+
 class EditPreDefinedExamChoice extends StatelessWidget {
   final List<String> _topicList = [
     'เพิ่ม Examination',

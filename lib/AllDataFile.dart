@@ -15,9 +15,7 @@ List<ExamPreDefinedObject> examListPreDefined = [];
 
 /////question List/////
 List<FullQuestionObject> teacherQuestionList = [];
-
-/////nisit selected question/////
-QuestionObject? currentQuestion;
+List<QuestionObject> nisitQuestionList = [];
 
 /////role/////
 late int userRole;

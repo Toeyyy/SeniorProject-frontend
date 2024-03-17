@@ -17,8 +17,9 @@ import 'package:frontend/UIModels/nisit/selected_exam_provider.dart';
 
 class TreatmentDetail extends StatelessWidget {
   final String topic;
+  QuestionObject questionObj;
 
-  const TreatmentDetail(this.topic, {super.key});
+  TreatmentDetail(this.topic, {super.key, required this.questionObj});
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +34,7 @@ class TreatmentDetail extends StatelessWidget {
       appBar: const AppbarNisit(),
       body: SplitScreenNisit(
           leftPart: LeftPartContent(
-            questionObj: currentQuestion!,
+            questionObj: questionObj,
             addedContent: Column(
               children: [
                 TitleAndDottedListView(
@@ -64,6 +65,7 @@ class TreatmentDetail extends StatelessWidget {
           ),
           rightPart: RightPart_TreatmentDetail(
             topic: topic,
+            questionObj: questionObj,
           )),
     );
   }
@@ -71,8 +73,10 @@ class TreatmentDetail extends StatelessWidget {
 
 class RightPart_TreatmentDetail extends StatefulWidget {
   final String topic;
+  QuestionObject questionObj;
 
-  const RightPart_TreatmentDetail({super.key, required this.topic});
+  RightPart_TreatmentDetail(
+      {super.key, required this.topic, required this.questionObj});
 
   @override
   State<RightPart_TreatmentDetail> createState() =>
@@ -158,7 +162,9 @@ class _RightPart_TreatmentDetailState extends State<RightPart_TreatmentDetail> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => TreatmentTotal(),
+                                builder: (context) => TreatmentTotal(
+                                  questionObj: widget.questionObj,
+                                ),
                               ),
                             );
                           }),

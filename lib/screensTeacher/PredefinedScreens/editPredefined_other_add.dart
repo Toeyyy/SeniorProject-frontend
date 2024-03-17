@@ -1,9 +1,12 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:frontend/AllDataFile.dart';
+import 'package:frontend/aboutData/getDataFunctions.dart';
 import 'package:frontend/components/appbar.dart';
 import 'package:frontend/components/functions.dart';
 import 'package:frontend/constants.dart';
 import 'package:frontend/components/back_button.dart';
+import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
 import 'package:frontend/models/problemListObject.dart';
 import 'package:frontend/models/diagnosisObject.dart';
@@ -155,11 +158,11 @@ class _EditPreDefinedOtherAddState extends State<EditPreDefinedOtherAdd> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    MyBackButton(myContext: context),
+                    MyPopButton(myContext: context),
                     ElevatedButton(
                       onPressed: () async {
                         await _postAddData(widget.title).then((value) {
-                          Navigator.pop(context);
+                          context.pop();
                         });
                       },
                       child: const Text('บันทึก'),

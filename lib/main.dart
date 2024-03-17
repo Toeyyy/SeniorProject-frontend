@@ -27,7 +27,7 @@ import 'package:frontend/screensNisit/returnPoint.dart';
 import 'package:frontend/screensNisit/showStats.dart';
 import 'package:frontend/screensGeneral/loginScreen.dart';
 import 'package:frontend/screensGeneral/registerScreen.dart';
-import 'package:frontend/go_router.dart';
+import 'package:frontend/my_go_router.dart';
 
 Future main() async {
   await dotenv.load(fileName: "assets/.env");
@@ -51,35 +51,14 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    // return MaterialApp.router(
-    //   theme: lightTheme,
-    //   routerConfig: myRouterConfig,
-    // );
+    userRole = 1;
+    return MaterialApp.router(
+      theme: lightTheme,
+      routerConfig: myRouterConfig,
+    );
     //role 0 = nisit, role 1 = teacher
     //เค้าเปลี่ยนเป็นเซ็ต role ใส่ใน userRole ตรงนี้นะ ถ้าอยากเปิดหน้านรก็เปลี่ยนเป็น 0
-    userRole = 1;
-    return MaterialApp(
-      theme: lightTheme,
-      // initialRoute: '/Nisit/treatmentTotal',
-      // initialRoute: '/mainShowQuestion',
-      initialRoute: '/mainShowQuestion',
-      // initialRoute: '/register',
-      // initialRoute: '/Teacher/addQuesMenu',
-      // onGenerateRoute: RouteGenerator.generateRoute,
-      routes: {
-        /////General/////
-        '/login': (context) => LoginScreen(),
-        '/register': (context) => RegisterScreen(),
-        '/mainShowQuestion': (context) => const MainShowQuestion(),
-        '/Nisit/showStats': (context) => ShowStatsForNisit(),
-        /////Teacher/////
-        '/Teacher/addQuestion': (context) => AddQuestion(),
-        '/Teacher/editPredefined': (context) => EditPredefinedListTopic(),
-        '/Teacher/addQuesMenu': (context) => AddQuesMenu(),
-        'Teacher/editPreDefined/exams_topic': (context) =>
-            EditPreDefinedExamChoice(),
-      },
-    );
+    // userRole = 1;
   }
 }
 
