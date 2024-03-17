@@ -37,14 +37,18 @@ class _ReturnPointInitState extends State<ReturnPointInit> {
 
   @override
   Widget build(BuildContext context) {
-    return ReturnPoint(stat: stat);
+    return ReturnPoint(
+      stat: stat,
+      quesId: widget.quesId,
+    );
   }
 }
 
 class ReturnPoint extends StatelessWidget {
-  late StatQuestionObject? stat;
+  StatQuestionObject? stat;
+  String quesId;
 
-  ReturnPoint({super.key, required this.stat});
+  ReturnPoint({super.key, required this.stat, required this.quesId});
 
   late Map<String, List<ProblemObject>> splitProblems =
       groupBy(stat!.problems, (e) => e.round.toString());
@@ -77,15 +81,13 @@ class ReturnPoint extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Column(
-                          children: [
-                            Text(
-                              'รายงานคะแนน',
-                              style: kHeaderTextStyle,
-                            ),
-                            DividerWithSpace(),
-                          ],
+                        const Center(
+                          child: Text(
+                            'รายงานคะแนน',
+                            style: kHeaderTextStyle,
+                          ),
                         ),
+                        const DividerWithSpace(),
                         Text(
                           'Problem List ครั้งที่ 1, คะแนนที่ได้: ${stat!.problem1Score} คะแนน',
                           style: kSubHeaderTextStyleInLeftPart,
@@ -105,7 +107,7 @@ class ReturnPoint extends StatelessWidget {
                           },
                         ),
                         const DividerWithSpace(),
-                        /////ten diag/////
+                        /////diff diag/////
                         Text(
                           'Differential Diagnosis, คะแนนที่ได้: ${stat!.diffDiagScore} คะแนน',
                           style: kSubHeaderTextStyleInLeftPart,
@@ -212,13 +214,30 @@ class ReturnPoint extends StatelessWidget {
                           'ราคาค่าตรวจรวม: ${findTotalCost()} บาท',
                           style: kSubHeaderTextStyleInLeftPart,
                         ),
-                        Center(
-                          child: ElevatedButton(
-                            onPressed: () {
-                              context.go('/mainShowQuestion');
-                            },
-                            child: const Text('หน้าแรก'),
-                          ),
+                        const DividerWithSpace(),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            ElevatedButton(
+                              onPressed: () {
+                                context.go('/mainShowQuestion');
+                              },
+                              child: const Text('หน้าแรก'),
+                            ),
+                            ElevatedButton(
+                              onPressed: () {
+                                context.goNamed('questionAnswer',
+                                    queryParameters: {"id": quesId});
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xFFA0E9FF),
+                              ),
+                              child: const Text(
+                                'เฉลยคำตอบ',
+                                style: TextStyle(color: Colors.black),
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),

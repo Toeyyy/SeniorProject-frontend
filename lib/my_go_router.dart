@@ -1,6 +1,3 @@
-import 'package:frontend/models/fullQuestionObject.dart';
-import 'package:frontend/models/questionObject.dart';
-import 'package:frontend/models/statModels/StatQuestionObject.dart';
 import 'package:frontend/screensTeacher/PredefinedScreens/editPredefinedListTopic.dart';
 import 'package:go_router/go_router.dart';
 import 'package:frontend/screensGeneral/loginScreen.dart';
@@ -18,9 +15,11 @@ import 'package:frontend/screensTeacher/PredefinedScreens/editPredefined_other_c
 import 'package:frontend/screensTeacher/showAndEditQuestion.dart';
 import 'package:frontend/screensTeacher/editQuestion.dart';
 import 'package:frontend/screensTeacher/showStatOverall.dart';
+import 'package:frontend/screensNisit/answerScreen.dart';
 
 final GoRouter myRouterConfig = GoRouter(
-  initialLocation: "/login",
+  initialLocation: "/mainShowQuestion",
+  // initialLocation: '/question/returnPoint',
   routes: [
     //general
     GoRoute(
@@ -39,22 +38,30 @@ final GoRouter myRouterConfig = GoRouter(
     ),
     //nisit
     GoRoute(
-        name: 'questionStart',
-        path: '/question',
-        builder: (context, state) {
-          return ProbList(
-            quesId: state.uri.queryParameters['id']!,
-            round: 1,
-          );
-        },
-        routes: [
-          GoRoute(
-            name: 'returnPoint',
-            path: 'returnPoint',
-            builder: (context, state) =>
-                ReturnPointInit(quesId: state.uri.queryParameters['id']!),
-          ),
-        ]),
+      name: 'questionStart',
+      path: '/question',
+      builder: (context, state) {
+        return ProbList(
+          quesId: state.uri.queryParameters['id']!,
+          round: 1,
+        );
+      },
+      routes: [
+        GoRoute(
+          name: 'returnPoint',
+          path: 'returnPoint',
+          builder: (context, state) =>
+              ReturnPointInit(quesId: state.uri.queryParameters['id']!),
+          // builder: (context, state) => ReturnPointInit(quesId: 'tmpID'),
+        ),
+        GoRoute(
+          name: 'questionAnswer',
+          path: 'answer',
+          builder: (context, state) =>
+              AnswerInit(quesId: state.uri.queryParameters['id']!),
+        ),
+      ],
+    ),
     GoRoute(
       name: 'showStats',
       path: '/showStats',

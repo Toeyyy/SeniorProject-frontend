@@ -1,0 +1,20 @@
+[
+  {
+    "id": "5",
+    "type": "Medical",
+    "name": "medical B 14",
+    "cost": 500
+  },
+  {
+    "id": "8",
+    "type": "Surgical",
+    "name": "surgical 3",
+    "cost": 100
+  },
+  {
+    "id": "12",
+    "type": "Nutritional support",
+    "name": "nutrition 2",
+    "cost": 100
+  }
+]

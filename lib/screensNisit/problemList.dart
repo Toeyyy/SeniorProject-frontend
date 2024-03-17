@@ -6,8 +6,6 @@ import 'package:frontend/components/functions.dart';
 import 'package:frontend/models/problemListObject.dart';
 import 'package:frontend/UIModels/nisit/selected_problem_provider.dart';
 import 'package:frontend/models/questionObject.dart';
-import 'package:frontend/models/signalmentObject.dart';
-import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:frontend/screensNisit/probListAns.dart';
 import 'package:frontend/AllDataFile.dart';
@@ -18,7 +16,6 @@ import 'package:frontend/UIModels/nisit/selected_diagnosis_provider.dart';
 import 'dart:html' as html;
 
 class ProbList extends StatefulWidget {
-  // QuestionObject questionObj;
   String quesId;
   int round;
 

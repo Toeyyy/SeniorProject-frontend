@@ -138,8 +138,109 @@ Future<List<ProblemObject>> fetchProblemAns(String quesId, int round) async {
   //   } else {
   //     jsonString = await rootBundle.loadString("data/tmpNisitProblemAns2.json");
   //   }
-  //   final List<dynamic> jsonList = json.decode(jsonString)[0]['problems'];
+  //   final List<dynamic> jsonList = json.decode(jsonString);
   //   return jsonList.map((data) => ProblemObject.fromJson(data)).toList();
+  // } catch (error) {
+  //   print('Error fetching data: $error');
+  //   return [];
+  // }
+}
+
+Future<List<ExamPreDefinedObject>> fetchExamAns(String quesId) async {
+  //real
+  final String apiUrl =
+      "${dotenv.env['API_PATH']}/question/solution/examination/$quesId";
+  final headers = {"Content-Type": "application/json"};
+  try {
+    final response = await http.get(Uri.parse(apiUrl), headers: headers);
+
+    if (response.statusCode >= 200 && response.statusCode < 300) {
+      List<dynamic> jsonList = jsonDecode(response.body);
+      return jsonList
+          .map((data) => ExamPreDefinedObject.fromJson(data))
+          .toList();
+    } else {
+      print("Error: ${response.statusCode} - ${response.body}");
+      return [];
+    }
+  } catch (error) {
+    print("Error: $error");
+    return [];
+  }
+
+  //tmp-comment later
+  // try {
+  //   String jsonString;
+  //   jsonString = await rootBundle.loadString("data/tmpNisitExamAns.json");
+  //
+  //   final List<dynamic> jsonList = json.decode(jsonString);
+  //   return jsonList.map((data) => ExamPreDefinedObject.fromJson(data)).toList();
+  // } catch (error) {
+  //   print('Error fetching data: $error');
+  //   return [];
+  // }
+}
+
+Future<List<DiagnosisObject>> fetchDiagAns(String quesId) async {
+  //real
+  final String apiUrl =
+      "${dotenv.env['API_PATH']}/question/solution/diagnostic/$quesId";
+  final headers = {"Content-Type": "application/json"};
+  try {
+    final response = await http.get(Uri.parse(apiUrl), headers: headers);
+
+    if (response.statusCode >= 200 && response.statusCode < 300) {
+      List<dynamic> jsonList = jsonDecode(response.body);
+      return jsonList.map((data) => DiagnosisObject.fromJson(data)).toList();
+    } else {
+      print("Error: ${response.statusCode} - ${response.body}");
+      return [];
+    }
+  } catch (error) {
+    print("Error: $error");
+    return [];
+  }
+
+  //tmp-comment later
+  // try {
+  //   String jsonString;
+  //   jsonString = await rootBundle.loadString("data/tmpNisitDiagAns.json");
+  //
+  //   final List<dynamic> jsonList = json.decode(jsonString);
+  //   return jsonList.map((data) => DiagnosisObject.fromJson(data)).toList();
+  // } catch (error) {
+  //   print('Error fetching data: $error');
+  //   return [];
+  // }
+}
+
+Future<List<TreatmentObject>> fetchTreatmentAns(String quesId) async {
+  //real
+  final String apiUrl =
+      "${dotenv.env['API_PATH']}/question/solution/treatment/$quesId";
+  final headers = {"Content-Type": "application/json"};
+  try {
+    final response = await http.get(Uri.parse(apiUrl), headers: headers);
+
+    if (response.statusCode >= 200 && response.statusCode < 300) {
+      List<dynamic> jsonList = jsonDecode(response.body);
+      return jsonList.map((data) => TreatmentObject.fromJson(data)).toList();
+    } else {
+      print("Error: ${response.statusCode} - ${response.body}");
+      return [];
+    }
+  } catch (error) {
+    print("Error: $error");
+    return [];
+  }
+
+  //tmp-comment later
+  // try {
+  //   String jsonString;
+  //   jsonString = await rootBundle.loadString("data/tmpNisitTreatmentAns.json");
+  //
+  //   final List<dynamic> jsonList = json.decode(jsonString);
+  //   return jsonList.map((data) => TreatmentObject.fromJson(data)).toList();
   // } catch (error) {
   //   print('Error fetching data: $error');
   //   return [];
@@ -165,7 +266,6 @@ Future<void> fetchFullQuestionList() async {
   }
 
   //tmp-comment later
-  // print('fetch questions');
   // try {
   //   final String jsonString =
   //       await rootBundle.loadString("data/tmpTeacherQuestion.json");
