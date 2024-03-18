@@ -14,13 +14,17 @@ import 'package:frontend/AllDataFile.dart';
 import 'package:frontend/models/tagObject.dart';
 import 'package:frontend/models/treatmentObject.dart';
 import 'package:http/http.dart' as http;
+import 'package:frontend/my_secure_storage.dart';
 
 //format '${dotenv.env['API_PATH']}/question/update/$id'
 
 Future<List<QuestionObject>> fetchQuestionList() async {
   //real
   final String apiUrl = "${dotenv.env['API_PATH']}/question";
-  final headers = {"Content-Type": "application/json"};
+  final headers = {
+    "Content-Type": "application/json",
+    "Authorization": "Bearer ${MySecureStorage().readSecureData('accessToken')}"
+  };
   try {
     final response = await http.get(Uri.parse(apiUrl), headers: headers);
 
@@ -51,7 +55,10 @@ Future<List<QuestionObject>> fetchQuestionList() async {
 Future<QuestionObject> fetchQuestionFromId(String quesId) async {
   //real
   final String apiUrl = "${dotenv.env['API_PATH']}/question/$quesId";
-  final headers = {"Content-Type": "application/json"};
+  final headers = {
+    "Content-Type": "application/json",
+    "Authorization": "Bearer ${MySecureStorage().readSecureData('accessToken')}"
+  };
   try {
     final response = await http.get(Uri.parse(apiUrl), headers: headers);
 
@@ -82,7 +89,10 @@ Future<QuestionObject> fetchQuestionFromId(String quesId) async {
 Future<FullQuestionObject> fetchFullQuestionFromId(String quesId) async {
   //real
   final String apiUrl = "${dotenv.env['API_PATH']}/question/solution/$quesId";
-  final headers = {"Content-Type": "application/json"};
+  final headers = {
+    "Content-Type": "application/json",
+    "Authorization": "Bearer ${MySecureStorage().readSecureData('accessToken')}"
+  };
   try {
     final response = await http.get(Uri.parse(apiUrl), headers: headers);
 
@@ -114,7 +124,10 @@ Future<List<ProblemObject>> fetchProblemAns(String quesId, int round) async {
   //real
   final String apiUrl =
       "${dotenv.env['API_PATH']}/question/solution/problem/$round/$quesId";
-  final headers = {"Content-Type": "application/json"};
+  final headers = {
+    "Content-Type": "application/json",
+    "Authorization": "Bearer ${MySecureStorage().readSecureData('accessToken')}"
+  };
   try {
     final response = await http.get(Uri.parse(apiUrl), headers: headers);
 
@@ -150,7 +163,10 @@ Future<List<ExamPreDefinedObject>> fetchExamAns(String quesId) async {
   //real
   final String apiUrl =
       "${dotenv.env['API_PATH']}/question/solution/examination/$quesId";
-  final headers = {"Content-Type": "application/json"};
+  final headers = {
+    "Content-Type": "application/json",
+    "Authorization": "Bearer ${MySecureStorage().readSecureData('accessToken')}"
+  };
   try {
     final response = await http.get(Uri.parse(apiUrl), headers: headers);
 
@@ -185,7 +201,10 @@ Future<List<DiagnosisObject>> fetchDiagAns(String quesId) async {
   //real
   final String apiUrl =
       "${dotenv.env['API_PATH']}/question/solution/diagnostic/$quesId";
-  final headers = {"Content-Type": "application/json"};
+  final headers = {
+    "Content-Type": "application/json",
+    "Authorization": "Bearer ${MySecureStorage().readSecureData('accessToken')}"
+  };
   try {
     final response = await http.get(Uri.parse(apiUrl), headers: headers);
 
@@ -218,7 +237,10 @@ Future<List<TreatmentObject>> fetchTreatmentAns(String quesId) async {
   //real
   final String apiUrl =
       "${dotenv.env['API_PATH']}/question/solution/treatment/$quesId";
-  final headers = {"Content-Type": "application/json"};
+  final headers = {
+    "Content-Type": "application/json",
+    "Authorization": "Bearer ${MySecureStorage().readSecureData('accessToken')}"
+  };
   try {
     final response = await http.get(Uri.parse(apiUrl), headers: headers);
 
@@ -250,7 +272,10 @@ Future<List<TreatmentObject>> fetchTreatmentAns(String quesId) async {
 Future<void> fetchFullQuestionList() async {
   //real
   final String apiUrl = "${dotenv.env['API_PATH']}/question/solution";
-  final headers = {"Content-Type": "application/json"};
+  final headers = {
+    "Content-Type": "application/json",
+    "Authorization": "Bearer ${MySecureStorage().readSecureData('accessToken')}"
+  };
   try {
     final response = await http.get(Uri.parse(apiUrl), headers: headers);
 
@@ -285,7 +310,10 @@ Future<List<ExamResultObject>> fetchResult(String examID, String quesID) async {
   List<Map<String, dynamic>> body = [
     {"examinationId": examID}
   ];
-  final headers = {"Content-Type": "application/json"};
+  final headers = {
+    "Content-Type": "application/json",
+    "Authorization": "Bearer ${MySecureStorage().readSecureData('accessToken')}"
+  };
   try {
     final response = await http.post(Uri.parse(apiUrl),
         headers: headers, body: jsonEncode(body));
@@ -317,7 +345,10 @@ Future<List<ExamResultObject>> fetchResult(String examID, String quesID) async {
 Future<StatQuestionObject> fetchStatQuestion(String quesId) async {
   //real
   final String apiUrl = "${dotenv.env['API_PATH']}/$quesId/stats";
-  final headers = {"Content-Type": "application/json"};
+  final headers = {
+    "Content-Type": "application/json",
+    "Authorization": "Bearer ${MySecureStorage().readSecureData('accessToken')}"
+  };
   try {
     final response = await http.get(Uri.parse(apiUrl), headers: headers);
 
@@ -348,7 +379,10 @@ Future<StatQuestionObject> fetchStatQuestion(String quesId) async {
 Future<List<StatQuestionObject>> fetchStatForNisit() async {
   //real
   final String apiUrl = "${dotenv.env['API_PATH']}/student/stats";
-  final headers = {"Content-Type": "application/json"};
+  final headers = {
+    "Content-Type": "application/json",
+    "Authorization": "Bearer ${MySecureStorage().readSecureData('accessToken')}"
+  };
   try {
     final response = await http.get(Uri.parse(apiUrl), headers: headers);
 
@@ -379,7 +413,10 @@ Future<List<StatQuestionObject>> fetchStatForNisit() async {
 Future<List<StatNisitObject>> fetchStatForTeacher(String quesId) async {
   //real
   final String apiUrl = "${dotenv.env['API_PATH']}/question/$quesId/stats";
-  final headers = {"Content-Type": "application/json"};
+  final headers = {
+    "Content-Type": "application/json",
+    "Authorization": "Bearer ${MySecureStorage().readSecureData('accessToken')}"
+  };
   try {
     final response = await http.get(Uri.parse(apiUrl), headers: headers);
 
@@ -412,7 +449,10 @@ Future<List<StatNisitObject>> fetchStatForTeacher(String quesId) async {
 Future<void> fetchPreDefinedProb() async {
   //real
   final String apiUrl = "${dotenv.env['API_PATH']}";
-  final headers = {"Content-Type": "application/json"};
+  final headers = {
+    "Content-Type": "application/json",
+    "Authorization": "Bearer ${MySecureStorage().readSecureData('accessToken')}"
+  };
   try {
     final response =
         await http.get(Uri.parse("$apiUrl/problem"), headers: headers);
@@ -444,7 +484,10 @@ Future<void> fetchPreDefinedProb() async {
 Future<void> fetchPreDefinedTag() async {
   //real
   final String apiUrl = "${dotenv.env['API_PATH']}";
-  final headers = {"Content-Type": "application/json"};
+  final headers = {
+    "Content-Type": "application/json",
+    "Authorization": "Bearer ${MySecureStorage().readSecureData('accessToken')}"
+  };
   try {
     final response = await http.get(Uri.parse("$apiUrl/tag"), headers: headers);
 
@@ -475,7 +518,10 @@ Future<void> fetchPreDefinedTag() async {
 Future<void> fetchPreDefinedDiag() async {
   //real
   final String apiUrl = "${dotenv.env['API_PATH']}";
-  final headers = {"Content-Type": "application/json"};
+  final headers = {
+    "Content-Type": "application/json",
+    "Authorization": "Bearer ${MySecureStorage().readSecureData('accessToken')}"
+  };
   try {
     final response =
         await http.get(Uri.parse("$apiUrl/diagnostic"), headers: headers);
@@ -507,7 +553,10 @@ Future<void> fetchPreDefinedDiag() async {
 Future<void> fetchPreDefinedTreatment() async {
   //real
   final String apiUrl = "${dotenv.env['API_PATH']}";
-  final headers = {"Content-Type": "application/json"};
+  final headers = {
+    "Content-Type": "application/json",
+    "Authorization": "Bearer ${MySecureStorage().readSecureData('accessToken')}"
+  };
   try {
     final response =
         await http.get(Uri.parse("$apiUrl/treatment"), headers: headers);
@@ -540,7 +589,10 @@ Future<void> fetchPreDefinedTreatment() async {
 Future<void> fetchPreDefinedExam() async {
   //real
   final String apiUrl = "${dotenv.env['API_PATH']}";
-  final headers = {"Content-Type": "application/json"};
+  final headers = {
+    "Content-Type": "application/json",
+    "Authorization": "Bearer ${MySecureStorage().readSecureData('accessToken')}"
+  };
   try {
     final response =
         await http.get(Uri.parse("$apiUrl/examination"), headers: headers);

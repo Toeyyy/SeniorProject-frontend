@@ -18,6 +18,7 @@ import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:frontend/aboutData/getDataFunctions.dart';
+import 'package:frontend/my_secure_storage.dart';
 
 class ShowAndEditQuestion extends StatefulWidget {
   String quesId;
@@ -99,7 +100,11 @@ class _ShowAndEditQuestionState extends State<ShowAndEditQuestion> {
       try {
         final http.Response response = await http.delete(
           Uri.parse("${dotenv.env['API_PATH']}/question/${questionObj!.id}"),
-          headers: {"Content-Type": "application/json"},
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization":
+                "Bearer ${MySecureStorage().readSecureData('accessToken')}"
+          },
         );
       } catch (error) {
         print('Error: $error');
