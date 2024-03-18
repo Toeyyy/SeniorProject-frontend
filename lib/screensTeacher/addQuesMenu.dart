@@ -3,7 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/components/appbar.dart';
 import 'package:frontend/constants.dart';
-import 'package:frontend/screensTeacher/addQuestion.dart';
+import 'package:frontend/my_secure_storage.dart';
 import 'package:frontend/screensTeacher/PredefinedScreens/editPredefinedListTopic.dart';
 import 'package:frontend/aboutData/getDataFunctions.dart';
 import 'package:file_picker/file_picker.dart';
@@ -26,8 +26,17 @@ class AddQuesMenu extends StatelessWidget {
             filename: "question.xlsx")
       });
       try {
-        final response = await dio
-            .post("${dotenv.env['API_PATH']}/question/upload", data: formData);
+        final response = await dio.post(
+          "${dotenv.env['API_PATH']}/question/upload",
+          data: formData,
+          options: Options(
+            headers: {
+              "Authorization":
+                  "Bearer ${MySecureStorage().readSecureData('accessToken')}",
+            },
+          ),
+        );
+        print('Response: ${response.statusCode} - ${response.data}');
       } catch (error) {
         print('Error: $error');
       }
@@ -37,7 +46,11 @@ class AddQuesMenu extends StatelessWidget {
       try {
         final http.Response response = await http.get(
           Uri.parse("${dotenv.env['API_PATH']}/question/template"),
-          headers: {"Content-Type": "application/json"},
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization":
+                "Bearer ${MySecureStorage().readSecureData('accessToken')}"
+          },
         );
         if (response.statusCode >= 200 && response.statusCode < 300) {
           final blob = html.Blob([response.bodyBytes]);

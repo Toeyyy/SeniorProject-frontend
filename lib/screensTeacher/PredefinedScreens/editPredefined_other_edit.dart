@@ -9,6 +9,7 @@ import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
 import 'package:frontend/components/back_button.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:frontend/my_secure_storage.dart';
 
 class EditPredefinedOtherEdit extends StatefulWidget {
   final String title;
@@ -42,20 +43,32 @@ class _EditPredefinedOtherEditState extends State<EditPredefinedOtherEdit> {
         if (title == 'Problem') {
           final http.Response response = await http.delete(
             Uri.parse("${dotenv.env['API_PATH']}/problem"),
-            headers: {"Content-Type": "application/json"},
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization":
+                  "Bearer ${MySecureStorage().readSecureData('accessToken')}"
+            },
             body: jsonEncode(data),
           );
         } else if (title == 'Differential Diagnosis' ||
             title == 'Tentative/Definitive Diagnosis') {
           final http.Response response = await http.delete(
             Uri.parse("${dotenv.env['API_PATH']}/diagnostic"),
-            headers: {"Content-Type": "application/json"},
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization":
+                  "Bearer ${MySecureStorage().readSecureData('accessToken')}"
+            },
             body: jsonEncode(data),
           );
         } else if (title == 'Tag') {
           final http.Response response = await http.delete(
             Uri.parse("${dotenv.env['API_PATH']}/tag"),
-            headers: {"Content-Type": "application/json"},
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization":
+                  "Bearer ${MySecureStorage().readSecureData('accessToken')}"
+            },
             body: jsonEncode(data),
           );
         }
@@ -74,19 +87,31 @@ class _EditPredefinedOtherEditState extends State<EditPredefinedOtherEdit> {
         if (title == 'Problem') {
           final http.Response response = await http.put(
             Uri.parse("${dotenv.env['API_PATH']}/problem"),
-            headers: {"Content-Type": "application/json"},
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization":
+                  "Bearer ${MySecureStorage().readSecureData('accessToken')}"
+            },
             body: jsonEncode(data),
           );
         } else if (title == 'Diagnosis List') {
           final http.Response response = await http.put(
             Uri.parse("${dotenv.env['API_PATH']}/diagnostic"),
-            headers: {"Content-Type": "application/json"},
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization":
+                  "Bearer ${MySecureStorage().readSecureData('accessToken')}"
+            },
             body: jsonEncode(data),
           );
         } else if (title == 'Tag') {
           final http.Response response = await http.put(
             Uri.parse("${dotenv.env['API_PATH']}/tag"),
-            headers: {"Content-Type": "application/json"},
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization":
+                  "Bearer ${MySecureStorage().readSecureData('accessToken')}"
+            },
             body: jsonEncode(data),
           );
         }

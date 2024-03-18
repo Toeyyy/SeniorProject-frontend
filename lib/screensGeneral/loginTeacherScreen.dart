@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'package:frontend/my_secure_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/components/BoxesInAddQ.dart';
 import 'package:frontend/screensGeneral/mainShowQuestion.dart';
@@ -16,7 +16,7 @@ class LoginTeacherScreen extends StatefulWidget {
 }
 
 class _LoginTeacherScreenState extends State<LoginTeacherScreen> {
-  TextEditingController emailController = TextEditingController();
+  TextEditingController userNameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
   void goToMainPage() {
@@ -26,18 +26,22 @@ class _LoginTeacherScreenState extends State<LoginTeacherScreen> {
   Future<void> _postAdminLogin() async {
     try {
       var data = {
-        "email": emailController.text,
+        "userName": userNameController.text,
         "password": passwordController.text,
       };
-      final http.Response response = await http.put(
+      final http.Response response = await http.post(
         Uri.parse("${dotenv.env['API_PATH']}/admin-login"),
         headers: {"Content-Type": "application/json"},
         body: jsonEncode(data),
       );
       if (response.statusCode >= 200 && response.statusCode < 300) {
         print("Success: ${response.body}");
-        //TODO assign token in storage
-        //TODO assign userRole
+        dynamic jsonFile = jsonDecode(response.body);
+        //assign token in storage
+        MySecureStorage()
+            .writeSecureData('accessToken', jsonFile['accessToken']);
+        //assign userRole
+        MySecureStorage().writeSecureData('userRole', '1');
         goToMainPage();
       } else {
         print("Error: ${response.statusCode} - ${response.body}");
@@ -77,13 +81,13 @@ class _LoginTeacherScreenState extends State<LoginTeacherScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  'Sign In',
+                  'Log In',
                   style: TextStyle(fontWeight: FontWeight.w800, fontSize: 40),
                 ),
                 const SizedBox(height: 35),
                 SimpleTextField(
-                  myController: emailController,
-                  hintText: "Email",
+                  myController: userNameController,
+                  hintText: "Username",
                   textFieldNotEmpty: true,
                 ),
                 const SizedBox(height: 15),
@@ -102,13 +106,12 @@ class _LoginTeacherScreenState extends State<LoginTeacherScreen> {
                   child: ElevatedButton(
                     onPressed: () {
                       //go to mainShowQuestion
-                      //TODO tmp-delete later
-                      userRole = int.parse(emailController.text);
-                      context.goNamed('mainShowQuestion');
-                      if (emailController.text.isNotEmpty &&
+                      //tmp-delete later
+                      // userRole = int.parse(userNameController.text);
+                      // context.goNamed('mainShowQuestion');
+                      if (userNameController.text.isNotEmpty &&
                           passwordController.text.isNotEmpty) {
-                        print('can login');
-                        //TODO login
+                        _postAdminLogin();
                       }
                     },
                     style: ButtonStyle(

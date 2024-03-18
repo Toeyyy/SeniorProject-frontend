@@ -135,12 +135,10 @@ final GoRouter myRouterConfig = GoRouter(
       ],
     ),
   ],
-  // redirect: (context, state) {
-  //   if (state.matchedLocation == '/question') {
-  //     print('hello from redirect');
-  //     return '/question';
-  //   }
-  //   return null;
-  // },
+  redirect: (context, state) {
+    bool _isOnLogIn = state.matchedLocation == '/login';
+    bool _isOnAdminLogin = state.matchedLocation == '/adminLogin';
+    bool _isOnRegister = state.matchedLocation == '/register';
+  },
   errorBuilder: (context, state) => const ErrorScreen(),
 );

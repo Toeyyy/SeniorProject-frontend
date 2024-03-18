@@ -10,6 +10,7 @@ import 'package:frontend/components/back_button.dart';
 import 'package:http/http.dart' as http;
 import 'package:frontend/AllDataFile.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:frontend/my_secure_storage.dart';
 
 class EditPreDefinedTreatmentAdd extends StatefulWidget {
   const EditPreDefinedTreatmentAdd({super.key});
@@ -63,7 +64,11 @@ class _EditPreDefinedTreatmentAddState
     try {
       final http.Response response = await http.post(
         Uri.parse("${dotenv.env['API_PATH']}/treatment"),
-        headers: {"Content-Type": "application/json"},
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization":
+              "Bearer ${MySecureStorage().readSecureData('accessToken')}"
+        },
         body: jsonEncode(data),
       );
       if ((response.statusCode >= 200 && response.statusCode < 300)) {

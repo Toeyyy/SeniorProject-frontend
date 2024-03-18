@@ -16,6 +16,7 @@ import 'package:frontend/components/BoxesInAddQ.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:frontend/AllDataFile.dart';
 import 'package:dio/dio.dart';
+import 'package:frontend/my_secure_storage.dart';
 
 class EditPredefinedExamName extends StatefulWidget {
   String selectedType;
@@ -82,7 +83,11 @@ class _EditPredefinedExamNameState extends State<EditPredefinedExamName> {
         }).toList();
         final http.Response response = await http.delete(
           Uri.parse("${dotenv.env['API_PATH']}/exam"),
-          headers: {"Content-Type": "application/json"},
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization":
+                "Bearer ${MySecureStorage().readSecureData('accessToken')}"
+          },
           body: jsonEncode(data),
         );
         if ((response.statusCode >= 200 && response.statusCode < 300)) {
@@ -138,8 +143,16 @@ class _EditPredefinedExamNameState extends State<EditPredefinedExamName> {
           index++;
         }
 
-        final response =
-            await dio.put("${dotenv.env['API_PATH']}/exam", data: formData);
+        final response = await dio.put(
+          "${dotenv.env['API_PATH']}/exam",
+          data: formData,
+          options: Options(
+            headers: {
+              "Authorization":
+                  "Bearer ${MySecureStorage().readSecureData('accessToken')}",
+            },
+          ),
+        );
         print('Response: ${response.statusCode} - ${response.data}');
       } catch (error) {
         print('Error: $error');

@@ -20,7 +20,6 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:frontend/aboutData/getDataFunctions.dart';
 
 class ShowAndEditQuestion extends StatefulWidget {
-  // FullQuestionObject questionObj;
   String quesId;
 
   ShowAndEditQuestion({super.key, required this.quesId});

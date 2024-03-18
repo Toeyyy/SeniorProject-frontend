@@ -18,23 +18,30 @@ class RegisterScreen extends StatelessWidget {
       context.go('/mainShowQuestion');
     }
 
-    Future<void> _postRegisterInfo() async {
+    Future<void> postRegisterInfo() async {
       try {
         var data = {
           "firstname": nameController.text,
           "lastname": surnameController.text,
           "studentid": stdIDController.text,
-          "idToken": MySecureStorage().readSecureData('idToken'),
         };
-        final http.Response response = await http.put(
+        final http.Response response = await http.post(
           Uri.parse("${dotenv.env['API_PATH']}/register"),
-          headers: {"Content-Type": "application/json"},
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization":
+                "Bearer ${MySecureStorage().readSecureData('idToken')}",
+          },
           body: jsonEncode(data),
         );
         if (response.statusCode >= 200 && response.statusCode < 300) {
           print("Success: ${response.body}");
-          //TODO assign token in storage
-          //TODO assign userRole
+          dynamic jsonFile = jsonDecode(response.body);
+          //assign token in storage
+          MySecureStorage()
+              .writeSecureData('accessToken', jsonFile['accessToken']);
+          //assign userRole
+          MySecureStorage().writeSecureData('userRole', '0');
           goToMainPage();
         } else {
           print("Error: ${response.statusCode} - ${response.body}");
@@ -104,8 +111,8 @@ class RegisterScreen extends StatelessWidget {
                       if (nameController.text.isNotEmpty &&
                           surnameController.text.isNotEmpty &&
                           stdIDController.text.isNotEmpty) {
-                        print('can register');
-                        //TODO post and go to mainShowQuestion
+                        //post and go to mainShowQuestion
+                        postRegisterInfo();
                       }
                     },
                     style: ButtonStyle(

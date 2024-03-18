@@ -8,6 +8,7 @@ import 'package:frontend/components/back_button.dart';
 import 'package:frontend/models/treatmentObject.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:frontend/my_secure_storage.dart';
 
 class EditPredefinedTreatmentDetail extends StatefulWidget {
   Map<String, List<TreatmentObject>> groupedByType;
@@ -61,7 +62,11 @@ class _EditPredefinedTreatmentDetailState
       try {
         final http.Response response = await http.delete(
           Uri.parse("${dotenv.env['API_PATH']}/treatment"),
-          headers: {"Content-Type": "application/json"},
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization":
+                "Bearer ${MySecureStorage().readSecureData('accessToken')}"
+          },
           body: jsonEncode(data),
         );
         if ((response.statusCode >= 200 && response.statusCode < 300)) {
@@ -83,7 +88,11 @@ class _EditPredefinedTreatmentDetailState
       try {
         final http.Response response = await http.put(
           Uri.parse("${dotenv.env['API_PATH']}/treatment"),
-          headers: {"Content-Type": "application/json"},
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization":
+                "Bearer ${MySecureStorage().readSecureData('accessToken')}"
+          },
           body: jsonEncode(data),
         );
         if ((response.statusCode >= 200 && response.statusCode < 300)) {

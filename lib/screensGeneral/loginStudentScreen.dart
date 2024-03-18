@@ -4,8 +4,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:frontend/screensGeneral/registerScreen.dart';
 import 'package:google_sign_in_web/web_only.dart' as web;
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
@@ -144,11 +142,6 @@ class _GoogleSignInState extends State<GoogleSignInScreen> {
                 else
                   {
                     WidgetsBinding.instance.addPostFrameCallback((_) {
-                      // Navigator.pushReplacement(
-                      //     context,
-                      //     MaterialPageRoute(
-                      //         builder: (_) =>
-                      //             RegisterScreen(token: data['token'])));
                       context.go('/register');
                     })
                   }
@@ -168,7 +161,7 @@ class _GoogleSignInState extends State<GoogleSignInScreen> {
               height: 10,
             ),
             const Text(
-              'Sign In',
+              'Log In',
               style: TextStyle(fontWeight: FontWeight.w800, fontSize: 30),
             ),
           ],

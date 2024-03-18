@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/constants.dart';
-import 'package:frontend/screensTeacher/addQuesMenu.dart';
-import 'package:frontend/screensGeneral/mainShowQuestion.dart';
-import 'package:frontend/screensNisit/showStats.dart';
+import 'package:frontend/my_secure_storage.dart';
 import 'package:go_router/go_router.dart';
 
 class AppbarNisit extends StatelessWidget implements PreferredSizeWidget {
@@ -36,7 +34,11 @@ class AppbarNisit extends StatelessWidget implements PreferredSizeWidget {
         kVerticalDividerInAppBar,
         TextButton(
           onPressed: () {
-            //TODO log out
+            //log out
+            MySecureStorage().deleteSecureData('accessToken');
+            MySecureStorage().deleteSecureData('idToken');
+            MySecureStorage().deleteSecureData('userRole');
+            context.go('/login');
           },
           child: const Text(
             'Log Out',
@@ -79,7 +81,10 @@ class AppbarTeacher extends StatelessWidget implements PreferredSizeWidget {
         kVerticalDividerInAppBar,
         TextButton(
           onPressed: () {
-            //TODO log out
+            //log out
+            MySecureStorage().deleteSecureData('accessToken');
+            MySecureStorage().deleteSecureData('userRole');
+            context.go('/adminLogin');
           },
           child: const Text(
             'Log Out',

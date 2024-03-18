@@ -7,7 +7,7 @@ class MySecureStorage {
     await storage.write(key: key, value: value);
   }
 
-  Future<String?> readSecureData(String key) async {
+  Future<String> readSecureData(String key) async {
     String value = await storage.read(key: key) ?? 'No data found!';
     print('Data read from secure storage: $value');
     return value;

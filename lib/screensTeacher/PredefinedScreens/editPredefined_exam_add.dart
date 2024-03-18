@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:typed_data';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +6,7 @@ import 'package:frontend/constants.dart';
 import 'package:frontend/components/BoxesInAddQ.dart';
 import 'package:frontend/models/examinationPreDefinedObject.dart';
 import 'package:frontend/components/back_button.dart';
-import 'package:http/http.dart' as http;
+import 'package:frontend/my_secure_storage.dart';
 import 'package:frontend/AllDataFile.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:file_picker/file_picker.dart';
@@ -117,8 +116,16 @@ class _EditPreDefinedExamAddState extends State<EditPreDefinedExamAdd> {
         index++;
       }
 
-      final response =
-          await dio.post("${dotenv.env['API_PATH']}/exam", data: formData);
+      final response = await dio.post(
+        "${dotenv.env['API_PATH']}/exam",
+        data: formData,
+        options: Options(
+          headers: {
+            "Authorization":
+                "Bearer ${MySecureStorage().readSecureData('accessToken')}",
+          },
+        ),
+      );
 
       print('Response: ${response.statusCode} - ${response.data}');
     } catch (error) {

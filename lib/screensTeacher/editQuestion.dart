@@ -21,6 +21,7 @@ import 'package:frontend/components/examContainer.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:frontend/models/fullQuestionObject.dart';
 import 'package:frontend/AllDataFile.dart';
+import 'package:frontend/my_secure_storage.dart';
 
 class EditQuestion extends StatefulWidget {
   // FullQuestionObject questionObj;
@@ -260,8 +261,16 @@ class _EditQuestionState extends State<EditQuestion> {
           index++;
         }
 
-        final response = await dio.put('${dotenv.env['API_PATH']}/question/$id',
-            data: formData);
+        final response = await dio.put(
+          '${dotenv.env['API_PATH']}/question/$id',
+          data: formData,
+          options: Options(
+            headers: {
+              "Authorization":
+                  "Bearer ${MySecureStorage().readSecureData('accessToken')}",
+            },
+          ),
+        );
         print('Response: ${response.statusCode} - ${response.data}');
       } catch (error) {
         print('Error: $error');

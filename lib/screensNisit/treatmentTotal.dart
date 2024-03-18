@@ -1,6 +1,7 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import 'package:frontend/AllDataFile.dart';
-import 'package:frontend/aboutData/getDataFunctions.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:frontend/components/splitScreenNisit.dart';
 import 'package:frontend/components/appbar.dart';
 import 'package:frontend/UIModels/nisit/selected_treatment_provider.dart';
@@ -8,17 +9,12 @@ import 'package:frontend/constants.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:frontend/screensNisit/treatmentTopic.dart';
-import 'package:frontend/screensNisit/returnPoint.dart';
 import 'package:frontend/models/questionObject.dart';
-import 'package:frontend/models/statModels/StatQuestionObject.dart';
 import 'package:frontend/UIModels/nisit/selected_diagnosis_provider.dart';
 import 'package:frontend/UIModels/nisit/selected_problem_provider.dart';
 import 'package:frontend/UIModels/nisit/selected_exam_provider.dart';
-import 'package:frontend/aboutData/postDataFunctions.dart';
-import 'package:frontend/UIModels/nisit/selected_problem_provider.dart';
-import 'package:frontend/UIModels/nisit/selected_diagnosis_provider.dart';
 import 'package:frontend/components/BoxesInAddQ.dart';
-import 'package:frontend/UIModels/nisit/selected_exam_provider.dart';
+import 'package:frontend/my_secure_storage.dart';
 
 class TreatmentTotal extends StatelessWidget {
   QuestionObject questionObj;
@@ -88,16 +84,7 @@ class RightPart_TreatmentTotal extends StatefulWidget {
 }
 
 class _RightPart_TreatmentTotalState extends State<RightPart_TreatmentTotal> {
-  // late StatQuestionObject stat;
   bool _isSendingData = false;
-
-  // Future getData(String questionID) async {
-  //   StatQuestionObject loadedData = await fetchStatQuestion(questionID);
-  //
-  //   setState(() {
-  //     stat = loadedData;
-  //   });
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -144,7 +131,27 @@ class _RightPart_TreatmentTotalState extends State<RightPart_TreatmentTotal> {
         "heartProblem2": problemProvider.heart2,
       };
 
-      await postSelectedItemNisit(data, widget.quesId);
+      final String apiUrl =
+          "${dotenv.env['API_PATH']}/student/${widget.quesId}/stats";
+      try {
+        final response = await http.post(
+          Uri.parse(apiUrl),
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization":
+                "Bearer ${MySecureStorage().readSecureData('accessToken')}",
+          },
+          body: jsonEncode(data),
+        );
+
+        if (response.statusCode >= 200 && response.statusCode < 300) {
+          print("Success: ${response.body}");
+        } else {
+          print("Error: ${response.statusCode} - ${response.body}");
+        }
+      } catch (error) {
+        print("Error: $error");
+      }
     }
 
     return Padding(

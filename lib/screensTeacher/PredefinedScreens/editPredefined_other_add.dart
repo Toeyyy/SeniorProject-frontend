@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:frontend/AllDataFile.dart';
-import 'package:frontend/aboutData/getDataFunctions.dart';
+import 'package:frontend/my_secure_storage.dart';
 import 'package:frontend/components/appbar.dart';
 import 'package:frontend/components/functions.dart';
 import 'package:frontend/constants.dart';
@@ -35,7 +34,11 @@ class _EditPreDefinedOtherAddState extends State<EditPreDefinedOtherAdd> {
       if (title == 'Problem List') {
         final http.Response response = await http.post(
           Uri.parse("${dotenv.env['API_PATH']}/problem"),
-          headers: {"Content-Type": "application/json"},
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization":
+                "Bearer ${MySecureStorage().readSecureData('accessToken')}"
+          },
           body: jsonEncode(data),
         );
       } else if (title == 'Differential Diagnosis' ||
@@ -45,13 +48,21 @@ class _EditPreDefinedOtherAddState extends State<EditPreDefinedOtherAdd> {
         }).toList();
         final http.Response response = await http.post(
           Uri.parse("${dotenv.env['API_PATH']}/diagnostic"),
-          headers: {"Content-Type": "application/json"},
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization":
+                "Bearer ${MySecureStorage().readSecureData('accessToken')}"
+          },
           body: jsonEncode(data),
         );
       } else if (title == 'Tag List') {
         final http.Response response = await http.post(
           Uri.parse("${dotenv.env['API_PATH']}/tag"),
-          headers: {"Content-Type": "application/json"},
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization":
+                "Bearer ${MySecureStorage().readSecureData('accessToken')}"
+          },
           body: jsonEncode(data),
         );
       }

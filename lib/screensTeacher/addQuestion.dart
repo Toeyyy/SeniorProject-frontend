@@ -10,7 +10,7 @@ import 'package:frontend/models/tagObject.dart';
 import 'package:frontend/components/treatmentContainer.dart';
 import 'package:frontend/UIModels/teacher/treatmentContainer_provider.dart';
 import 'package:go_router/go_router.dart';
-import 'package:multi_select_flutter/multi_select_flutter.dart';
+import 'package:frontend/my_secure_storage.dart';
 import 'package:frontend/components/BoxesInAddQ.dart';
 import 'package:frontend/components/functions.dart';
 import 'package:frontend/components/examContainer.dart';
@@ -192,8 +192,16 @@ class _AddQuestionState extends State<AddQuestion> {
           index++;
         }
 
-        final response = await dio.post('${dotenv.env['API_PATH']}/question',
-            data: formData);
+        final response = await dio.post(
+          '${dotenv.env['API_PATH']}/question',
+          data: formData,
+          options: Options(
+            headers: {
+              "Authorization":
+                  "Bearer ${MySecureStorage().readSecureData('accessToken')}",
+            },
+          ),
+        );
 
         print('Response: ${response.statusCode} - ${response.data}');
       } catch (error) {
