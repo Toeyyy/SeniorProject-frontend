@@ -25,7 +25,7 @@ import 'package:frontend/UIModels/nisit/selected_problem_provider.dart';
 import 'package:frontend/UIModels/nisit/selected_diagnosis_provider.dart';
 import 'package:frontend/screensNisit/returnPoint.dart';
 import 'package:frontend/screensNisit/showStats.dart';
-import 'package:frontend/screensGeneral/loginScreen.dart';
+import 'package:frontend/screensGeneral/loginTeacherScreen.dart';
 import 'package:frontend/screensGeneral/registerScreen.dart';
 import 'package:frontend/my_go_router.dart';
 
@@ -51,7 +51,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    userRole = 0;
+    // userRole = 0;
     return MaterialApp.router(
       theme: lightTheme,
       routerConfig: myRouterConfig,

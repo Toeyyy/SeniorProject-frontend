@@ -1,6 +1,6 @@
 import 'package:frontend/screensTeacher/PredefinedScreens/editPredefinedListTopic.dart';
 import 'package:go_router/go_router.dart';
-import 'package:frontend/screensGeneral/loginScreen.dart';
+import 'package:frontend/screensGeneral/loginTeacherScreen.dart';
 import 'package:frontend/screensGeneral/mainShowQuestion.dart';
 import 'package:frontend/screensGeneral/errorScreen.dart';
 import 'package:frontend/screensGeneral/registerScreen.dart';
@@ -16,15 +16,20 @@ import 'package:frontend/screensTeacher/showAndEditQuestion.dart';
 import 'package:frontend/screensTeacher/editQuestion.dart';
 import 'package:frontend/screensTeacher/showStatOverall.dart';
 import 'package:frontend/screensNisit/answerScreen.dart';
+import 'package:frontend/screensGeneral/loginStudentScreen.dart';
 
 final GoRouter myRouterConfig = GoRouter(
-  initialLocation: "/mainShowQuestion",
+  initialLocation: "/register",
   // initialLocation: '/question/returnPoint',
   routes: [
     //general
     GoRoute(
       path: '/login',
-      builder: (context, state) => LoginScreen(),
+      builder: (context, state) => const GoogleSignInScreen(),
+    ),
+    GoRoute(
+      path: '/adminLogin',
+      builder: (context, state) => LoginTeacherScreen(),
     ),
     GoRoute(
       name: 'register',

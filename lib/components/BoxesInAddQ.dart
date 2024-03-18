@@ -736,20 +736,35 @@ class StatBarGraph extends StatelessWidget {
 }
 
 /////login & register page/////
-class SimpleTextField extends StatelessWidget {
+class SimpleTextField extends StatefulWidget {
   TextEditingController myController;
   String hintText;
+  bool textFieldNotEmpty;
   SimpleTextField(
-      {super.key, required this.myController, required this.hintText});
+      {super.key,
+      required this.myController,
+      required this.hintText,
+      required this.textFieldNotEmpty});
 
+  @override
+  State<SimpleTextField> createState() => _SimpleTextFieldState();
+}
+
+class _SimpleTextFieldState extends State<SimpleTextField> {
   @override
   Widget build(BuildContext context) {
     return TextField(
-      controller: myController,
+      controller: widget.myController,
       decoration: InputDecoration(
+        errorText: widget.textFieldNotEmpty ? null : "Value can't be empty",
         border: const OutlineInputBorder(),
-        hintText: hintText,
+        hintText: widget.hintText,
       ),
+      onChanged: (newValue) {
+        setState(() {
+          widget.textFieldNotEmpty = widget.myController.text.isNotEmpty;
+        });
+      },
     );
   }
 }
