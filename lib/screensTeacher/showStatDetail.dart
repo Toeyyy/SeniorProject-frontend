@@ -141,7 +141,7 @@ class ShowStatDetail extends StatelessWidget {
                                       Text(
                                         statList[index]
                                             .problem1Score
-                                            .toString(),
+                                            .toStringAsFixed(2),
                                       ),
                                       IconButton(
                                           onPressed: () {
@@ -161,7 +161,7 @@ class ShowStatDetail extends StatelessWidget {
                                       Text(
                                         statList[index]
                                             .diffDiagScore
-                                            .toString(),
+                                            .toStringAsFixed(2),
                                       ),
                                       IconButton(
                                           onPressed: () {
@@ -181,7 +181,7 @@ class ShowStatDetail extends StatelessWidget {
                                       Text(
                                         statList[index]
                                             .examinationScore
-                                            .toString(),
+                                            .toStringAsFixed(2),
                                       ),
                                       IconButton(
                                           onPressed: () {
@@ -199,7 +199,7 @@ class ShowStatDetail extends StatelessWidget {
                                       Text(
                                         statList[index]
                                             .problem2Score
-                                            .toString(),
+                                            .toStringAsFixed(2),
                                       ),
                                       IconButton(
                                           onPressed: () {
@@ -217,7 +217,9 @@ class ShowStatDetail extends StatelessWidget {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Text(
-                                        statList[index].tenDiagScore.toString(),
+                                        statList[index]
+                                            .tenDiagScore
+                                            .toStringAsFixed(2),
                                       ),
                                       IconButton(
                                           onPressed: () {
@@ -237,7 +239,7 @@ class ShowStatDetail extends StatelessWidget {
                                       Text(
                                         statList[index]
                                             .treatmentScore
-                                            .toString(),
+                                            .toStringAsFixed(2),
                                       ),
                                       IconButton(
                                           onPressed: () {

@@ -194,7 +194,7 @@ class _ShowStatsForNisitState extends State<ShowStatsForNisit> {
                                             Text(
                                               statList[index]
                                                   .problem1Score
-                                                  .toString(),
+                                                  .toStringAsFixed(2),
                                             ),
                                             IconButton(
                                                 onPressed: () {
@@ -215,7 +215,7 @@ class _ShowStatsForNisitState extends State<ShowStatsForNisit> {
                                             Text(
                                               statList[index]
                                                   .diffDiagScore
-                                                  .toString(),
+                                                  .toStringAsFixed(2),
                                             ),
                                             IconButton(
                                                 onPressed: () {
@@ -237,7 +237,7 @@ class _ShowStatsForNisitState extends State<ShowStatsForNisit> {
                                             Text(
                                               statList[index]
                                                   .examinationScore
-                                                  .toString(),
+                                                  .toStringAsFixed(2),
                                             ),
                                             IconButton(
                                                 onPressed: () {
@@ -258,7 +258,7 @@ class _ShowStatsForNisitState extends State<ShowStatsForNisit> {
                                             Text(
                                               statList[index]
                                                   .problem2Score
-                                                  .toString(),
+                                                  .toStringAsFixed(2),
                                             ),
                                             IconButton(
                                                 onPressed: () {
@@ -278,8 +278,8 @@ class _ShowStatsForNisitState extends State<ShowStatsForNisit> {
                                           children: [
                                             Text(
                                               statList[index]
-                                                  .diffDiagScore
-                                                  .toString(),
+                                                  .tenDiagScore
+                                                  .toStringAsFixed(2),
                                             ),
                                             IconButton(
                                                 onPressed: () {
@@ -300,7 +300,7 @@ class _ShowStatsForNisitState extends State<ShowStatsForNisit> {
                                             Text(
                                               statList[index]
                                                   .treatmentScore
-                                                  .toString(),
+                                                  .toStringAsFixed(2),
                                             ),
                                             IconButton(
                                                 onPressed: () {
