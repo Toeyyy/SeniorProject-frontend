@@ -70,10 +70,10 @@
         "name":"tentative Diag 14"
       }
     ],
-    "problem1_Score": 10,
-    "problem2_Score": 15,
-    "examination_Score": 10,
-    "treatment_Score": 5,
-    "diffDiag_Score": 10,
-  "tenDiag_Score": 14
+    "problem1_Score": 10.125,
+    "problem2_Score": 15.116,
+    "examination_Score": 10.167,
+    "treatment_Score": 5.1111,
+    "diffDiag_Score": 10.4496,
+  "tenDiag_Score": 14.12755
   }

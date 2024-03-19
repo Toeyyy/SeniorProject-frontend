@@ -11,4 +11,15 @@ class DiagnosisObject {
         type: json['type'] ?? "",
         name: json['name'] ?? "");
   }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is DiagnosisObject &&
+          runtimeType == other.runtimeType &&
+          name == other.name &&
+          id == other.id;
+
+  @override
+  int get hashCode => name.hashCode ^ id.hashCode;
 }

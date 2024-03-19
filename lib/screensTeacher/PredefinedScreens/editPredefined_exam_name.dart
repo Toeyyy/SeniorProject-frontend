@@ -86,7 +86,7 @@ class _EditPredefinedExamNameState extends State<EditPredefinedExamName> {
           headers: {
             "Content-Type": "application/json",
             "Authorization":
-                "Bearer ${MySecureStorage().readSecureData('accessToken')}"
+                "Bearer ${await MySecureStorage().readSecureData('accessToken')}"
           },
           body: jsonEncode(data),
         );
@@ -110,14 +110,14 @@ class _EditPredefinedExamNameState extends State<EditPredefinedExamName> {
             "id": item.id,
             "lab": item.lab,
             "type": item.type,
-            "area": item.area != '' ? null : item.area,
+            "area": item.area != '' ? item.area : null,
             "name": item.name,
-            "textDefault": item.textDefault != '' ? null : item.textDefault,
+            "textDefault": item.textDefault != '' ? item.textDefault : null,
             "imgDefault": item.imgDefault != null
                 ? MultipartFile.fromBytes(item.imgDefault!.bytes!,
                     filename: "image", contentType: MediaType("image", "png"))
                 : null,
-            "imgPath": item.imgPath != null ? imagePath : null,
+            "imgPath": item.imgPath != null ? item.imgPath : null,
             "cost": item.cost
           };
         });
@@ -149,7 +149,7 @@ class _EditPredefinedExamNameState extends State<EditPredefinedExamName> {
           options: Options(
             headers: {
               "Authorization":
-                  "Bearer ${MySecureStorage().readSecureData('accessToken')}",
+                  "Bearer ${await MySecureStorage().readSecureData('accessToken')}",
             },
           ),
         );
@@ -205,6 +205,12 @@ class _EditPredefinedExamNameState extends State<EditPredefinedExamName> {
         nameFilterList(nameTextFieldController, groupedExam);
     List<String> areaDisplayList =
         areaFilterList(areaTextFieldController, areaList);
+
+    void _popToChoicePage() {
+      Navigator.pop(context);
+      Navigator.pop(context);
+      Navigator.pop(context);
+    }
 
     return Scaffold(
       appBar: const AppbarTeacher(),
@@ -496,7 +502,7 @@ class _EditPredefinedExamNameState extends State<EditPredefinedExamName> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      MyBackButton(myContext: context),
+                      MyCancelButton(myContext: context),
                       _isEditing
                           ? ElevatedButton(
                               onPressed: () {
@@ -534,7 +540,7 @@ class _EditPredefinedExamNameState extends State<EditPredefinedExamName> {
                               onPressed: () async {
                                 await _postUpdateData();
                                 await _postDeleteData()
-                                    .then((value) => Navigator.pop(context));
+                                    .then((value) => _popToChoicePage());
                               },
                               child: const Text('บันทึก'))
                     ],

@@ -10,12 +10,12 @@ class StatNisitObject {
   List<ProblemObject> problems;
   List<TreatmentObject> treatments;
   List<DiagnosisObject> diagnostics;
-  int problem1Score;
-  int problem2Score;
-  int examinationScore;
-  int treatmentScore;
-  int diffDiagScore;
-  int tenDiagScore;
+  double problem1Score;
+  double problem2Score;
+  double examinationScore;
+  double treatmentScore;
+  double diffDiagScore;
+  double tenDiagScore;
 
   StatNisitObject(
       {required this.userId,

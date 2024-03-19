@@ -67,7 +67,7 @@ class _EditPreDefinedTreatmentAddState
         headers: {
           "Content-Type": "application/json",
           "Authorization":
-              "Bearer ${MySecureStorage().readSecureData('accessToken')}"
+              "Bearer ${await MySecureStorage().readSecureData('accessToken')}"
         },
         body: jsonEncode(data),
       );
@@ -249,7 +249,7 @@ class _EditPreDefinedTreatmentAddState
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      MyBackButton(myContext: context),
+                      MyCancelButton(myContext: context),
                       _isEditing
                           ? ElevatedButton(
                               onPressed: () {

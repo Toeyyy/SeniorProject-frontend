@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/components/appbar.dart';
+import 'package:frontend/components/back_button.dart';
 import 'package:frontend/constants.dart';
 import 'package:frontend/models/logObject.dart';
 import 'package:frontend/components/BoxesInAddQ.dart';
@@ -72,17 +73,7 @@ class ShowEditHistory extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF8B72BE),
-                  ),
-                  child: const Text(
-                    'กลับ',
-                  ),
-                ),
+                MyBackButton(myContext: context),
               ],
             ),
           ),

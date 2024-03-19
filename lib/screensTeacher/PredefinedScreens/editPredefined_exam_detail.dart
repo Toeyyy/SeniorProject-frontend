@@ -75,7 +75,7 @@ class EditPredefinedExamLab extends StatelessWidget {
                     },
                   ),
                 ),
-                MyBackButton(myContext: context),
+                MyCancelButton(myContext: context),
               ],
             ),
           ),
@@ -130,18 +130,16 @@ class _EditPreDefinedExamTypeState extends State<EditPreDefinedExamType> {
                           style: const TextStyle(
                               fontWeight: FontWeight.w500, fontSize: 20),
                         ),
-                        onTap: () async {
-                          await fetchPreDefinedExam().then((value) {
-                            examProvider.updateGroupedList(widget.selectedLab);
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => EditPredefinedExamName(
-                                  selectedType: title,
-                                ),
+                        onTap: () {
+                          examProvider.updateGroupedList(widget.selectedLab);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => EditPredefinedExamName(
+                                selectedType: title,
                               ),
-                            );
-                          });
+                            ),
+                          );
                         },
                       );
                     },

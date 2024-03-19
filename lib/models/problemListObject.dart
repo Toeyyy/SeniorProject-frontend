@@ -11,4 +11,15 @@ class ProblemObject {
         name: json['name'] ?? "",
         round: json['round'] as int?);
   }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ProblemObject &&
+          runtimeType == other.runtimeType &&
+          name == other.name &&
+          id == other.id;
+
+  @override
+  int get hashCode => name.hashCode ^ id.hashCode;
 }

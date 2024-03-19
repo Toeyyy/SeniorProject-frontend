@@ -46,7 +46,7 @@ class _EditPredefinedOtherEditState extends State<EditPredefinedOtherEdit> {
             headers: {
               "Content-Type": "application/json",
               "Authorization":
-                  "Bearer ${MySecureStorage().readSecureData('accessToken')}"
+                  "Bearer ${await MySecureStorage().readSecureData('accessToken')}"
             },
             body: jsonEncode(data),
           );
@@ -57,7 +57,7 @@ class _EditPredefinedOtherEditState extends State<EditPredefinedOtherEdit> {
             headers: {
               "Content-Type": "application/json",
               "Authorization":
-                  "Bearer ${MySecureStorage().readSecureData('accessToken')}"
+                  "Bearer ${await MySecureStorage().readSecureData('accessToken')}"
             },
             body: jsonEncode(data),
           );
@@ -67,7 +67,7 @@ class _EditPredefinedOtherEditState extends State<EditPredefinedOtherEdit> {
             headers: {
               "Content-Type": "application/json",
               "Authorization":
-                  "Bearer ${MySecureStorage().readSecureData('accessToken')}"
+                  "Bearer ${await MySecureStorage().readSecureData('accessToken')}"
             },
             body: jsonEncode(data),
           );
@@ -90,7 +90,7 @@ class _EditPredefinedOtherEditState extends State<EditPredefinedOtherEdit> {
             headers: {
               "Content-Type": "application/json",
               "Authorization":
-                  "Bearer ${MySecureStorage().readSecureData('accessToken')}"
+                  "Bearer ${await MySecureStorage().readSecureData('accessToken')}"
             },
             body: jsonEncode(data),
           );
@@ -100,7 +100,7 @@ class _EditPredefinedOtherEditState extends State<EditPredefinedOtherEdit> {
             headers: {
               "Content-Type": "application/json",
               "Authorization":
-                  "Bearer ${MySecureStorage().readSecureData('accessToken')}"
+                  "Bearer ${await MySecureStorage().readSecureData('accessToken')}"
             },
             body: jsonEncode(data),
           );
@@ -110,7 +110,7 @@ class _EditPredefinedOtherEditState extends State<EditPredefinedOtherEdit> {
             headers: {
               "Content-Type": "application/json",
               "Authorization":
-                  "Bearer ${MySecureStorage().readSecureData('accessToken')}"
+                  "Bearer ${await MySecureStorage().readSecureData('accessToken')}"
             },
             body: jsonEncode(data),
           );
@@ -242,13 +242,25 @@ class _EditPredefinedOtherEditState extends State<EditPredefinedOtherEdit> {
                                             ),
                                             IconButton(
                                               onPressed: () {
+                                                print(
+                                                    'selectedIndex = $selectedTileIndex');
                                                 setState(() {
                                                   deletedList.add(displayList[
                                                       selectedTileIndex]);
+                                                  print(fullList.indexOf(
+                                                      displayList[
+                                                          selectedTileIndex]));
+                                                  print(fullList.contains(
+                                                      displayList[
+                                                          selectedTileIndex]));
+                                                  // print(
+                                                  //     'before len = ${fullList.map((e) => "${e.name}, ${e.id}").toList()}');
                                                   fullList.remove(displayList[
                                                       selectedTileIndex]);
-                                                  fullList.sort((a, b) =>
-                                                      a.name.compareTo(b.name));
+                                                  // print(
+                                                  //     'after len = ${fullList.map((e) => "${e.name}, ${e.id}").toList()}');
+                                                  // fullList.sort((a, b) =>
+                                                  //     a.name.compareTo(b.name));
                                                   displayList = fullList;
                                                   textFieldController.clear();
                                                   selectedTileIndex = -1;
@@ -271,6 +283,7 @@ class _EditPredefinedOtherEditState extends State<EditPredefinedOtherEdit> {
                                         selectedTileIndex = index;
                                         isEditing = false;
                                       }
+                                      print('tileIndex = $selectedTileIndex');
                                     });
                                   },
                                 ),

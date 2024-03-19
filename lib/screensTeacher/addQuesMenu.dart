@@ -32,7 +32,7 @@ class AddQuesMenu extends StatelessWidget {
           options: Options(
             headers: {
               "Authorization":
-                  "Bearer ${MySecureStorage().readSecureData('accessToken')}",
+                  "Bearer ${await MySecureStorage().readSecureData('accessToken')}",
             },
           ),
         );
@@ -49,7 +49,7 @@ class AddQuesMenu extends StatelessWidget {
           headers: {
             "Content-Type": "application/json",
             "Authorization":
-                "Bearer ${MySecureStorage().readSecureData('accessToken')}"
+                "Bearer ${await MySecureStorage().readSecureData('accessToken')}"
           },
         );
         if (response.statusCode >= 200 && response.statusCode < 300) {

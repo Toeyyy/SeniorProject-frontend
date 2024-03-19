@@ -30,7 +30,7 @@ class RegisterScreen extends StatelessWidget {
           headers: {
             "Content-Type": "application/json",
             "Authorization":
-                "Bearer ${MySecureStorage().readSecureData('idToken')}",
+                "Bearer ${await MySecureStorage().readSecureData('idToken')}",
           },
           body: jsonEncode(data),
         );
@@ -42,13 +42,13 @@ class RegisterScreen extends StatelessWidget {
               .writeSecureData('accessToken', jsonFile['accessToken']);
           //assign userRole
           MySecureStorage().writeSecureData('userRole', '0');
-          goToMainPage();
         } else {
           print("Error: ${response.statusCode} - ${response.body}");
         }
       } catch (error) {
         print('Error register: $error');
       }
+      goToMainPage();
     }
 
     return Scaffold(

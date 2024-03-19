@@ -38,17 +38,17 @@ class _LoginTeacherScreenState extends State<LoginTeacherScreen> {
         print("Success: ${response.body}");
         dynamic jsonFile = jsonDecode(response.body);
         //assign token in storage
-        MySecureStorage()
+        await MySecureStorage()
             .writeSecureData('accessToken', jsonFile['accessToken']);
         //assign userRole
         MySecureStorage().writeSecureData('userRole', '1');
-        goToMainPage();
       } else {
         print("Error: ${response.statusCode} - ${response.body}");
       }
     } catch (error) {
       print('Error login(admin): $error');
     }
+    goToMainPage();
   }
 
   @override
@@ -81,7 +81,7 @@ class _LoginTeacherScreenState extends State<LoginTeacherScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  'Log In',
+                  'Admin Log In',
                   style: TextStyle(fontWeight: FontWeight.w800, fontSize: 40),
                 ),
                 const SizedBox(height: 35),
@@ -106,12 +106,11 @@ class _LoginTeacherScreenState extends State<LoginTeacherScreen> {
                   child: ElevatedButton(
                     onPressed: () {
                       //go to mainShowQuestion
-                      //tmp-delete later
-                      // userRole = int.parse(userNameController.text);
-                      // context.goNamed('mainShowQuestion');
                       if (userNameController.text.isNotEmpty &&
                           passwordController.text.isNotEmpty) {
                         _postAdminLogin();
+                        // MySecureStorage().writeSecureData('userRole', '1');
+                        // goToMainPage();
                       }
                     },
                     style: ButtonStyle(
@@ -124,22 +123,6 @@ class _LoginTeacherScreenState extends State<LoginTeacherScreen> {
                     child: const Text('LOGIN', style: TextStyle(fontSize: 20)),
                   ),
                 ),
-                const SizedBox(height: 40),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text("Don't have an account?"),
-                    TextButton(
-                      onPressed: () {
-                        //TODO go to register page
-                      },
-                      child: const Text(
-                        'Register Now',
-                        style: TextStyle(color: Color(0xFF3DABF5)),
-                      ),
-                    ),
-                  ],
-                )
               ],
             ),
           ),

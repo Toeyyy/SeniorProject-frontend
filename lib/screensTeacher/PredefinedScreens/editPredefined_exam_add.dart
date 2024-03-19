@@ -122,7 +122,7 @@ class _EditPreDefinedExamAddState extends State<EditPreDefinedExamAdd> {
         options: Options(
           headers: {
             "Authorization":
-                "Bearer ${MySecureStorage().readSecureData('accessToken')}",
+                "Bearer ${await MySecureStorage().readSecureData('accessToken')}",
           },
         ),
       );
@@ -491,7 +491,7 @@ class _EditPreDefinedExamAddState extends State<EditPreDefinedExamAdd> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      MyBackButton(myContext: context),
+                      MyCancelButton(myContext: context),
                       !_canSave
                           ? ElevatedButton(
                               onPressed: () {

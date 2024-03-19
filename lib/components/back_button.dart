@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-class MyBackButton extends StatelessWidget {
+class MyCancelButton extends StatelessWidget {
   BuildContext myContext;
 
-  MyBackButton({super.key, required this.myContext});
+  MyCancelButton({super.key, required this.myContext});
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +38,27 @@ class MyPopButton extends StatelessWidget {
       ),
       child: const Text(
         'ยกเลิก',
+      ),
+    );
+  }
+}
+
+class MyBackButton extends StatelessWidget {
+  BuildContext myContext;
+
+  MyBackButton({super.key, required this.myContext});
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      onPressed: () {
+        Navigator.pop(myContext);
+      },
+      style: ElevatedButton.styleFrom(
+        backgroundColor: const Color(0xFF8B72BE),
+      ),
+      child: const Text(
+        'กลับ',
       ),
     );
   }

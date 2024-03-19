@@ -52,8 +52,8 @@ class _ShowStatsForNisitState extends State<ShowStatsForNisit> {
       return res;
     }
 
-    int findTotalPoint(StatQuestionObject stat) {
-      int res = 0;
+    double findTotalPoint(StatQuestionObject stat) {
+      double res = 0;
       res = stat.problem1Score +
           stat.problem2Score +
           stat.examinationScore +
@@ -176,7 +176,7 @@ class _ShowStatsForNisitState extends State<ShowStatsForNisit> {
                                         Center(
                                           child: Text(
                                               findTotalPoint(statList[index])
-                                                  .toString()),
+                                                  .toStringAsFixed(2)),
                                         ),
                                       ),
                                       DataCell(

@@ -51,7 +51,7 @@ class _ShowAndEditQuestionState extends State<ShowAndEditQuestion> {
       diagnostics: [],
       examinations: [],
       modified: true,
-      status: false,
+      status: 0,
       logs: []);
   late Map<String, List<ProblemObject>> splitProblems = {};
   late Map<String, List<DiagnosisObject>> splitDiagnosis = {};
@@ -103,7 +103,7 @@ class _ShowAndEditQuestionState extends State<ShowAndEditQuestion> {
           headers: {
             "Content-Type": "application/json",
             "Authorization":
-                "Bearer ${MySecureStorage().readSecureData('accessToken')}"
+                "Bearer ${await MySecureStorage().readSecureData('accessToken')}"
           },
         );
       } catch (error) {
@@ -140,7 +140,7 @@ class _ShowAndEditQuestionState extends State<ShowAndEditQuestion> {
                             },
                             child: const Text('ยืนยัน')),
                         const SizedBox(width: 30),
-                        MyBackButton(myContext: context),
+                        MyCancelButton(myContext: context),
                       ],
                     ),
                   ],
@@ -358,7 +358,19 @@ class _ShowAndEditQuestionState extends State<ShowAndEditQuestion> {
                                         treatment: item.name);
                                   }).toList()[index];
                                 }),
-                            Center(child: MyBackButton(myContext: context)),
+                            Center(
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  context.go('/mainShowQuestion');
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: const Color(0xFF8B72BE),
+                                ),
+                                child: const Text(
+                                  'กลับ',
+                                ),
+                              ),
+                            ),
                           ],
                         )
                       : const SizedBox(

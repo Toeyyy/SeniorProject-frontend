@@ -19,8 +19,9 @@ import 'package:frontend/screensNisit/answerScreen.dart';
 import 'package:frontend/screensGeneral/loginStudentScreen.dart';
 
 final GoRouter myRouterConfig = GoRouter(
-  initialLocation: "/register",
-  // initialLocation: '/question/returnPoint',
+  // initialLocation: "/register",
+  // initialLocation: "/adminLogin",
+  initialLocation: '/login',
   routes: [
     //general
     GoRoute(

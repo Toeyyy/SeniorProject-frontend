@@ -107,7 +107,7 @@ class EditPreDefinedTreatmentChoice extends StatelessWidget {
                     },
                   ),
                 ),
-                MyBackButton(myContext: context),
+                MyCancelButton(myContext: context),
               ],
             ),
           ),

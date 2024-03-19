@@ -114,7 +114,7 @@ class EditPreDefinedOtherChoice extends StatelessWidget {
                     },
                   ),
                 ),
-                MyBackButton(myContext: context),
+                MyCancelButton(myContext: context),
               ],
             ),
           ),

@@ -92,7 +92,7 @@ class ExamDetail_Type extends StatelessWidget {
                   },
                 ),
               ),
-              MyBackButton(myContext: context),
+              MyCancelButton(myContext: context),
             ],
           ),
         ),
@@ -250,7 +250,7 @@ class _ExamDetail_NameState extends State<ExamDetail_Name> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      MyBackButton(myContext: context),
+                      MyCancelButton(myContext: context),
                       ElevatedButton(
                         onPressed: () async {
                           examProvider.addNewExam(selectedItem!);

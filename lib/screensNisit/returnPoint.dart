@@ -95,7 +95,9 @@ class ReturnPoint extends StatelessWidget {
                         const SizedBox(height: 10),
                         ListView.builder(
                           shrinkWrap: true,
-                          itemCount: splitProblems['1']!.length,
+                          itemCount: splitProblems.containsKey('1')
+                              ? splitProblems['1']!.length
+                              : 0,
                           itemBuilder: (context, index) {
                             return ListTile(
                               title: Text(splitProblems['1']![index].name),
@@ -115,7 +117,9 @@ class ReturnPoint extends StatelessWidget {
                         const SizedBox(height: 10),
                         ListView.builder(
                           shrinkWrap: true,
-                          itemCount: splitDiag['differential']!.length,
+                          itemCount: splitDiag.containsKey('differential')
+                              ? splitDiag['differential']!.length
+                              : 0,
                           itemBuilder: (context, index) {
                             return ListTile(
                               title:
@@ -154,7 +158,9 @@ class ReturnPoint extends StatelessWidget {
                         const SizedBox(height: 10),
                         ListView.builder(
                           shrinkWrap: true,
-                          itemCount: splitProblems['2']!.length,
+                          itemCount: splitProblems.containsKey('2')
+                              ? splitProblems['2']!.length
+                              : 0,
                           itemBuilder: (context, index) {
                             return ListTile(
                               title: Text(splitProblems['2']![index].name),
@@ -174,7 +180,9 @@ class ReturnPoint extends StatelessWidget {
                         const SizedBox(height: 10),
                         ListView.builder(
                           shrinkWrap: true,
-                          itemCount: splitDiag['tentative']!.length,
+                          itemCount: splitDiag.containsKey('tentative')
+                              ? splitDiag['tentative']!.length
+                              : 0,
                           itemBuilder: (context, index) {
                             return ListTile(
                               title: Text(splitDiag['tentative']![index].name),

@@ -121,6 +121,10 @@ class _RightPart_TreatmentTotalState extends State<RightPart_TreatmentTotal> {
       var diag = diagProvider.diffDiagList.map((item) {
         return {"id": item.id};
       }).toList();
+      var tenDiag = diagProvider.tenDiagList.map((item) {
+        return {"id": item.id};
+      }).toList();
+      diag.addAll(tenDiag);
 
       Map<String, dynamic> data = {
         "problems": probList1,
@@ -139,7 +143,7 @@ class _RightPart_TreatmentTotalState extends State<RightPart_TreatmentTotal> {
           headers: {
             "Content-Type": "application/json",
             "Authorization":
-                "Bearer ${MySecureStorage().readSecureData('accessToken')}",
+                "Bearer ${await MySecureStorage().readSecureData('accessToken')}",
           },
           body: jsonEncode(data),
         );

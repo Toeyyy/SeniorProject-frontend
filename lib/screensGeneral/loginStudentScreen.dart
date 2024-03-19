@@ -9,7 +9,6 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 import 'package:go_router/go_router.dart';
 import 'package:frontend/my_secure_storage.dart';
-import 'package:frontend/AllDataFile.dart';
 
 const List<String> scopes = <String>[
   'email',
@@ -25,7 +24,6 @@ class GoogleSignInScreen extends StatefulWidget {
 }
 
 class _GoogleSignInState extends State<GoogleSignInScreen> {
-  // final _storage = const FlutterSecureStorage();
   GoogleSignInAccount? _currentUser;
   bool _isAuthorized = false; // has granted permissions?
   String _contactText = '';
@@ -64,28 +62,24 @@ class _GoogleSignInState extends State<GoogleSignInScreen> {
     _googleSignIn.signInSilently();
   }
 
-  Future<Map<String, dynamic>> _handlePostToken(
-      GoogleSignInAccount user) async {
+  Future<bool> _handleVerifyDomain(GoogleSignInAccount user) async {
     final GoogleSignInAuthentication auth = await user.authentication;
     final String apiUrl = "${dotenv.env['API_PATH']}/verify";
     String token = auth.idToken!;
-    //await _storage.write(key: 'jwt', value: token);
     MySecureStorage().writeSecureData('idToken', token);
-    bool isSuccess = false;
-    bool result = false;
+    bool isKuDomain = false;
     try {
-      final response = await http.get(
+      final response = await http.post(
         Uri.parse(apiUrl),
         headers: {
           "Content-Type": "application/json",
-          "Authorization": "Bearer $token"
+          "Authorization": "Bearer $token",
         },
       );
 
       if (response.statusCode >= 200 && response.statusCode < 300) {
         print("Success: ${response.body}");
-        isSuccess = true;
-        result = jsonDecode(response.body);
+        isKuDomain = true;
       } else {
         print("Error: ${response.statusCode} - ${response.body}");
       }
@@ -93,12 +87,41 @@ class _GoogleSignInState extends State<GoogleSignInScreen> {
       print("Error: $error");
     }
 
-    Map<String, dynamic> data = {
-      "isSuccess": isSuccess,
-      "token": token,
-      "response": result
-    };
-    return data;
+    return isKuDomain;
+  }
+
+  Future<bool> _handlePostToken(GoogleSignInAccount user) async {
+    final GoogleSignInAuthentication auth = await user.authentication;
+    final String apiUrl = "${dotenv.env['API_PATH']}/google-login";
+    String token = auth.idToken!;
+    MySecureStorage().writeSecureData('idToken', token);
+    bool isSuccess = false;
+    try {
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer $token",
+        },
+      );
+
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        print("Success: ${response.body}");
+        //TO-DO ** GET TOKEN FROM RESPONSE AND SAVE IT TO STORAGE
+        dynamic jsonFile = jsonDecode(response.body);
+        //assign token in storage
+        MySecureStorage()
+            .writeSecureData('accessToken', jsonFile['accessToken']);
+        MySecureStorage().writeSecureData('userRole', '0');
+        isSuccess = true;
+      } else {
+        print("Error: ${response.statusCode} - ${response.body}");
+      }
+    } catch (error) {
+      print("Error: $error");
+    }
+
+    return isSuccess;
   }
 
   // This is the on-click handler for the Sign In button that is rendered by Flutter.
@@ -126,25 +149,24 @@ class _GoogleSignInState extends State<GoogleSignInScreen> {
     String? token;
     // The user is NOT Authenticated
     if (_isAuthorized) {
-      _handlePostToken(user!).then((data) async => {
+      _handleVerifyDomain(user!).then((data) => {
             print(data),
-            // _storage.read(key: 'jwt').then((value) => token = value),
-            token = await MySecureStorage().readSecureData('idToken'),
-            if (data['isSuccess'])
+            if (data)
               {
-                if (data['response'])
-                  {
-                    WidgetsBinding.instance.addPostFrameCallback((_) {
-                      MySecureStorage().writeSecureData('userRole', '0');
-                      context.go('/mainShowQuestion');
+                _handlePostToken(user).then((value) => {
+                      if (value)
+                        {
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            context.go('/mainShowQuestion');
+                          })
+                        }
+                      else
+                        {
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            context.go('/register');
+                          })
+                        }
                     })
-                  }
-                else
-                  {
-                    WidgetsBinding.instance.addPostFrameCallback((_) {
-                      context.go('/register');
-                    })
-                  }
               }
           });
     }

@@ -174,7 +174,7 @@ class _RightPart_TreatmentDetailState extends State<RightPart_TreatmentDetail> {
               ),
             ),
           ),
-          MyBackButton(myContext: context),
+          MyCancelButton(myContext: context),
         ],
       ),
     );

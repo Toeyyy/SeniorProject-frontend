@@ -10,12 +10,12 @@ class StatQuestionObject {
   List<ProblemObject> problems;
   List<TreatmentObject> treatments;
   List<DiagnosisObject> diagnostics;
-  int problem1Score;
-  int problem2Score;
-  int examinationScore;
-  int treatmentScore;
-  int diffDiagScore;
-  int tenDiagScore;
+  double problem1Score;
+  double problem2Score;
+  double examinationScore;
+  double treatmentScore;
+  double diffDiagScore;
+  double tenDiagScore;
   String dateTime;
 
   StatQuestionObject(
@@ -53,12 +53,12 @@ class StatQuestionObject {
               .map((jsonItem) => DiagnosisObject.fromJson(jsonItem))
               .toList() ??
           [],
-      problem1Score: json['problem1_Score'] ?? 0,
-      problem2Score: json['problem2_Score'] ?? 0,
-      examinationScore: json['examination_Score'] ?? 0,
-      treatmentScore: json['treatment_Score'] ?? 0,
-      diffDiagScore: json['diffDiag_Score'] ?? 0,
-      tenDiagScore: json['tenDiag_Score'] ?? 0,
+      problem1Score: json['problem1_Score'] ?? 0.0,
+      problem2Score: json['problem2_Score'] ?? 0.0,
+      examinationScore: json['examination_Score'] ?? 0.0,
+      treatmentScore: json['treatment_Score'] ?? 0.0,
+      diffDiagScore: json['diffDiag_Score'] ?? 0.0,
+      tenDiagScore: json['tenDiag_Score'] ?? 0.0,
       dateTime: json['dateTime'] ?? "",
     );
   }

@@ -178,7 +178,7 @@ class _EditQuestionState extends State<EditQuestion> {
     examContainers = examProvider.examContainers;
 
     //post function
-    Future<void> postQuestion(BuildContext context, bool status) async {
+    Future<void> postQuestion(BuildContext context, int status) async {
       try {
         final dio = Dio();
 
@@ -267,7 +267,7 @@ class _EditQuestionState extends State<EditQuestion> {
           options: Options(
             headers: {
               "Authorization":
-                  "Bearer ${MySecureStorage().readSecureData('accessToken')}",
+                  "Bearer ${await MySecureStorage().readSecureData('accessToken')}",
             },
           ),
         );
@@ -557,7 +557,7 @@ class _EditQuestionState extends State<EditQuestion> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
-                                        MyBackButton(myContext: context),
+                                        MyCancelButton(myContext: context),
                                         Row(
                                           children: [
                                             ElevatedButton(
@@ -566,8 +566,7 @@ class _EditQuestionState extends State<EditQuestion> {
                                                 setState(() {
                                                   _isPosting = true;
                                                 });
-                                                await postQuestion(
-                                                        context, false)
+                                                await postQuestion(context, 0)
                                                     .then((value) {
                                                   setState(() {
                                                     _isPosting = false;
@@ -597,8 +596,7 @@ class _EditQuestionState extends State<EditQuestion> {
                                                   setState(() {
                                                     _isPosting = true;
                                                   });
-                                                  await postQuestion(
-                                                          context, true)
+                                                  await postQuestion(context, 1)
                                                       .then((value) {
                                                     setState(() {
                                                       _isPosting = false;

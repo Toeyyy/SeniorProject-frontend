@@ -111,7 +111,7 @@ class _AddQuestionState extends State<AddQuestion> {
           });
     }
 
-    Future<void> postQuestion(BuildContext context, bool status) async {
+    Future<void> postQuestion(BuildContext context, int status) async {
       final dio = Dio();
 
       //prob List
@@ -198,7 +198,7 @@ class _AddQuestionState extends State<AddQuestion> {
           options: Options(
             headers: {
               "Authorization":
-                  "Bearer ${MySecureStorage().readSecureData('accessToken')}",
+                  "Bearer ${await MySecureStorage().readSecureData('accessToken')}",
             },
           ),
         );
@@ -493,7 +493,7 @@ class _AddQuestionState extends State<AddQuestion> {
                                     setState(() {
                                       _isPosting = true;
                                     });
-                                    await postQuestion(context, false)
+                                    await postQuestion(context, 0)
                                         .then((value) {
                                       setState(() {
                                         _isPosting = false;
@@ -519,7 +519,7 @@ class _AddQuestionState extends State<AddQuestion> {
                                         setState(() {
                                           _isPosting = true;
                                         });
-                                        await postQuestion(context, true)
+                                        await postQuestion(context, 1)
                                             .then((value) {
                                           setState(() {
                                             _isPosting = false;

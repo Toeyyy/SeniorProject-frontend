@@ -103,7 +103,7 @@
       }
     ],
     "modified": true,
-    "status": true,
+    "status": 1,
     "logs": [
       {
         "id": "9bc52d59-e5c9-42ae-95f1-71cce6c6113c",
@@ -132,6 +132,6 @@
     "name" : "17",
     "clientComplains": "xxx",
     "modified": true,
-    "status": false
+    "status": 0
   }
 ]

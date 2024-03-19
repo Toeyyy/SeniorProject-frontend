@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/components/appbar.dart';
+import 'package:frontend/components/back_button.dart';
 import 'package:frontend/constants.dart';
 import 'package:frontend/models/diagnosisObject.dart';
 import 'package:frontend/models/statModels/StatNisitObject.dart';
@@ -28,8 +29,8 @@ class ShowStatDetail extends StatelessWidget {
       return res;
     }
 
-    int findTotalPoint(StatNisitObject stat) {
-      int res = 0;
+    double findTotalPoint(StatNisitObject stat) {
+      double res = 0;
       res = stat.problem1Score +
           stat.problem2Score +
           stat.examinationScore +
@@ -124,7 +125,7 @@ class ShowStatDetail extends StatelessWidget {
                                 DataCell(
                                   Center(
                                     child: Text(findTotalPoint(statList[index])
-                                        .toString()),
+                                        .toStringAsFixed(2)),
                                   ),
                                 ),
                                 DataCell(
@@ -256,17 +257,7 @@ class ShowStatDetail extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF8B72BE),
-                  ),
-                  child: const Text(
-                    'กลับ',
-                  ),
-                ),
+                MyBackButton(myContext: context),
               ],
             ),
           ),

@@ -104,7 +104,7 @@ class EditPreDefinedExamChoice extends StatelessWidget {
                     },
                   ),
                 ),
-                MyBackButton(myContext: context),
+                MyCancelButton(myContext: context),
               ],
             ),
           ),

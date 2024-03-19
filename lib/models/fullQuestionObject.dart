@@ -19,7 +19,7 @@ class FullQuestionObject {
   List<DiagnosisObject>? diagnostics;
   List<ExaminationObject>? examinations;
   bool modified;
-  bool status;
+  int status;
   List<LogObject>? logs;
 
   FullQuestionObject(
@@ -81,7 +81,7 @@ class FullQuestionObject {
               []
           : [],
       modified: json['modified'] ?? false,
-      status: json['status'] ?? false,
+      status: json['status'] ?? 0,
       logs: json['logs'] != null
           ? (json['logs'] as List<dynamic>)
                   .map((jsonItem) => LogObject.fromJson(jsonItem))

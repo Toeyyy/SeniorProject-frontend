@@ -65,7 +65,7 @@ class _EditPredefinedTreatmentDetailState
           headers: {
             "Content-Type": "application/json",
             "Authorization":
-                "Bearer ${MySecureStorage().readSecureData('accessToken')}"
+                "Bearer ${await MySecureStorage().readSecureData('accessToken')}"
           },
           body: jsonEncode(data),
         );
@@ -91,7 +91,7 @@ class _EditPredefinedTreatmentDetailState
           headers: {
             "Content-Type": "application/json",
             "Authorization":
-                "Bearer ${MySecureStorage().readSecureData('accessToken')}"
+                "Bearer ${await MySecureStorage().readSecureData('accessToken')}"
           },
           body: jsonEncode(data),
         );
@@ -111,6 +111,11 @@ class _EditPredefinedTreatmentDetailState
       return false;
     }
     return textFieldController.text != '' && costTextFieldController.text != '';
+  }
+
+  void _popToChoicePage() {
+    Navigator.pop(context);
+    Navigator.pop(context);
   }
 
   @override
@@ -274,7 +279,7 @@ class _EditPredefinedTreatmentDetailState
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      MyBackButton(myContext: context),
+                      MyCancelButton(myContext: context),
                       isEditing
                           ? ElevatedButton(
                               onPressed: () {
@@ -299,7 +304,7 @@ class _EditPredefinedTreatmentDetailState
                               onPressed: () async {
                                 await _postUpdateData();
                                 await _postDeleteData()
-                                    .then((value) => Navigator.pop(context));
+                                    .then((value) => _popToChoicePage());
                               },
                               child: const Text('บันทึก'))
                     ],

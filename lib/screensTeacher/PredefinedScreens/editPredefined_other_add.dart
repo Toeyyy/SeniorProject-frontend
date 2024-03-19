@@ -37,10 +37,15 @@ class _EditPreDefinedOtherAddState extends State<EditPreDefinedOtherAdd> {
           headers: {
             "Content-Type": "application/json",
             "Authorization":
-                "Bearer ${MySecureStorage().readSecureData('accessToken')}"
+                "Bearer ${await MySecureStorage().readSecureData('accessToken')}"
           },
           body: jsonEncode(data),
         );
+        if ((response.statusCode >= 200 && response.statusCode < 300)) {
+          print("Posting complete");
+        } else {
+          print("Error: ${response.statusCode} - ${response.body}");
+        }
       } else if (title == 'Differential Diagnosis' ||
           title == 'Tentative/Definitive Diagnosis') {
         data = addedList.map((item) {
@@ -51,20 +56,30 @@ class _EditPreDefinedOtherAddState extends State<EditPreDefinedOtherAdd> {
           headers: {
             "Content-Type": "application/json",
             "Authorization":
-                "Bearer ${MySecureStorage().readSecureData('accessToken')}"
+                "Bearer ${await MySecureStorage().readSecureData('accessToken')}"
           },
           body: jsonEncode(data),
         );
+        if ((response.statusCode >= 200 && response.statusCode < 300)) {
+          print("Posting complete");
+        } else {
+          print("Error: ${response.statusCode} - ${response.body}");
+        }
       } else if (title == 'Tag List') {
         final http.Response response = await http.post(
           Uri.parse("${dotenv.env['API_PATH']}/tag"),
           headers: {
             "Content-Type": "application/json",
             "Authorization":
-                "Bearer ${MySecureStorage().readSecureData('accessToken')}"
+                "Bearer ${await MySecureStorage().readSecureData('accessToken')}"
           },
           body: jsonEncode(data),
         );
+        if ((response.statusCode >= 200 && response.statusCode < 300)) {
+          print("Posting complete");
+        } else {
+          print("Error: ${response.statusCode} - ${response.body}");
+        }
       }
     } catch (error) {
       print("Error: $error");
@@ -102,7 +117,7 @@ class _EditPreDefinedOtherAddState extends State<EditPreDefinedOtherAdd> {
                       icon: const Icon(Icons.add),
                       onPressed: () {
                         if (textFieldController.text != '') {
-                          if (widget.title == 'Problem List') {
+                          if (widget.title == 'Problem') {
                             ProblemObject newItem = ProblemObject(
                                 id: 'X', name: textFieldController.text);
                             fullList.add(newItem);
@@ -122,7 +137,7 @@ class _EditPreDefinedOtherAddState extends State<EditPreDefinedOtherAdd> {
                                 name: textFieldController.text);
                             fullList.add(newItem);
                             addedList.add(newItem);
-                          } else if (widget.title == 'Tag List') {
+                          } else if (widget.title == 'Tag') {
                             TagObject newItem = TagObject(
                                 id: 'X', name: textFieldController.text);
                             fullList.add(newItem);
