@@ -31,7 +31,7 @@ class _EditPreDefinedOtherAddState extends State<EditPreDefinedOtherAdd> {
       return {"name": item.name};
     }).toList();
     try {
-      if (title == 'Problem List') {
+      if (title == 'Problem') {
         final http.Response response = await http.post(
           Uri.parse("${dotenv.env['API_PATH']}/problem"),
           headers: {
@@ -65,7 +65,7 @@ class _EditPreDefinedOtherAddState extends State<EditPreDefinedOtherAdd> {
         } else {
           print("Error: ${response.statusCode} - ${response.body}");
         }
-      } else if (title == 'Tag List') {
+      } else if (title == 'Tag') {
         final http.Response response = await http.post(
           Uri.parse("${dotenv.env['API_PATH']}/tag"),
           headers: {

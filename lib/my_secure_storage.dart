@@ -1,4 +1,5 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class MySecureStorage {
   final FlutterSecureStorage storage = const FlutterSecureStorage();
@@ -15,5 +16,9 @@ class MySecureStorage {
 
   deleteSecureData(String key) async {
     await storage.delete(key: key);
+  }
+
+  refreshToken() async {
+    String oldToken = await readSecureData('accessToken');
   }
 }

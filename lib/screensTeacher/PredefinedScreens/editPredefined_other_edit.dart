@@ -105,6 +105,7 @@ class _EditPredefinedOtherEditState extends State<EditPredefinedOtherEdit> {
             body: jsonEncode(data),
           );
         } else if (title == 'Tag') {
+          print('in case tag');
           final http.Response response = await http.put(
             Uri.parse("${dotenv.env['API_PATH']}/tag"),
             headers: {
@@ -242,25 +243,13 @@ class _EditPredefinedOtherEditState extends State<EditPredefinedOtherEdit> {
                                             ),
                                             IconButton(
                                               onPressed: () {
-                                                print(
-                                                    'selectedIndex = $selectedTileIndex');
                                                 setState(() {
                                                   deletedList.add(displayList[
                                                       selectedTileIndex]);
-                                                  print(fullList.indexOf(
-                                                      displayList[
-                                                          selectedTileIndex]));
-                                                  print(fullList.contains(
-                                                      displayList[
-                                                          selectedTileIndex]));
-                                                  // print(
-                                                  //     'before len = ${fullList.map((e) => "${e.name}, ${e.id}").toList()}');
                                                   fullList.remove(displayList[
                                                       selectedTileIndex]);
-                                                  // print(
-                                                  //     'after len = ${fullList.map((e) => "${e.name}, ${e.id}").toList()}');
-                                                  // fullList.sort((a, b) =>
-                                                  //     a.name.compareTo(b.name));
+                                                  fullList.sort((a, b) =>
+                                                      a.name.compareTo(b.name));
                                                   displayList = fullList;
                                                   textFieldController.clear();
                                                   selectedTileIndex = -1;
@@ -283,7 +272,6 @@ class _EditPredefinedOtherEditState extends State<EditPredefinedOtherEdit> {
                                         selectedTileIndex = index;
                                         isEditing = false;
                                       }
-                                      print('tileIndex = $selectedTileIndex');
                                     });
                                   },
                                 ),

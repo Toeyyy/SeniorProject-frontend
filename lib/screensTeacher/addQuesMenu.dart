@@ -202,7 +202,8 @@ class AddQuesMenu extends StatelessWidget {
               ),
               ElevatedButton(
                 onPressed: () {
-                  context.go('/questionMenu/addQuestion');
+                  fetchPreDefined()
+                      .then((value) => context.go('/questionMenu/addQuestion'));
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF8B72BE),
@@ -212,14 +213,8 @@ class AddQuesMenu extends StatelessWidget {
               ),
               ElevatedButton(
                 onPressed: () {
-                  fetchPreDefined().then((value) => {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    const EditPredefinedListTopic()))
-                      });
-                  context.go('/questionMenu/editPredefined');
+                  fetchPreDefined().then(
+                      (value) => context.go('/questionMenu/editPredefined'));
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF694873),
