@@ -31,7 +31,7 @@ final GoRouter myRouterConfig = GoRouter(
     ),
     GoRoute(
       path: '/adminLogin',
-      builder: (context, state) => LoginTeacherScreen(),
+      builder: (context, state) => const LoginTeacherScreen(),
     ),
     GoRoute(
       name: 'register',
