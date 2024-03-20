@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_sign_in_web/web_only.dart' as web;
 import 'package:google_sign_in/google_sign_in.dart';
@@ -26,10 +25,7 @@ class GoogleSignInScreen extends StatefulWidget {
 class _GoogleSignInState extends State<GoogleSignInScreen> {
   GoogleSignInAccount? _currentUser;
   bool _isAuthorized = false; // has granted permissions?
-  String _contactText = '';
   final _googleSignIn = GoogleSignIn(
-    // Optional clientId
-    // clientId: 'your-client_id.apps.googleusercontent.com',
     clientId: dotenv.env['CLIENT_ID'],
     scopes: scopes,
     hostedDomain: 'ku.th',
@@ -110,8 +106,12 @@ class _GoogleSignInState extends State<GoogleSignInScreen> {
         //TO-DO ** GET TOKEN FROM RESPONSE AND SAVE IT TO STORAGE
         dynamic jsonFile = jsonDecode(response.body);
         //assign token in storage
-        MySecureStorage()
+        await MySecureStorage()
             .writeSecureData('accessToken', jsonFile['accessToken']);
+        await MySecureStorage()
+            .writeSecureData('refreshToken', jsonFile['refreshToken']);
+        await MySecureStorage()
+            .writeSecureData('tokenExpires', jsonFile['tokenExpires']);
         MySecureStorage().writeSecureData('userRole', '0');
         isSuccess = true;
       } else {

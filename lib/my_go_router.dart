@@ -1,3 +1,4 @@
+import 'package:frontend/my_secure_storage.dart';
 import 'package:frontend/screensTeacher/PredefinedScreens/editPredefinedListTopic.dart';
 import 'package:go_router/go_router.dart';
 import 'package:frontend/screensGeneral/loginTeacherScreen.dart';
@@ -20,8 +21,8 @@ import 'package:frontend/screensGeneral/loginStudentScreen.dart';
 
 final GoRouter myRouterConfig = GoRouter(
   // initialLocation: "/register",
-  // initialLocation: "/adminLogin",
-  initialLocation: '/login',
+  initialLocation: "/adminLogin",
+  // initialLocation: '/login',
   routes: [
     //general
     GoRoute(
@@ -136,10 +137,19 @@ final GoRouter myRouterConfig = GoRouter(
       ],
     ),
   ],
-  redirect: (context, state) {
-    bool _isOnLogIn = state.matchedLocation == '/login';
-    bool _isOnAdminLogin = state.matchedLocation == '/adminLogin';
-    bool _isOnRegister = state.matchedLocation == '/register';
+  redirect: (context, state) async {
+    bool isOnLogIn = state.matchedLocation == '/login';
+    bool isOnAdminLogin = state.matchedLocation == '/adminLogin';
+    bool isOnRegister = state.matchedLocation == '/register';
+    String? status = await MySecureStorage().storage.read(key: 'accessToken');
+    bool isLogin = status != null && status.isNotEmpty;
+
+    if (isOnAdminLogin && !isLogin) {
+      return '/adminLogin';
+    } else if (!isLogin && !isOnRegister && !isOnLogIn && !isOnAdminLogin) {
+      return '/login';
+    }
+    return null;
   },
   errorBuilder: (context, state) => const ErrorScreen(),
 );

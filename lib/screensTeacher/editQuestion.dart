@@ -261,6 +261,7 @@ class _EditQuestionState extends State<EditQuestion> {
           index++;
         }
 
+        await MySecureStorage().refreshToken();
         final response = await dio.put(
           '${dotenv.env['API_PATH']}/question/$id',
           data: formData,

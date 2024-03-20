@@ -192,6 +192,7 @@ class _AddQuestionState extends State<AddQuestion> {
           index++;
         }
 
+        await MySecureStorage().refreshToken();
         final response = await dio.post(
           '${dotenv.env['API_PATH']}/question',
           data: formData,
@@ -476,6 +477,8 @@ class _AddQuestionState extends State<AddQuestion> {
                           children: [
                             ElevatedButton(
                               onPressed: () {
+                                treatmentProvider.clearList();
+                                examListProvider.clearList();
                                 context.pop();
                               },
                               style: ElevatedButton.styleFrom(
@@ -498,6 +501,7 @@ class _AddQuestionState extends State<AddQuestion> {
                                       setState(() {
                                         _isPosting = false;
                                       });
+                                      treatmentProvider.clearList();
                                       examListProvider.clearList();
                                       showModal(context);
                                     });
@@ -525,6 +529,7 @@ class _AddQuestionState extends State<AddQuestion> {
                                             _isPosting = false;
                                           });
                                           examListProvider.clearList();
+                                          treatmentProvider.clearList();
                                           showModal(context);
                                         });
                                       }

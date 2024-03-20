@@ -90,7 +90,7 @@ class _MainShowQuestionState extends State<MainShowQuestion> {
       if (checkBoxStat == true) {
         setState(() {
           teacherDisplayList = teacherDisplayList
-              .where((element) => element.status == false)
+              .where((element) => element.status == 0)
               .toList();
         });
       } else {

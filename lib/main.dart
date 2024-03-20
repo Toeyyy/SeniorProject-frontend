@@ -51,14 +51,10 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    // userRole = 0;
     return MaterialApp.router(
       theme: lightTheme,
       routerConfig: myRouterConfig,
     );
-    //role 0 = nisit, role 1 = teacher
-    //เค้าเปลี่ยนเป็นเซ็ต role ใส่ใน userRole ตรงนี้นะ ถ้าอยากเปิดหน้านรก็เปลี่ยนเป็น 0
-    // userRole = 1;
   }
 }
 

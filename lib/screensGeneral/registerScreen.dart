@@ -38,10 +38,14 @@ class RegisterScreen extends StatelessWidget {
           print("Success: ${response.body}");
           dynamic jsonFile = jsonDecode(response.body);
           //assign token in storage
-          MySecureStorage()
+          await MySecureStorage()
               .writeSecureData('accessToken', jsonFile['accessToken']);
+          await MySecureStorage()
+              .writeSecureData('refreshToken', jsonFile['refreshToken']);
+          await MySecureStorage()
+              .writeSecureData('tokenExpires', jsonFile['tokenExpires']);
           //assign userRole
-          MySecureStorage().writeSecureData('userRole', '0');
+          await MySecureStorage().writeSecureData('userRole', '0');
         } else {
           print("Error: ${response.statusCode} - ${response.body}");
         }
@@ -107,12 +111,17 @@ class RegisterScreen extends StatelessWidget {
                   width: double.infinity,
                   height: 45,
                   child: ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
                       if (nameController.text.isNotEmpty &&
                           surnameController.text.isNotEmpty &&
                           stdIDController.text.isNotEmpty) {
                         //post and go to mainShowQuestion
                         postRegisterInfo();
+                        // await MySecureStorage()
+                        //     .writeSecureData('userRole', '0');
+                        // await MySecureStorage()
+                        //     .writeSecureData('accessToken', 'accwsfdas');
+                        // goToMainPage();
                       }
                     },
                     style: ButtonStyle(

@@ -116,6 +116,7 @@ class _EditPreDefinedExamAddState extends State<EditPreDefinedExamAdd> {
         index++;
       }
 
+      await MySecureStorage().refreshToken();
       final response = await dio.post(
         "${dotenv.env['API_PATH']}/exam",
         data: formData,

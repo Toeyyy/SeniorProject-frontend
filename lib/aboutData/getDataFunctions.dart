@@ -21,6 +21,7 @@ import 'package:frontend/my_secure_storage.dart';
 Future<List<QuestionObject>> fetchQuestionList() async {
   //real
   final String apiUrl = "${dotenv.env['API_PATH']}/question";
+  await MySecureStorage().refreshToken();
   final headers = {
     "Content-Type": "application/json",
     "Authorization":
@@ -56,6 +57,7 @@ Future<List<QuestionObject>> fetchQuestionList() async {
 Future<QuestionObject> fetchQuestionFromId(String quesId) async {
   //real
   final String apiUrl = "${dotenv.env['API_PATH']}/question/$quesId";
+  await MySecureStorage().refreshToken();
   final headers = {
     "Content-Type": "application/json",
     "Authorization":
@@ -91,6 +93,7 @@ Future<QuestionObject> fetchQuestionFromId(String quesId) async {
 Future<FullQuestionObject> fetchFullQuestionFromId(String quesId) async {
   //real
   final String apiUrl = "${dotenv.env['API_PATH']}/question/solution/$quesId";
+  await MySecureStorage().refreshToken();
   final headers = {
     "Content-Type": "application/json",
     "Authorization":
@@ -127,6 +130,7 @@ Future<List<ProblemObject>> fetchProblemAns(String quesId, int round) async {
   //real
   final String apiUrl =
       "${dotenv.env['API_PATH']}/question/solution/problem/$round/$quesId";
+  await MySecureStorage().refreshToken();
   final headers = {
     "Content-Type": "application/json",
     "Authorization":
@@ -167,6 +171,7 @@ Future<List<ExamPreDefinedObject>> fetchExamAns(String quesId) async {
   //real
   final String apiUrl =
       "${dotenv.env['API_PATH']}/question/solution/examination/$quesId";
+  await MySecureStorage().refreshToken();
   final headers = {
     "Content-Type": "application/json",
     "Authorization":
@@ -206,6 +211,7 @@ Future<List<DiagnosisObject>> fetchDiagAns(String quesId) async {
   //real
   final String apiUrl =
       "${dotenv.env['API_PATH']}/question/solution/diagnostic/$quesId";
+  await MySecureStorage().refreshToken();
   final headers = {
     "Content-Type": "application/json",
     "Authorization":
@@ -243,6 +249,7 @@ Future<List<TreatmentObject>> fetchTreatmentAns(String quesId) async {
   //real
   final String apiUrl =
       "${dotenv.env['API_PATH']}/question/solution/treatment/$quesId";
+  await MySecureStorage().refreshToken();
   final headers = {
     "Content-Type": "application/json",
     "Authorization":
@@ -279,6 +286,7 @@ Future<List<TreatmentObject>> fetchTreatmentAns(String quesId) async {
 Future<void> fetchFullQuestionList() async {
   //real
   final String apiUrl = "${dotenv.env['API_PATH']}/question/solution";
+  await MySecureStorage().refreshToken();
   final headers = {
     "Content-Type": "application/json",
     "Authorization":
@@ -315,6 +323,7 @@ Future<List<ExamResultObject>> fetchResult(String examID, String quesID) async {
   //real
   final String apiUrl =
       "${dotenv.env['API_PATH']}/question/$quesID/examinationresult";
+  await MySecureStorage().refreshToken();
   List<Map<String, dynamic>> body = [
     {"examinationId": examID}
   ];
@@ -354,6 +363,7 @@ Future<List<ExamResultObject>> fetchResult(String examID, String quesID) async {
 Future<StatQuestionObject> fetchStatQuestion(String quesId) async {
   //real
   final String apiUrl = "${dotenv.env['API_PATH']}/$quesId/stats";
+  await MySecureStorage().refreshToken();
   final headers = {
     "Content-Type": "application/json",
     "Authorization":
@@ -389,6 +399,7 @@ Future<StatQuestionObject> fetchStatQuestion(String quesId) async {
 Future<List<StatQuestionObject>> fetchStatForNisit() async {
   //real
   final String apiUrl = "${dotenv.env['API_PATH']}/student/stats";
+  await MySecureStorage().refreshToken();
   final headers = {
     "Content-Type": "application/json",
     "Authorization":
@@ -424,6 +435,7 @@ Future<List<StatQuestionObject>> fetchStatForNisit() async {
 Future<List<StatNisitObject>> fetchStatForTeacher(String quesId) async {
   //real
   final String apiUrl = "${dotenv.env['API_PATH']}/question/$quesId/stats";
+  await MySecureStorage().refreshToken();
   final headers = {
     "Content-Type": "application/json",
     "Authorization":
@@ -461,6 +473,7 @@ Future<List<StatNisitObject>> fetchStatForTeacher(String quesId) async {
 Future<void> fetchPreDefinedProb() async {
   //real
   final String apiUrl = "${dotenv.env['API_PATH']}";
+  await MySecureStorage().refreshToken();
   final headers = {
     "Content-Type": "application/json",
     "Authorization":
@@ -497,6 +510,7 @@ Future<void> fetchPreDefinedProb() async {
 Future<void> fetchPreDefinedTag() async {
   //real
   final String apiUrl = "${dotenv.env['API_PATH']}";
+  await MySecureStorage().refreshToken();
   final headers = {
     "Content-Type": "application/json",
     "Authorization":
@@ -532,6 +546,7 @@ Future<void> fetchPreDefinedTag() async {
 Future<void> fetchPreDefinedDiag() async {
   //real
   final String apiUrl = "${dotenv.env['API_PATH']}";
+  await MySecureStorage().refreshToken();
   final headers = {
     "Content-Type": "application/json",
     "Authorization":
@@ -568,6 +583,7 @@ Future<void> fetchPreDefinedDiag() async {
 Future<void> fetchPreDefinedTreatment() async {
   //real
   final String apiUrl = "${dotenv.env['API_PATH']}";
+  await MySecureStorage().refreshToken();
   final headers = {
     "Content-Type": "application/json",
     "Authorization":
@@ -605,6 +621,7 @@ Future<void> fetchPreDefinedTreatment() async {
 Future<void> fetchPreDefinedExam() async {
   //real
   final String apiUrl = "${dotenv.env['API_PATH']}";
+  await MySecureStorage().refreshToken();
   final headers = {
     "Content-Type": "application/json",
     "Authorization":

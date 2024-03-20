@@ -25,6 +25,7 @@ class AddQuesMenu extends StatelessWidget {
         "file": MultipartFile.fromBytes(userFile!.files[0].bytes!.toList(),
             filename: "question.xlsx")
       });
+      await MySecureStorage().refreshToken();
       try {
         final response = await dio.post(
           "${dotenv.env['API_PATH']}/question/upload",
@@ -43,6 +44,7 @@ class AddQuesMenu extends StatelessWidget {
     }
 
     Future<void> getFile() async {
+      await MySecureStorage().refreshToken();
       try {
         final http.Response response = await http.get(
           Uri.parse("${dotenv.env['API_PATH']}/question/template"),

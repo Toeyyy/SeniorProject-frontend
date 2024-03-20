@@ -30,6 +30,7 @@ class _EditPreDefinedOtherAddState extends State<EditPreDefinedOtherAdd> {
     var data = addedList.map((item) {
       return {"name": item.name};
     }).toList();
+    await MySecureStorage().refreshToken();
     try {
       if (title == 'Problem') {
         final http.Response response = await http.post(

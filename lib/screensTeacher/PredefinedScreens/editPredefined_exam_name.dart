@@ -81,6 +81,7 @@ class _EditPredefinedExamNameState extends State<EditPredefinedExamName> {
         var data = deletedList.map((item) {
           return {"id": item.id};
         }).toList();
+        await MySecureStorage().refreshToken();
         final http.Response response = await http.delete(
           Uri.parse("${dotenv.env['API_PATH']}/exam"),
           headers: {
@@ -143,6 +144,7 @@ class _EditPredefinedExamNameState extends State<EditPredefinedExamName> {
           index++;
         }
 
+        await MySecureStorage().refreshToken();
         final response = await dio.put(
           "${dotenv.env['API_PATH']}/exam",
           data: formData,

@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/constants.dart';
 import 'package:frontend/UIModels/teacher/examContainer_provider.dart';
@@ -760,6 +761,55 @@ class _SimpleTextFieldState extends State<SimpleTextField> {
         border: const OutlineInputBorder(),
         hintText: widget.hintText,
       ),
+      onChanged: (newValue) {
+        setState(() {
+          widget.textFieldNotEmpty = widget.myController.text.isNotEmpty;
+        });
+      },
+    );
+  }
+}
+
+class PasswordTextField extends StatefulWidget {
+  TextEditingController myController;
+  String hintText;
+  bool textFieldNotEmpty;
+  PasswordTextField(
+      {super.key,
+      required this.myController,
+      required this.hintText,
+      required this.textFieldNotEmpty});
+
+  @override
+  State<PasswordTextField> createState() => _PasswordTextFieldState();
+}
+
+class _PasswordTextFieldState extends State<PasswordTextField> {
+  bool _obscureText = true;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      controller: widget.myController,
+      decoration: InputDecoration(
+        errorText: widget.textFieldNotEmpty ? null : "Value can't be empty",
+        border: const OutlineInputBorder(),
+        hintText: widget.hintText,
+        suffixIcon: Padding(
+          padding: const EdgeInsets.only(right: 5),
+          child: IconButton(
+            onPressed: () {
+              setState(() {
+                _obscureText = !_obscureText;
+              });
+            },
+            icon: _obscureText
+                ? const Icon(CupertinoIcons.eye_slash)
+                : const Icon(CupertinoIcons.eye),
+          ),
+        ),
+      ),
+      obscureText: _obscureText,
       onChanged: (newValue) {
         setState(() {
           widget.textFieldNotEmpty = widget.myController.text.isNotEmpty;

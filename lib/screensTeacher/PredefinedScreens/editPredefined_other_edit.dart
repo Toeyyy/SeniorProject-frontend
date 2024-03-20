@@ -39,6 +39,7 @@ class _EditPredefinedOtherEditState extends State<EditPredefinedOtherEdit> {
       var data = deletedList.map((item) {
         return {"id": item.id};
       }).toList();
+      await MySecureStorage().refreshToken();
       try {
         if (title == 'Problem') {
           final http.Response response = await http.delete(
@@ -83,6 +84,7 @@ class _EditPredefinedOtherEditState extends State<EditPredefinedOtherEdit> {
       var data = editedList.map((item) {
         return {"id": item.id, "name": item.name};
       }).toList();
+      await MySecureStorage().refreshToken();
       try {
         if (title == 'Problem') {
           final http.Response response = await http.put(

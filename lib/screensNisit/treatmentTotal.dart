@@ -137,6 +137,7 @@ class _RightPart_TreatmentTotalState extends State<RightPart_TreatmentTotal> {
 
       final String apiUrl =
           "${dotenv.env['API_PATH']}/student/${widget.quesId}/stats";
+      await MySecureStorage().refreshToken();
       try {
         final response = await http.post(
           Uri.parse(apiUrl),

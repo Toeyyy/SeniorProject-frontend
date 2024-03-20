@@ -35,9 +35,7 @@ class AppbarNisit extends StatelessWidget implements PreferredSizeWidget {
         TextButton(
           onPressed: () {
             //log out
-            MySecureStorage().deleteSecureData('accessToken');
-            MySecureStorage().deleteSecureData('idToken');
-            MySecureStorage().deleteSecureData('userRole');
+            MySecureStorage().storage.deleteAll();
             context.go('/login');
           },
           child: const Text(
@@ -82,8 +80,7 @@ class AppbarTeacher extends StatelessWidget implements PreferredSizeWidget {
         TextButton(
           onPressed: () {
             //log out
-            MySecureStorage().deleteSecureData('accessToken');
-            MySecureStorage().deleteSecureData('userRole');
+            MySecureStorage().storage.deleteAll();
             context.go('/adminLogin');
           },
           child: const Text(

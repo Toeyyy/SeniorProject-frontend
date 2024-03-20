@@ -190,17 +190,9 @@ class FullQuestionCard extends StatelessWidget {
                       ),
                       Row(
                         children: [
-                          questionObj.status == false
+                          questionObj.status == 0
                               ? IconButton(
                                   onPressed: () {
-                                    // Navigator.push(
-                                    //   context,
-                                    //   MaterialPageRoute(
-                                    //     builder: (context) => EditQuestion(
-                                    //       questionObj: questionObj,
-                                    //     ),
-                                    //   ),
-                                    // );
                                     context.goNamed(
                                       'editQuestion',
                                       queryParameters: {"id": questionObj.id},

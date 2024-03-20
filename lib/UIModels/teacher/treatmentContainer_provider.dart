@@ -14,9 +14,6 @@ class TreatmentContainerProvider extends ChangeNotifier {
   }
 
   void deleteContainer(Key key) {
-    // print(treatmentContainerList.map((item) {
-    //   return "item.key = ${item.key} and key = $key";
-    // }).toList());
     treatmentContainerList.removeWhere((item) => item.key == key);
     notifyListeners();
   }

@@ -61,6 +61,7 @@ class _EditPreDefinedTreatmentAddState
     var data = addedList.map((item) {
       return {"type": item.type, "name": item.name, "cost": item.cost};
     }).toList();
+    await MySecureStorage().refreshToken();
     try {
       final http.Response response = await http.post(
         Uri.parse("${dotenv.env['API_PATH']}/treatment"),

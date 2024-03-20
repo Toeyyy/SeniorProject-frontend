@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/cupertino.dart';
 import 'package:frontend/my_secure_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/components/BoxesInAddQ.dart';
@@ -9,7 +10,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class LoginTeacherScreen extends StatefulWidget {
-  LoginTeacherScreen({super.key});
+  const LoginTeacherScreen({super.key});
 
   @override
   State<LoginTeacherScreen> createState() => _LoginTeacherScreenState();
@@ -18,6 +19,7 @@ class LoginTeacherScreen extends StatefulWidget {
 class _LoginTeacherScreenState extends State<LoginTeacherScreen> {
   TextEditingController userNameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  bool _isDataValid = true;
 
   void goToMainPage() {
     context.go('/mainShowQuestion');
@@ -40,10 +42,19 @@ class _LoginTeacherScreenState extends State<LoginTeacherScreen> {
         //assign token in storage
         await MySecureStorage()
             .writeSecureData('accessToken', jsonFile['accessToken']);
+        await MySecureStorage()
+            .writeSecureData('refreshToken', jsonFile['refreshToken']);
+        await MySecureStorage()
+            .writeSecureData('tokenExpires', jsonFile['tokenExpires']);
         //assign userRole
-        MySecureStorage().writeSecureData('userRole', '1');
+        await MySecureStorage().writeSecureData('userRole', '1');
       } else {
         print("Error: ${response.statusCode} - ${response.body}");
+        if (response.statusCode == 400) {
+          setState(() {
+            _isDataValid = false;
+          });
+        }
       }
     } catch (error) {
       print('Error login(admin): $error');
@@ -91,10 +102,20 @@ class _LoginTeacherScreenState extends State<LoginTeacherScreen> {
                   textFieldNotEmpty: true,
                 ),
                 const SizedBox(height: 15),
-                SimpleTextField(
+                PasswordTextField(
                   myController: passwordController,
                   hintText: "Password",
                   textFieldNotEmpty: true,
+                ),
+                Visibility(
+                  visible: !_isDataValid,
+                  child: const Padding(
+                    padding: EdgeInsets.only(left: 20, top: 10),
+                    child: Text(
+                      'Username หรือ Password ไม่ถูกต้อง',
+                      style: TextStyle(color: Colors.red),
+                    ),
+                  ),
                 ),
                 const Expanded(
                     child: SizedBox(
@@ -104,12 +125,15 @@ class _LoginTeacherScreenState extends State<LoginTeacherScreen> {
                   width: double.infinity,
                   height: 45,
                   child: ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
                       //go to mainShowQuestion
                       if (userNameController.text.isNotEmpty &&
                           passwordController.text.isNotEmpty) {
                         _postAdminLogin();
-                        // MySecureStorage().writeSecureData('userRole', '1');
+                        // await MySecureStorage()
+                        //     .writeSecureData('userRole', '1');
+                        // await MySecureStorage()
+                        //     .writeSecureData('accessToken', 'asfdafsfsdfa');
                         // goToMainPage();
                       }
                     },

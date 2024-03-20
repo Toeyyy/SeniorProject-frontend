@@ -97,6 +97,7 @@ class _ShowAndEditQuestionState extends State<ShowAndEditQuestion> {
   @override
   Widget build(BuildContext context) {
     Future<void> deleteQuestion() async {
+      await MySecureStorage().refreshToken();
       try {
         final http.Response response = await http.delete(
           Uri.parse("${dotenv.env['API_PATH']}/question/${questionObj!.id}"),

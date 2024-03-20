@@ -59,6 +59,7 @@ class _EditPredefinedTreatmentDetailState
       var data = deletedList.map((item) {
         return {"id": item.id};
       }).toList();
+      await MySecureStorage().refreshToken();
       try {
         final http.Response response = await http.delete(
           Uri.parse("${dotenv.env['API_PATH']}/treatment"),
@@ -85,6 +86,7 @@ class _EditPredefinedTreatmentDetailState
       var data = editedList.map((item) {
         return {"id": item.id, "name": item.name, "cost": item.cost};
       }).toList();
+      await MySecureStorage().refreshToken();
       try {
         final http.Response response = await http.put(
           Uri.parse("${dotenv.env['API_PATH']}/treatment"),
