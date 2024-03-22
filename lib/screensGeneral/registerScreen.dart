@@ -17,16 +17,11 @@ class RegisterScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    void goToMainPage() {
-      context.go('/mainShowQuestion');
-    }
-
-    void goToEmailScreen(String id, String code) {
+    void goToEmailScreen() {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => EmailConfirmScreen(
-              code: code, id: id, email: emailController.text),
+          builder: (context) => EmailConfirmScreen(email: emailController.text),
         ),
       );
     }
@@ -49,10 +44,7 @@ class RegisterScreen extends StatelessWidget {
         );
         if (response.statusCode >= 200 && response.statusCode < 300) {
           print("Success: ${response.body}");
-          dynamic jsonFile = jsonDecode(response.body);
-          String code = jsonFile['code'];
-          String id = jsonFile['id'];
-          goToEmailScreen(id, code);
+          goToEmailScreen();
         } else {
           print("Error: ${response.statusCode} - ${response.body}");
         }

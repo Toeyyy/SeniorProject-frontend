@@ -19,6 +19,7 @@ import 'package:frontend/screensTeacher/showStatOverall.dart';
 import 'package:frontend/screensNisit/answerScreen.dart';
 import 'package:frontend/screensGeneral/loginStudentScreen.dart';
 import 'package:frontend/screensGeneral/emailConfirmationScreen.dart';
+import 'package:frontend/screensGeneral/emailConfirmSuccessScreen.dart';
 
 final GoRouter myRouterConfig = GoRouter(
   // initialLocation: "/adminLogin",
@@ -33,11 +34,12 @@ final GoRouter myRouterConfig = GoRouter(
     //   path: '/register',
     //   builder: (context, state) => RegisterScreen(),
     // ),
-    // GoRoute(
-    //   path: '/emailConfirm',
-    //   builder: (context, state) =>
-    //       EmailConfirmScreen(code: 'code', id: 'id', email: 'email'),
-    // ),
+    GoRoute(
+      path: '/confirmEmail',
+      builder: (context, state) => EmailConfirmSuccess(
+          code: state.uri.queryParameters['id2']!,
+          id: state.uri.queryParameters['id1']!),
+    ),
     GoRoute(
       path: '/adminLogin',
       builder: (context, state) => const LoginTeacherScreen(),
@@ -165,7 +167,7 @@ final GoRouter myRouterConfig = GoRouter(
     bool isOnLogIn = currentLocation == '/login';
     bool isOnAdminLogin = currentLocation == '/adminlogin';
     // bool isOnRegister = currentLocation == '/register';
-    // bool isOnEmailConfirm = currentLocation == '/emailconfirm';
+    bool isOnEmailConfirm = currentLocation == '/confirmemail';
     String? status = await MySecureStorage().storage.read(key: 'accessToken');
     String? role = await MySecureStorage().storage.read(key: 'userRole');
     bool isLogin = status != null && status.isNotEmpty;
@@ -193,7 +195,7 @@ final GoRouter myRouterConfig = GoRouter(
 
     if (isOnAdminLogin && !isLogin) {
       return '/adminLogin';
-    } else if (!isLogin && !isOnLogIn && !isOnAdminLogin) {
+    } else if (!isLogin && !isOnLogIn && !isOnAdminLogin && !isOnEmailConfirm) {
       return '/login';
     } else if (isLogin && role == '0' && isOnAdminPage) {
       return '/mainShowQuestion';
