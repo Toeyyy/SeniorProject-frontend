@@ -20,7 +20,10 @@ import 'package:frontend/my_secure_storage.dart';
 
 class EditPredefinedExamName extends StatefulWidget {
   String selectedType;
-  EditPredefinedExamName({super.key, required this.selectedType});
+  // List<ExamPreDefinedObject> groupedExam;
+  Map<String, List<ExamPreDefinedObject>> groupedByType;
+  EditPredefinedExamName(
+      {super.key, required this.selectedType, required this.groupedByType});
 
   @override
   State<EditPredefinedExamName> createState() => _EditPredefinedExamNameState();
@@ -41,6 +44,8 @@ class _EditPredefinedExamNameState extends State<EditPredefinedExamName> {
   bool _isFormatCostCorrect = true;
   List<ExamPreDefinedObject> editedList = [];
   List<ExamPreDefinedObject> deletedList = [];
+  late List<ExamPreDefinedObject> fullList = [];
+  bool _isLoadData = true;
 
   List<String> areaList = groupBy(
           examListPreDefined.where((item) => item.area != null), (e) => e.area!)
@@ -77,13 +82,14 @@ class _EditPredefinedExamNameState extends State<EditPredefinedExamName> {
 
   Future<void> _postDeleteData() async {
     if (deletedList.isNotEmpty) {
+      print('in function');
       try {
         var data = deletedList.map((item) {
           return {"id": item.id};
         }).toList();
         await MySecureStorage().refreshToken();
         final http.Response response = await http.delete(
-          Uri.parse("${dotenv.env['API_PATH']}/exam"),
+          Uri.parse("${dotenv.env['API_PATH']}/examination"),
           headers: {
             "Content-Type": "application/json",
             "Authorization":
@@ -121,7 +127,7 @@ class _EditPredefinedExamNameState extends State<EditPredefinedExamName> {
             "imgPath": item.imgPath != null ? item.imgPath : null,
             "cost": item.cost
           };
-        });
+        }).toList();
 
         FormData formData = FormData.fromMap({
           "examinations": data,
@@ -146,7 +152,7 @@ class _EditPredefinedExamNameState extends State<EditPredefinedExamName> {
 
         await MySecureStorage().refreshToken();
         final response = await dio.put(
-          "${dotenv.env['API_PATH']}/exam",
+          "${dotenv.env['API_PATH']}/examination",
           data: formData,
           options: Options(
             headers: {
@@ -197,18 +203,38 @@ class _EditPredefinedExamNameState extends State<EditPredefinedExamName> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    setState(() {
+      _isLoadData = true;
+      fullList =
+          List.from(widget.groupedByType[widget.selectedType]!.toList()) ?? [];
+      printData();
+      _isLoadData = false;
+    });
+  }
+
+  void printData() {
+    // print('widget = ${widget.groupedExam}');
+    // print(
+    // 'equal = ${widget.groupedByType[widget.selectedType]!.toList() == fullList}');
+    print('full = $fullList');
+  }
+
+  @override
   Widget build(BuildContext context) {
-    PreDefinedExamProvider examProvider =
-        Provider.of<PreDefinedExamProvider>(context);
-    examProvider.assignItem(examListPreDefined);
-    List<ExamPreDefinedObject> groupedExam =
-        examProvider.getGroupByType(widget.selectedType);
+    // PreDefinedExamProvider examProvider =
+    //     Provider.of<PreDefinedExamProvider>(context);
+    // examProvider.assignItem(examListPreDefined);
+    // List<ExamPreDefinedObject> groupedExam =
+    //     examProvider.getGroupByType(widget.selectedType);
     List<ExamPreDefinedObject> nameDisplayList =
-        nameFilterList(nameTextFieldController, groupedExam);
+        nameFilterList(nameTextFieldController, fullList);
     List<String> areaDisplayList =
         areaFilterList(areaTextFieldController, areaList);
 
-    void _popToChoicePage() {
+    void popToChoicePage() {
+      // examProvider.clearList();
       Navigator.pop(context);
       Navigator.pop(context);
       Navigator.pop(context);
@@ -220,336 +246,377 @@ class _EditPredefinedExamNameState extends State<EditPredefinedExamName> {
         padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
         child: SingleChildScrollView(
           child: Center(
-            child: SizedBox(
-              width: MediaQuery.of(context).size.width * 0.7,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Center(
-                    child: Text(
-                      widget.selectedType,
-                      style: kSubHeaderTextStyle,
-                    ),
-                  ),
-                  const DividerWithSpace(),
-                  const Text('ชื่อการตรวจ', style: kSubHeaderTextStyle),
-                  const SizedBox(height: 20),
-                  TextField(
-                    controller: nameTextFieldController,
-                    textAlignVertical: TextAlignVertical.center,
-                    onChanged: (value) {
-                      setState(() {
-                        nameDisplayList = nameFilterList(
-                            nameTextFieldController, groupedExam);
-                      });
-                    },
-                    decoration: const InputDecoration(
-                      isDense: true,
-                      border: OutlineInputBorder(),
-                      hintText: "Exam name only",
-                    ),
-                  ),
-                  nameDisplayList.isNotEmpty
-                      ? Card(
-                          color: const Color(0xFFF2F5F7),
-                          elevation: 0,
-                          margin: const EdgeInsets.symmetric(horizontal: 15),
-                          child: ListView.builder(
-                              shrinkWrap: true,
-                              itemCount: nameDisplayList.length,
-                              itemBuilder: (context, index) {
-                                return Container(
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                        color: const Color(0xFFB5C1BE),
-                                        width: 1.0),
-                                  ),
-                                  child: ListTile(
-                                    tileColor: selectedTileIndex == index
-                                        ? const Color(0xFFA0E9FF)
-                                        : const Color(0xFFE7F9FF),
-                                    hoverColor: const Color(0xFFA0E9FF),
-                                    trailing: index == selectedTileIndex
-                                        ? Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.end,
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              IconButton(
-                                                icon: const Icon(Icons.edit),
-                                                onPressed: () {
-                                                  setState(() {
-                                                    nameTextFieldController
-                                                            .text =
-                                                        nameDisplayList[index]
-                                                            .name;
-                                                    nameDisplayList =
-                                                        nameFilterList(
-                                                            nameTextFieldController,
-                                                            groupedExam);
-                                                    selectedTileIndex =
-                                                        nameDisplayList.indexOf(
-                                                            selectedItem!);
-                                                    _isEditing = true;
-                                                  });
-                                                },
-                                              ),
-                                              IconButton(
-                                                icon: const Icon(
-                                                    CupertinoIcons.delete),
-                                                onPressed: () {
-                                                  setState(() {
-                                                    examProvider.deleteItem(
-                                                        selectedItem!);
-                                                    deletedList
-                                                        .add(selectedItem!);
-                                                    groupedExam
-                                                        .remove(selectedItem);
-                                                    nameDisplayList =
-                                                        groupedExam;
-                                                    nameTextFieldController
-                                                        .clear();
-                                                    costTextFieldController
-                                                        .clear();
-                                                    defaultTextFieldController
-                                                        .clear();
-                                                    imagePath = null;
-                                                    imageDefault = null;
-                                                    areaTextFieldController
-                                                        .clear();
-                                                    selectedTileIndex = -1;
-                                                  });
-                                                },
-                                              ),
-                                            ],
-                                          )
-                                        : null,
-                                    title: nameDisplayList[index].area != null
-                                        ? Text(
-                                            '${nameDisplayList[index].name}, ${nameDisplayList[index].area}')
-                                        : Text(nameDisplayList[index].name),
-                                    onTap: () {
-                                      setState(() {
-                                        if (selectedTileIndex == -1 ||
-                                            selectedTileIndex != index) {
-                                          selectedItem = nameDisplayList[index];
-                                          if (groupedExam == nameDisplayList) {
-                                            selectedTileIndex = index;
-                                          } else {
-                                            selectedTileIndex = nameDisplayList
-                                                .indexOf(selectedItem!);
-                                          }
-                                          _isEditing = false;
-                                          _isOtherPartVisible = true;
-                                          areaTextFieldController.text =
-                                              (selectedItem?.area ?? "");
-                                          costTextFieldController.text =
-                                              selectedItem!.cost.toString();
-                                          defaultTextFieldController.text =
-                                              (selectedItem?.textDefault ?? "");
-                                          imagePath = selectedItem?.imgPath;
-                                          imageDefault =
-                                              selectedItem?.imgDefault;
-                                        } else {
-                                          selectedTileIndex = -1;
-                                          selectedItem = null;
-                                          _isEditing = false;
-                                          _isOtherPartVisible = false;
-                                        }
-                                      });
-                                    },
-                                  ),
-                                );
-                              }),
-                        )
-                      : const SizedBox(),
-                  const DividerWithSpace(),
-                  /////area/////
-                  Visibility(
-                    visible: _isOtherPartVisible,
-                    child: Container(
-                      margin: const EdgeInsets.only(left: 60),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text('ตัวอย่างที่ใช้ในการส่งตรวจ (Optional)',
-                              style: kSubHeaderTextStyle),
-                          const SizedBox(height: 20),
-                          TextField(
-                            enabled: _isEditing,
-                            controller: areaTextFieldController,
-                            textAlignVertical: TextAlignVertical.center,
-                            onChanged: (value) {
-                              setState(() {
-                                areaDisplayList = areaFilterList(
-                                    areaTextFieldController, areaList);
-                              });
-                            },
-                            decoration: const InputDecoration(
-                              isDense: true,
-                              border: OutlineInputBorder(),
-                              hintText:
-                                  "ชื่อตัวอย่างที่ใช้ในการส่งตรวจ เช่น Nasal Swab",
-                            ),
+            child: !_isLoadData
+                ? SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.7,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Center(
+                          child: Text(
+                            widget.selectedType,
+                            style: kSubHeaderTextStyle,
                           ),
-                          Visibility(
-                            visible: _isEditing,
-                            child: Card(
-                              color: const Color(0xFFF2F5F7),
-                              elevation: 0,
-                              margin:
-                                  const EdgeInsets.symmetric(horizontal: 15),
-                              child: ListView.builder(
-                                  shrinkWrap: true,
-                                  itemCount: areaDisplayList.length,
-                                  itemBuilder: (context, index) {
-                                    return Container(
-                                      decoration: BoxDecoration(
-                                        border: Border.all(
-                                            color: const Color(0xFFB5C1BE),
-                                            width: 1.0),
-                                      ),
-                                      child: ListTile(
-                                        tileColor: const Color(0xFFE7F9FF),
-                                        hoverColor: const Color(0xFFA0E9FF),
-                                        title: Text(areaDisplayList[index]),
-                                        onTap: () {
-                                          setState(() {
-                                            areaTextFieldController.text =
-                                                areaDisplayList[index];
-                                          });
-                                        },
-                                      ),
-                                    );
-                                  }),
-                            ),
+                        ),
+                        const DividerWithSpace(),
+                        const Text('ชื่อการตรวจ', style: kSubHeaderTextStyle),
+                        const SizedBox(height: 20),
+                        TextField(
+                          controller: nameTextFieldController,
+                          textAlignVertical: TextAlignVertical.center,
+                          onChanged: (value) {
+                            setState(() {
+                              nameDisplayList = nameFilterList(
+                                  nameTextFieldController, fullList);
+                            });
+                          },
+                          decoration: const InputDecoration(
+                            isDense: true,
+                            border: OutlineInputBorder(),
+                            hintText: "Exam name only",
                           ),
-                          const DividerWithSpace(),
-                          /////cost/////
-                          const Text('ราคาการส่งตรวจ',
-                              style: kSubHeaderTextStyle),
-                          const SizedBox(height: 20),
-                          TextField(
-                            enabled: _isEditing,
-                            controller: costTextFieldController,
-                            textAlignVertical: TextAlignVertical.center,
-                            onChanged: (value) {
-                              setState(() {
-                                _isFormatCostCorrect =
-                                    _formatCost.hasMatch(value);
-                              });
-                            },
-                            decoration: InputDecoration(
-                              isDense: true,
-                              border: const OutlineInputBorder(),
-                              hintText: "ราคาการส่งตรวจ [ใส่แค่ตัวเลขเท่านั้น]",
-                              errorText: _isFormatCostCorrect
-                                  ? null
-                                  : "Please use correct format: number only",
-                            ),
-                          ),
-                          const DividerWithSpace(),
-                          /////default/////
-                          const Text('ค่าผลตรวจ Default (Optional)',
-                              style: kSubHeaderTextStyle),
-                          const SizedBox(height: 20),
-                          TextField(
-                            enabled: _isEditing,
-                            controller: defaultTextFieldController,
-                            textAlignVertical: TextAlignVertical.center,
-                            decoration: const InputDecoration(
-                              isDense: true,
-                              border: OutlineInputBorder(),
-                              hintText:
-                                  "ค่าผลตรวจ Default [ถ้าไม่ใส่จะมีค่าเป็น 'ค่าปกติ']",
-                            ),
-                          ),
-                          const SizedBox(height: 15),
-                          Visibility(
-                            visible: _isEditing,
-                            child: Row(
+                        ),
+                        nameDisplayList.isNotEmpty
+                            ? Card(
+                                color: const Color(0xFFF2F5F7),
+                                elevation: 0,
+                                margin:
+                                    const EdgeInsets.symmetric(horizontal: 15),
+                                child: ListView.builder(
+                                    shrinkWrap: true,
+                                    itemCount: nameDisplayList.length,
+                                    itemBuilder: (context, index) {
+                                      return Container(
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                              color: const Color(0xFFB5C1BE),
+                                              width: 1.0),
+                                        ),
+                                        child: ListTile(
+                                          tileColor: selectedTileIndex == index
+                                              ? const Color(0xFFA0E9FF)
+                                              : const Color(0xFFE7F9FF),
+                                          hoverColor: const Color(0xFFA0E9FF),
+                                          trailing: index == selectedTileIndex
+                                              ? Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.end,
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  children: [
+                                                    IconButton(
+                                                      icon: const Icon(
+                                                          Icons.edit),
+                                                      onPressed: () {
+                                                        setState(() {
+                                                          nameTextFieldController
+                                                                  .text =
+                                                              nameDisplayList[
+                                                                      index]
+                                                                  .name;
+                                                          nameDisplayList =
+                                                              nameFilterList(
+                                                                  nameTextFieldController,
+                                                                  fullList);
+                                                          selectedTileIndex =
+                                                              nameDisplayList
+                                                                  .indexOf(
+                                                                      selectedItem!);
+                                                          _isEditing = true;
+                                                        });
+                                                      },
+                                                    ),
+                                                    IconButton(
+                                                      icon: const Icon(
+                                                          CupertinoIcons
+                                                              .delete),
+                                                      onPressed: () {
+                                                        setState(() {
+                                                          // examProvider.deleteItem(
+                                                          //     selectedItem!);
+                                                          deletedList.add(
+                                                              selectedItem!);
+                                                          fullList.remove(
+                                                              selectedItem);
+                                                          print(
+                                                              'after grouped = ${widget.groupedByType[widget.groupedByType]}');
+                                                          print(
+                                                              'after full = $fullList');
+                                                          nameDisplayList =
+                                                              fullList;
+                                                          nameTextFieldController
+                                                              .clear();
+                                                          costTextFieldController
+                                                              .clear();
+                                                          defaultTextFieldController
+                                                              .clear();
+                                                          imagePath = null;
+                                                          imageDefault = null;
+                                                          areaTextFieldController
+                                                              .clear();
+                                                          selectedTileIndex =
+                                                              -1;
+                                                        });
+                                                      },
+                                                    ),
+                                                  ],
+                                                )
+                                              : null,
+                                          title: nameDisplayList[index].area !=
+                                                  null
+                                              ? Text(
+                                                  '${nameDisplayList[index].name}, ${nameDisplayList[index].area}')
+                                              : Text(
+                                                  nameDisplayList[index].name),
+                                          onTap: () {
+                                            setState(() {
+                                              if (selectedTileIndex == -1 ||
+                                                  selectedTileIndex != index) {
+                                                selectedItem =
+                                                    nameDisplayList[index];
+                                                if (fullList ==
+                                                    nameDisplayList) {
+                                                  selectedTileIndex = index;
+                                                } else {
+                                                  selectedTileIndex =
+                                                      nameDisplayList.indexOf(
+                                                          selectedItem!);
+                                                }
+                                                _isEditing = false;
+                                                _isOtherPartVisible = true;
+                                                areaTextFieldController.text =
+                                                    (selectedItem?.area ?? "");
+                                                costTextFieldController.text =
+                                                    selectedItem!.cost
+                                                        .toString();
+                                                defaultTextFieldController
+                                                    .text = (selectedItem
+                                                        ?.textDefault ??
+                                                    "");
+                                                imagePath =
+                                                    selectedItem?.imgPath;
+                                                imageDefault =
+                                                    selectedItem?.imgDefault;
+                                              } else {
+                                                selectedTileIndex = -1;
+                                                selectedItem = null;
+                                                _isEditing = false;
+                                                _isOtherPartVisible = false;
+                                              }
+                                            });
+                                          },
+                                        ),
+                                      );
+                                    }),
+                              )
+                            : const SizedBox(),
+                        const DividerWithSpace(),
+                        /////area/////
+                        Visibility(
+                          visible: _isOtherPartVisible,
+                          child: Container(
+                            margin: const EdgeInsets.only(left: 60),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                ElevatedButton(
-                                  onPressed: pickImage,
-                                  child:
-                                      const Text('เพิ่มรูป Default (Optional)'),
-                                ),
-                                const SizedBox(width: 20),
-                                Visibility(
-                                  visible:
-                                      imagePath != null || imageDefault != null,
-                                  child: ElevatedButton(
-                                    onPressed: () {
-                                      setState(() {
-                                        imagePath = null;
-                                        imageDefault = null;
-                                      });
-                                    },
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: const Color(0xFF8B72BE),
-                                    ),
-                                    child: const Text('ลบรูป'),
+                                const Text(
+                                    'ตัวอย่างที่ใช้ในการส่งตรวจ (Optional)',
+                                    style: kSubHeaderTextStyle),
+                                const SizedBox(height: 20),
+                                TextField(
+                                  enabled: _isEditing,
+                                  controller: areaTextFieldController,
+                                  textAlignVertical: TextAlignVertical.center,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      areaDisplayList = areaFilterList(
+                                          areaTextFieldController, areaList);
+                                    });
+                                  },
+                                  decoration: const InputDecoration(
+                                    isDense: true,
+                                    border: OutlineInputBorder(),
+                                    hintText:
+                                        "ชื่อตัวอย่างที่ใช้ในการส่งตรวจ เช่น Nasal Swab",
                                   ),
                                 ),
+                                Visibility(
+                                  visible: _isEditing,
+                                  child: Card(
+                                    color: const Color(0xFFF2F5F7),
+                                    elevation: 0,
+                                    margin: const EdgeInsets.symmetric(
+                                        horizontal: 15),
+                                    child: ListView.builder(
+                                        shrinkWrap: true,
+                                        itemCount: areaDisplayList.length,
+                                        itemBuilder: (context, index) {
+                                          return Container(
+                                            decoration: BoxDecoration(
+                                              border: Border.all(
+                                                  color:
+                                                      const Color(0xFFB5C1BE),
+                                                  width: 1.0),
+                                            ),
+                                            child: ListTile(
+                                              tileColor:
+                                                  const Color(0xFFE7F9FF),
+                                              hoverColor:
+                                                  const Color(0xFFA0E9FF),
+                                              title:
+                                                  Text(areaDisplayList[index]),
+                                              onTap: () {
+                                                setState(() {
+                                                  areaTextFieldController.text =
+                                                      areaDisplayList[index];
+                                                });
+                                              },
+                                            ),
+                                          );
+                                        }),
+                                  ),
+                                ),
+                                const DividerWithSpace(),
+                                /////cost/////
+                                const Text('ราคาการส่งตรวจ',
+                                    style: kSubHeaderTextStyle),
+                                const SizedBox(height: 20),
+                                TextField(
+                                  enabled: _isEditing,
+                                  controller: costTextFieldController,
+                                  textAlignVertical: TextAlignVertical.center,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      _isFormatCostCorrect =
+                                          _formatCost.hasMatch(value);
+                                    });
+                                  },
+                                  decoration: InputDecoration(
+                                    isDense: true,
+                                    border: const OutlineInputBorder(),
+                                    hintText:
+                                        "ราคาการส่งตรวจ [ใส่แค่ตัวเลขเท่านั้น]",
+                                    errorText: _isFormatCostCorrect
+                                        ? null
+                                        : "Please use correct format: number only",
+                                  ),
+                                ),
+                                const DividerWithSpace(),
+                                /////default/////
+                                const Text('ค่าผลตรวจ Default (Optional)',
+                                    style: kSubHeaderTextStyle),
+                                const SizedBox(height: 20),
+                                TextField(
+                                  enabled: _isEditing,
+                                  controller: defaultTextFieldController,
+                                  textAlignVertical: TextAlignVertical.center,
+                                  decoration: const InputDecoration(
+                                    isDense: true,
+                                    border: OutlineInputBorder(),
+                                    hintText:
+                                        "ค่าผลตรวจ Default [ถ้าไม่ใส่จะมีค่าเป็น 'ค่าปกติ']",
+                                  ),
+                                ),
+                                const SizedBox(height: 15),
+                                Visibility(
+                                  visible: _isEditing,
+                                  child: Row(
+                                    children: [
+                                      ElevatedButton(
+                                        onPressed: pickImage,
+                                        child: const Text(
+                                            'เพิ่มรูป Default (Optional)'),
+                                      ),
+                                      const SizedBox(width: 20),
+                                      Visibility(
+                                        visible: imagePath != null ||
+                                            imageDefault != null,
+                                        child: ElevatedButton(
+                                          onPressed: () {
+                                            setState(() {
+                                              imagePath = null;
+                                              imageDefault = null;
+                                            });
+                                          },
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor:
+                                                const Color(0xFF8B72BE),
+                                          ),
+                                          child: const Text('ลบรูป'),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(height: 15),
+                                displayImage(),
                               ],
                             ),
                           ),
-                          const SizedBox(height: 15),
-                          displayImage(),
-                        ],
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 30),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      MyCancelButton(myContext: context),
-                      _isEditing
-                          ? ElevatedButton(
+                        ),
+                        const SizedBox(height: 30),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            ElevatedButton(
                               onPressed: () {
-                                if (_checkNotEmpty() && _isFormatCostCorrect) {
-                                  selectedItem!.name =
-                                      nameTextFieldController.text;
-                                  selectedItem!.area =
-                                      areaTextFieldController.text == ''
-                                          ? null
-                                          : areaTextFieldController.text;
-                                  selectedItem!.cost =
-                                      int.parse(costTextFieldController.text);
-                                  selectedItem!.textDefault =
-                                      defaultTextFieldController.text;
-                                  selectedItem!.imgDefault = imageDefault;
-                                  selectedItem!.imgPath = imagePath;
-                                  editedList.add(selectedItem!);
-                                  setState(() {
-                                    _isEditing = false;
-                                    nameTextFieldController.clear();
-                                    areaTextFieldController.clear();
-                                    costTextFieldController.clear();
-                                    defaultTextFieldController.clear();
-                                    imagePath = null;
-                                    imageDefault = null;
-                                    selectedTileIndex = -1;
-                                    groupedExam.sort(
-                                        (a, b) => a.name.compareTo(b.name));
-                                    nameDisplayList = groupedExam;
-                                  });
-                                }
+                                popToChoicePage();
                               },
-                              child: const Text('บันทึกแก้ไข'))
-                          : ElevatedButton(
-                              onPressed: () async {
-                                await _postUpdateData();
-                                await _postDeleteData()
-                                    .then((value) => _popToChoicePage());
-                              },
-                              child: const Text('บันทึก'))
-                    ],
-                  ),
-                ],
-              ),
-            ),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xFF8B72BE),
+                              ),
+                              child: const Text(
+                                'ยกเลิก',
+                              ),
+                            ),
+                            _isEditing
+                                ? ElevatedButton(
+                                    onPressed: () {
+                                      if (_checkNotEmpty() &&
+                                          _isFormatCostCorrect) {
+                                        selectedItem!.name =
+                                            nameTextFieldController.text;
+                                        selectedItem!.area =
+                                            areaTextFieldController.text == ''
+                                                ? null
+                                                : areaTextFieldController.text;
+                                        selectedItem!.cost = int.parse(
+                                            costTextFieldController.text);
+                                        selectedItem!.textDefault =
+                                            defaultTextFieldController.text;
+                                        selectedItem!.imgDefault = imageDefault;
+                                        selectedItem!.imgPath = imagePath;
+                                        editedList.add(selectedItem!);
+                                        setState(() {
+                                          _isEditing = false;
+                                          nameTextFieldController.clear();
+                                          areaTextFieldController.clear();
+                                          costTextFieldController.clear();
+                                          defaultTextFieldController.clear();
+                                          imagePath = null;
+                                          imageDefault = null;
+                                          selectedTileIndex = -1;
+                                          fullList.sort((a, b) =>
+                                              a.name.compareTo(b.name));
+                                          nameDisplayList = fullList;
+                                        });
+                                      }
+                                    },
+                                    child: const Text('บันทึกแก้ไข'))
+                                : ElevatedButton(
+                                    onPressed: () async {
+                                      await _postUpdateData();
+                                      await _postDeleteData()
+                                          .then((value) => popToChoicePage());
+                                    },
+                                    child: const Text('บันทึก'))
+                          ],
+                        ),
+                      ],
+                    ),
+                  )
+                : const SizedBox(
+                    width: 30, height: 30, child: CircularProgressIndicator()),
           ),
         ),
       ),

@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:frontend/AllDataFile.dart';
 import 'package:frontend/components/BoxesInAddQ.dart';
 import 'package:frontend/components/appbar.dart';
 import 'package:frontend/constants.dart';
@@ -281,7 +283,17 @@ class _EditPredefinedTreatmentDetailState
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      MyCancelButton(myContext: context),
+                      ElevatedButton(
+                        onPressed: () {
+                          _popToChoicePage();
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF8B72BE),
+                        ),
+                        child: const Text(
+                          'ยกเลิก',
+                        ),
+                      ),
                       isEditing
                           ? ElevatedButton(
                               onPressed: () {

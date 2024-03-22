@@ -16,6 +16,3 @@ List<ExamPreDefinedObject> examListPreDefined = [];
 /////question List/////
 List<FullQuestionObject> teacherQuestionList = [];
 List<QuestionObject> nisitQuestionList = [];
-
-/////role/////
-// late int userRole;

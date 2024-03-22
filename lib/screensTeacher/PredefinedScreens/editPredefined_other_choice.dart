@@ -21,10 +21,14 @@ class _EditOtherInitState extends State<EditOtherInit> {
   @override
   void initState() {
     super.initState();
+    getData();
+  }
+
+  Future getData() async {
     setState(() {
       _isLoadData = true;
     });
-    getProbDiagTag(widget.title);
+    await getProbDiagTag(widget.title);
     setState(() {
       _isLoadData = false;
     });
@@ -90,10 +94,6 @@ class EditPreDefinedOtherChoice extends StatelessWidget {
                                 ),
                               );
                             });
-                            // context.goNamed(
-                            //   'addOther',
-                            //   pathParameters: {'title': title},
-                            // );
                           } else if (_topicList[index] == 'แก้ไข/ลบ') {
                             await getProbDiagTag(title).then((value) {
                               Navigator.push(
@@ -104,10 +104,6 @@ class EditPreDefinedOtherChoice extends StatelessWidget {
                                 ),
                               );
                             });
-                            // context.goNamed(
-                            //   'editOther',
-                            //   pathParameters: {'title': title},
-                            // );
                           }
                         },
                       );

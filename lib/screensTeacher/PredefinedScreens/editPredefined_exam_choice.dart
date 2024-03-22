@@ -19,10 +19,14 @@ class _EditExamInitState extends State<EditExamInit> {
   @override
   void initState() {
     super.initState();
+    getData();
+  }
+
+  Future getData() async {
     setState(() {
       _isLoadData = true;
     });
-    getExams();
+    await getExams();
     setState(() {
       _isLoadData = false;
     });
@@ -57,7 +61,7 @@ class EditPreDefinedExamChoice extends StatelessWidget {
             child: Column(
               children: [
                 Text(
-                  'Examination List',
+                  'Examination',
                   style: kHeaderTextStyle.copyWith(fontWeight: FontWeight.w900),
                 ),
                 const SizedBox(height: 20),
@@ -94,7 +98,7 @@ class EditPreDefinedExamChoice extends StatelessWidget {
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) =>
-                                          EditPredefinedExamLab(),
+                                          const EditPredefinedExamLab(),
                                     ),
                                   )
                                 });

@@ -18,25 +18,29 @@ import 'package:frontend/screensTeacher/editQuestion.dart';
 import 'package:frontend/screensTeacher/showStatOverall.dart';
 import 'package:frontend/screensNisit/answerScreen.dart';
 import 'package:frontend/screensGeneral/loginStudentScreen.dart';
+import 'package:frontend/screensGeneral/emailConfirmationScreen.dart';
 
 final GoRouter myRouterConfig = GoRouter(
-  // initialLocation: "/register",
-  initialLocation: "/adminLogin",
-  // initialLocation: '/login',
+  // initialLocation: "/adminLogin",
+  initialLocation: '/login',
   routes: [
     //general
     GoRoute(
       path: '/login',
-      builder: (context, state) => const GoogleSignInScreen(),
+      builder: (context, state) => const LoginStudentScreen(),
     ),
+    // GoRoute(
+    //   path: '/register',
+    //   builder: (context, state) => RegisterScreen(),
+    // ),
+    // GoRoute(
+    //   path: '/emailConfirm',
+    //   builder: (context, state) =>
+    //       EmailConfirmScreen(code: 'code', id: 'id', email: 'email'),
+    // ),
     GoRoute(
       path: '/adminLogin',
       builder: (context, state) => const LoginTeacherScreen(),
-    ),
-    GoRoute(
-      name: 'register',
-      path: '/register',
-      builder: (context, state) => RegisterScreen(),
     ),
     GoRoute(
       name: 'mainShowQuestion',
@@ -48,6 +52,9 @@ final GoRouter myRouterConfig = GoRouter(
       name: 'questionStart',
       path: '/question',
       builder: (context, state) {
+        if (state.uri.queryParameters.isEmpty) {
+          return const ErrorScreen();
+        }
         return ProbList(
           quesId: state.uri.queryParameters['id']!,
           round: 1,
@@ -55,18 +62,23 @@ final GoRouter myRouterConfig = GoRouter(
       },
       routes: [
         GoRoute(
-          name: 'returnPoint',
-          path: 'returnPoint',
-          builder: (context, state) =>
-              ReturnPointInit(quesId: state.uri.queryParameters['id']!),
-          // builder: (context, state) => ReturnPointInit(quesId: 'tmpID'),
-        ),
+            name: 'returnPoint',
+            path: 'returnPoint',
+            builder: (context, state) {
+              if (state.uri.queryParameters.isEmpty) {
+                return const ErrorScreen();
+              }
+              return ReturnPointInit(quesId: state.uri.queryParameters['id']!);
+            }),
         GoRoute(
-          name: 'questionAnswer',
-          path: 'answer',
-          builder: (context, state) =>
-              AnswerInit(quesId: state.uri.queryParameters['id']!),
-        ),
+            name: 'questionAnswer',
+            path: 'answer',
+            builder: (context, state) {
+              if (state.uri.queryParameters.isEmpty) {
+                return const ErrorScreen();
+              }
+              return AnswerInit(quesId: state.uri.queryParameters['id']!);
+            }),
       ],
     ),
     GoRoute(
@@ -118,36 +130,75 @@ final GoRouter myRouterConfig = GoRouter(
     GoRoute(
       name: 'showQuestion',
       path: '/showQuestion',
-      builder: (context, state) => ShowAndEditQuestion(
-        quesId: state.uri.queryParameters['id']!,
-      ),
+      builder: (context, state) {
+        if (state.uri.queryParameters.isEmpty) {
+          return const ErrorScreen();
+        }
+        return ShowAndEditQuestion(
+          quesId: state.uri.queryParameters['id']!,
+        );
+      },
       routes: [
         GoRoute(
-          name: 'editQuestion',
-          path: 'edit',
-          builder: (context, state) =>
-              EditQuestion(quesId: state.uri.queryParameters['id']!),
-        ),
+            name: 'editQuestion',
+            path: 'edit',
+            builder: (context, state) {
+              if (state.uri.queryParameters.isEmpty) {
+                return const ErrorScreen();
+              }
+              return EditQuestion(quesId: state.uri.queryParameters['id']!);
+            }),
         GoRoute(
-          name: 'statOverall',
-          path: 'stat',
-          builder: (context, state) =>
-              ShowStatOverall(quesId: state.uri.queryParameters['id']!),
-        ),
+            name: 'statOverall',
+            path: 'stat',
+            builder: (context, state) {
+              if (state.uri.queryParameters.isEmpty) {
+                return const ErrorScreen();
+              }
+              return ShowStatOverall(quesId: state.uri.queryParameters['id']!);
+            }),
       ],
     ),
   ],
   redirect: (context, state) async {
-    bool isOnLogIn = state.matchedLocation == '/login';
-    bool isOnAdminLogin = state.matchedLocation == '/adminLogin';
-    bool isOnRegister = state.matchedLocation == '/register';
+    String currentLocation = state.matchedLocation.toLowerCase();
+    bool isOnLogIn = currentLocation == '/login';
+    bool isOnAdminLogin = currentLocation == '/adminlogin';
+    // bool isOnRegister = currentLocation == '/register';
+    // bool isOnEmailConfirm = currentLocation == '/emailconfirm';
     String? status = await MySecureStorage().storage.read(key: 'accessToken');
+    String? role = await MySecureStorage().storage.read(key: 'userRole');
     bool isLogin = status != null && status.isNotEmpty;
+
+    bool isOnNisitPage = currentLocation == '/question' ||
+        currentLocation == '/question/returnpoint' ||
+        currentLocation == '/question/answer' ||
+        currentLocation == '/showstats';
+
+    bool isOnAdminPage = currentLocation == '/questionmenu' ||
+        currentLocation == '/questionmenu/addquestion' ||
+        currentLocation == '/questionmenu/editpredefined' ||
+        currentLocation == '/questionmenu/editpredefined/exam' ||
+        currentLocation == '/questionmenu/editpredefined/treatment' ||
+        currentLocation == '/questionmenu/editpredefined/problem' ||
+        currentLocation == '/questionmenu/editpredefined/differential' ||
+        currentLocation ==
+            '/questionmenu/editpredefined/tentativeanddefinitive' ||
+        currentLocation == '/questionmenu/editpredefined/tag' ||
+        currentLocation == '/showquestion' ||
+        currentLocation == '/showquestion/edit' ||
+        currentLocation == '/showquestion/stat';
+
+    print('isLogin = $isLogin');
 
     if (isOnAdminLogin && !isLogin) {
       return '/adminLogin';
-    } else if (!isLogin && !isOnRegister && !isOnLogIn && !isOnAdminLogin) {
+    } else if (!isLogin && !isOnLogIn && !isOnAdminLogin) {
       return '/login';
+    } else if (isLogin && role == '0' && isOnAdminPage) {
+      return '/mainShowQuestion';
+    } else if (isLogin && role == '1' && isOnNisitPage) {
+      return '/mainShowQuestion';
     }
     return null;
   },

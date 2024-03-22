@@ -133,6 +133,8 @@ class _ShowAndEditQuestionState extends State<ShowAndEditQuestion> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       mainAxisSize: MainAxisSize.min,
                       children: [
+                        MyCancelButton(myContext: context),
+                        const SizedBox(width: 30),
                         ElevatedButton(
                             onPressed: () {
                               deleteQuestion().then((value) {
@@ -140,8 +142,6 @@ class _ShowAndEditQuestionState extends State<ShowAndEditQuestion> {
                               });
                             },
                             child: const Text('ยืนยัน')),
-                        const SizedBox(width: 30),
-                        MyCancelButton(myContext: context),
                       ],
                     ),
                   ],

@@ -1,109 +1,44 @@
-import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:google_sign_in_web/web_only.dart' as web;
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:http/http.dart' as http;
-import 'package:go_router/go_router.dart';
 import 'package:frontend/my_secure_storage.dart';
+import 'package:flutter/material.dart';
+import 'package:frontend/components/BoxesInAddQ.dart';
+import 'package:go_router/go_router.dart';
+import 'package:http/http.dart' as http;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:frontend/screensGeneral/registerScreen.dart';
 
-const List<String> scopes = <String>[
-  'email',
-];
-typedef HandleSignInFn = Future<void> Function();
-
-//// The SignInDemo app.
-class GoogleSignInScreen extends StatefulWidget {
-  const GoogleSignInScreen({super.key});
+class LoginStudentScreen extends StatefulWidget {
+  const LoginStudentScreen({super.key});
 
   @override
-  State createState() => _GoogleSignInState();
+  State<LoginStudentScreen> createState() => _LoginStudentScreenState();
 }
 
-class _GoogleSignInState extends State<GoogleSignInScreen> {
-  GoogleSignInAccount? _currentUser;
-  bool _isAuthorized = false; // has granted permissions?
-  final _googleSignIn = GoogleSignIn(
-    clientId: dotenv.env['CLIENT_ID'],
-    scopes: scopes,
-    hostedDomain: 'ku.th',
-  );
-  @override
-  void initState() {
-    super.initState();
+class _LoginStudentScreenState extends State<LoginStudentScreen> {
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  bool _isDataValid = true;
 
-    _googleSignIn.onCurrentUserChanged
-        .listen((GoogleSignInAccount? account) async {
-// #docregion CanAccessScopes
-      // In mobile, being authenticated means being authorized...
-      bool isAuthorized = account != null;
-      // However, on web...
-      if (kIsWeb && account != null) {
-        isAuthorized = true;
-      }
-// #enddocregion CanAccessScopes
-
-      setState(() {
-        _currentUser = account;
-        _isAuthorized = isAuthorized;
-      });
-
-      // Now that we know that the user can access the required scopes, the app
-      // can call the REST API.
-      if (isAuthorized) {}
-    });
-
-    _googleSignIn.signInSilently();
+  void goToMainPage() {
+    context.go('/mainShowQuestion');
   }
 
-  Future<bool> _handleVerifyDomain(GoogleSignInAccount user) async {
-    final GoogleSignInAuthentication auth = await user.authentication;
-    final String apiUrl = "${dotenv.env['API_PATH']}/verify";
-    String token = auth.idToken!;
-    MySecureStorage().writeSecureData('idToken', token);
-    bool isKuDomain = false;
+  Future<void> _postLogin() async {
     try {
-      final response = await http.post(
-        Uri.parse(apiUrl),
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": "Bearer $token",
-        },
+      var data = {
+        "userName": emailController.text,
+        "password": passwordController.text,
+      };
+      final http.Response response = await http.post(
+        Uri.parse("${dotenv.env['API_PATH']}/user-login"),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode(data),
       );
-
       if (response.statusCode >= 200 && response.statusCode < 300) {
-        print("Success: ${response.body}");
-        isKuDomain = true;
-      } else {
-        print("Error: ${response.statusCode} - ${response.body}");
-      }
-    } catch (error) {
-      print("Error: $error");
-    }
-
-    return isKuDomain;
-  }
-
-  Future<bool> _handlePostToken(GoogleSignInAccount user) async {
-    final GoogleSignInAuthentication auth = await user.authentication;
-    final String apiUrl = "${dotenv.env['API_PATH']}/google-login";
-    String token = auth.idToken!;
-    MySecureStorage().writeSecureData('idToken', token);
-    bool isSuccess = false;
-    try {
-      final response = await http.post(
-        Uri.parse(apiUrl),
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": "Bearer $token",
-        },
-      );
-
-      if (response.statusCode >= 200 && response.statusCode < 300) {
-        print("Success: ${response.body}");
-        //TO-DO ** GET TOKEN FROM RESPONSE AND SAVE IT TO STORAGE
+        if (kDebugMode) {
+          print("Success: ${response.body}");
+        }
         dynamic jsonFile = jsonDecode(response.body);
         //assign token in storage
         await MySecureStorage()
@@ -112,87 +47,20 @@ class _GoogleSignInState extends State<GoogleSignInScreen> {
             .writeSecureData('refreshToken', jsonFile['refreshToken']);
         await MySecureStorage()
             .writeSecureData('tokenExpires', jsonFile['tokenExpires']);
-        MySecureStorage().writeSecureData('userRole', '0');
-        isSuccess = true;
+        //assign userRole
+        await MySecureStorage().writeSecureData('userRole', '0');
       } else {
         print("Error: ${response.statusCode} - ${response.body}");
+        if (response.statusCode == 400) {
+          setState(() {
+            _isDataValid = false;
+          });
+        }
       }
     } catch (error) {
-      print("Error: $error");
+      print('Error login(user): $error');
     }
-
-    return isSuccess;
-  }
-
-  // This is the on-click handler for the Sign In button that is rendered by Flutter.
-  //
-  // On the web, the on-click handler of the Sign In button is owned by the JS
-  // SDK, so this method can be considered mobile only.
-  // #docregion SignIn
-  Future<void> _handleSignIn() async {
-    try {
-      await _googleSignIn.signIn();
-      // Check if the user is signed in after the sign-in attempt
-    } catch (error) {
-      print(error);
-    }
-  }
-
-  Future<void> _handleSignOut() => _googleSignIn.disconnect();
-
-  Widget buildSignInButton({HandleSignInFn? onPressed}) {
-    return web.renderButton();
-  }
-
-  Widget _buildBody() {
-    final GoogleSignInAccount? user = _currentUser;
-    String? token;
-    // The user is NOT Authenticated
-    if (_isAuthorized) {
-      _handleVerifyDomain(user!).then((data) => {
-            print(data),
-            if (data)
-              {
-                _handlePostToken(user).then((value) => {
-                      if (value)
-                        {
-                          WidgetsBinding.instance.addPostFrameCallback((_) {
-                            context.go('/mainShowQuestion');
-                          })
-                        }
-                      else
-                        {
-                          WidgetsBinding.instance.addPostFrameCallback((_) {
-                            context.go('/register');
-                          })
-                        }
-                    })
-              }
-          });
-    }
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[
-        Column(
-          children: [
-            Image.asset(
-              'assets/images/google_logo.png',
-              height: 100,
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            const Text(
-              'Log In',
-              style: TextStyle(fontWeight: FontWeight.w800, fontSize: 30),
-            ),
-          ],
-        ),
-        buildSignInButton(
-          onPressed: _handleSignIn,
-        ),
-      ],
-    );
+    goToMainPage();
   }
 
   @override
@@ -213,15 +81,98 @@ class _GoogleSignInState extends State<GoogleSignInScreen> {
         ),
         child: Center(
           child: Container(
-            width: MediaQuery.of(context).size.width * 0.5,
-            constraints: const BoxConstraints(maxWidth: 300, minHeight: 350),
-            height: MediaQuery.of(context).size.height * 0.55,
+            width: MediaQuery.of(context).size.width * 0.8,
+            constraints: const BoxConstraints(maxWidth: 500, minHeight: 540),
+            height: MediaQuery.of(context).size.height * 0.6,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(15),
               color: Colors.white,
             ),
-            padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 35),
-            child: _buildBody(),
+            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 35),
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 100,
+                  child: Image.asset('assets/images/project_logo.png'),
+                ),
+                const Text(
+                  'Log In',
+                  style: TextStyle(fontWeight: FontWeight.w800, fontSize: 40),
+                ),
+                const SizedBox(height: 35),
+                SimpleTextField(
+                  myController: emailController,
+                  hintText: "Email",
+                  textFieldNotEmpty: true,
+                ),
+                const SizedBox(height: 15),
+                PasswordTextField(
+                  myController: passwordController,
+                  hintText: "Password",
+                  textFieldNotEmpty: true,
+                ),
+                Visibility(
+                  visible: !_isDataValid,
+                  child: const Padding(
+                    padding: EdgeInsets.only(left: 20, top: 10),
+                    child: Text(
+                      'Username หรือ Password ไม่ถูกต้อง',
+                      style: TextStyle(color: Colors.red),
+                    ),
+                  ),
+                ),
+                const Expanded(
+                    child: SizedBox(
+                  height: double.infinity,
+                )),
+                SizedBox(
+                  width: double.infinity,
+                  height: 45,
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      //go to mainShowQuestion
+                      if (emailController.text.isNotEmpty &&
+                          passwordController.text.isNotEmpty) {
+                        _postLogin();
+                        // await MySecureStorage()
+                        //     .writeSecureData('userRole', '1');
+                        // await MySecureStorage()
+                        //     .writeSecureData('accessToken', 'asfdafsfsdfa');
+                        // goToMainPage();
+                      }
+                    },
+                    style: ButtonStyle(
+                      shape: MaterialStateProperty.all(
+                        const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.zero,
+                        ),
+                      ),
+                    ),
+                    child: const Text('LOGIN', style: TextStyle(fontSize: 20)),
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text("Don't have an account yet?"),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => RegisterScreen(),
+                          ),
+                        );
+                      },
+                      child: const Text('Register here'),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),

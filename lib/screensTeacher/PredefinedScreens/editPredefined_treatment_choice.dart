@@ -19,10 +19,14 @@ class _EditTreatmentInitState extends State<EditTreatmentInit> {
   @override
   void initState() {
     super.initState();
+    getData();
+  }
+
+  Future getData() async {
     setState(() {
       _isLoadData = true;
     });
-    getTreatment();
+    await getTreatment();
     setState(() {
       _isLoadData = false;
     });
@@ -61,7 +65,7 @@ class EditPreDefinedTreatmentChoice extends StatelessWidget {
             child: Column(
               children: [
                 Text(
-                  'Treatment List',
+                  'Treatment',
                   style: kHeaderTextStyle.copyWith(fontWeight: FontWeight.w900),
                 ),
                 const SizedBox(height: 20),

@@ -89,7 +89,7 @@ class ReturnPoint extends StatelessWidget {
                         ),
                         const DividerWithSpace(),
                         Text(
-                          'Problem List ครั้งที่ 1, คะแนนที่ได้: ${stat!.problem1Score} คะแนน',
+                          'Problem List ครั้งที่ 1, คะแนนที่ได้: ${stat!.problem1Score.toStringAsFixed(2)} คะแนน',
                           style: kSubHeaderTextStyleInLeftPart,
                         ),
                         const SizedBox(height: 10),
@@ -111,7 +111,7 @@ class ReturnPoint extends StatelessWidget {
                         const DividerWithSpace(),
                         /////diff diag/////
                         Text(
-                          'Differential Diagnosis, คะแนนที่ได้: ${stat!.diffDiagScore} คะแนน',
+                          'Differential Diagnosis, คะแนนที่ได้: ${stat!.diffDiagScore.toStringAsFixed(2)} คะแนน',
                           style: kSubHeaderTextStyleInLeftPart,
                         ),
                         const SizedBox(height: 10),
@@ -134,7 +134,7 @@ class ReturnPoint extends StatelessWidget {
                         const DividerWithSpace(),
                         //exam
                         Text(
-                          'Examination, คะแนนที่ได้: ${stat!.examinationScore} คะแนน',
+                          'Examination, คะแนนที่ได้: ${stat!.examinationScore.toStringAsFixed(2)} คะแนน',
                           style: kSubHeaderTextStyleInLeftPart,
                         ),
                         const SizedBox(height: 15),
@@ -152,7 +152,7 @@ class ReturnPoint extends StatelessWidget {
                         const DividerWithSpace(),
                         /////prob2/////
                         Text(
-                          'Problem List ครั้งที่ 2, คะแนนที่ได้: ${stat!.problem2Score} คะแนน',
+                          'Problem List ครั้งที่ 2, คะแนนที่ได้: ${stat!.problem2Score.toStringAsFixed(2)} คะแนน',
                           style: kSubHeaderTextStyleInLeftPart,
                         ),
                         const SizedBox(height: 10),
@@ -174,7 +174,7 @@ class ReturnPoint extends StatelessWidget {
                         const DividerWithSpace(),
                         /////ten diag/////
                         Text(
-                          'Definitive/Tentative Diagnosis, คะแนนที่ได้: ${stat!.tenDiagScore} คะแนน',
+                          'Definitive/Tentative Diagnosis, คะแนนที่ได้: ${stat!.tenDiagScore.toStringAsFixed(2)} คะแนน',
                           style: kSubHeaderTextStyleInLeftPart,
                         ),
                         const SizedBox(height: 10),
@@ -196,7 +196,7 @@ class ReturnPoint extends StatelessWidget {
                         const DividerWithSpace(),
                         /////treatment/////
                         Text(
-                          'Treatment, คะแนนที่ได้: ${stat!.treatmentScore} คะแนน',
+                          'Treatment, คะแนนที่ได้: ${stat!.treatmentScore.toStringAsFixed(2)} คะแนน',
                           style: kSubHeaderTextStyleInLeftPart,
                         ),
                         const SizedBox(height: 10),
@@ -215,7 +215,7 @@ class ReturnPoint extends StatelessWidget {
                         ),
                         const DividerWithSpace(),
                         Text(
-                          'คะแนนรวม: ${stat!.problem1Score + stat!.problem2Score + stat!.examinationScore + stat!.diffDiagScore + stat!.treatmentScore} คะแนน',
+                          'คะแนนรวม: ${(stat!.problem1Score + stat!.problem2Score + stat!.examinationScore + stat!.diffDiagScore + stat!.treatmentScore).toStringAsFixed(2)} คะแนน',
                           style: kSubHeaderTextStyleInLeftPart,
                         ),
                         Text(

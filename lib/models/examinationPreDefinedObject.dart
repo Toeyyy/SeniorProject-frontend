@@ -34,4 +34,13 @@ class ExamPreDefinedObject {
         imgDefault: json['imgDefault'],
         cost: json['cost'] ?? 0);
   }
+
+  ExamPreDefinedObject copyWith(ExamPreDefinedObject item) {
+    return ExamPreDefinedObject(
+        id: item.id,
+        lab: item.lab,
+        type: item.type,
+        name: item.name,
+        cost: item.cost);
+  }
 }

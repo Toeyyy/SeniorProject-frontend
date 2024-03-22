@@ -1,11 +1,9 @@
 import 'dart:convert';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:frontend/my_secure_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/components/BoxesInAddQ.dart';
-import 'package:frontend/screensGeneral/mainShowQuestion.dart';
 import 'package:go_router/go_router.dart';
-import 'package:frontend/AllDataFile.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
@@ -37,7 +35,9 @@ class _LoginTeacherScreenState extends State<LoginTeacherScreen> {
         body: jsonEncode(data),
       );
       if (response.statusCode >= 200 && response.statusCode < 300) {
-        print("Success: ${response.body}");
+        if (kDebugMode) {
+          print("Success: ${response.body}");
+        }
         dynamic jsonFile = jsonDecode(response.body);
         //assign token in storage
         await MySecureStorage()
@@ -89,8 +89,11 @@ class _LoginTeacherScreenState extends State<LoginTeacherScreen> {
             ),
             padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 35),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                SizedBox(
+                  height: 100,
+                  child: Image.asset('assets/images/project_logo.png'),
+                ),
                 const Text(
                   'Admin Log In',
                   style: TextStyle(fontWeight: FontWeight.w800, fontSize: 40),

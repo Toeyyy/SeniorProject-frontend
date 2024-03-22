@@ -52,7 +52,11 @@ class _AddQuestionState extends State<AddQuestion> {
   @override
   void initState() {
     super.initState();
-    fetchPreDefined();
+    getData();
+  }
+
+  Future getData() async {
+    await fetchPreDefined();
   }
 
   @override

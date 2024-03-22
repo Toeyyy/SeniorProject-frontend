@@ -1,41 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:frontend/AllDataFile.dart';
 import 'package:frontend/UIModels/nisit/selected_treatment_provider.dart';
 import 'package:frontend/UIModels/teacher/examContainer_provider.dart';
 import 'package:frontend/UIModels/teacher/treatmentContainer_provider.dart';
-import 'package:frontend/UIModels/teacher/predefinedExam_provider.dart';
-import 'package:frontend/screensNisit/tenDiag.dart';
-import 'package:frontend/screensNisit/probListAns.dart';
-import 'package:frontend/screensNisit/treatmentTopic.dart';
-import 'package:frontend/screensNisit/treatmentTotal.dart';
-import 'package:frontend/screensTeacher/addQuesMenu.dart';
-import 'package:frontend/screensTeacher/addQuestion.dart';
-import 'package:frontend/screensTeacher/PredefinedScreens/editPredefinedListTopic.dart';
-import 'package:frontend/screensTeacher/showAndEditQuestion.dart';
-import 'package:frontend/screensGeneral/mainShowQuestion.dart';
-import 'package:frontend/screensNisit/problemList.dart';
 import 'package:provider/provider.dart';
-import 'package:frontend/screensTeacher/editQuestion.dart';
-import 'package:frontend/screensTeacher/PredefinedScreens/editPredefined_exam_detail.dart';
-import 'package:frontend/screensNisit/examScreens/exam_topics.dart';
 import 'package:frontend/UIModels/nisit/selected_exam_provider.dart';
 import 'package:frontend/screensTeacher/PredefinedScreens/editPredefined_exam_choice.dart';
 import 'package:frontend/UIModels/nisit/selected_problem_provider.dart';
 import 'package:frontend/UIModels/nisit/selected_diagnosis_provider.dart';
-import 'package:frontend/screensNisit/returnPoint.dart';
-import 'package:frontend/screensNisit/showStats.dart';
-import 'package:frontend/screensGeneral/loginTeacherScreen.dart';
-import 'package:frontend/screensGeneral/registerScreen.dart';
 import 'package:frontend/my_go_router.dart';
+import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 
 Future main() async {
   await dotenv.load(fileName: "assets/.env");
+  setUrlStrategy(PathUrlStrategy());
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (_) => ExamContainerProvider()),
       ChangeNotifierProvider(create: (_) => TreatmentContainerProvider()),
-      ChangeNotifierProvider(create: (_) => PreDefinedExamProvider()),
       ChangeNotifierProvider(create: (_) => SelectedTreatment()),
       ChangeNotifierProvider(create: (_) => SelectedExam()),
       ChangeNotifierProvider(create: (_) => SelectedProblem()),

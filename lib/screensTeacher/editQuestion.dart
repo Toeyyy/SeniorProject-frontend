@@ -103,7 +103,7 @@ class _EditQuestionState extends State<EditQuestion> {
       _isLoadData = true;
     });
     var loadedData = await fetchFullQuestionFromId(widget.quesId);
-    fetchPreDefined();
+    await fetchPreDefined();
     setState(() {
       questionObj = loadedData;
       if (questionObj != null) {
@@ -533,7 +533,7 @@ class _EditQuestionState extends State<EditQuestion> {
                                                 selectedTreatmentTopic:
                                                     getTreatmentTopic().first,
                                                 selectedTreatmentDetail:
-                                                    filterTreatment('Medical')
+                                                    filterTreatment('first')
                                                         .first,
                                               ),
                                             );

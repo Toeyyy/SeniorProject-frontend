@@ -13,7 +13,6 @@ class MySecureStorage {
 
   Future<String> readSecureData(String key) async {
     String value = await storage.read(key: key) ?? 'No data found!';
-    print('Data read from secure storage: $value, from key: $key');
     return value;
   }
 
@@ -34,8 +33,9 @@ class MySecureStorage {
         expireDate.substring(8, 10),
       ),
       int.parse(
-        expireDate.substring(11, 13),
-      ),
+            expireDate.substring(11, 13),
+          ) +
+          7,
       int.parse(
         expireDate.substring(14, 16),
       ),

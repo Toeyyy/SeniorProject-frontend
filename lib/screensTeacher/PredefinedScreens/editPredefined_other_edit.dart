@@ -96,7 +96,13 @@ class _EditPredefinedOtherEditState extends State<EditPredefinedOtherEdit> {
             },
             body: jsonEncode(data),
           );
-        } else if (title == 'Diagnosis List') {
+          if ((response.statusCode >= 200 && response.statusCode < 300)) {
+            print("Posting complete");
+          } else {
+            print("Error: ${response.statusCode} - ${response.body}");
+          }
+        } else if (title == 'Differential Diagnosis' ||
+            title == 'Tentative/Definitive Diagnosis') {
           final http.Response response = await http.put(
             Uri.parse("${dotenv.env['API_PATH']}/diagnostic"),
             headers: {
@@ -106,8 +112,12 @@ class _EditPredefinedOtherEditState extends State<EditPredefinedOtherEdit> {
             },
             body: jsonEncode(data),
           );
+          if ((response.statusCode >= 200 && response.statusCode < 300)) {
+            print("Posting complete");
+          } else {
+            print("Error: ${response.statusCode} - ${response.body}");
+          }
         } else if (title == 'Tag') {
-          print('in case tag');
           final http.Response response = await http.put(
             Uri.parse("${dotenv.env['API_PATH']}/tag"),
             headers: {
@@ -117,7 +127,13 @@ class _EditPredefinedOtherEditState extends State<EditPredefinedOtherEdit> {
             },
             body: jsonEncode(data),
           );
+          if ((response.statusCode >= 200 && response.statusCode < 300)) {
+            print("Posting complete");
+          } else {
+            print("Error: ${response.statusCode} - ${response.body}");
+          }
         }
+        print('hello');
       } catch (error) {
         print("Error: $error");
       }
@@ -139,10 +155,14 @@ class _EditPredefinedOtherEditState extends State<EditPredefinedOtherEdit> {
   @override
   void initState() {
     super.initState();
+    getData();
+  }
+
+  Future getData() async {
     setState(() {
       _isLoadData = true;
     });
-    getProbDiagTag(widget.title);
+    await getProbDiagTag(widget.title);
     setState(() {
       _isLoadData = false;
     });

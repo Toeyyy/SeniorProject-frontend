@@ -685,50 +685,67 @@ class StatBarGraph extends StatelessWidget {
         Container(
           margin: const EdgeInsets.only(bottom: 30),
           height: 300,
-          child: BarChart(
-            BarChartData(
-              maxY: statList.values.reduce(
-                      (value, element) => value > element ? value : element) +
-                  1,
-              gridData: const FlGridData(
-                show: false,
-              ),
-              titlesData: FlTitlesData(
-                topTitles: AxisTitles(
-                  axisNameWidget: Container(
-                    alignment: Alignment.topLeft,
-                    child: Text(title, style: kTableHeaderTextStyle),
+          child: statList.isNotEmpty
+              ? BarChart(
+                  BarChartData(
+                    maxY: statList.values.reduce((value, element) =>
+                            value > element ? value : element) +
+                        1,
+                    gridData: const FlGridData(
+                      show: false,
+                    ),
+                    titlesData: FlTitlesData(
+                      topTitles: AxisTitles(
+                        axisNameWidget: Container(
+                          alignment: Alignment.topLeft,
+                          child: Text(title, style: kTableHeaderTextStyle),
+                        ),
+                        axisNameSize: 35,
+                      ),
+                      bottomTitles: AxisTitles(
+                        sideTitles: SideTitles(
+                          showTitles: true,
+                          getTitlesWidget: (value, meta) {
+                            if (value >= 0 && value < statList.length) {
+                              String title =
+                                  statList.keys.toList()[value.toInt()];
+                              return Transform.rotate(
+                                angle: -45,
+                                child: Text(title),
+                              );
+                            }
+                            return const SizedBox();
+                          },
+                        ),
+                      ),
+                    ),
+                    barGroups: statList.entries.map((entry) {
+                      final String name = entry.key;
+                      final int count = entry.value;
+                      return BarChartGroupData(
+                        x: statList.keys.toList().indexOf(name),
+                        barRods: [BarChartRodData(toY: count.toDouble())],
+                        barsSpace: 2,
+                      );
+                    }).toList(),
                   ),
-                  axisNameSize: 35,
-                ),
-                bottomTitles: AxisTitles(
-                  sideTitles: SideTitles(
-                    showTitles: true,
-                    getTitlesWidget: (value, meta) {
-                      if (value >= 0 && value < statList.length) {
-                        String title = statList.keys.toList()[value.toInt()];
-                        // return Text(title);
-                        return Transform.rotate(
-                          angle: -45,
-                          child: Text(title),
-                        );
-                      }
-                      return const SizedBox();
-                    },
+                )
+              : BarChart(
+                  BarChartData(
+                    gridData: const FlGridData(
+                      show: false,
+                    ),
+                    titlesData: FlTitlesData(
+                      topTitles: AxisTitles(
+                        axisNameWidget: Container(
+                          alignment: Alignment.topLeft,
+                          child: Text(title, style: kTableHeaderTextStyle),
+                        ),
+                        axisNameSize: 35,
+                      ),
+                    ),
                   ),
                 ),
-              ),
-              barGroups: statList.entries.map((entry) {
-                final String name = entry.key;
-                final int count = entry.value;
-                return BarChartGroupData(
-                  x: statList.keys.toList().indexOf(name),
-                  barRods: [BarChartRodData(toY: count.toDouble())],
-                  barsSpace: 2,
-                );
-              }).toList(),
-            ),
-          ),
         ),
         const SizedBox(height: 20),
       ],

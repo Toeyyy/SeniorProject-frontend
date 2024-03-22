@@ -5,12 +5,15 @@ import 'package:go_router/go_router.dart';
 import 'package:frontend/my_secure_storage.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
+import 'package:frontend/screensGeneral/emailConfirmationScreen.dart';
 
 class RegisterScreen extends StatelessWidget {
   RegisterScreen({super.key});
   TextEditingController nameController = TextEditingController();
   TextEditingController surnameController = TextEditingController();
   TextEditingController stdIDController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -18,41 +21,44 @@ class RegisterScreen extends StatelessWidget {
       context.go('/mainShowQuestion');
     }
 
+    void goToEmailScreen(String id, String code) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => EmailConfirmScreen(
+              code: code, id: id, email: emailController.text),
+        ),
+      );
+    }
+
     Future<void> postRegisterInfo() async {
       try {
         var data = {
-          "firstname": nameController.text,
-          "lastname": surnameController.text,
-          "studentid": stdIDController.text,
+          "firstName": nameController.text,
+          "lastName": surnameController.text,
+          "studentId": stdIDController.text,
+          "email": emailController.text,
+          "password": passwordController.text,
         };
         final http.Response response = await http.post(
-          Uri.parse("${dotenv.env['API_PATH']}/register"),
+          Uri.parse("${dotenv.env['API_PATH']}/user-register"),
           headers: {
             "Content-Type": "application/json",
-            "Authorization":
-                "Bearer ${await MySecureStorage().readSecureData('idToken')}",
           },
           body: jsonEncode(data),
         );
         if (response.statusCode >= 200 && response.statusCode < 300) {
           print("Success: ${response.body}");
           dynamic jsonFile = jsonDecode(response.body);
-          //assign token in storage
-          await MySecureStorage()
-              .writeSecureData('accessToken', jsonFile['accessToken']);
-          await MySecureStorage()
-              .writeSecureData('refreshToken', jsonFile['refreshToken']);
-          await MySecureStorage()
-              .writeSecureData('tokenExpires', jsonFile['tokenExpires']);
-          //assign userRole
-          await MySecureStorage().writeSecureData('userRole', '0');
+          String code = jsonFile['code'];
+          String id = jsonFile['id'];
+          goToEmailScreen(id, code);
         } else {
           print("Error: ${response.statusCode} - ${response.body}");
         }
       } catch (error) {
         print('Error register: $error');
       }
-      goToMainPage();
     }
 
     return Scaffold(
@@ -70,72 +76,89 @@ class RegisterScreen extends StatelessWidget {
           ),
         ),
         child: Center(
-          child: Container(
-            width: MediaQuery.of(context).size.width * 0.8,
-            constraints: const BoxConstraints(maxWidth: 500, minHeight: 540),
-            height: MediaQuery.of(context).size.height * 0.7,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(15),
-              color: Colors.white,
-            ),
-            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 35),
-            child: Column(
-              children: [
-                const Text(
-                  'Register',
-                  style: TextStyle(fontWeight: FontWeight.w800, fontSize: 40),
-                ),
-                const SizedBox(height: 35),
-                SimpleTextField(
-                  myController: nameController,
-                  hintText: "Name",
-                  textFieldNotEmpty: true,
-                ),
-                const SizedBox(height: 15),
-                SimpleTextField(
-                  myController: surnameController,
-                  hintText: "Surname",
-                  textFieldNotEmpty: true,
-                ),
-                const SizedBox(height: 15),
-                SimpleTextField(
-                  myController: stdIDController,
-                  hintText: "bXXXXXXXXXX",
-                  textFieldNotEmpty: true,
-                ),
-                const Expanded(
-                    child: SizedBox(
-                  height: double.infinity,
-                )),
-                SizedBox(
-                  width: double.infinity,
-                  height: 45,
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      if (nameController.text.isNotEmpty &&
-                          surnameController.text.isNotEmpty &&
-                          stdIDController.text.isNotEmpty) {
-                        //post and go to mainShowQuestion
-                        postRegisterInfo();
-                        // await MySecureStorage()
-                        //     .writeSecureData('userRole', '0');
-                        // await MySecureStorage()
-                        //     .writeSecureData('accessToken', 'accwsfdas');
-                        // goToMainPage();
-                      }
-                    },
-                    style: ButtonStyle(
-                      shape: MaterialStateProperty.all(
-                        const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.zero,
+          child: SingleChildScrollView(
+            child: Container(
+              margin: const EdgeInsets.symmetric(vertical: 30),
+              width: MediaQuery.of(context).size.width * 0.8,
+              constraints: const BoxConstraints(maxWidth: 500),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(15),
+                color: Colors.white,
+              ),
+              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 35),
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 100,
+                    child: Image.asset('assets/images/project_logo.png'),
+                  ),
+                  const Text(
+                    'Register',
+                    style: TextStyle(fontWeight: FontWeight.w800, fontSize: 40),
+                  ),
+                  const SizedBox(height: 35),
+                  SimpleTextField(
+                      myController: emailController,
+                      hintText: "Email",
+                      textFieldNotEmpty: true),
+                  const SizedBox(height: 15),
+                  PasswordTextField(
+                      myController: passwordController,
+                      hintText: "Password",
+                      textFieldNotEmpty: true),
+                  const SizedBox(height: 15),
+                  SimpleTextField(
+                    myController: nameController,
+                    hintText: "Name",
+                    textFieldNotEmpty: true,
+                  ),
+                  const SizedBox(height: 15),
+                  SimpleTextField(
+                    myController: surnameController,
+                    hintText: "Surname",
+                    textFieldNotEmpty: true,
+                  ),
+                  const SizedBox(height: 15),
+                  SimpleTextField(
+                    myController: stdIDController,
+                    hintText: "bXXXXXXXXXX",
+                    textFieldNotEmpty: true,
+                  ),
+                  const SizedBox(
+                    height: 35,
+                  ),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 45,
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        if (nameController.text.isNotEmpty &&
+                            surnameController.text.isNotEmpty &&
+                            stdIDController.text.isNotEmpty &&
+                            emailController.text.isNotEmpty &&
+                            passwordController.text.isNotEmpty) {
+                          //post and go to mainShowQuestion
+                          postRegisterInfo();
+                          // await MySecureStorage()
+                          //     .writeSecureData('userRole', '0');
+                          // await MySecureStorage()
+                          //     .writeSecureData('accessToken', 'accwsfdas');
+                          // goToMainPage();
+                        }
+                      },
+                      style: ButtonStyle(
+                        shape: MaterialStateProperty.all(
+                          const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.zero,
+                          ),
                         ),
                       ),
+                      child: const Text('REGISTER',
+                          style: TextStyle(fontSize: 20)),
                     ),
-                    child:
-                        const Text('REGISTER', style: TextStyle(fontSize: 20)),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

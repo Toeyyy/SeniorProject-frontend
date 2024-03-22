@@ -620,6 +620,7 @@ Future<void> fetchPreDefinedTreatment() async {
 
 Future<void> fetchPreDefinedExam() async {
   //real
+  print('fetch exam');
   final String apiUrl = "${dotenv.env['API_PATH']}";
   await MySecureStorage().refreshToken();
   final headers = {

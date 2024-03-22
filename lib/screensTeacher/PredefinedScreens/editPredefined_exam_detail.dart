@@ -15,13 +15,16 @@ class EditPredefinedExamLab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    PreDefinedExamProvider examProvider =
-        Provider.of<PreDefinedExamProvider>(context);
-    examProvider.assignItem(examListPreDefined);
-    List<ExamPreDefinedObject> examList = examProvider.examList;
+    // PreDefinedExamProvider examProvider =
+    //     Provider.of<PreDefinedExamProvider>(context);
+    // examProvider.assignItem(examListPreDefined);
 
+    // Map<String, List<ExamPreDefinedObject>> groupedByLab =
+    //     examProvider.groupedByLab;
     Map<String, List<ExamPreDefinedObject>> groupedByLab =
-        examProvider.groupedByLab;
+        groupBy(examListPreDefined, (e) => e.lab);
+    print('len = $groupedByLab');
+    // print('from provider = ${examProvider.ex}');
 
     Map<String, List<ExamPreDefinedObject>> getGroupByLab(String labName) {
       return groupBy(groupedByLab[labName]!, (e) => e.type);
@@ -57,10 +60,10 @@ class EditPredefinedExamLab extends StatelessWidget {
                               fontWeight: FontWeight.w500, fontSize: 20),
                         ),
                         onTap: () {
-                          examProvider.assignCurrentLabList(title);
+                          // examProvider.assignCurrentLabList(title);
                           Map<String, List<ExamPreDefinedObject>> sendingList =
                               getGroupByLab(title);
-                          examProvider.currentLabList = sendingList;
+                          // examProvider.currentLabList = sendingList;
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -98,8 +101,8 @@ class EditPreDefinedExamType extends StatefulWidget {
 class _EditPreDefinedExamTypeState extends State<EditPreDefinedExamType> {
   @override
   Widget build(BuildContext context) {
-    PreDefinedExamProvider examProvider =
-        Provider.of<PreDefinedExamProvider>(context);
+    // PreDefinedExamProvider examProvider =
+    //     Provider.of<PreDefinedExamProvider>(context);
 
     return Scaffold(
       appBar: const AppbarTeacher(),
@@ -131,12 +134,13 @@ class _EditPreDefinedExamTypeState extends State<EditPreDefinedExamType> {
                               fontWeight: FontWeight.w500, fontSize: 20),
                         ),
                         onTap: () {
-                          examProvider.updateGroupedList(widget.selectedLab);
+                          // examProvider.updateGroupedList(widget.selectedLab);
                           Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (context) => EditPredefinedExamName(
                                 selectedType: title,
+                                groupedByType: widget.groupedByType ?? {},
                               ),
                             ),
                           );

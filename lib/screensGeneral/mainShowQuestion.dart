@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/aboutData/getDataFunctions.dart';
 import 'package:frontend/constants.dart';
@@ -100,6 +101,22 @@ class _MainShowQuestionState extends State<MainShowQuestion> {
       }
     }
 
+    void upDateTextField() {
+      if (userRole == '0') {
+        setState(() {
+          displayList =
+              filterFromQuesName(questionObjList, quesSearchController.text)
+                  .cast<QuestionObject>();
+        });
+      } else {
+        setState(() {
+          teacherDisplayList =
+              filterFromQuesName(teacherQuestionList, quesSearchController.text)
+                  .cast<FullQuestionObject>();
+        });
+      }
+    }
+
     return !_isLoadData
         ? Scaffold(
             appBar: userRole == '0'
@@ -141,23 +158,24 @@ class _MainShowQuestionState extends State<MainShowQuestion> {
                                         labelStyle: TextStyle(fontSize: 20),
                                       ),
                                       onEditingComplete: () {
-                                        if (userRole == '0') {
-                                          setState(() {
-                                            displayList = filterFromQuesName(
-                                                    questionObjList,
-                                                    quesSearchController.text)
-                                                .cast<QuestionObject>();
-                                          });
-                                        } else {
-                                          setState(() {
-                                            teacherDisplayList =
-                                                filterFromQuesName(
-                                                        teacherQuestionList,
-                                                        quesSearchController
-                                                            .text)
-                                                    .cast<FullQuestionObject>();
-                                          });
-                                        }
+                                        upDateTextField();
+                                        // if (userRole == '0') {
+                                        //   setState(() {
+                                        //     displayList = filterFromQuesName(
+                                        //             questionObjList,
+                                        //             quesSearchController.text)
+                                        //         .cast<QuestionObject>();
+                                        //   });
+                                        // } else {
+                                        //   setState(() {
+                                        //     teacherDisplayList =
+                                        //         filterFromQuesName(
+                                        //                 teacherQuestionList,
+                                        //                 quesSearchController
+                                        //                     .text)
+                                        //             .cast<FullQuestionObject>();
+                                        //   });
+                                        // }
                                       },
                                     ),
                                   ),

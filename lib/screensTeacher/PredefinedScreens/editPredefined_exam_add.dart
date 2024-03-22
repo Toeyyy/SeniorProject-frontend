@@ -118,7 +118,7 @@ class _EditPreDefinedExamAddState extends State<EditPreDefinedExamAdd> {
 
       await MySecureStorage().refreshToken();
       final response = await dio.post(
-        "${dotenv.env['API_PATH']}/exam",
+        "${dotenv.env['API_PATH']}/examination",
         data: formData,
         options: Options(
           headers: {
@@ -549,6 +549,9 @@ class _EditPreDefinedExamAddState extends State<EditPreDefinedExamAdd> {
                                   imageDefault = null;
                                 }
                               },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xFF926096),
+                              ),
                               child: const Text('เพิ่ม'),
                             )
                           : ElevatedButton(

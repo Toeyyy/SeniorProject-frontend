@@ -203,8 +203,8 @@ class AddQuesMenu extends StatelessWidget {
                 child: const Text('แนบไฟล์ .xlsx'),
               ),
               ElevatedButton(
-                onPressed: () {
-                  fetchPreDefined()
+                onPressed: () async {
+                  await fetchPreDefined()
                       .then((value) => context.go('/questionMenu/addQuestion'));
                 },
                 style: ElevatedButton.styleFrom(
@@ -214,8 +214,8 @@ class AddQuesMenu extends StatelessWidget {
                 child: const Text('กรอกโจทย์โดยตรง'),
               ),
               ElevatedButton(
-                onPressed: () {
-                  fetchPreDefined().then(
+                onPressed: () async {
+                  await fetchPreDefined().then(
                       (value) => context.go('/questionMenu/editPredefined'));
                 },
                 style: ElevatedButton.styleFrom(

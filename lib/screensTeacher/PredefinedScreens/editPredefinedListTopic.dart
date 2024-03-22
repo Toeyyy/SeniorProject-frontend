@@ -21,10 +21,14 @@ class _EditPredefinedInitState extends State<EditPredefinedInit> {
   @override
   void initState() {
     super.initState();
+    getData();
+  }
+
+  Future getData() async {
     setState(() {
       _isLoadData = true;
     });
-    fetchPreDefined();
+    await fetchPreDefined();
     setState(() {
       _isLoadData = false;
     });
@@ -115,7 +119,6 @@ class EditPredefinedListTopic extends StatelessWidget {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    context.pop();
                     context.pop();
                   },
                   style: ElevatedButton.styleFrom(

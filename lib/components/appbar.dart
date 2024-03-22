@@ -13,9 +13,14 @@ class AppbarNisit extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       automaticallyImplyLeading: false,
-      title: const Text(
-        'App Name',
-        textAlign: TextAlign.left,
+      title: SizedBox(
+        height: 50,
+        child: IconButton(
+          onPressed: () {
+            context.go('/mainShowQuestion');
+          },
+          icon: Image.asset('assets/images/project_logo_lined.png'),
+        ),
       ),
       actions: [
         TextButton(
@@ -58,9 +63,14 @@ class AppbarTeacher extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       automaticallyImplyLeading: false,
-      title: const Text(
-        'App Name',
-        textAlign: TextAlign.left,
+      title: SizedBox(
+        height: 50,
+        child: IconButton(
+          onPressed: () {
+            context.go('/mainShowQuestion');
+          },
+          icon: Image.asset('assets/images/project_logo_lined.png'),
+        ),
       ),
       actions: [
         TextButton(
