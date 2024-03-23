@@ -165,12 +165,7 @@ class _LoginStudentScreenState extends State<LoginStudentScreen> {
                     const Text("Don't have an account yet?"),
                     TextButton(
                       onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => RegisterScreen(),
-                          ),
-                        );
+                        context.go('/register');
                       },
                       child: const Text('Register here'),
                     ),
