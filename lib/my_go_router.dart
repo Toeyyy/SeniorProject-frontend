@@ -30,16 +30,16 @@ final GoRouter myRouterConfig = GoRouter(
       path: '/login',
       builder: (context, state) => const LoginStudentScreen(),
     ),
-    // GoRoute(
-    //   path: '/register',
-    //   builder: (context, state) => RegisterScreen(),
-    // ),
     GoRoute(
-      path: '/confirmEmail',
-      builder: (context, state) => EmailConfirmSuccess(
-          code: state.uri.queryParameters['id2']!,
-          id: state.uri.queryParameters['id1']!),
+      path: '/register',
+      builder: (context, state) => RegisterScreen(),
     ),
+    // GoRoute(
+    //   path: '/confirmEmail',
+    //   builder: (context, state) => EmailConfirmSuccess(
+    //       code: state.uri.queryParameters['id2']!,
+    //       id: state.uri.queryParameters['id1']!),
+    // ),
     GoRoute(
       path: '/adminLogin',
       builder: (context, state) => const LoginTeacherScreen(),
@@ -166,8 +166,8 @@ final GoRouter myRouterConfig = GoRouter(
     String currentLocation = state.matchedLocation.toLowerCase();
     bool isOnLogIn = currentLocation == '/login';
     bool isOnAdminLogin = currentLocation == '/adminlogin';
-    // bool isOnRegister = currentLocation == '/register';
-    bool isOnEmailConfirm = currentLocation == '/confirmemail';
+    bool isOnRegister = currentLocation == '/register';
+    // bool isOnEmailConfirm = currentLocation == '/confirmemail';
     String? status = await MySecureStorage().storage.read(key: 'accessToken');
     String? role = await MySecureStorage().storage.read(key: 'userRole');
     bool isLogin = status != null && status.isNotEmpty;
@@ -195,7 +195,7 @@ final GoRouter myRouterConfig = GoRouter(
 
     if (isOnAdminLogin && !isLogin) {
       return '/adminLogin';
-    } else if (!isLogin && !isOnLogIn && !isOnAdminLogin && !isOnEmailConfirm) {
+    } else if (!isLogin && !isOnLogIn && !isOnAdminLogin && !isOnRegister) {
       return '/login';
     } else if (isLogin && role == '0' && isOnAdminPage) {
       return '/mainShowQuestion';

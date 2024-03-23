@@ -24,7 +24,7 @@ class RegisterScreen extends StatelessWidget {
       //     builder: (context) => EmailConfirmScreen(email: emailController.text),
       //   ),
       // );
-      context.pop();
+      context.go('/login');
     }
 
     Future<void> postRegisterInfo() async {
