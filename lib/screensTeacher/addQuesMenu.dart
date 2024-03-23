@@ -19,6 +19,50 @@ class AddQuesMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    void postFileResponseModal(bool success) async {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return Dialog(
+            child: Container(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFBBF5FF),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                        success
+                            ? "แนบไฟล์สำเร็จ"
+                            : "แนบไฟล์ไม่สำเร็จ กรุณาตรวจสอบไฟล์อีกครั้ง",
+                        style: kNormalTextStyle.copyWith(
+                            fontWeight: FontWeight.w700)),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        if (success == true) {
+                          Navigator.pop(context);
+                          Navigator.pop(context);
+                          userFile = null;
+                        } else {
+                          Navigator.pop(context);
+                        }
+                      },
+                      child: const Text('ยืนยัน'),
+                    ),
+                  ],
+                )),
+          );
+        },
+      );
+    }
+
     Future<void> postFile() async {
       final dio = Dio();
       var formData = FormData.fromMap({
@@ -37,7 +81,13 @@ class AddQuesMenu extends StatelessWidget {
             },
           ),
         );
-        print('Response: ${response.statusCode} - ${response.data}');
+        if (response.statusCode! >= 200 && response.statusCode! < 300) {
+          print("Success: ${response.data}");
+          postFileResponseModal(true);
+        } else {
+          print('Error - ${response.statusCode}');
+          postFileResponseModal(false);
+        }
       } catch (error) {
         print('Error: $error');
       }
@@ -154,10 +204,7 @@ class AddQuesMenu extends StatelessWidget {
                               alignment: Alignment.bottomRight,
                               child: ElevatedButton(
                                 onPressed: () async {
-                                  await postFile().then((value) {
-                                    userFile = null;
-                                    Navigator.pop(context);
-                                  });
+                                  await postFile();
                                 },
                                 child: const Text('ยืนยัน'),
                               ),

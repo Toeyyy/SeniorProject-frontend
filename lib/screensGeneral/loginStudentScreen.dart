@@ -25,6 +25,7 @@ class _LoginStudentScreenState extends State<LoginStudentScreen> {
   }
 
   Future<void> _postLogin() async {
+    int correct = 0;
     try {
       var data = {
         "userName": emailController.text,
@@ -49,18 +50,22 @@ class _LoginStudentScreenState extends State<LoginStudentScreen> {
             .writeSecureData('tokenExpires', jsonFile['tokenExpires']);
         //assign userRole
         await MySecureStorage().writeSecureData('userRole', '0');
+        correct = 1;
       } else {
         print("Error: ${response.statusCode} - ${response.body}");
-        if (response.statusCode == 400) {
+        if (response.statusCode >= 400 && response.statusCode <= 403) {
           setState(() {
             _isDataValid = false;
+            correct = 0;
           });
         }
       }
     } catch (error) {
       print('Error login(user): $error');
     }
-    goToMainPage();
+    if (correct == 1) {
+      goToMainPage();
+    }
   }
 
   @override

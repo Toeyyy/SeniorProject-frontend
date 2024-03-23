@@ -24,6 +24,7 @@ class _LoginTeacherScreenState extends State<LoginTeacherScreen> {
   }
 
   Future<void> _postAdminLogin() async {
+    int correct = 0;
     try {
       var data = {
         "userName": userNameController.text,
@@ -48,18 +49,22 @@ class _LoginTeacherScreenState extends State<LoginTeacherScreen> {
             .writeSecureData('tokenExpires', jsonFile['tokenExpires']);
         //assign userRole
         await MySecureStorage().writeSecureData('userRole', '1');
+        correct = 1;
       } else {
         print("Error: ${response.statusCode} - ${response.body}");
-        if (response.statusCode == 400) {
+        if (response.statusCode >= 400 && response.statusCode <= 403) {
           setState(() {
             _isDataValid = false;
+            correct = 0;
           });
         }
       }
     } catch (error) {
       print('Error login(admin): $error');
     }
-    goToMainPage();
+    if (correct == 1) {
+      goToMainPage();
+    }
   }
 
   @override
@@ -113,7 +118,7 @@ class _LoginTeacherScreenState extends State<LoginTeacherScreen> {
                 Visibility(
                   visible: !_isDataValid,
                   child: const Padding(
-                    padding: EdgeInsets.only(left: 20, top: 10),
+                    padding: EdgeInsets.only(),
                     child: Text(
                       'Username หรือ Password ไม่ถูกต้อง',
                       style: TextStyle(color: Colors.red),

@@ -207,8 +207,11 @@ class _AddQuestionState extends State<AddQuestion> {
             },
           ),
         );
-
-        print('Response: ${response.statusCode} - ${response.data}');
+        if (response.statusCode! >= 200 && response.statusCode! < 300) {
+          print("Success: ${response.data}");
+        } else {
+          print('Error - ${response.statusCode}');
+        }
       } catch (error) {
         print('Error: $error');
       }
@@ -228,7 +231,7 @@ class _AddQuestionState extends State<AddQuestion> {
           signalmentAgeValue.text.isNotEmpty &&
           signalmentWeightValue.text.isNotEmpty &&
           examContainers.isNotEmpty &&
-          signalmentBreedValue != null &&
+          signalmentBreedValue.text.isNotEmpty &&
           signalmentSexValue != null;
 
       for (TreatmentContainer item in treatmentContainer) {

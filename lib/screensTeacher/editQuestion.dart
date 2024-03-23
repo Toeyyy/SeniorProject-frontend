@@ -272,7 +272,11 @@ class _EditQuestionState extends State<EditQuestion> {
             },
           ),
         );
-        print('Response: ${response.statusCode} - ${response.data}');
+        if (response.statusCode! >= 200 && response.statusCode! < 300) {
+          print("Success: ${response.data}");
+        } else {
+          print('Error - ${response.statusCode}');
+        }
       } catch (error) {
         print('Error: $error');
       }
