@@ -52,6 +52,10 @@ class ShowEditHistory extends StatelessWidget {
                       rows: List.generate(logList.length, (index) {
                         String date = logList[index].dateTime.substring(0, 10);
                         String time = logList[index].dateTime.substring(11, 16);
+                        String hour =
+                            (int.parse(time.substring(0, 2)) + 7).toString();
+                        time =
+                            "${hour.length == 2 ? hour : "0$hour"}:${time.substring(3, 5)}";
                         DateTime dateInType = DateTime.parse(date);
                         return DataRow(
                             color: MaterialStateColor.resolveWith(

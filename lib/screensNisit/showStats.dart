@@ -162,6 +162,11 @@ class _ShowStatsForNisitState extends State<ShowStatsForNisit> {
                                   String time = statList[index]
                                       .dateTime
                                       .substring(11, 16);
+                                  String hour =
+                                      (int.parse(time.substring(0, 2)) + 7)
+                                          .toString();
+                                  time =
+                                      "${hour.length == 2 ? hour : "0$hour"}:${time.substring(3, 5)}";
                                   DateTime dateInType = DateTime.parse(date);
                                   return DataRow(
                                     color: MaterialStateColor.resolveWith(
@@ -201,7 +206,7 @@ class _ShowStatsForNisitState extends State<ShowStatsForNisit> {
                                                   probDiagTreatmentModal(
                                                       context,
                                                       "Problem List ครั้งที่ 1",
-                                                      splitProblems['1']!);
+                                                      splitProblems['1'] ?? []);
                                                 },
                                                 icon: const Icon(Icons.search)),
                                           ],
@@ -223,7 +228,8 @@ class _ShowStatsForNisitState extends State<ShowStatsForNisit> {
                                                       context,
                                                       "Differential Diagnosis",
                                                       splitDiag[
-                                                          'differential']!);
+                                                              'differential'] ??
+                                                          []);
                                                 },
                                                 icon: const Icon(Icons.search)),
                                           ],
@@ -244,7 +250,8 @@ class _ShowStatsForNisitState extends State<ShowStatsForNisit> {
                                                   examModal(
                                                       context,
                                                       statList[index]
-                                                          .examinations);
+                                                              .examinations ??
+                                                          []);
                                                 },
                                                 icon: const Icon(Icons.search))
                                           ],
@@ -265,7 +272,7 @@ class _ShowStatsForNisitState extends State<ShowStatsForNisit> {
                                                   probDiagTreatmentModal(
                                                       context,
                                                       "Problem List ครั้งที่ 2",
-                                                      splitProblems['2']!);
+                                                      splitProblems['2'] ?? []);
                                                 },
                                                 icon: const Icon(Icons.search)),
                                           ],
@@ -286,7 +293,8 @@ class _ShowStatsForNisitState extends State<ShowStatsForNisit> {
                                                   probDiagTreatmentModal(
                                                       context,
                                                       "Definitive/Tentative Diagnosis",
-                                                      splitDiag['tentative']!);
+                                                      splitDiag['tentative'] ??
+                                                          []);
                                                 },
                                                 icon: const Icon(Icons.search)),
                                           ],
@@ -308,7 +316,8 @@ class _ShowStatsForNisitState extends State<ShowStatsForNisit> {
                                                       context,
                                                       "Treatment",
                                                       statList[index]
-                                                          .treatments);
+                                                              .treatments ??
+                                                          []);
                                                 },
                                                 icon: const Icon(Icons.search))
                                           ],

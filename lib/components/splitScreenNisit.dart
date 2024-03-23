@@ -42,7 +42,8 @@ class LeftPartContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<String> generalList = questionObj.generalInfo.split(',');
+    List<String> generalList =
+        questionObj.generalInfo.split(',').map((e) => e.trim()).toList();
 
     return SingleChildScrollView(
       child: Padding(

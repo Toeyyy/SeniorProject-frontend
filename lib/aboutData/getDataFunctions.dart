@@ -362,7 +362,7 @@ Future<List<ExamResultObject>> fetchResult(String examID, String quesID) async {
 
 Future<StatQuestionObject> fetchStatQuestion(String quesId) async {
   //real
-  final String apiUrl = "${dotenv.env['API_PATH']}/$quesId/stats";
+  final String apiUrl = "${dotenv.env['API_PATH']}/student/$quesId/stats";
   await MySecureStorage().refreshToken();
   final headers = {
     "Content-Type": "application/json",

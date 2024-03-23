@@ -286,8 +286,11 @@ class _ShowAndEditQuestionState extends State<ShowAndEditQuestion> {
                             const Text('ผลตรวจทั่วไป',
                                 style: kSubHeaderTextStyle),
                             DottedListView(
-                                showList:
-                                    questionObj?.generalInfo.split(',') ?? []),
+                                showList: questionObj?.generalInfo
+                                        .split(',')
+                                        .map((e) => e.trim())
+                                        .toList() ??
+                                    []),
                             const DividerWithSpace(),
                             const Text('เฉลย', style: kHeaderTextStyle),
                             const H20Sizedbox(),

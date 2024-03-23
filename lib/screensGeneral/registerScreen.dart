@@ -18,12 +18,14 @@ class RegisterScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     void goToEmailScreen() {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => EmailConfirmScreen(email: emailController.text),
-        ),
-      );
+      //TODO แก้คืน
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(
+      //     builder: (context) => EmailConfirmScreen(email: emailController.text),
+      //   ),
+      // );
+      context.go('/login');
     }
 
     Future<void> postRegisterInfo() async {
@@ -44,6 +46,17 @@ class RegisterScreen extends StatelessWidget {
         );
         if (response.statusCode >= 200 && response.statusCode < 300) {
           print("Success: ${response.body}");
+          dynamic jsonFile = jsonDecode(response.body);
+          //TODO tmp-delete later
+          //assign token in storage
+          await MySecureStorage()
+              .writeSecureData('accessToken', jsonFile['accessToken']);
+          await MySecureStorage()
+              .writeSecureData('refreshToken', jsonFile['refreshToken']);
+          await MySecureStorage()
+              .writeSecureData('tokenExpires', jsonFile['tokenExpires']);
+          //assign userRole
+          await MySecureStorage().writeSecureData('userRole', '0');
           goToEmailScreen();
         } else {
           print("Error: ${response.statusCode} - ${response.body}");

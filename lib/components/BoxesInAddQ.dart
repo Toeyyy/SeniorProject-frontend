@@ -542,15 +542,17 @@ void probDiagTreatmentModal(
                 ),
                 Expanded(
                   child: SingleChildScrollView(
-                    child: ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: list.length,
-                        itemBuilder: (context, index) {
-                          return ListTile(
-                            title: Text(list[index].name),
-                            leading: const Icon(Icons.circle, size: 15),
-                          );
-                        }),
+                    child: list.isNotEmpty
+                        ? ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: list.length,
+                            itemBuilder: (context, index) {
+                              return ListTile(
+                                title: Text(list[index].name),
+                                leading: const Icon(Icons.circle, size: 15),
+                              );
+                            })
+                        : const SizedBox(),
                   ),
                 ),
               ],
