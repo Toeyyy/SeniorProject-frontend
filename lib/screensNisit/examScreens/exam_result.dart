@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/AllDataFile.dart';
 import 'package:frontend/components/appbar.dart';
-import 'package:frontend/models/examResultObject.dart';
-import 'package:frontend/components/splitScreenNisit.dart';
-import 'package:frontend/models/examinationPreDefinedObject.dart';
+import 'package:frontend/models/exam_result_object.dart';
+import 'package:frontend/components/split_screen_nisit.dart';
+import 'package:frontend/models/examination_predefined_object.dart';
 import 'package:frontend/constants.dart';
-import 'package:frontend/components/BoxesInAddQ.dart';
+import 'package:frontend/components/boxes_component.dart';
 import 'package:frontend/UIModels/nisit/selected_exam_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:frontend/components/resultContainer.dart';
+import 'package:frontend/components/result_container.dart';
 import 'package:frontend/screensNisit/examScreens/exam_total.dart';
-import 'package:frontend/models/questionObject.dart';
+import 'package:frontend/models/question_object.dart';
 import 'package:frontend/UIModels/nisit/selected_problem_provider.dart';
 import 'package:frontend/UIModels/nisit/selected_diagnosis_provider.dart';
 
@@ -32,7 +31,6 @@ class ExamResult extends StatelessWidget {
         Provider.of<SelectedProblem>(context, listen: false);
     SelectedDiagnosis diagProvider =
         Provider.of<SelectedDiagnosis>(context, listen: false);
-    // SelectedQuestion questionProvider = Provider.of(context, listen: false);
 
     return Scaffold(
       appBar: const AppbarNisit(),

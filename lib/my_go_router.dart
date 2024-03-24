@@ -1,28 +1,25 @@
 import 'package:frontend/my_secure_storage.dart';
-import 'package:frontend/screensTeacher/PredefinedScreens/editPredefinedListTopic.dart';
+import 'package:frontend/screensTeacher/PredefinedScreens/edit_predefined_main_topic.dart';
 import 'package:go_router/go_router.dart';
-import 'package:frontend/screensGeneral/loginTeacherScreen.dart';
-import 'package:frontend/screensGeneral/mainShowQuestion.dart';
-import 'package:frontend/screensGeneral/errorScreen.dart';
-import 'package:frontend/screensGeneral/registerScreen.dart';
-import 'package:frontend/screensNisit/showStats.dart';
-import 'package:frontend/screensNisit/problemList.dart';
-import 'package:frontend/screensNisit/returnPoint.dart';
-import 'package:frontend/screensTeacher/addQuesMenu.dart';
-import 'package:frontend/screensTeacher/addQuestion.dart';
-import 'package:frontend/screensTeacher/PredefinedScreens/editPredefined_treatment_choice.dart';
-import 'package:frontend/screensTeacher/PredefinedScreens/editPredefined_exam_choice.dart';
-import 'package:frontend/screensTeacher/PredefinedScreens/editPredefined_other_choice.dart';
-import 'package:frontend/screensTeacher/showAndEditQuestion.dart';
-import 'package:frontend/screensTeacher/editQuestion.dart';
-import 'package:frontend/screensTeacher/showStatOverall.dart';
-import 'package:frontend/screensNisit/answerScreen.dart';
-import 'package:frontend/screensGeneral/loginStudentScreen.dart';
-import 'package:frontend/screensGeneral/emailConfirmationScreen.dart';
-import 'package:frontend/screensGeneral/emailConfirmSuccessScreen.dart';
+import 'package:frontend/screensGeneral/login_teacher_screen.dart';
+import 'package:frontend/screensGeneral/main_show_question.dart';
+import 'package:frontend/screensGeneral/error_screen.dart';
+import 'package:frontend/screensGeneral/register_screen.dart';
+import 'package:frontend/screensNisit/show_stats_screen.dart';
+import 'package:frontend/screensNisit/problem_list.dart';
+import 'package:frontend/screensNisit/return_point_screen.dart';
+import 'package:frontend/screensTeacher/add_question_menu.dart';
+import 'package:frontend/screensTeacher/add_question.dart';
+import 'package:frontend/screensTeacher/PredefinedScreens/edit_predefined_treatment_choice.dart';
+import 'package:frontend/screensTeacher/PredefinedScreens/edit_predefined_exam_choice.dart';
+import 'package:frontend/screensTeacher/PredefinedScreens/edit_predefined_other_choice.dart';
+import 'package:frontend/screensTeacher/show_and_edit_question.dart';
+import 'package:frontend/screensTeacher/edit_question.dart';
+import 'package:frontend/screensTeacher/show_stat_overall.dart';
+import 'package:frontend/screensNisit/answer_screen.dart';
+import 'package:frontend/screensGeneral/login_student_screen.dart';
 
 final GoRouter myRouterConfig = GoRouter(
-  // initialLocation: "/adminLogin",
   initialLocation: '/login',
   routes: [
     //general
@@ -34,12 +31,6 @@ final GoRouter myRouterConfig = GoRouter(
       path: '/register',
       builder: (context, state) => RegisterScreen(),
     ),
-    // GoRoute(
-    //   path: '/confirmEmail',
-    //   builder: (context, state) => EmailConfirmSuccess(
-    //       code: state.uri.queryParameters['id2']!,
-    //       id: state.uri.queryParameters['id1']!),
-    // ),
     GoRoute(
       path: '/adminLogin',
       builder: (context, state) => const LoginTeacherScreen(),
@@ -167,7 +158,6 @@ final GoRouter myRouterConfig = GoRouter(
     bool isOnLogIn = currentLocation == '/login';
     bool isOnAdminLogin = currentLocation == '/adminlogin';
     bool isOnRegister = currentLocation == '/register';
-    // bool isOnEmailConfirm = currentLocation == '/confirmemail';
     String? status = await MySecureStorage().storage.read(key: 'accessToken');
     String? role = await MySecureStorage().storage.read(key: 'userRole');
     bool isLogin = status != null && status.isNotEmpty;
@@ -190,8 +180,6 @@ final GoRouter myRouterConfig = GoRouter(
         currentLocation == '/showquestion' ||
         currentLocation == '/showquestion/edit' ||
         currentLocation == '/showquestion/stat';
-
-    print('isLogin = $isLogin');
 
     if (isOnAdminLogin && !isLogin) {
       return '/adminLogin';

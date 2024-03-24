@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/components/splitScreenNisit.dart';
+import 'package:frontend/components/split_screen_nisit.dart';
 import 'package:frontend/components/appbar.dart';
 import 'package:frontend/constants.dart';
 import 'package:collection/collection.dart';
-import 'package:frontend/models/examinationPreDefinedObject.dart';
+import 'package:frontend/models/examination_predefined_object.dart';
 import 'package:frontend/screensNisit/examScreens/exam_details.dart';
-import 'package:frontend/models/questionObject.dart';
+import 'package:frontend/models/question_object.dart';
 import 'package:frontend/AllDataFile.dart';
-import 'package:frontend/components/BoxesInAddQ.dart';
+import 'package:frontend/components/boxes_component.dart';
 import 'package:frontend/UIModels/nisit/selected_problem_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:frontend/UIModels/nisit/selected_diagnosis_provider.dart';
 
 class ExamTopic extends StatelessWidget {
-  QuestionObject questionObj;
+  final QuestionObject questionObj;
 
-  ExamTopic({super.key, required this.questionObj});
+  const ExamTopic({super.key, required this.questionObj});
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +23,6 @@ class ExamTopic extends StatelessWidget {
         Provider.of<SelectedProblem>(context, listen: false);
     SelectedDiagnosis diagProvider =
         Provider.of<SelectedDiagnosis>(context, listen: false);
-    // SelectedQuestion questionProvider = Provider.of(context, listen: false);
 
     return Scaffold(
       appBar: const AppbarNisit(),
@@ -44,7 +43,7 @@ class ExamTopic extends StatelessWidget {
             ],
           ),
         ),
-        rightPart: RightPart_ExamTopic(
+        rightPart: RightPartExamTopic(
           questionObj: questionObj,
         ),
       ),
@@ -52,12 +51,12 @@ class ExamTopic extends StatelessWidget {
   }
 }
 
-class RightPart_ExamTopic extends StatelessWidget {
-  QuestionObject questionObj;
+class RightPartExamTopic extends StatelessWidget {
+  final QuestionObject questionObj;
 
-  RightPart_ExamTopic({super.key, required this.questionObj});
+  RightPartExamTopic({super.key, required this.questionObj});
 
-  Map<String, List<ExamPreDefinedObject>> groupedByLab =
+  final Map<String, List<ExamPreDefinedObject>> groupedByLab =
       groupBy(examListPreDefined, (e) => e.lab);
 
   @override
@@ -82,7 +81,7 @@ class RightPart_ExamTopic extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => ExamDetail_Type(
+                        builder: (context) => ExamDetailType(
                           list: groupedByLab[labName]!,
                           title: labName,
                           questionObj: questionObj,

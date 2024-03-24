@@ -1,27 +1,26 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:frontend/AllDataFile.dart';
-import 'package:frontend/components/splitScreenNisit.dart';
+import 'package:frontend/components/split_screen_nisit.dart';
 import 'package:frontend/components/appbar.dart';
 import 'package:frontend/constants.dart';
-import 'package:frontend/models/examinationPreDefinedObject.dart';
+import 'package:frontend/models/examination_predefined_object.dart';
 import 'package:frontend/UIModels/nisit/selected_exam_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:frontend/components/back_button.dart';
-import 'package:frontend/components/BoxesInAddQ.dart';
+import 'package:frontend/components/boxes_component.dart';
 import 'package:frontend/screensNisit/examScreens/exam_result.dart';
-import 'package:frontend/models/questionObject.dart';
-import 'package:frontend/models/examResultObject.dart';
+import 'package:frontend/models/question_object.dart';
+import 'package:frontend/models/exam_result_object.dart';
 import 'package:frontend/aboutData/getDataFunctions.dart';
 import 'package:frontend/UIModels/nisit/selected_problem_provider.dart';
 import 'package:frontend/UIModels/nisit/selected_diagnosis_provider.dart';
 
-class ExamDetail_Type extends StatelessWidget {
+class ExamDetailType extends StatelessWidget {
   List<ExamPreDefinedObject> list;
-  String title;
-  QuestionObject questionObj;
+  final String title;
+  final QuestionObject questionObj;
 
-  ExamDetail_Type(
+  ExamDetailType(
       {super.key,
       required this.list,
       required this.title,
@@ -34,11 +33,8 @@ class ExamDetail_Type extends StatelessWidget {
   Widget build(BuildContext context) {
     SelectedProblem problemProvider =
         Provider.of<SelectedProblem>(context, listen: false);
-    SelectedExam examProvider =
-        Provider.of<SelectedExam>(context, listen: false);
     SelectedDiagnosis diagProvider =
         Provider.of<SelectedDiagnosis>(context, listen: false);
-    // SelectedQuestion questionProvider = Provider.of(context, listen: false);
 
     return Scaffold(
       appBar: const AppbarNisit(),
@@ -79,7 +75,7 @@ class ExamDetail_Type extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => ExamDetail_Name(
+                            builder: (context) => ExamDetailName(
                               list: groupedByType.values.toList()[index],
                               title: groupedByType.keys.toList()[index],
                               quesId: questionObj.id,
@@ -101,13 +97,13 @@ class ExamDetail_Type extends StatelessWidget {
   }
 }
 
-class ExamDetail_Name extends StatefulWidget {
-  List<ExamPreDefinedObject> list;
-  String title;
-  String quesId;
-  QuestionObject questionObj;
+class ExamDetailName extends StatefulWidget {
+  final List<ExamPreDefinedObject> list;
+  final String title;
+  final String quesId;
+  final QuestionObject questionObj;
 
-  ExamDetail_Name(
+  const ExamDetailName(
       {super.key,
       required this.list,
       required this.title,
@@ -115,10 +111,10 @@ class ExamDetail_Name extends StatefulWidget {
       required this.questionObj});
 
   @override
-  State<ExamDetail_Name> createState() => _ExamDetail_NameState();
+  State<ExamDetailName> createState() => _ExamDetailNameState();
 }
 
-class _ExamDetail_NameState extends State<ExamDetail_Name> {
+class _ExamDetailNameState extends State<ExamDetailName> {
   late Map<String, List<ExamPreDefinedObject>> groupedByName =
       groupBy(widget.list, (e) => e.name);
   late String selectedName = groupedByName.keys.first;
@@ -150,7 +146,6 @@ class _ExamDetail_NameState extends State<ExamDetail_Name> {
         Provider.of<SelectedProblem>(context, listen: false);
     SelectedDiagnosis diagProvider =
         Provider.of<SelectedDiagnosis>(context, listen: false);
-    // SelectedQuestion questionProvider = Provider.of(context, listen: false);
 
     return Scaffold(
       appBar: const AppbarNisit(),

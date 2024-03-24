@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/models/problemListObject.dart';
+import 'package:frontend/models/problem_object.dart';
 
 class SelectedProblem extends ChangeNotifier {
   List<ProblemObject> problemList1 = [];

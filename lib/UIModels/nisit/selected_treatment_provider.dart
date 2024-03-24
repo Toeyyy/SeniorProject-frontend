@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/models/treatmentObject.dart';
+import 'package:frontend/models/treatment_object.dart';
 
 class SelectedTreatment extends ChangeNotifier {
   List<TreatmentObject> treatmentList = [];

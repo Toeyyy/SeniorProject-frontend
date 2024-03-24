@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:frontend/UIModels/nisit/selected_treatment_provider.dart';
-import 'package:frontend/UIModels/teacher/examContainer_provider.dart';
-import 'package:frontend/UIModels/teacher/treatmentContainer_provider.dart';
+import 'package:frontend/UIModels/teacher/exam_container_provider.dart';
+import 'package:frontend/UIModels/teacher/treatment_container_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:frontend/UIModels/nisit/selected_exam_provider.dart';
-import 'package:frontend/screensTeacher/PredefinedScreens/editPredefined_exam_choice.dart';
 import 'package:frontend/UIModels/nisit/selected_problem_provider.dart';
 import 'package:frontend/UIModels/nisit/selected_diagnosis_provider.dart';
 import 'package:frontend/my_go_router.dart';
@@ -48,7 +47,6 @@ ThemeData lightTheme = ThemeData(
     color: Color(0xFF3DABF5),
     foregroundColor: Color(0xFFF2F5F7),
   ),
-  // colorScheme: ColorScheme.fromSeed(seedColor: Color(0xFFF2F5F7)),
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: ButtonStyle(
       backgroundColor: MaterialStateProperty.all(

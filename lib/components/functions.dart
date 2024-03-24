@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/models/treatmentObject.dart';
-import 'package:frontend/models/problemListObject.dart';
-import 'package:frontend/models/diagnosisObject.dart';
+import 'package:frontend/models/treatment_object.dart';
+import 'package:frontend/models/problem_object.dart';
+import 'package:frontend/models/diagnosis_object.dart';
 import 'package:collection/collection.dart';
 import 'package:frontend/AllDataFile.dart';
-import 'package:frontend/models/tagObject.dart';
+import 'package:frontend/models/tag_object.dart';
 
 List<ProblemObject> filterProblemList(
     TextEditingController searchController, List<ProblemObject> listForSearch) {

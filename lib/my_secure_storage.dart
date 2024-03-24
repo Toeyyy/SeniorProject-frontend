@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
@@ -62,14 +62,18 @@ class MySecureStorage {
         body: jsonEncode(data),
       );
       if ((response.statusCode >= 200 && response.statusCode < 300)) {
-        print("Posting complete");
+        if (kDebugMode) {
+          print("Posting complete");
+        }
         dynamic jsonFile = jsonDecode(response.body);
         await MySecureStorage()
             .writeSecureData('accessToken', jsonFile['accessToken']);
         await MySecureStorage()
             .writeSecureData('refreshToken', jsonFile['refreshToken']);
       } else {
-        print("Error: ${response.statusCode} - ${response.body}");
+        if (kDebugMode) {
+          print("Error: ${response.statusCode}}");
+        }
       }
     }
   }

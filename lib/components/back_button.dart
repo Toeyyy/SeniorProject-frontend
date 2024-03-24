@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class MyCancelButton extends StatelessWidget {
-  BuildContext myContext;
+  final BuildContext myContext;
 
-  MyCancelButton({super.key, required this.myContext});
+  const MyCancelButton({super.key, required this.myContext});
 
   @override
   Widget build(BuildContext context) {
@@ -23,9 +23,9 @@ class MyCancelButton extends StatelessWidget {
 }
 
 class MyPopButton extends StatelessWidget {
-  BuildContext myContext;
+  final BuildContext myContext;
 
-  MyPopButton({super.key, required this.myContext});
+  const MyPopButton({super.key, required this.myContext});
 
   @override
   Widget build(BuildContext context) {
@@ -44,9 +44,9 @@ class MyPopButton extends StatelessWidget {
 }
 
 class MyBackButton extends StatelessWidget {
-  BuildContext myContext;
+  final BuildContext myContext;
 
-  MyBackButton({super.key, required this.myContext});
+  const MyBackButton({super.key, required this.myContext});
 
   @override
   Widget build(BuildContext context) {

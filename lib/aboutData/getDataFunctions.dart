@@ -1,25 +1,22 @@
 import 'dart:convert';
 import 'dart:async';
-import 'package:flutter/services.dart';
-import 'package:frontend/models/diagnosisObject.dart';
-import 'package:frontend/models/examinationPreDefinedObject.dart';
-import 'package:frontend/models/fullQuestionObject.dart';
-import 'package:frontend/models/problemListObject.dart';
-import 'package:frontend/models/questionObject.dart';
-import 'package:frontend/models/examResultObject.dart';
-import 'package:frontend/models/statModels/StatNisitObject.dart';
-import 'package:frontend/models/statModels/StatQuestionObject.dart';
+import 'package:flutter/foundation.dart';
+import 'package:frontend/models/diagnosis_object.dart';
+import 'package:frontend/models/examination_predefined_object.dart';
+import 'package:frontend/models/full_question_object.dart';
+import 'package:frontend/models/problem_object.dart';
+import 'package:frontend/models/question_object.dart';
+import 'package:frontend/models/exam_result_object.dart';
+import 'package:frontend/models/statModels/stat_nisit_object.dart';
+import 'package:frontend/models/statModels/stat_question_object.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:frontend/AllDataFile.dart';
-import 'package:frontend/models/tagObject.dart';
-import 'package:frontend/models/treatmentObject.dart';
+import 'package:frontend/models/tag_object.dart';
+import 'package:frontend/models/treatment_object.dart';
 import 'package:http/http.dart' as http;
 import 'package:frontend/my_secure_storage.dart';
 
-//format '${dotenv.env['API_PATH']}/question/update/$id'
-
 Future<List<QuestionObject>> fetchQuestionList() async {
-  //real
   final String apiUrl = "${dotenv.env['API_PATH']}/question";
   await MySecureStorage().refreshToken();
   final headers = {
@@ -34,28 +31,20 @@ Future<List<QuestionObject>> fetchQuestionList() async {
       List<dynamic> jsonList = jsonDecode(response.body);
       return jsonList.map((data) => QuestionObject.fromJson(data)).toList();
     } else {
-      print("Error: ${response.statusCode} - ${response.body}");
+      if (kDebugMode) {
+        print("Error: ${response.statusCode}");
+      }
       return [];
     }
   } catch (error) {
-    print("Error: $error");
+    if (kDebugMode) {
+      print("Error: $error");
+    }
     return [];
   }
-
-  //tmp-comment later
-  // try {
-  //   final String jsonString =
-  //       await rootBundle.loadString("data/tmpNisitQuestion.json");
-  //   final List<dynamic> jsonList = json.decode(jsonString);
-  //   return jsonList.map((data) => QuestionObject.fromJson(data)).toList();
-  // } catch (error) {
-  //   print('Error fetching data: $error');
-  //   return [];
-  // }
 }
 
 Future<QuestionObject> fetchQuestionFromId(String quesId) async {
-  //real
   final String apiUrl = "${dotenv.env['API_PATH']}/question/$quesId";
   await MySecureStorage().refreshToken();
   final headers = {
@@ -70,28 +59,20 @@ Future<QuestionObject> fetchQuestionFromId(String quesId) async {
       dynamic jsonFile = jsonDecode(response.body);
       return QuestionObject.fromJson(jsonFile);
     } else {
-      print("Error: ${response.statusCode} - ${response.body}");
+      if (kDebugMode) {
+        print("Error: ${response.statusCode}");
+      }
       return QuestionObject.fromJson({});
     }
   } catch (error) {
-    print("Error: $error");
+    if (kDebugMode) {
+      print("Error");
+    }
     return QuestionObject.fromJson({});
   }
-
-  //tmp-comment later
-  // try {
-  //   final String jsonString =
-  //       await rootBundle.loadString("data/tmpNisitQues12.json");
-  //   final dynamic jsonFile = json.decode(jsonString);
-  //   return QuestionObject.fromJson(jsonFile);
-  // } catch (error) {
-  //   print('Error fetching data: $error');
-  //   return QuestionObject.fromJson({});
-  // }
 }
 
 Future<FullQuestionObject> fetchFullQuestionFromId(String quesId) async {
-  //real
   final String apiUrl = "${dotenv.env['API_PATH']}/question/solution/$quesId";
   await MySecureStorage().refreshToken();
   final headers = {
@@ -106,28 +87,20 @@ Future<FullQuestionObject> fetchFullQuestionFromId(String quesId) async {
       dynamic jsonFile = jsonDecode(response.body);
       return FullQuestionObject.fromJson(jsonFile);
     } else {
-      print("Error: ${response.statusCode} - ${response.body}");
+      if (kDebugMode) {
+        print("Error: ${response.statusCode}}");
+      }
       return FullQuestionObject.fromJson({});
     }
   } catch (error) {
-    print("Error: $error");
+    if (kDebugMode) {
+      print("Error");
+    }
     return FullQuestionObject.fromJson({});
   }
-
-  //tmp-comment later
-  // try {
-  //   final String jsonString =
-  //       await rootBundle.loadString("data/tmpTeacherQues14.json");
-  //   final dynamic jsonFile = json.decode(jsonString);
-  //   return FullQuestionObject.fromJson(jsonFile);
-  // } catch (error) {
-  //   print('Error fetching data: $error');
-  //   return FullQuestionObject.fromJson({});
-  // }
 }
 
 Future<List<ProblemObject>> fetchProblemAns(String quesId, int round) async {
-  //real
   final String apiUrl =
       "${dotenv.env['API_PATH']}/question/solution/problem/$round/$quesId";
   await MySecureStorage().refreshToken();
@@ -143,32 +116,20 @@ Future<List<ProblemObject>> fetchProblemAns(String quesId, int round) async {
       List<dynamic> jsonList = jsonDecode(response.body);
       return jsonList.map((data) => ProblemObject.fromJson(data)).toList();
     } else {
-      print("Error: ${response.statusCode} - ${response.body}");
+      if (kDebugMode) {
+        print("Error: ${response.statusCode}");
+      }
       return [];
     }
   } catch (error) {
-    print("Error: $error");
+    if (kDebugMode) {
+      print("Error");
+    }
     return [];
   }
-
-  //tmp-comment later
-  // try {
-  //   String jsonString;
-  //   if (round == 1) {
-  //     jsonString = await rootBundle.loadString("data/tmpNisitProblemAns1.json");
-  //   } else {
-  //     jsonString = await rootBundle.loadString("data/tmpNisitProblemAns2.json");
-  //   }
-  //   final List<dynamic> jsonList = json.decode(jsonString);
-  //   return jsonList.map((data) => ProblemObject.fromJson(data)).toList();
-  // } catch (error) {
-  //   print('Error fetching data: $error');
-  //   return [];
-  // }
 }
 
 Future<List<ExamPreDefinedObject>> fetchExamAns(String quesId) async {
-  //real
   final String apiUrl =
       "${dotenv.env['API_PATH']}/question/solution/examination/$quesId";
   await MySecureStorage().refreshToken();
@@ -186,29 +147,20 @@ Future<List<ExamPreDefinedObject>> fetchExamAns(String quesId) async {
           .map((data) => ExamPreDefinedObject.fromJson(data))
           .toList();
     } else {
-      print("Error: ${response.statusCode} - ${response.body}");
+      if (kDebugMode) {
+        print("Error: ${response.statusCode}");
+      }
       return [];
     }
   } catch (error) {
-    print("Error: $error");
+    if (kDebugMode) {
+      print("Error: $error");
+    }
     return [];
   }
-
-  //tmp-comment later
-  // try {
-  //   String jsonString;
-  //   jsonString = await rootBundle.loadString("data/tmpNisitExamAns.json");
-  //
-  //   final List<dynamic> jsonList = json.decode(jsonString);
-  //   return jsonList.map((data) => ExamPreDefinedObject.fromJson(data)).toList();
-  // } catch (error) {
-  //   print('Error fetching data: $error');
-  //   return [];
-  // }
 }
 
 Future<List<DiagnosisObject>> fetchDiagAns(String quesId) async {
-  //real
   final String apiUrl =
       "${dotenv.env['API_PATH']}/question/solution/diagnostic/$quesId";
   await MySecureStorage().refreshToken();
@@ -224,29 +176,20 @@ Future<List<DiagnosisObject>> fetchDiagAns(String quesId) async {
       List<dynamic> jsonList = jsonDecode(response.body);
       return jsonList.map((data) => DiagnosisObject.fromJson(data)).toList();
     } else {
-      print("Error: ${response.statusCode} - ${response.body}");
+      if (kDebugMode) {
+        print("Error: ${response.statusCode}");
+      }
       return [];
     }
   } catch (error) {
-    print("Error: $error");
+    if (kDebugMode) {
+      print("Error");
+    }
     return [];
   }
-
-  //tmp-comment later
-  // try {
-  //   String jsonString;
-  //   jsonString = await rootBundle.loadString("data/tmpNisitDiagAns.json");
-  //
-  //   final List<dynamic> jsonList = json.decode(jsonString);
-  //   return jsonList.map((data) => DiagnosisObject.fromJson(data)).toList();
-  // } catch (error) {
-  //   print('Error fetching data: $error');
-  //   return [];
-  // }
 }
 
 Future<List<TreatmentObject>> fetchTreatmentAns(String quesId) async {
-  //real
   final String apiUrl =
       "${dotenv.env['API_PATH']}/question/solution/treatment/$quesId";
   await MySecureStorage().refreshToken();
@@ -262,29 +205,20 @@ Future<List<TreatmentObject>> fetchTreatmentAns(String quesId) async {
       List<dynamic> jsonList = jsonDecode(response.body);
       return jsonList.map((data) => TreatmentObject.fromJson(data)).toList();
     } else {
-      print("Error: ${response.statusCode} - ${response.body}");
+      if (kDebugMode) {
+        print("Error: ${response.statusCode}");
+      }
       return [];
     }
   } catch (error) {
-    print("Error: $error");
+    if (kDebugMode) {
+      print("Error");
+    }
     return [];
   }
-
-  //tmp-comment later
-  // try {
-  //   String jsonString;
-  //   jsonString = await rootBundle.loadString("data/tmpNisitTreatmentAns.json");
-  //
-  //   final List<dynamic> jsonList = json.decode(jsonString);
-  //   return jsonList.map((data) => TreatmentObject.fromJson(data)).toList();
-  // } catch (error) {
-  //   print('Error fetching data: $error');
-  //   return [];
-  // }
 }
 
 Future<void> fetchFullQuestionList() async {
-  //real
   final String apiUrl = "${dotenv.env['API_PATH']}/question/solution";
   await MySecureStorage().refreshToken();
   final headers = {
@@ -300,27 +234,18 @@ Future<void> fetchFullQuestionList() async {
       teacherQuestionList =
           jsonList.map((data) => FullQuestionObject.fromJson(data)).toList();
     } else {
-      print("Error: ${response.statusCode} - ${response.body}");
+      if (kDebugMode) {
+        print("Error: ${response.statusCode}");
+      }
     }
   } catch (error) {
-    print("Error: $error");
+    if (kDebugMode) {
+      print("Error");
+    }
   }
-
-  //tmp-comment later
-  // try {
-  //   final String jsonString =
-  //       await rootBundle.loadString("data/tmpTeacherQuestion.json");
-  //
-  //   final List<dynamic> jsonList = json.decode(jsonString);
-  //   teacherQuestionList =
-  //       jsonList.map((data) => FullQuestionObject.fromJson(data)).toList();
-  // } catch (error) {
-  //   print('Error fetching data: $error');
-  // }
 }
 
 Future<List<ExamResultObject>> fetchResult(String examID, String quesID) async {
-  //real
   final String apiUrl =
       "${dotenv.env['API_PATH']}/question/$quesID/examinationresult";
   await MySecureStorage().refreshToken();
@@ -340,28 +265,20 @@ Future<List<ExamResultObject>> fetchResult(String examID, String quesID) async {
       List<dynamic> jsonList = jsonDecode(response.body);
       return jsonList.map((data) => ExamResultObject.fromJson(data)).toList();
     } else {
-      print("Error: ${response.statusCode} - ${response.body}");
+      if (kDebugMode) {
+        print("Error: ${response.statusCode}");
+      }
       return [];
     }
   } catch (error) {
-    print("Error: $error");
+    if (kDebugMode) {
+      print("Error: $error");
+    }
     return [];
   }
-
-  //tmp-comment later
-  // try {
-  //   final String jsonString =
-  //       await rootBundle.loadString("data/tmpResultData.json");
-  //   final List<dynamic> jsonList = json.decode(jsonString);
-  //   return jsonList.map((data) => ExamResultObject.fromJson(data)).toList();
-  // } catch (error) {
-  //   print('error fetching data: $error');
-  //   return [];
-  // }
 }
 
 Future<StatQuestionObject> fetchStatQuestion(String quesId) async {
-  //real
   final String apiUrl = "${dotenv.env['API_PATH']}/student/$quesId/stats";
   await MySecureStorage().refreshToken();
   final headers = {
@@ -376,28 +293,20 @@ Future<StatQuestionObject> fetchStatQuestion(String quesId) async {
       dynamic jsonList = jsonDecode(response.body);
       return StatQuestionObject.fromJson(jsonList);
     } else {
-      print("Error: ${response.statusCode} - ${response.body}");
+      if (kDebugMode) {
+        print("Error: ${response.statusCode}");
+      }
       return StatQuestionObject.fromJson({});
     }
   } catch (error) {
-    print("Error: $error");
+    if (kDebugMode) {
+      print("Error: $error");
+    }
     return StatQuestionObject.fromJson({});
   }
-
-  //tmp-comment later
-  // try {
-  //   final String jsonString =
-  //       await rootBundle.loadString("data/tmpReturnPoint.json");
-  //   final dynamic jsonList = json.decode(jsonString);
-  //   return StatQuestionObject.fromJson(jsonList);
-  // } catch (error) {
-  //   print('error fetching data: $error');
-  //   return StatQuestionObject.fromJson({});
-  // }
 }
 
 Future<List<StatQuestionObject>> fetchStatForNisit() async {
-  //real
   final String apiUrl = "${dotenv.env['API_PATH']}/student/stats";
   await MySecureStorage().refreshToken();
   final headers = {
@@ -412,28 +321,20 @@ Future<List<StatQuestionObject>> fetchStatForNisit() async {
       List<dynamic> jsonList = jsonDecode(response.body);
       return jsonList.map((data) => StatQuestionObject.fromJson(data)).toList();
     } else {
-      print("Error: ${response.statusCode} - ${response.body}");
+      if (kDebugMode) {
+        print("Error: ${response.statusCode}");
+      }
       return [];
     }
   } catch (error) {
-    print("Error: $error");
+    if (kDebugMode) {
+      print("Error: $error");
+    }
     return [];
   }
-
-  //tmp-comment later
-  // try {
-  //   final String jsonString =
-  //       await rootBundle.loadString("data/stat/tmpStatsForNisit.json");
-  //   final List<dynamic> jsonList = json.decode(jsonString);
-  //   return jsonList.map((data) => StatQuestionObject.fromJson(data)).toList();
-  // } catch (error) {
-  //   print('error fetching data: $error');
-  //   return [];
-  // }
 }
 
 Future<List<StatNisitObject>> fetchStatForTeacher(String quesId) async {
-  //real
   final String apiUrl = "${dotenv.env['API_PATH']}/question/$quesId/stats";
   await MySecureStorage().refreshToken();
   final headers = {
@@ -448,30 +349,22 @@ Future<List<StatNisitObject>> fetchStatForTeacher(String quesId) async {
       List<dynamic> jsonList = jsonDecode(response.body);
       return jsonList.map((data) => StatNisitObject.fromJson(data)).toList();
     } else {
-      print("Error: ${response.statusCode} - ${response.body}");
+      if (kDebugMode) {
+        print("Error: ${response.statusCode}");
+      }
       return [];
     }
   } catch (error) {
-    print("Error: $error");
+    if (kDebugMode) {
+      print("Error: $error");
+    }
     return [];
   }
-
-  //tmp-comment later
-  // try {
-  //   final String jsonString =
-  //       await rootBundle.loadString("data/stat/tmpStatsQuestion.json");
-  //   final List<dynamic> jsonList = json.decode(jsonString);
-  //   return jsonList.map((data) => StatNisitObject.fromJson(data)).toList();
-  // } catch (error) {
-  //   print('error fetching data: $error');
-  //   return [];
-  // }
 }
 
 /////get predefined/////
 
 Future<void> fetchPreDefinedProb() async {
-  //real
   final String apiUrl = "${dotenv.env['API_PATH']}";
   await MySecureStorage().refreshToken();
   final headers = {
@@ -488,27 +381,18 @@ Future<void> fetchPreDefinedProb() async {
       problemListPreDefined =
           jsonList.map((data) => ProblemObject.fromJson(data)).toList();
     } else {
-      print("Error fetch Prob: ${response.statusCode} - ${response.body}");
+      if (kDebugMode) {
+        print("Error fetch Prob: ${response.statusCode}");
+      }
     }
   } catch (error) {
-    print("Error: $error");
+    if (kDebugMode) {
+      print("Error");
+    }
   }
-
-  //tmp-comment later
-  // try {
-  //   final String jsonProbString =
-  //       await rootBundle.loadString("data/preDefined/tmpProblem.json");
-  //
-  //   final List<dynamic> jsonProbList = json.decode(jsonProbString);
-  //   problemListPreDefined =
-  //       jsonProbList.map((data) => ProblemObject.fromJson(data)).toList();
-  // } catch (error) {
-  //   print('error fetching data: $error');
-  // }
 }
 
 Future<void> fetchPreDefinedTag() async {
-  //real
   final String apiUrl = "${dotenv.env['API_PATH']}";
   await MySecureStorage().refreshToken();
   final headers = {
@@ -524,27 +408,18 @@ Future<void> fetchPreDefinedTag() async {
       tagListPreDefined =
           jsonList.map((data) => TagObject.fromJson(data)).toList();
     } else {
-      print("Error fetch Prob: ${response.statusCode} - ${response.body}");
+      if (kDebugMode) {
+        print("Error fetch Tag: ${response.statusCode}");
+      }
     }
   } catch (error) {
-    print("Error: $error");
+    if (kDebugMode) {
+      print("Error: $error");
+    }
   }
-
-  //tmp-comment later
-  // try {
-  //   final String jsonTagString =
-  //       await rootBundle.loadString("data/preDefined/tmpTag.json");
-  //
-  //   final List<dynamic> jsonTagList = json.decode(jsonTagString);
-  //   tagListPreDefined =
-  //       jsonTagList.map((data) => TagObject.fromJson(data)).toList();
-  // } catch (error) {
-  //   print('error fetching data: $error');
-  // }
 }
 
 Future<void> fetchPreDefinedDiag() async {
-  //real
   final String apiUrl = "${dotenv.env['API_PATH']}";
   await MySecureStorage().refreshToken();
   final headers = {
@@ -561,27 +436,18 @@ Future<void> fetchPreDefinedDiag() async {
       diagnosisListPreDefined =
           jsonList.map((data) => DiagnosisObject.fromJson(data)).toList();
     } else {
-      print("Error fetch Prob: ${response.statusCode} - ${response.body}");
+      if (kDebugMode) {
+        print("Error fetch Diag: ${response.statusCode}");
+      }
     }
   } catch (error) {
-    print("Error: $error");
+    if (kDebugMode) {
+      print("Error: $error");
+    }
   }
-
-  //tmp-comment later
-  // try {
-  //   final String jsonDiagString =
-  //       await rootBundle.loadString("data/preDefined/tmpDiagnosis.json");
-  //
-  //   final List<dynamic> jsonDiagList = json.decode(jsonDiagString);
-  //   diagnosisListPreDefined =
-  //       jsonDiagList.map((data) => DiagnosisObject.fromJson(data)).toList();
-  // } catch (error) {
-  //   print('error fetching data: $error');
-  // }
 }
 
 Future<void> fetchPreDefinedTreatment() async {
-  //real
   final String apiUrl = "${dotenv.env['API_PATH']}";
   await MySecureStorage().refreshToken();
   final headers = {
@@ -598,29 +464,18 @@ Future<void> fetchPreDefinedTreatment() async {
       treatmentListPreDefined =
           jsonList.map((data) => TreatmentObject.fromJson(data)).toList();
     } else {
-      print("Error fetch Prob: ${response.statusCode} - ${response.body}");
+      if (kDebugMode) {
+        print("Error fetch treatment: ${response.statusCode}");
+      }
     }
   } catch (error) {
-    print("Error: $error");
+    if (kDebugMode) {
+      print("Error");
+    }
   }
-
-  //tmp-comment later
-  // try {
-  //   final String jsonTreatmentString =
-  //       await rootBundle.loadString("data/preDefined/tmpTreatment.json");
-  //
-  //   final List<dynamic> jsonTreatmentList = json.decode(jsonTreatmentString);
-  //   treatmentListPreDefined = jsonTreatmentList
-  //       .map((data) => TreatmentObject.fromJson(data))
-  //       .toList();
-  // } catch (error) {
-  //   print('error fetching data: $error');
-  // }
 }
 
 Future<void> fetchPreDefinedExam() async {
-  //real
-  print('fetch exam');
   final String apiUrl = "${dotenv.env['API_PATH']}";
   await MySecureStorage().refreshToken();
   final headers = {
@@ -637,24 +492,15 @@ Future<void> fetchPreDefinedExam() async {
       examListPreDefined =
           jsonList.map((data) => ExamPreDefinedObject.fromJson(data)).toList();
     } else {
-      print("Error fetch Prob: ${response.statusCode} - ${response.body}");
+      if (kDebugMode) {
+        print("Error fetch Exam: ${response.statusCode}");
+      }
     }
   } catch (error) {
-    print("Error: $error");
+    if (kDebugMode) {
+      print("Error");
+    }
   }
-
-  // tmp-comment later
-  // try {
-  //   final String jsonExamString =
-  //       await rootBundle.loadString("data/preDefined/tmpExamination.json");
-  //
-  //   final List<dynamic> jsonExamList = json.decode(jsonExamString);
-  //   examListPreDefined = jsonExamList
-  //       .map((data) => ExamPreDefinedObject.fromJson(data))
-  //       .toList();
-  // } catch (error) {
-  //   print('error fetching data: $error');
-  // }
 }
 
 /////functions for fetch predefined/////

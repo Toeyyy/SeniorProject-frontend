@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/models/diagnosisObject.dart';
+import 'package:frontend/models/diagnosis_object.dart';
 
 class SelectedDiagnosis extends ChangeNotifier {
   List<DiagnosisObject> diffDiagList = [];

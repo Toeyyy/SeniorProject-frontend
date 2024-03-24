@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-const KAppBarTextStyle = TextStyle(
+const kAppBarTextStyle = TextStyle(
   color: Color(0xFFF5F5F5),
   fontSize: 20,
 );

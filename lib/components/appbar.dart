@@ -27,14 +27,14 @@ class AppbarNisit extends StatelessWidget implements PreferredSizeWidget {
           onPressed: () {
             context.go('/mainShowQuestion');
           },
-          child: const Text('โจทย์', style: KAppBarTextStyle),
+          child: const Text('โจทย์', style: kAppBarTextStyle),
         ),
         kVerticalDividerInAppBar,
         TextButton(
           onPressed: () {
             context.go('/showStats');
           },
-          child: const Text('สถิติ', style: KAppBarTextStyle),
+          child: const Text('สถิติ', style: kAppBarTextStyle),
         ),
         kVerticalDividerInAppBar,
         TextButton(
@@ -45,7 +45,7 @@ class AppbarNisit extends StatelessWidget implements PreferredSizeWidget {
           },
           child: const Text(
             'Log Out',
-            style: KAppBarTextStyle,
+            style: kAppBarTextStyle,
           ),
         ),
       ],
@@ -77,14 +77,14 @@ class AppbarTeacher extends StatelessWidget implements PreferredSizeWidget {
           onPressed: () {
             context.go('/mainShowQuestion');
           },
-          child: const Text('โจทย์', style: KAppBarTextStyle),
+          child: const Text('โจทย์', style: kAppBarTextStyle),
         ),
         kVerticalDividerInAppBar,
         TextButton(
           onPressed: () {
             context.go('/questionMenu');
           },
-          child: const Text('เพิ่มโจทย์', style: KAppBarTextStyle),
+          child: const Text('เพิ่มโจทย์', style: kAppBarTextStyle),
         ),
         kVerticalDividerInAppBar,
         TextButton(
@@ -95,7 +95,7 @@ class AppbarTeacher extends StatelessWidget implements PreferredSizeWidget {
           },
           child: const Text(
             'Log Out',
-            style: KAppBarTextStyle,
+            style: kAppBarTextStyle,
           ),
         ),
       ],
