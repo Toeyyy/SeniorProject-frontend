@@ -54,6 +54,9 @@ class ShowEditHistory extends StatelessWidget {
                         String time = logList[index].dateTime.substring(11, 16);
                         String hour =
                             (int.parse(time.substring(0, 2)) + 7).toString();
+                        if (int.parse(hour) > 24) {
+                          hour = (int.parse(hour) - 24).toString();
+                        }
                         time =
                             "${hour.length == 2 ? hour : "0$hour"}:${time.substring(3, 5)}";
                         DateTime dateInType = DateTime.parse(date);

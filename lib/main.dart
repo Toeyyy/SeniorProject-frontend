@@ -11,7 +11,7 @@ import 'package:frontend/my_go_router.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 
 Future main() async {
-  await dotenv.load(fileName: "assets/.env");
+  await dotenv.load(fileName: "assets/env");
   setUrlStrategy(PathUrlStrategy());
   runApp(MultiProvider(
     providers: [
