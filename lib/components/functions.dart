@@ -28,6 +28,8 @@ List<String> filterTreatment(String topic) {
       groupBy(treatmentListPreDefined, (e) => e.type);
   if (topic == 'first') {
     return splitTreatment.values.first.map((e) => e.name).toList();
+  } else if (topic == 'firstID') {
+    return splitTreatment.values.first.map((e) => e.id).toList();
   }
   return splitTreatment[topic]!.map((e) => e.name).toList();
 }

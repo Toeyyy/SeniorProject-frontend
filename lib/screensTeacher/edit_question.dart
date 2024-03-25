@@ -538,7 +538,8 @@ class _EditQuestionState extends State<EditQuestion> {
                                                 treatmentProvider.nub;
                                             treatmentProvider.addContainer(
                                               TreatmentContainer(
-                                                id: currentNub.toString(),
+                                                id: filterTreatment('firstID')
+                                                    .first,
                                                 key: ObjectKey(currentNub),
                                                 selectedTreatmentTopic:
                                                     getTreatmentTopic().first,
