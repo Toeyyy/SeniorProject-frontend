@@ -91,7 +91,7 @@ class RegisterScreen extends StatelessWidget {
                   const SizedBox(height: 35),
                   SimpleTextField(
                       myController: emailController,
-                      hintText: "Email",
+                      hintText: "Email [KU Mail Only]",
                       textFieldNotEmpty: true),
                   const SizedBox(height: 15),
                   PasswordTextField(

@@ -8,11 +8,9 @@ import 'package:frontend/UIModels/nisit/selected_exam_provider.dart';
 import 'package:frontend/UIModels/nisit/selected_problem_provider.dart';
 import 'package:frontend/UIModels/nisit/selected_diagnosis_provider.dart';
 import 'package:frontend/my_go_router.dart';
-import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 
 Future main() async {
   await dotenv.load(fileName: "assets/env");
-  setUrlStrategy(PathUrlStrategy());
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (_) => ExamContainerProvider()),
