@@ -63,7 +63,6 @@ class ProbListAns extends StatelessWidget {
         Provider.of<SelectedProblem>(context, listen: false);
     SelectedDiagnosis diagProvider =
         Provider.of<SelectedDiagnosis>(context, listen: false);
-    // SelectedQuestion questionProvider = Provider.of(context, listen: false);
 
     List<ProblemObject> correctProblem = round == 1
         ? problemProvider.problemAnsList1

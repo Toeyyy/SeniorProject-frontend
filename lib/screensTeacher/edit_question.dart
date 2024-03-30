@@ -177,6 +177,95 @@ class _EditQuestionState extends State<EditQuestion> {
     examProvider = Provider.of<ExamContainerProvider>(context);
     examContainers = examProvider.examContainers;
 
+    //modal
+    void successModal() {
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return Center(
+              child: Container(
+                width: MediaQuery.of(context).size.height * 0.3,
+                height: MediaQuery.of(context).size.height * 0.35,
+                padding: const EdgeInsets.all(40),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5),
+                  color: const Color(0xFFDFE4E0),
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Icon(
+                      Icons.check_circle_outline,
+                      size: 100,
+                      color: Color(0xFF42C2FF),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        treatmentProvider.clearList();
+                        examProvider.clearList();
+                        context.go('/mainShowQuestion');
+                      },
+                      child: const Text('กลับ'),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          });
+    }
+
+    void popFunction() {
+      Navigator.pop(context);
+    }
+
+    void failModal() {
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return Dialog(
+              child: Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5),
+                  color: const Color(0xFFDFE4E0),
+                ),
+                child: _isPosting
+                    ? const CircularProgressIndicator(
+                        color: Color(0xFF42C2FF),
+                      )
+                    : Column(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          const Text(
+                            'แก้ไขโจทย์ไม่สำเร็จ',
+                            style: TextStyle(
+                                fontWeight: FontWeight.w700, fontSize: 20),
+                          ),
+                          const SizedBox(height: 15),
+                          ElevatedButton(
+                            onPressed: () async {
+                              setState(() {
+                                _isLoadData = true;
+                              });
+                              await fetchPreDefined();
+                              setState(() {
+                                _isLoadData = false;
+                              });
+                              popFunction();
+                            },
+                            child: const Text('ยืนยัน'),
+                          ),
+                        ],
+                      ),
+              ),
+            );
+          });
+    }
+
     //post function
     Future<void> postQuestion(BuildContext context, int status) async {
       try {
@@ -276,52 +365,19 @@ class _EditQuestionState extends State<EditQuestion> {
           if (kDebugMode) {
             print("Success");
           }
+          successModal();
         } else {
           if (kDebugMode) {
             print('Error - ${response.statusCode}');
           }
+          failModal();
         }
       } catch (error) {
         if (kDebugMode) {
           print('Error');
         }
+        failModal();
       }
-    }
-
-    void showModal(BuildContext context) {
-      showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return Center(
-              child: Container(
-                width: MediaQuery.of(context).size.height * 0.3,
-                height: MediaQuery.of(context).size.height * 0.35,
-                padding: const EdgeInsets.all(40),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(5),
-                  color: const Color(0xFFDFE4E0),
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const Icon(
-                      Icons.check_circle_outline,
-                      size: 100,
-                      color: Color(0xFF42C2FF),
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        context.go('/mainShowQuestion');
-                      },
-                      child: const Text('กลับ'),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          });
     }
 
     bool checkNotEmpty() {
@@ -583,9 +639,6 @@ class _EditQuestionState extends State<EditQuestion> {
                                                   setState(() {
                                                     _isPosting = false;
                                                   });
-                                                  treatmentProvider.clearList();
-                                                  examProvider.clearList();
-                                                  showModal(context);
                                                 });
                                               },
                                               style: ElevatedButton.styleFrom(
@@ -613,10 +666,6 @@ class _EditQuestionState extends State<EditQuestion> {
                                                     setState(() {
                                                       _isPosting = false;
                                                     });
-                                                    treatmentProvider
-                                                        .clearList();
-                                                    examProvider.clearList();
-                                                    showModal(context);
                                                   });
                                                 }
                                               },

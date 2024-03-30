@@ -215,7 +215,7 @@ class ReturnPoint extends StatelessWidget {
                         ),
                         const DividerWithSpace(),
                         Text(
-                          'คะแนนรวม: ${(stat!.problem1Score + stat!.problem2Score + stat!.examinationScore + stat!.diffDiagScore + stat!.treatmentScore).toStringAsFixed(2)} คะแนน',
+                          'คะแนนรวม: ${(stat!.problem1Score + stat!.problem2Score + stat!.examinationScore + stat!.diffDiagScore + stat!.treatmentScore + stat!.tenDiagScore).toStringAsFixed(2)} คะแนน',
                           style: kSubHeaderTextStyleInLeftPart,
                         ),
                         Text(

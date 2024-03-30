@@ -100,6 +100,7 @@ class AddQuesMenu extends StatelessWidget {
           postFileResponseModal(false);
         }
       } catch (error) {
+        postFileResponseModal(false);
         if (kDebugMode) {
           print('Error');
         }

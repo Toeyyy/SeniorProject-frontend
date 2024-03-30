@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/aboutData/getDataFunctions.dart';
@@ -79,15 +80,59 @@ class _AddQuestionState extends State<AddQuestion> {
 
     /////modal//////
 
-    void showModal(BuildContext context) {
+    void successModal() {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Center(
+            child: Container(
+              width: MediaQuery.of(context).size.height * 0.3,
+              height: MediaQuery.of(context).size.height * 0.35,
+              padding: const EdgeInsets.all(40),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(5),
+                color: const Color(0xFFDFE4E0),
+              ),
+              child: _isPosting
+                  ? const CircularProgressIndicator(
+                      color: Color(0xFF42C2FF),
+                    )
+                  : Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const Icon(
+                          Icons.check_circle_outline,
+                          size: 100,
+                          color: Color(0xFF42C2FF),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                          },
+                          child: const Text('กลับ'),
+                        ),
+                      ],
+                    ),
+            ),
+          );
+        },
+      );
+    }
+
+    void popFunction() {
+      Navigator.pop(context);
+    }
+
+    void failModal() {
       showDialog(
           context: context,
           builder: (BuildContext context) {
-            return Center(
+            return Dialog(
               child: Container(
-                width: MediaQuery.of(context).size.height * 0.3,
-                height: MediaQuery.of(context).size.height * 0.35,
-                padding: const EdgeInsets.all(40),
+                padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(5),
                   color: const Color(0xFFDFE4E0),
@@ -101,17 +146,31 @@ class _AddQuestionState extends State<AddQuestion> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          const Icon(
-                            Icons.check_circle_outline,
-                            size: 100,
-                            color: Color(0xFF42C2FF),
+                          const Text(
+                            'เพิ่มโจทย์ไม่สำเร็จ',
+                            style: TextStyle(
+                                fontWeight: FontWeight.w700, fontSize: 20),
                           ),
+                          const SizedBox(height: 15),
                           ElevatedButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                              Navigator.pop(context);
+                            onPressed: () async {
+                              setState(() {
+                                _isLoadData = true;
+                              });
+                              treatmentProvider.clearList();
+                              examListProvider.clearList();
+                              selectedTags = [];
+                              selectedDiffDiag = [];
+                              selectedProblemList1 = [];
+                              selectedProblemList2 = [];
+                              selectedTentativeDiag = [];
+                              await fetchPreDefined();
+                              setState(() {
+                                _isLoadData = false;
+                              });
+                              popFunction();
                             },
-                            child: const Text('กลับ'),
+                            child: const Text('ยืนยัน'),
                           ),
                         ],
                       ),
@@ -216,15 +275,20 @@ class _AddQuestionState extends State<AddQuestion> {
           if (kDebugMode) {
             print("Success");
           }
+          treatmentProvider.clearList();
+          examListProvider.clearList();
+          successModal();
         } else {
           if (kDebugMode) {
             print('Error - ${response.statusCode}');
           }
+          failModal();
         }
       } catch (error) {
         if (kDebugMode) {
           print('Error');
         }
+        failModal();
       }
     }
 
@@ -276,7 +340,6 @@ class _AddQuestionState extends State<AddQuestion> {
     }
 
     //////////////////
-
     List<String> signalmentTypelist = ["สุนัข", "แมว", "นก"];
 
     return Scaffold(
@@ -523,9 +586,6 @@ class _AddQuestionState extends State<AddQuestion> {
                                             setState(() {
                                               _isPosting = false;
                                             });
-                                            treatmentProvider.clearList();
-                                            examListProvider.clearList();
-                                            showModal(context);
                                           });
                                         },
                                         style: ElevatedButton.styleFrom(
@@ -551,9 +611,6 @@ class _AddQuestionState extends State<AddQuestion> {
                                                 setState(() {
                                                   _isPosting = false;
                                                 });
-                                                examListProvider.clearList();
-                                                treatmentProvider.clearList();
-                                                showModal(context);
                                               });
                                             }
                                           },
