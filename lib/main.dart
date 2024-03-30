@@ -1,5 +1,4 @@
 import 'dart:ui_web';
-import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:frontend/UIModels/nisit/selected_treatment_provider.dart';
@@ -13,7 +12,6 @@ import 'package:frontend/my_go_router.dart';
 
 Future main() async {
   await dotenv.load(fileName: "assets/env");
-  setUrlStrategy(PathUrlStrategy());
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (_) => ExamContainerProvider()),
