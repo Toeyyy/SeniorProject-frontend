@@ -1,4 +1,3 @@
-import 'dart:ui_web';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:frontend/UIModels/nisit/selected_treatment_provider.dart';
@@ -32,6 +31,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
+      title: 'Vet Learning Lab',
       theme: lightTheme,
       routerConfig: myRouterConfig,
     );
