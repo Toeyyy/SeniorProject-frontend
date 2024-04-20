@@ -125,7 +125,7 @@ class EditPredefinedListTopic extends StatelessWidget {
                     backgroundColor: const Color(0xFF8B72BE),
                   ),
                   child: const Text(
-                    'ยกเลิก',
+                    'กลับ',
                   ),
                 ),
               ],

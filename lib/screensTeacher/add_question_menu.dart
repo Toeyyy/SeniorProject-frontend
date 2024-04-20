@@ -26,7 +26,7 @@ class AddQuesMenu extends StatelessWidget {
     TreatmentContainerProvider treatmentProvider =
         Provider.of<TreatmentContainerProvider>(context, listen: false);
 
-    void postFileResponseModal(bool success) async {
+    void postFileResponseModal(bool success, [String? errorDetail]) async {
       showDialog(
         context: context,
         builder: (context) {
@@ -48,6 +48,10 @@ class AddQuesMenu extends StatelessWidget {
                             : "แนบไฟล์ไม่สำเร็จ กรุณาตรวจสอบไฟล์อีกครั้ง",
                         style: kNormalTextStyle.copyWith(
                             fontWeight: FontWeight.w700)),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    !success ? Text("Error: $errorDetail") : const SizedBox(),
                     const SizedBox(
                       height: 15,
                     ),
@@ -99,8 +103,8 @@ class AddQuesMenu extends StatelessWidget {
           }
           postFileResponseModal(false);
         }
-      } catch (error) {
-        postFileResponseModal(false);
+      } on DioException catch (error) {
+        postFileResponseModal(false, error.response?.data['detail']);
         if (kDebugMode) {
           print('Error');
         }

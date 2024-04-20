@@ -35,6 +35,7 @@ class _ShowStatsForNisitState extends State<ShowStatsForNisit> {
     List<StatQuestionObject> loadedData = await fetchStatForNisit();
     setState(() {
       statList = loadedData;
+      statList.sort((a, b) => b.dateTime.compareTo(a.dateTime));
       _isLoadingData = false;
     });
   }
@@ -66,19 +67,23 @@ class _ShowStatsForNisitState extends State<ShowStatsForNisit> {
     Widget showIcon(double score) {
       if (80 <= score && score <= 100) {
         // [80,100]
-        return const Icon(Icons.sentiment_very_satisfied_outlined);
+        return const Icon(Icons.sentiment_very_satisfied_outlined,
+            color: Color(0xFF42C2FF));
       } else if (60 <= score && score < 80) {
         //[60,80)
-        return const Icon(Icons.sentiment_satisfied_alt_outlined);
+        return const Icon(Icons.sentiment_satisfied_alt_outlined,
+            color: Color(0xFF42C2FF));
       } else if (40 <= score && score < 60) {
         //[40,60)
-        return const Icon(Icons.sentiment_satisfied);
+        return const Icon(Icons.sentiment_satisfied, color: Color(0xFF42C2FF));
       } else if (20 <= score && score < 40) {
         //[20,40)
-        return const Icon(Icons.sentiment_neutral_rounded);
+        return const Icon(Icons.sentiment_neutral_rounded,
+            color: Color(0xFF42C2FF));
       } else {
         //[0,20)
-        return const Icon(Icons.sentiment_dissatisfied);
+        return const Icon(Icons.sentiment_dissatisfied,
+            color: Color(0xFF42C2FF));
       }
     }
 

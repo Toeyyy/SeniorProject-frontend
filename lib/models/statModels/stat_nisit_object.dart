@@ -17,6 +17,7 @@ class StatNisitObject {
   double diffDiagScore;
   double tenDiagScore;
   String dateTime;
+  String quesVersion;
 
   StatNisitObject(
       {required this.userId,
@@ -31,7 +32,8 @@ class StatNisitObject {
       required this.treatmentScore,
       required this.diffDiagScore,
       required this.tenDiagScore,
-      required this.dateTime});
+      required this.dateTime,
+      required this.quesVersion});
 
   factory StatNisitObject.fromJson(Map<String, dynamic> json) {
     return StatNisitObject(
@@ -60,6 +62,7 @@ class StatNisitObject {
       diffDiagScore: json['diffDiag_Score'] ?? 0,
       tenDiagScore: json['tenDiag_Score'] ?? 0,
       dateTime: json['dateTime'] ?? "",
+      quesVersion: json['quesVersion'] ?? "",
     );
   }
 }

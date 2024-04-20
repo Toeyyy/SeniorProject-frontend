@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/components/appbar.dart';
 import 'package:frontend/constants.dart';
@@ -227,6 +228,20 @@ class _RightPartProbListState extends State<RightPartProbList> {
       child: (isLoadingData && widget.questionObj != null)
           ? Column(
               children: [
+                SizedBox(
+                  height: 50,
+                  child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: widget.round == 1
+                          ? problemProvider.heart1
+                          : problemProvider.heart2,
+                      itemBuilder: (context, index) {
+                        return const Icon(
+                          CupertinoIcons.heart_fill,
+                          color: Colors.red,
+                        );
+                      }),
+                ),
                 Text(
                   'เลือก Problem List ครั้งที่ ${widget.round}',
                   style: kSubHeaderTextStyle,

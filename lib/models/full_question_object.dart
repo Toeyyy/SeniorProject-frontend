@@ -18,9 +18,10 @@ class FullQuestionObject {
   List<TreatmentObject>? treatments;
   List<DiagnosisObject>? diagnostics;
   List<ExaminationObject>? examinations;
-  bool modified;
+  int modified;
   int status;
   List<LogObject>? logs;
+  String quesVersion;
 
   FullQuestionObject(
       {required this.id,
@@ -36,11 +37,10 @@ class FullQuestionObject {
       required this.examinations,
       required this.modified,
       required this.status,
-      required this.logs});
+      required this.logs,
+      required this.quesVersion});
 
   factory FullQuestionObject.fromJson(Map<String, dynamic> json) {
-    // print('Received JSON: $json');
-
     return FullQuestionObject(
       id: json['id'] ?? "",
       name: json['name'] ?? "",
@@ -80,7 +80,7 @@ class FullQuestionObject {
                   .toList() ??
               []
           : [],
-      modified: json['modified'] ?? false,
+      modified: json['modified'] ?? 2,
       status: json['status'] ?? 0,
       logs: json['logs'] != null
           ? (json['logs'] as List<dynamic>)
@@ -88,6 +88,7 @@ class FullQuestionObject {
                   .toList() ??
               []
           : [],
+      quesVersion: json['quesVersion'] ?? "",
     );
   }
 }

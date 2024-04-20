@@ -8,6 +8,7 @@ import 'package:frontend/aboutData/getDataFunctions.dart';
 import 'package:frontend/components/back_button.dart';
 import 'package:frontend/screensTeacher/show_stat_detail.dart';
 import 'package:frontend/screensTeacher/show_edit_history.dart';
+import 'package:collection/collection.dart';
 
 class ShowStatOverall extends StatefulWidget {
   final String quesId;
@@ -28,11 +29,20 @@ class _ShowStatOverallState extends State<ShowStatOverall> {
   late Map<String, int> prob1List = {};
   late Map<String, int> prob2List = {};
   late Map<String, int> examList = {};
+  late List<StatNisitObject> showList = [];
+  late Map<String, List<StatNisitObject>> groupedVer = {};
+  late String selectedVersion;
   bool _loadData = true;
 
   ////for bar chart////
   void assignStatList() {
-    for (var item in statList) {
+    diffDiagList = {};
+    tenDiagList = {};
+    treatmentList = {};
+    prob1List = {};
+    prob2List = {};
+    examList = {};
+    for (var item in showList) {
       for (var prob in item.problems) {
         if (prob.round == 1) {
           prob1List[prob.name] = (prob1List[prob.name] ?? 0) + 1;
@@ -58,25 +68,25 @@ class _ShowStatOverallState extends State<ShowStatOverall> {
     /////problem/////
     prob1List = Map.fromEntries(
         prob1List.entries.toList()..sort((a, b) => b.value.compareTo(a.value)));
-    prob1List = Map.fromEntries(prob1List.entries.take(20));
+    prob1List = Map.fromEntries(prob1List.entries.take(15));
     prob2List = Map.fromEntries(
         prob2List.entries.toList()..sort((a, b) => b.value.compareTo(a.value)));
-    prob2List = Map.fromEntries(prob2List.entries.take(20));
+    prob2List = Map.fromEntries(prob2List.entries.take(15));
     /////exam/////
     examList = Map.fromEntries(
         examList.entries.toList()..sort((a, b) => b.value.compareTo(a.value)));
-    examList = Map.fromEntries(examList.entries.take(20));
+    examList = Map.fromEntries(examList.entries.take(15));
     /////diag/////
     diffDiagList = Map.fromEntries(diffDiagList.entries.toList()
       ..sort((a, b) => b.value.compareTo(a.value)));
-    diffDiagList = Map.fromEntries(diffDiagList.entries.take(10));
+    diffDiagList = Map.fromEntries(diffDiagList.entries.take(15));
     tenDiagList = Map.fromEntries(tenDiagList.entries.toList()
       ..sort((a, b) => b.value.compareTo(a.value)));
-    tenDiagList = Map.fromEntries(tenDiagList.entries.take(10));
+    tenDiagList = Map.fromEntries(tenDiagList.entries.take(15));
     /////treatment/////
     treatmentList = Map.fromEntries(treatmentList.entries.toList()
       ..sort((a, b) => b.value.compareTo(a.value)));
-    treatmentList = Map.fromEntries(treatmentList.entries.take(20));
+    treatmentList = Map.fromEntries(treatmentList.entries.take(15));
   }
 
   void findAvgCost() {
@@ -118,6 +128,10 @@ class _ShowStatOverallState extends State<ShowStatOverall> {
         await fetchStatForTeacher(questionObj!.id);
     setState(() {
       statList = loadedData;
+      statList.sort((a, b) => b.quesVersion.compareTo(a.quesVersion));
+      groupedVer = groupBy(statList, (e) => e.quesVersion);
+      showList = groupedVer[groupedVer.keys.first]!;
+      selectedVersion = groupedVer.keys.first;
     });
     assignStatList();
     findAvgCost();
@@ -146,6 +160,8 @@ class _ShowStatOverallState extends State<ShowStatOverall> {
                           children: [
                             ElevatedButton(
                               onPressed: () {
+                                statList.sort(
+                                    (a, b) => b.dateTime.compareTo(a.dateTime));
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -159,11 +175,14 @@ class _ShowStatOverallState extends State<ShowStatOverall> {
                             const SizedBox(width: 15),
                             ElevatedButton(
                               onPressed: () {
+                                var list = questionObj!.logs!;
+                                list.sort(
+                                    (a, b) => b.dateTime.compareTo(a.dateTime));
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => ShowEditHistory(
-                                        logList: questionObj!.logs!),
+                                    builder: (context) =>
+                                        ShowEditHistory(logList: list),
                                   ),
                                 );
                               },
@@ -176,12 +195,42 @@ class _ShowStatOverallState extends State<ShowStatOverall> {
                         ),
                       ],
                     ),
-                    statList.isNotEmpty
+                    showList.isNotEmpty
                         ? Expanded(
                             child: SingleChildScrollView(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  Row(
+                                    children: [
+                                      const Text(
+                                        'Version',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w800,
+                                            fontSize: 20),
+                                      ),
+                                      const SizedBox(
+                                        width: 5,
+                                      ),
+                                      DropDownButtonInAddQ(
+                                        selectedValue: selectedVersion,
+                                        list: groupedVer.keys.toList(),
+                                        hintText: "version",
+                                        onChanged: (value) {
+                                          setState(() {
+                                            selectedVersion = value!;
+                                            _loadData = true;
+                                            showList = groupedVer[value]!;
+                                            assignStatList();
+                                            _loadData = false;
+                                          });
+                                        },
+                                      ),
+                                    ],
+                                  ),
                                   const DividerWithSpace(),
                                   /////prob1/////
                                   StatBarGraph(
@@ -213,6 +262,7 @@ class _ShowStatOverallState extends State<ShowStatOverall> {
                                       statList: treatmentList,
                                       title:
                                           'กราฟแสดงการเลือก Treatment ของนิสิตทั้งหมด'),
+                                  const SizedBox(height: 25),
                                   ListTile(
                                     title: Text(
                                         'ราคาที่ใช้ในส่วน Examination โดยเฉลี่ยของนิสิตทั้งหมด: ${averageCostExam.toInt()} บาท',

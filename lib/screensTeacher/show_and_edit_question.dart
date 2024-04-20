@@ -31,26 +31,28 @@ class _ShowAndEditQuestionState extends State<ShowAndEditQuestion> {
   bool initialized = false;
 
   late FullQuestionObject? questionObj = FullQuestionObject(
-      id: 'X',
-      name: 'X',
-      clientComplains: "",
-      historyTakingInfo: "",
-      generalInfo: "generalInfo",
-      tags: [],
-      signalment: SignalmentObject(
-          species: "",
-          breed: "",
-          sterilize: false,
-          age: "",
-          gender: "",
-          weight: ""),
-      problems: [],
-      treatments: [],
-      diagnostics: [],
-      examinations: [],
-      modified: true,
-      status: 0,
-      logs: []);
+    id: 'X',
+    name: 'X',
+    clientComplains: "",
+    historyTakingInfo: "",
+    generalInfo: "generalInfo",
+    tags: [],
+    signalment: SignalmentObject(
+        species: "",
+        breed: "",
+        sterilize: false,
+        age: "",
+        gender: "",
+        weight: ""),
+    problems: [],
+    treatments: [],
+    diagnostics: [],
+    examinations: [],
+    modified: 0,
+    status: 0,
+    logs: [],
+    quesVersion: '',
+  );
   late Map<String, List<ProblemObject>> splitProblems = {};
   late Map<String, List<DiagnosisObject>> splitDiagnosis = {};
   bool _loadData = true;

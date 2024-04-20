@@ -19,7 +19,9 @@ class FullQuestionCard extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
               width: MediaQuery.of(context).size.width * 0.5,
               decoration: BoxDecoration(
-                color: const Color(0xFFBBF5FF),
+                color: questionObj.status == 0
+                    ? const Color(0xFFBBF5FF)
+                    : const Color(0xFF8BE4FF),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Column(
@@ -29,14 +31,25 @@ class FullQuestionCard extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 5, horizontal: 20),
-                        color: const Color(0xFFE7F9FF),
-                        child: Text(
-                          'โจทย์ ${questionObj.name}',
-                          style: kSubHeaderTextStyle,
-                        ),
+                      Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 5, horizontal: 20),
+                            color: const Color(0xFFE7F9FF),
+                            child: Text(
+                              'โจทย์ ${questionObj.name}',
+                              style: kSubHeaderTextStyle,
+                            ),
+                          ),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          Text(
+                            'V. ${questionObj.quesVersion}',
+                            style: const TextStyle(fontSize: 30),
+                          ),
+                        ],
                       ),
                       IconButton(
                         onPressed: () {
@@ -96,14 +109,6 @@ class FullQuestionCard extends StatelessWidget {
                       ElevatedButton(
                         onPressed: () {
                           //go to showQues
-                          // Navigator.push(
-                          //   context,
-                          //   MaterialPageRoute(
-                          //     builder: (context) => ShowAndEditQuestion(
-                          //       questionObj: questionObj,
-                          //     ),
-                          //   ),
-                          // );
                           context.goNamed(
                             'showQuestion',
                             queryParameters: {"id": questionObj.id},
@@ -120,7 +125,7 @@ class FullQuestionCard extends StatelessWidget {
         });
   }
 
-  void _modifiedModal(BuildContext context) {
+  void _modifiedModal(BuildContext context, int status) {
     showDialog(
         context: context,
         builder: (context) {
@@ -134,20 +139,20 @@ class FullQuestionCard extends StatelessWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text('ข้อมูล Predefined ที่ใช้ในโจทย์มีการลบหรือแก้ไข',
-                      style: kNormalTextStyle.copyWith(
-                          fontWeight: FontWeight.w700)),
+                  status == 1
+                      ? Text(
+                          'มีการแก้ไขข้อมูล Predefined ที่ใช้ในโจทย์',
+                          style: kNormalTextStyle.copyWith(
+                              fontWeight: FontWeight.w700),
+                        )
+                      : Text(
+                          'มีการลบข้อมูล Predefined ที่ใช้ในโจทย์',
+                          style: kNormalTextStyle.copyWith(
+                              fontWeight: FontWeight.w700),
+                        ),
                   const SizedBox(height: 15),
                   ElevatedButton(
                     onPressed: () {
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(
-                      //     builder: (context) => EditQuestion(
-                      //       questionObj: questionObj,
-                      //     ),
-                      //   ),
-                      // );
                       context.goNamed(
                         'editQuestion',
                         queryParameters: {"id": questionObj.id},
@@ -172,7 +177,9 @@ class FullQuestionCard extends StatelessWidget {
         children: [
           Card(
             elevation: 5,
-            color: const Color(0xFFA0E9FF),
+            color: questionObj.status == 0
+                ? const Color(0xFFBBF5FF)
+                : const Color(0xFF8BE4FF),
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Column(
@@ -196,18 +203,22 @@ class FullQuestionCard extends StatelessWidget {
                                       queryParameters: {"id": questionObj.id},
                                     );
                                   },
-                                  icon: const Icon(Icons.edit),
+                                  icon: const Icon(Icons.description_outlined),
                                   tooltip: "แก้ไข draft",
                                 )
                               : const SizedBox(),
-                          questionObj.modified == true
+                          (questionObj.modified == 1 ||
+                                  questionObj.modified == 2)
                               ? IconButton(
                                   onPressed: () {
-                                    _modifiedModal(context);
+                                    _modifiedModal(
+                                        context, questionObj.modified);
                                   },
-                                  icon: const Icon(
+                                  icon: Icon(
                                     CupertinoIcons.exclamationmark_circle_fill,
-                                    color: Color(0xFFDC493A),
+                                    color: questionObj.modified == 1
+                                        ? const Color(0xFFfca404)
+                                        : const Color(0xffec3d37),
                                   ),
                                 )
                               : const SizedBox(),

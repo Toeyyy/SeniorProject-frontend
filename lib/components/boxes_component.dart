@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -680,6 +682,12 @@ class StatBarGraph extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    int totalBar = statList.length;
+    int space = MediaQuery.of(context).size.width.toInt();
+    double barWidth = (space / totalBar) - 10;
+    if (barWidth < 0 || barWidth > 25) {
+      barWidth = 25;
+    }
     return Column(
       children: [
         Container(
@@ -709,9 +717,11 @@ class StatBarGraph extends StatelessWidget {
                             if (value >= 0 && value < statList.length) {
                               String title =
                                   statList.keys.toList()[value.toInt()];
-                              return Transform.rotate(
-                                angle: -45,
-                                child: Text(title),
+                              return Text(
+                                title.split(' ')[0],
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                softWrap: true,
                               );
                             }
                             return const SizedBox();
@@ -724,10 +734,39 @@ class StatBarGraph extends StatelessWidget {
                       final int count = entry.value;
                       return BarChartGroupData(
                         x: statList.keys.toList().indexOf(name),
-                        barRods: [BarChartRodData(toY: count.toDouble())],
+                        barRods: [
+                          BarChartRodData(
+                            toY: count.toDouble(),
+                            width: barWidth,
+                            borderRadius: const BorderRadius.only(
+                              topRight: Radius.circular(5),
+                              topLeft: Radius.circular(5),
+                            ),
+                          ),
+                        ],
                         barsSpace: 2,
                       );
                     }).toList(),
+                    barTouchData: BarTouchData(
+                      touchTooltipData: BarTouchTooltipData(
+                          tooltipBgColor: const Color(0xFFBBF5FF),
+                          getTooltipItem: (group, groupIndex, rod, rodIndex) {
+                            final String title =
+                                statList.keys.elementAt(group.x);
+                            final String count = rod.toY.toString();
+                            return BarTooltipItem(
+                                '$title\n',
+                                const TextStyle(
+                                    fontSize: 15, fontWeight: FontWeight.bold),
+                                children: [
+                                  TextSpan(
+                                    text: count,
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.normal),
+                                  ),
+                                ]);
+                          }),
+                    ),
                   ),
                 )
               : BarChart(

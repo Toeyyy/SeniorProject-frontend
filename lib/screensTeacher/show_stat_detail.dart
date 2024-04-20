@@ -119,6 +119,11 @@ class ShowStatDetail extends StatelessWidget {
                               child: Text('เวลา'),
                             ),
                           ),
+                          DataColumn(
+                            label: Expanded(
+                              child: Text('เวอร์ชันโจทย์'),
+                            ),
+                          ),
                         ],
                         rows: List.generate(statList.length, (index) {
                           splitProblems = groupBy(statList[index].problems,
@@ -282,6 +287,11 @@ class ShowStatDetail extends StatelessWidget {
                               ),
                               DataCell(
                                 Center(child: Text(time)),
+                              ),
+                              DataCell(
+                                Center(
+                                    child: Text(
+                                        'V. ${statList[index].quesVersion}')),
                               ),
                             ],
                           );

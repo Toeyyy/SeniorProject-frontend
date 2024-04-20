@@ -70,7 +70,9 @@ final GoRouter myRouterConfig = GoRouter(
               if (state.uri.queryParameters.isEmpty) {
                 return const ErrorScreen();
               }
-              return AnswerInit(quesId: state.uri.queryParameters['id']!);
+              return AnswerInit(
+                quesId: state.uri.queryParameters['id']!,
+              );
             }),
       ],
     ),
