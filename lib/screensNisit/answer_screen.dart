@@ -26,7 +26,7 @@ class _AnswerInitState extends State<AnswerInit> {
   late List<DiagnosisObject> diagList;
   late List<TreatmentObject> treatmentList;
   bool _isLoadData = true;
-  late StatQuestionObject userAns;
+  late StatQuestionObject? userAns;
 
   @override
   void initState() {
@@ -66,7 +66,7 @@ class _AnswerInitState extends State<AnswerInit> {
                 diagList.where((e) => e.type == 'differential').toList(),
             tenDiagList: diagList.where((e) => e.type == 'tentative').toList(),
             treatmentList: treatmentList,
-            userAnswer: userAns,
+            userAnswer: userAns!,
           )
         : const Padding(
             padding: EdgeInsets.only(top: 30),
@@ -116,13 +116,14 @@ class AnswerScreen extends StatelessWidget {
                   child: SizedBox(
                     height: MediaQuery.of(context).size.height,
                     child: ShowAnswerTemplate(
-                        title: 'Correct Answer',
-                        probList1: probList1,
-                        probList2: probList2,
-                        examList: examList,
-                        diffDiagList: diffDiagList,
-                        tenDiagList: tenDiagList,
-                        treatmentList: treatmentList),
+                      title: 'Correct Answer',
+                      probList1: probList1,
+                      probList2: probList2,
+                      examList: examList,
+                      diffDiagList: diffDiagList,
+                      tenDiagList: tenDiagList,
+                      treatmentList: treatmentList,
+                    ),
                   ),
                 ),
                 const VerticalDivider(
@@ -132,28 +133,30 @@ class AnswerScreen extends StatelessWidget {
                   child: SizedBox(
                     height: MediaQuery.of(context).size.height,
                     child: ShowAnswerTemplate(
-                        title: 'Your Answer',
-                        probList1: userAnswer.problems
-                            .where((element) => element.round == 1)
-                            .toList(),
-                        probList2: userAnswer.problems
-                            .where((element) => element.round == 2)
-                            .toList(),
-                        examList: userAnswer.examinations
-                            .map((e) => ExamPreDefinedObject(
-                                id: e.id,
-                                lab: e.lab,
-                                type: e.type,
-                                name: e.name,
-                                cost: 0))
-                            .toList(),
-                        diffDiagList: userAnswer.diagnostics
-                            .where((element) => element.type == 'differential')
-                            .toList(),
-                        tenDiagList: userAnswer.diagnostics
-                            .where((element) => element.type == 'tentative')
-                            .toList(),
-                        treatmentList: userAnswer.treatments),
+                      title: 'Your Answer',
+                      probList1: userAnswer.problems
+                          .where((element) => element.round == 1)
+                          .toList(),
+                      probList2: userAnswer.problems
+                          .where((element) => element.round == 2)
+                          .toList(),
+                      examList: userAnswer.examinations
+                          .map((e) => ExamPreDefinedObject(
+                              id: e.id,
+                              lab: e.lab,
+                              type: e.type,
+                              name: e.name,
+                              cost: 0))
+                          .toList(),
+                      diffDiagList: userAnswer.diagnostics
+                          .where((element) => element.type == 'differential')
+                          .toList(),
+                      tenDiagList: userAnswer.diagnostics
+                          .where((element) => element.type == 'tentative')
+                          .toList(),
+                      treatmentList: userAnswer.treatments,
+                      extraAns: userAnswer.extraAns,
+                    ),
                   ),
                 ),
               ],
@@ -181,6 +184,7 @@ class ShowAnswerTemplate extends StatelessWidget {
   final List<DiagnosisObject> diffDiagList;
   final List<DiagnosisObject> tenDiagList;
   final List<TreatmentObject> treatmentList;
+  final String? extraAns;
   final String title;
 
   const ShowAnswerTemplate({
@@ -192,6 +196,7 @@ class ShowAnswerTemplate extends StatelessWidget {
     required this.diffDiagList,
     required this.tenDiagList,
     required this.treatmentList,
+    this.extraAns,
   });
 
   @override
@@ -315,7 +320,6 @@ class ShowAnswerTemplate extends StatelessWidget {
                   'Treatment',
                   style: kSubHeaderTextStyleInLeftPart,
                 ),
-                const SizedBox(height: 10),
                 ListView.builder(
                   shrinkWrap: true,
                   itemCount: treatmentList.length,
@@ -329,6 +333,16 @@ class ShowAnswerTemplate extends StatelessWidget {
                     );
                   },
                 ),
+                const DividerWithSpace(),
+                (extraAns != null && extraAns != "")
+                    ? Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(10),
+                        margin: const EdgeInsets.only(bottom: 20),
+                        color: const Color(0xFFDFE4E0),
+                        child: Text(extraAns!),
+                      )
+                    : const SizedBox(),
               ],
             ),
           ),

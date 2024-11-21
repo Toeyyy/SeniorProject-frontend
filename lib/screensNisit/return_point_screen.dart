@@ -217,6 +217,17 @@ class ReturnPoint extends StatelessWidget {
                           },
                         ),
                         const DividerWithSpace(),
+                        (stat!.extraQues != null && stat!.extraQues != "")
+                            ? Container(
+                                width: double.infinity,
+                                padding: const EdgeInsets.all(10),
+                                margin: const EdgeInsets.only(bottom: 20),
+                                color: const Color(0xFFDFE4E0),
+                                child: Text(stat!.extraAns != null
+                                    ? stat!.extraAns!
+                                    : ""),
+                              )
+                            : const SizedBox(),
                         Text(
                           'คะแนนรวม: ${(stat!.problem1Score + stat!.problem2Score + stat!.examinationScore + stat!.diffDiagScore + stat!.treatmentScore + stat!.tenDiagScore).toStringAsFixed(2)} คะแนน',
                           style: kSubHeaderTextStyleInLeftPart,

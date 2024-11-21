@@ -48,6 +48,7 @@ class _ShowAndEditQuestionState extends State<ShowAndEditQuestion> {
     treatments: [],
     diagnostics: [],
     examinations: [],
+    extraQues: null,
     modified: 0,
     status: 0,
     logs: [],
@@ -186,18 +187,20 @@ class _ShowAndEditQuestionState extends State<ShowAndEditQuestion> {
                                 ),
                                 Row(
                                   children: [
-                                    ElevatedButton(
-                                      onPressed: () {
-                                        //go to stat
-                                        context.goNamed(
-                                          'statOverall',
-                                          queryParameters: {
-                                            "id": questionObj!.id
-                                          },
-                                        );
-                                      },
-                                      child: const Text('ดูสถิติ'),
-                                    ),
+                                    questionObj!.status == 1
+                                        ? ElevatedButton(
+                                            onPressed: () {
+                                              //go to stat
+                                              context.goNamed(
+                                                'statOverall',
+                                                queryParameters: {
+                                                  "id": questionObj!.id
+                                                },
+                                              );
+                                            },
+                                            child: const Text('ดูสถิติ'),
+                                          )
+                                        : const SizedBox(),
                                     const SizedBox(width: 15),
                                     ElevatedButton(
                                       onPressed: () {
@@ -357,6 +360,7 @@ class _ShowAndEditQuestionState extends State<ShowAndEditQuestion> {
                                             .toList()
                                         : []),
                             const H20SizedBox(),
+                            //treatment
                             const Text('Treatment', style: kSubHeaderTextStyle),
                             ListView.builder(
                                 shrinkWrap: true,
@@ -372,6 +376,22 @@ class _ShowAndEditQuestionState extends State<ShowAndEditQuestion> {
                                         treatment: item.name);
                                   }).toList()[index];
                                 }),
+                            const H20SizedBox(),
+                            //extra question
+                            const Text(
+                              'คำถามเพิ่มเติม',
+                              style: kSubHeaderTextStyle,
+                            ),
+                            Container(
+                              padding: const EdgeInsets.all(10),
+                              color: const Color(0xFFDFE4E0),
+                              width: double.infinity,
+                              child: Text(
+                                questionObj?.extraQues ?? "",
+                                style: kNormalTextStyle,
+                              ),
+                            ),
+                            const H20SizedBox(),
                             Center(
                               child: ElevatedButton(
                                 onPressed: () {

@@ -38,14 +38,25 @@ class QuestionCard extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 5, horizontal: 20),
-                        color: const Color(0xFFE7F9FF),
-                        child: Text(
-                          'โจทย์ ${questionObj.name}',
-                          style: kSubHeaderTextStyle,
-                        ),
+                      Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 5, horizontal: 20),
+                            color: const Color(0xFFE7F9FF),
+                            child: Text(
+                              'โจทย์ ${questionObj.name}',
+                              style: kSubHeaderTextStyle,
+                            ),
+                          ),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          Text(
+                            'V. ${questionObj.quesVersion}',
+                            style: const TextStyle(fontSize: 30),
+                          ),
+                        ],
                       ),
                       IconButton(
                         onPressed: () {

@@ -16,12 +16,11 @@ import 'package:frontend/UIModels/nisit/selected_problem_provider.dart';
 import 'package:frontend/UIModels/nisit/selected_exam_provider.dart';
 import 'package:frontend/components/boxes_component.dart';
 import 'package:frontend/my_secure_storage.dart';
-import 'package:frontend/screensNisit/extra_question.dart';
 
-class TreatmentTotal extends StatelessWidget {
+class ExtraQuestion extends StatelessWidget {
   final QuestionObject questionObj;
 
-  const TreatmentTotal({super.key, required this.questionObj});
+  const ExtraQuestion({super.key, required this.questionObj});
 
   @override
   Widget build(BuildContext context) {
@@ -31,6 +30,8 @@ class TreatmentTotal extends StatelessWidget {
         Provider.of<SelectedExam>(context, listen: false);
     SelectedDiagnosis diagProvider =
         Provider.of<SelectedDiagnosis>(context, listen: false);
+    SelectedTreatment treatmentProvider =
+        Provider.of<SelectedTreatment>(context, listen: false);
 
     return Scaffold(
       appBar: const AppbarNisit(),
@@ -62,30 +63,34 @@ class TreatmentTotal extends StatelessWidget {
                   title: 'Definitive/Tentative Diagnosis',
                   showList:
                       diagProvider.tenDiagList.map((e) => e.name).toList()),
+              TitleAndDottedListView(
+                  title: 'Treatment',
+                  showList: treatmentProvider.treatmentList
+                      .map((e) => e.name)
+                      .toList()),
             ],
           ),
         ),
-        rightPart: RightPartTreatmentTotal(
-          quesId: questionObj.id,
-          questionObj: questionObj,
-        ),
+        rightPart: RightPartExtraQues(
+            quesId: questionObj.id, questionObj: questionObj),
       ),
     );
   }
 }
 
-class RightPartTreatmentTotal extends StatefulWidget {
+class RightPartExtraQues extends StatefulWidget {
   final String quesId;
   QuestionObject questionObj;
-  RightPartTreatmentTotal(
+
+  RightPartExtraQues(
       {super.key, required this.quesId, required this.questionObj});
 
   @override
-  State<RightPartTreatmentTotal> createState() =>
-      _RightPartTreatmentTotalState();
+  State<RightPartExtraQues> createState() => _RightPartExtraQuesState();
 }
 
-class _RightPartTreatmentTotalState extends State<RightPartTreatmentTotal> {
+class _RightPartExtraQuesState extends State<RightPartExtraQues> {
+  TextEditingController answerController = TextEditingController();
   bool _isSendingData = false;
 
   @override
@@ -133,6 +138,7 @@ class _RightPartTreatmentTotalState extends State<RightPartTreatmentTotal> {
         "examinations": exam,
         "treatments": treatment,
         "diagnostics": diag,
+        "extraAns": answerController.text,
         "heartProblem1": problemProvider.heart1,
         "heartProblem2": problemProvider.heart2,
       };
@@ -171,78 +177,48 @@ class _RightPartTreatmentTotalState extends State<RightPartTreatmentTotal> {
       padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
       child: !_isSendingData
           ? Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  "Treatment ที่เลือก",
-                  style: kHeaderTextStyle,
-                ),
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: treatmentProvider.treatmentList.length,
-                    itemBuilder: (context, index) {
-                      return ListTile(
-                        leading: const Icon(Icons.circle, size: 15),
-                        title:
-                            Text(treatmentProvider.treatmentList[index].name),
-                      );
-                    },
-                  ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                Column(
                   children: [
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => TreatmentTopic(
-                              questionObj: widget.questionObj,
-                            ),
-                          ),
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF8B72BE),
-                      ),
-                      child: const Text('เลือก Treatment'),
+                    Text(
+                      widget.questionObj.extraQues!,
+                      style: kSubHeaderTextStyleInLeftPart,
                     ),
-                    ElevatedButton(
-                      onPressed: () async {
-                        if (widget.questionObj.extraQues == null ||
-                            widget.questionObj.extraQues == "") {
-                          setState(() {
-                            _isSendingData = true;
-                          });
-                          //post answer//
-                          await postStat(context).then((value) {
-                            setState(() {
-                              _isSendingData = false;
-                            });
-                            //clear data//
-                            treatmentProvider.clearList();
-                            problemProvider.clearList();
-                            examProvider.clearList();
-                            diagProvider.clearList();
-                            context.goNamed('returnPoint',
-                                queryParameters: {"id": widget.quesId});
-                          });
-                        } else {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ExtraQuestion(
-                                  questionObj: widget.questionObj),
-                            ),
-                          );
-                        }
-                      },
-                      child: (widget.questionObj.extraQues == null ||
-                              widget.questionObj.extraQues == "")
-                          ? const Text('ส่งคำตอบ')
-                          : const Text('ยืนยัน'),
+                    const H20SizedBox(),
+                    Container(
+                      color: const Color(0xFFDFE4E0),
+                      child: TextField(
+                        controller: answerController,
+                        maxLines: 5,
+                        decoration: const InputDecoration(
+                          contentPadding: EdgeInsets.all(10),
+                          border: InputBorder.none,
+                        ),
+                      ),
                     ),
                   ],
+                ),
+                ElevatedButton(
+                  onPressed: () async {
+                    setState(() {
+                      _isSendingData = true;
+                    });
+                    //post answer//
+                    await postStat(context).then((value) {
+                      setState(() {
+                        _isSendingData = false;
+                      });
+                      //clear data//
+                      treatmentProvider.clearList();
+                      problemProvider.clearList();
+                      examProvider.clearList();
+                      diagProvider.clearList();
+                      context.goNamed('returnPoint',
+                          queryParameters: {"id": widget.quesId});
+                    });
+                  },
+                  child: const Text('ส่งคำตอบ'),
                 ),
               ],
             )

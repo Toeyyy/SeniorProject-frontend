@@ -18,6 +18,7 @@ class FullQuestionObject {
   List<TreatmentObject>? treatments;
   List<DiagnosisObject>? diagnostics;
   List<ExaminationObject>? examinations;
+  String? extraQues;
   int modified;
   int status;
   List<LogObject>? logs;
@@ -35,6 +36,7 @@ class FullQuestionObject {
       required this.treatments,
       required this.diagnostics,
       required this.examinations,
+      required this.extraQues,
       required this.modified,
       required this.status,
       required this.logs,
@@ -80,6 +82,7 @@ class FullQuestionObject {
                   .toList() ??
               []
           : [],
+      extraQues: json['extraQues'],
       modified: json['modified'] ?? 2,
       status: json['status'] ?? 0,
       logs: json['logs'] != null

@@ -52,6 +52,8 @@ class _EditQuestionState extends State<EditQuestion> {
       TextEditingController(text: 'N/A');
   late TextEditingController generalResultsController =
       TextEditingController(text: 'N/A');
+  late TextEditingController extraQuesController =
+      TextEditingController(text: 'N/A');
   late Map<String, List<ProblemObject>> splitProblems = {};
   late List<ProblemObject> selectedProblemList1 = [];
   late List<ProblemObject> selectedProblemList2 = [];
@@ -123,6 +125,7 @@ class _EditQuestionState extends State<EditQuestion> {
         historyTakingController.text = questionObj!.historyTakingInfo;
         generalResultsController.text = questionObj!.generalInfo;
         selectedTags = questionObj!.tags ?? [];
+        extraQuesController.text = questionObj!.extraQues ?? "";
         /////
         splitProblems = questionObj!.problems != []
             ? groupBy(questionObj!.problems!, (e) => e.round.toString())
@@ -267,7 +270,8 @@ class _EditQuestionState extends State<EditQuestion> {
     }
 
     //post function
-    Future<void> postQuestion(BuildContext context, int status) async {
+    Future<void> postQuestion(
+        BuildContext context, int status, bool newVer) async {
       try {
         final dio = Dio();
 
@@ -331,7 +335,11 @@ class _EditQuestionState extends State<EditQuestion> {
             "age": signalmentAgeValue.text,
             "weight": signalmentWeightValue.text,
           },
-          "status": status
+          "status": status,
+          "extraQues": extraQuesController.text.isEmpty
+              ? null
+              : extraQuesController.text,
+          "newVersion": newVer,
         }, ListFormat.multiCompatible);
         var index = 0;
         for (var item in examContainers) {
@@ -414,7 +422,7 @@ class _EditQuestionState extends State<EditQuestion> {
               ? Center(
                   child: !_isPosting
                       ? SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.7,
+                          width: MediaQuery.of(context).size.width * 0.8,
                           child: questionObj != null
                               ? Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -581,6 +589,7 @@ class _EditQuestionState extends State<EditQuestion> {
                                             "เลือก Definitive/Tentative Diagnosis",
                                         updateListCallback: updateDiagList),
                                     const H20SizedBox(),
+                                    //treatment
                                     Row(
                                       children: [
                                         const Text(
@@ -621,6 +630,15 @@ class _EditQuestionState extends State<EditQuestion> {
                                             },
                                           ),
                                     const H20SizedBox(),
+                                    //extra question
+                                    TextBoxMultiLine(
+                                      myController: extraQuesController,
+                                      hintText: "คำถามเพิ่มเติม",
+                                      titleText: "คำถามเพิ่มเติม [Optional]",
+                                      maxLine: 3,
+                                      boxColor: const Color(0xFFDFE4E0),
+                                    ),
+                                    const H20SizedBox(),
                                     Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
@@ -634,7 +652,8 @@ class _EditQuestionState extends State<EditQuestion> {
                                                 setState(() {
                                                   _isPosting = true;
                                                 });
-                                                await postQuestion(context, 0)
+                                                await postQuestion(
+                                                        context, 0, false)
                                                     .then((value) {
                                                   setState(() {
                                                     _isPosting = false;
@@ -661,7 +680,8 @@ class _EditQuestionState extends State<EditQuestion> {
                                                   setState(() {
                                                     _isPosting = true;
                                                   });
-                                                  await postQuestion(context, 1)
+                                                  await postQuestion(
+                                                          context, 1, false)
                                                       .then((value) {
                                                     setState(() {
                                                       _isPosting = false;
@@ -669,7 +689,34 @@ class _EditQuestionState extends State<EditQuestion> {
                                                   });
                                                 }
                                               },
-                                              child: const Text('บันทึก'),
+                                              child: const Text(
+                                                  'Overwrite current version'),
+                                            ),
+                                            const SizedBox(width: 10),
+                                            ElevatedButton(
+                                              onPressed: () async {
+                                                //send data
+                                                if (!checkNotEmpty()) {
+                                                  alertModal(context);
+                                                } else {
+                                                  setState(() {
+                                                    _isPosting = true;
+                                                  });
+                                                  await postQuestion(
+                                                          context, 1, true)
+                                                      .then((value) {
+                                                    setState(() {
+                                                      _isPosting = false;
+                                                    });
+                                                  });
+                                                }
+                                              },
+                                              style: ElevatedButton.styleFrom(
+                                                backgroundColor:
+                                                    const Color(0xFF3DABF5),
+                                              ),
+                                              child: const Text(
+                                                  'Save as new version'),
                                             ),
                                           ],
                                         ),

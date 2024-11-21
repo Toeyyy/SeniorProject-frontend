@@ -123,7 +123,7 @@ class _ShowStatsForNisitState extends State<ShowStatsForNisit> {
                                 ),
                                 DataColumn(
                                   label: Expanded(
-                                    child: Text('ราคาค่าตรวจรวม'),
+                                    child: Text('ราคาที่ใช้โดยรวม'),
                                   ),
                                 ),
                                 DataColumn(
@@ -157,6 +157,11 @@ class _ShowStatsForNisitState extends State<ShowStatsForNisit> {
                                 DataColumn(
                                   label: Expanded(
                                     child: Text('คะแนน Treatment'),
+                                  ),
+                                ),
+                                DataColumn(
+                                  label: Expanded(
+                                    child: Text('คำถามเพิ่มเติม [ถ้ามี]'),
                                   ),
                                 ),
                                 DataColumn(
@@ -357,6 +362,23 @@ class _ShowStatsForNisitState extends State<ShowStatsForNisit> {
                                           ],
                                         ),
                                       ),
+                                      DataCell((statList[index].extraQues !=
+                                                  null &&
+                                              statList[index].extraQues != "")
+                                          ? Center(
+                                              child: IconButton(
+                                                  onPressed: () {
+                                                    extraQuesModal(
+                                                        context,
+                                                        statList[index]
+                                                            .extraQues!,
+                                                        statList[index]
+                                                            .extraAns);
+                                                  },
+                                                  icon:
+                                                      const Icon(Icons.search)),
+                                            )
+                                          : const SizedBox()),
                                       DataCell(
                                         Center(
                                           child: Text(

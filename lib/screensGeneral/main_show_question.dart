@@ -1,3 +1,5 @@
+import 'dart:async';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/aboutData/getDataFunctions.dart';
 import 'package:frontend/constants.dart';
@@ -29,6 +31,10 @@ class _MainShowQuestionState extends State<MainShowQuestion> {
   bool _draftCheckBoxStatus = false;
   bool _isLoadData = true;
   late String userRole;
+  late int totalCard = 0;
+  int cardPerPage = 8;
+  late int pageCount = 0;
+  int currentPage = 0;
 
   @override
   void initState() {
@@ -50,15 +56,18 @@ class _MainShowQuestionState extends State<MainShowQuestion> {
     if (userRole == '0') {
       List<QuestionObject> loadedData = await fetchQuestionList();
       setState(() {
-        nisitQuestionList = loadedData;
         questionObjList = loadedData;
         displayList = loadedData;
+        totalCard = questionObjList.length;
+        pageCount = (totalCard / cardPerPage).ceil();
       });
     } else {
       await fetchFullQuestionList();
       setState(() {
         teacherQuestionObjList = teacherQuestionList;
         teacherDisplayList = teacherQuestionList;
+        totalCard = teacherQuestionObjList.length;
+        pageCount = (totalCard / cardPerPage).ceil();
       });
     }
     setState(() {
@@ -70,16 +79,31 @@ class _MainShowQuestionState extends State<MainShowQuestion> {
   Widget build(BuildContext context) {
     TextEditingController quesSearchController = TextEditingController();
 
-    void updateTagList(List<TagObject> newList) {
+    void updateTagList(List<TagObject> newList, [bool? isFiltered]) {
+      isFiltered ??= false;
       selectedTags = newList;
       setState(() {
         _draftCheckBoxStatus = false;
         if (userRole == '0') {
-          displayList =
-              filterFromTags(questionObjList, newList).cast<QuestionObject>();
+          if (!isFiltered!) {
+            displayList =
+                filterFromTags(questionObjList, newList).cast<QuestionObject>();
+          } else {
+            displayList =
+                filterFromTags(displayList, newList).cast<QuestionObject>();
+          }
+          totalCard = displayList.length;
+          pageCount = (totalCard / cardPerPage).ceil();
         } else {
-          teacherDisplayList = filterFromTags(teacherQuestionObjList, newList)
-              .cast<FullQuestionObject>();
+          if (!isFiltered!) {
+            teacherDisplayList = filterFromTags(teacherQuestionObjList, newList)
+                .cast<FullQuestionObject>();
+          } else {
+            teacherDisplayList = filterFromTags(teacherDisplayList, newList)
+                .cast<FullQuestionObject>();
+          }
+          totalCard = teacherDisplayList.length;
+          pageCount = (totalCard / cardPerPage).ceil();
         }
       });
     }
@@ -90,10 +114,17 @@ class _MainShowQuestionState extends State<MainShowQuestion> {
           teacherDisplayList = teacherDisplayList
               .where((element) => element.status == 0)
               .toList();
+          currentPage = 0;
+          totalCard = teacherDisplayList.length;
+          pageCount = (totalCard / cardPerPage).ceil();
         });
       } else {
         setState(() {
+          currentPage = 0;
+          teacherDisplayList = teacherQuestionList;
           updateTagList(selectedTags);
+          totalCard = teacherDisplayList.length;
+          pageCount = (totalCard / cardPerPage).ceil();
         });
       }
     }
@@ -104,14 +135,32 @@ class _MainShowQuestionState extends State<MainShowQuestion> {
           displayList =
               filterFromQuesName(questionObjList, quesSearchController.text)
                   .cast<QuestionObject>();
+          updateTagList(selectedTags, true);
+          totalCard = displayList.length;
+          pageCount = (totalCard / cardPerPage).ceil();
         });
       } else {
         setState(() {
-          teacherDisplayList =
-              filterFromQuesName(teacherQuestionList, quesSearchController.text)
-                  .cast<FullQuestionObject>();
+          teacherDisplayList = filterFromQuesName(
+                  teacherQuestionObjList, quesSearchController.text)
+              .cast<FullQuestionObject>();
+          updateTagList(selectedTags, true);
+          totalCard = teacherDisplayList.length;
+          pageCount = (totalCard / cardPerPage).ceil();
         });
       }
+    }
+
+    previousPage() {
+      setState(() {
+        currentPage -= 1;
+      });
+    }
+
+    nextPage() {
+      setState(() {
+        currentPage += 1;
+      });
     }
 
     return !_isLoadData
@@ -156,6 +205,8 @@ class _MainShowQuestionState extends State<MainShowQuestion> {
                                       ),
                                       onEditingComplete: () {
                                         upDateTextField();
+                                        quesSearchController.text =
+                                            quesSearchController.text;
                                       },
                                     ),
                                   ),
@@ -166,17 +217,69 @@ class _MainShowQuestionState extends State<MainShowQuestion> {
                         ),
                         userRole == '1'
                             ? Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Checkbox(
-                                      value: _draftCheckBoxStatus,
-                                      onChanged: (newValue) {
-                                        _draftCheckBoxStatus = newValue!;
-                                        updateDraft(newValue);
-                                      }),
-                                  const Text('Show only draft questions'),
+                                  Row(
+                                    children: [
+                                      Checkbox(
+                                          value: _draftCheckBoxStatus,
+                                          onChanged: (newValue) {
+                                            _draftCheckBoxStatus = newValue!;
+                                            updateDraft(newValue);
+                                          }),
+                                      const Text('Show only draft questions'),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      currentPage > 0
+                                          ? IconButton(
+                                              onPressed: () {
+                                                previousPage();
+                                              },
+                                              icon: const Icon(CupertinoIcons
+                                                  .chevron_left_circle),
+                                            )
+                                          : const SizedBox(),
+                                      Text('หน้าที่ ${currentPage + 1}'),
+                                      currentPage < pageCount - 1
+                                          ? IconButton(
+                                              onPressed: () {
+                                                nextPage();
+                                              },
+                                              icon: const Icon(CupertinoIcons
+                                                  .chevron_right_circle),
+                                            )
+                                          : const SizedBox(),
+                                    ],
+                                  )
                                 ],
                               )
-                            : const SizedBox(),
+                            : Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  currentPage > 0
+                                      ? IconButton(
+                                          onPressed: () {
+                                            previousPage();
+                                          },
+                                          icon: const Icon(CupertinoIcons
+                                              .chevron_left_circle),
+                                        )
+                                      : const SizedBox(),
+                                  Text('หน้าที่ ${currentPage + 1}'),
+                                  currentPage < pageCount - 1
+                                      ? IconButton(
+                                          onPressed: () {
+                                            nextPage();
+                                          },
+                                          icon: const Icon(CupertinoIcons
+                                              .chevron_right_circle),
+                                        )
+                                      : const SizedBox(),
+                                ],
+                              ),
                         const Divider(),
                         const SizedBox(
                           height: 20,
@@ -195,24 +298,42 @@ class _MainShowQuestionState extends State<MainShowQuestion> {
                                         crossAxisCount: 2,
                                         mainAxisSpacing: 2,
                                         crossAxisSpacing: 2,
-                                        itemCount: displayList.length,
+                                        itemCount:
+                                            displayList.length < cardPerPage
+                                                ? displayList.length
+                                                : cardPerPage,
                                         itemBuilder: (context, index) {
                                           return QuestionCard(
-                                              questionObj: displayList[index]);
+                                              questionObj: displayList[index +
+                                                  (currentPage * cardPerPage)]);
                                         })
                                     : const SizedBox()
                                 : teacherDisplayList.isNotEmpty
                                     ? MasonryGridView.count(
                                         shrinkWrap: true,
                                         crossAxisCount: 2,
-                                        mainAxisSpacing: 2,
+                                        mainAxisSpacing: 5,
                                         crossAxisSpacing: 2,
-                                        itemCount: teacherDisplayList.length,
+                                        itemCount: teacherDisplayList.length <
+                                                cardPerPage
+                                            ? teacherDisplayList.length
+                                            : cardPerPage,
                                         itemBuilder: (context, index) {
-                                          return FullQuestionCard(
-                                            questionObj:
-                                                teacherDisplayList[index],
-                                          );
+                                          int realIndex = index +
+                                              (currentPage * cardPerPage);
+                                          FullQuestionObject? showCard;
+                                          if (realIndex >
+                                              teacherDisplayList.length - 1) {
+                                            showCard = null;
+                                          } else {
+                                            showCard =
+                                                teacherDisplayList[realIndex];
+                                          }
+                                          return showCard != null
+                                              ? FullQuestionCard(
+                                                  questionObj: showCard,
+                                                )
+                                              : const SizedBox();
                                         })
                                     : const SizedBox()
                             : const Center(child: CircularProgressIndicator()),

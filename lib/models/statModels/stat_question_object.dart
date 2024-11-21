@@ -10,6 +10,8 @@ class StatQuestionObject {
   List<ProblemObject> problems;
   List<TreatmentObject> treatments;
   List<DiagnosisObject> diagnostics;
+  String? extraAns;
+  String? extraQues;
   double problem1Score;
   double problem2Score;
   double examinationScore;
@@ -25,6 +27,8 @@ class StatQuestionObject {
       required this.problems,
       required this.treatments,
       required this.diagnostics,
+      required this.extraAns,
+      required this.extraQues,
       required this.problem1Score,
       required this.problem2Score,
       required this.examinationScore,
@@ -53,6 +57,8 @@ class StatQuestionObject {
               .map((jsonItem) => DiagnosisObject.fromJson(jsonItem))
               .toList() ??
           [],
+      extraQues: json['extraQues'],
+      extraAns: json['extraAns'],
       problem1Score: json['problem1_Score'] ?? 0.0,
       problem2Score: json['problem2_Score'] ?? 0.0,
       examinationScore: json['examination_Score'] ?? 0.0,

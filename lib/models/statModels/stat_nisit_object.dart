@@ -10,6 +10,7 @@ class StatNisitObject {
   List<ProblemObject> problems;
   List<TreatmentObject> treatments;
   List<DiagnosisObject> diagnostics;
+  String? extraAns;
   double problem1Score;
   double problem2Score;
   double examinationScore;
@@ -26,6 +27,7 @@ class StatNisitObject {
       required this.problems,
       required this.treatments,
       required this.diagnostics,
+      required this.extraAns,
       required this.problem1Score,
       required this.problem2Score,
       required this.examinationScore,
@@ -55,6 +57,7 @@ class StatNisitObject {
               .map((jsonItem) => DiagnosisObject.fromJson(jsonItem))
               .toList() ??
           [],
+      extraAns: json['extraAns'],
       problem1Score: json['problem1_Score'] ?? 0,
       problem2Score: json['problem2_Score'] ?? 0,
       examinationScore: json['examination_Score'] ?? 0,

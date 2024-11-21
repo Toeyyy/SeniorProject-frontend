@@ -562,6 +562,40 @@ void probDiagTreatmentModal(
       });
 }
 
+void extraQuesModal(BuildContext context, String ques, String? ans) {
+  showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          child: Container(
+            padding: const EdgeInsets.all(20),
+            width: MediaQuery.of(context).size.width * 0.5,
+            constraints: BoxConstraints(
+                maxHeight: MediaQuery.of(context).size.height * 0.45),
+            decoration: BoxDecoration(
+              color: const Color(0xFFBBF5FF),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  ques,
+                  style: kSubHeaderTextStyleInLeftPart,
+                ),
+                const SizedBox(height: 5),
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Text(ans ?? ""),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      });
+}
+
 void examModal(BuildContext context, List<ExamPreDefinedObject> examList) {
   showDialog(
       context: context,

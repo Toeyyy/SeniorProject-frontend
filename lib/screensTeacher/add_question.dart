@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/aboutData/getDataFunctions.dart';
@@ -39,6 +38,7 @@ class _AddQuestionState extends State<AddQuestion> {
   TextEditingController clientComplainsController = TextEditingController();
   TextEditingController historyTakingController = TextEditingController();
   TextEditingController generalResultsController = TextEditingController();
+  TextEditingController extraQuesController = TextEditingController();
   List<ProblemObject> selectedProblemList1 = [];
   List<ProblemObject> selectedProblemList2 = [];
   List<DiagnosisObject> selectedDiffDiag = [];
@@ -241,6 +241,9 @@ class _AddQuestionState extends State<AddQuestion> {
             "age": signalmentAgeValue.text,
             "weight": signalmentWeightValue.text,
           },
+          "extraQues": extraQuesController.text.isEmpty
+              ? null
+              : extraQuesController.text,
           "status": status
         }, ListFormat.multiCompatible);
         var index = 0;
@@ -350,7 +353,7 @@ class _AddQuestionState extends State<AddQuestion> {
           child: Center(
             child: !_isLoadData
                 ? SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.7,
+                    width: MediaQuery.of(context).size.width * 0.8,
                     child: !_isPosting
                         ? Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -548,12 +551,22 @@ class _AddQuestionState extends State<AddQuestion> {
                                 ],
                               ),
                               const H20SizedBox(),
+                              //treatment
                               ListView.builder(
                                 shrinkWrap: true,
                                 itemCount: treatmentContainer.length,
                                 itemBuilder: (context, index) {
                                   return treatmentContainer[index];
                                 },
+                              ),
+                              const H20SizedBox(),
+                              //extra question
+                              TextBoxMultiLine(
+                                myController: extraQuesController,
+                                hintText: "คำถามเพิ่มเติม",
+                                titleText: "คำถามเพิ่มเติม [Optional]",
+                                maxLine: 3,
+                                boxColor: const Color(0xFFDFE4E0),
                               ),
                               const H20SizedBox(),
                               Row(
@@ -614,7 +627,7 @@ class _AddQuestionState extends State<AddQuestion> {
                                               });
                                             }
                                           },
-                                          child: const Text('บันทึก')),
+                                          child: const Text('Save')),
                                     ],
                                   ),
                                 ],

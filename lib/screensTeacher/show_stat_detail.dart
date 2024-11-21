@@ -11,7 +11,9 @@ import 'package:intl/intl.dart';
 
 class ShowStatDetail extends StatelessWidget {
   final List<StatNisitObject> statList;
-  const ShowStatDetail({super.key, required this.statList});
+  final String? extraQues;
+  const ShowStatDetail(
+      {super.key, required this.statList, required this.extraQues});
 
   @override
   Widget build(BuildContext context) {
@@ -40,6 +42,412 @@ class ShowStatDetail extends StatelessWidget {
       return res;
     }
 
+    const List<DataColumn> tableNameList = [
+      DataColumn(
+        label: Expanded(
+          child: Text('ชื่อนิสิต'),
+        ),
+      ),
+      DataColumn(
+        label: Expanded(
+          child: Text('คะแนนรวม'),
+        ),
+      ),
+      DataColumn(
+        label: Expanded(
+          child: Text('ราคาที่ใช้โดยรวม'),
+        ),
+      ),
+      DataColumn(
+        label: Expanded(
+          child: Text('คะแนน Problem List ครั้งที่ 1'),
+        ),
+      ),
+      DataColumn(
+        label: Expanded(
+          child: Text('คะแนน Differential Diagnosis'),
+        ),
+      ),
+      DataColumn(
+        label: Expanded(
+          child: Text('คะแนน Examination'),
+        ),
+      ),
+      DataColumn(
+        label: Expanded(
+          child: Text('คะแนน Problem List ครั้งที่ 2'),
+        ),
+      ),
+      DataColumn(
+        label: Expanded(
+          child: Text('คะแนน Definitive/Tentative Diagnosis'),
+        ),
+      ),
+      DataColumn(
+        label: Expanded(
+          child: Text('คะแนน Treatment'),
+        ),
+      ),
+      DataColumn(
+        label: Expanded(
+          child: Text('คำถามเพิ่มเติม'),
+        ),
+      ),
+      DataColumn(
+        label: Expanded(
+          child: Text('วันที่ทำโจทย์'),
+        ),
+      ),
+      DataColumn(
+        label: Expanded(
+          child: Text('เวลา'),
+        ),
+      ),
+      DataColumn(
+        label: Expanded(
+          child: Text('เวอร์ชันโจทย์'),
+        ),
+      ),
+    ];
+
+    const List<DataColumn> tableNameNoQuesList = [
+      DataColumn(
+        label: Expanded(
+          child: Text('ชื่อนิสิต'),
+        ),
+      ),
+      DataColumn(
+        label: Expanded(
+          child: Text('คะแนนรวม'),
+        ),
+      ),
+      DataColumn(
+        label: Expanded(
+          child: Text('ราคาที่ใช้โดยรวม'),
+        ),
+      ),
+      DataColumn(
+        label: Expanded(
+          child: Text('คะแนน Problem List ครั้งที่ 1'),
+        ),
+      ),
+      DataColumn(
+        label: Expanded(
+          child: Text('คะแนน Differential Diagnosis'),
+        ),
+      ),
+      DataColumn(
+        label: Expanded(
+          child: Text('คะแนน Examination'),
+        ),
+      ),
+      DataColumn(
+        label: Expanded(
+          child: Text('คะแนน Problem List ครั้งที่ 2'),
+        ),
+      ),
+      DataColumn(
+        label: Expanded(
+          child: Text('คะแนน Definitive/Tentative Diagnosis'),
+        ),
+      ),
+      DataColumn(
+        label: Expanded(
+          child: Text('คะแนน Treatment'),
+        ),
+      ),
+      DataColumn(
+        label: Expanded(
+          child: Text('วันที่ทำโจทย์'),
+        ),
+      ),
+      DataColumn(
+        label: Expanded(
+          child: Text('เวลา'),
+        ),
+      ),
+      DataColumn(
+        label: Expanded(
+          child: Text('เวอร์ชันโจทย์'),
+        ),
+      ),
+    ];
+
+    List<DataCell> tableContent(
+        int index,
+        Map<String, List<ProblemObject>> splitProblems,
+        Map<String, List<DiagnosisObject>> splitDiag,
+        String time,
+        DateTime dateInType) {
+      return [
+        DataCell(
+          Center(child: Text(statList[index].userName)),
+        ),
+        DataCell(
+          Center(
+            child: Text(findTotalPoint(statList[index]).toStringAsFixed(2)),
+          ),
+        ),
+        DataCell(
+          Center(
+            child: Text(findTotalCost(statList[index]).toString()),
+          ),
+        ),
+        DataCell(
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                statList[index].problem1Score.toStringAsFixed(2),
+              ),
+              IconButton(
+                  onPressed: () {
+                    probDiagTreatmentModal(context, "Problem List ครั้งที่ 1",
+                        splitProblems['1'] ?? []);
+                  },
+                  icon: const Icon(Icons.search)),
+            ],
+          ),
+        ),
+        DataCell(
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                statList[index].diffDiagScore.toStringAsFixed(2),
+              ),
+              IconButton(
+                  onPressed: () {
+                    probDiagTreatmentModal(context, "Differential Diagnosis",
+                        splitDiag['differential'] ?? []);
+                  },
+                  icon: const Icon(Icons.search)),
+            ],
+          ),
+        ),
+        DataCell(
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                statList[index].examinationScore.toStringAsFixed(2),
+              ),
+              IconButton(
+                  onPressed: () {
+                    examModal(context, statList[index].examinations ?? []);
+                  },
+                  icon: const Icon(Icons.search))
+            ],
+          ),
+        ),
+        DataCell(
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                statList[index].problem2Score.toStringAsFixed(2),
+              ),
+              IconButton(
+                  onPressed: () {
+                    probDiagTreatmentModal(context, "Problem List ครั้งที่ 2",
+                        splitProblems['2'] ?? []);
+                  },
+                  icon: const Icon(Icons.search)),
+            ],
+          ),
+        ),
+        DataCell(
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                statList[index].tenDiagScore.toStringAsFixed(2),
+              ),
+              IconButton(
+                  onPressed: () {
+                    probDiagTreatmentModal(
+                        context,
+                        "Definitive/Tentative Diagnosis",
+                        splitDiag['tentative'] ?? []);
+                  },
+                  icon: const Icon(Icons.search)),
+            ],
+          ),
+        ),
+        DataCell(
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                statList[index].treatmentScore.toStringAsFixed(2),
+              ),
+              IconButton(
+                  onPressed: () {
+                    probDiagTreatmentModal(
+                        context, "Treatment", statList[index].treatments ?? []);
+                  },
+                  icon: const Icon(Icons.search))
+            ],
+          ),
+        ),
+        DataCell(
+          Center(
+            child: IconButton(
+                onPressed: () {
+                  extraQuesModal(context, extraQues!, statList[index].extraAns);
+                },
+                icon: const Icon(Icons.search)),
+          ),
+        ),
+        DataCell(
+          Center(
+            child: Text(
+              DateFormat('dd/MM/yyyy').format(dateInType),
+            ),
+          ),
+        ),
+        DataCell(
+          Center(child: Text(time)),
+        ),
+        DataCell(
+          Center(child: Text('V. ${statList[index].quesVersion}')),
+        ),
+      ];
+    }
+
+    List<DataCell> tableContentNoQues(
+        int index,
+        Map<String, List<ProblemObject>> splitProblems,
+        Map<String, List<DiagnosisObject>> splitDiag,
+        String time,
+        DateTime dateInType) {
+      return [
+        DataCell(
+          Center(child: Text(statList[index].userName)),
+        ),
+        DataCell(
+          Center(
+            child: Text(findTotalPoint(statList[index]).toStringAsFixed(2)),
+          ),
+        ),
+        DataCell(
+          Center(
+            child: Text(findTotalCost(statList[index]).toString()),
+          ),
+        ),
+        DataCell(
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                statList[index].problem1Score.toStringAsFixed(2),
+              ),
+              IconButton(
+                  onPressed: () {
+                    probDiagTreatmentModal(context, "Problem List ครั้งที่ 1",
+                        splitProblems['1'] ?? []);
+                  },
+                  icon: const Icon(Icons.search)),
+            ],
+          ),
+        ),
+        DataCell(
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                statList[index].diffDiagScore.toStringAsFixed(2),
+              ),
+              IconButton(
+                  onPressed: () {
+                    probDiagTreatmentModal(context, "Differential Diagnosis",
+                        splitDiag['differential'] ?? []);
+                  },
+                  icon: const Icon(Icons.search)),
+            ],
+          ),
+        ),
+        DataCell(
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                statList[index].examinationScore.toStringAsFixed(2),
+              ),
+              IconButton(
+                  onPressed: () {
+                    examModal(context, statList[index].examinations ?? []);
+                  },
+                  icon: const Icon(Icons.search))
+            ],
+          ),
+        ),
+        DataCell(
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                statList[index].problem2Score.toStringAsFixed(2),
+              ),
+              IconButton(
+                  onPressed: () {
+                    probDiagTreatmentModal(context, "Problem List ครั้งที่ 2",
+                        splitProblems['2'] ?? []);
+                  },
+                  icon: const Icon(Icons.search)),
+            ],
+          ),
+        ),
+        DataCell(
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                statList[index].tenDiagScore.toStringAsFixed(2),
+              ),
+              IconButton(
+                  onPressed: () {
+                    probDiagTreatmentModal(
+                        context,
+                        "Definitive/Tentative Diagnosis",
+                        splitDiag['tentative'] ?? []);
+                  },
+                  icon: const Icon(Icons.search)),
+            ],
+          ),
+        ),
+        DataCell(
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                statList[index].treatmentScore.toStringAsFixed(2),
+              ),
+              IconButton(
+                  onPressed: () {
+                    probDiagTreatmentModal(
+                        context, "Treatment", statList[index].treatments ?? []);
+                  },
+                  icon: const Icon(Icons.search))
+            ],
+          ),
+        ),
+        DataCell(
+          Center(
+            child: Text(
+              DateFormat('dd/MM/yyyy').format(dateInType),
+            ),
+          ),
+        ),
+        DataCell(
+          Center(child: Text(time)),
+        ),
+        DataCell(
+          Center(child: Text('V. ${statList[index].quesVersion}')),
+        ),
+      ];
+    }
+
     return Scaffold(
       appBar: const AppbarTeacher(),
       body: Padding(
@@ -62,69 +470,9 @@ class ShowStatDetail extends StatelessWidget {
                         headingTextStyle: kTableHeaderTextStyle,
                         headingRowColor: MaterialStateColor.resolveWith(
                             (states) => const Color(0xFFA0E9FF)),
-                        columns: const <DataColumn>[
-                          DataColumn(
-                            label: Expanded(
-                              child: Text('ชื่อนิสิต'),
-                            ),
-                          ),
-                          DataColumn(
-                            label: Expanded(
-                              child: Text('คะแนนรวม'),
-                            ),
-                          ),
-                          DataColumn(
-                            label: Expanded(
-                              child: Text('ราคาค่าตรวจรวม'),
-                            ),
-                          ),
-                          DataColumn(
-                            label: Expanded(
-                              child: Text('คะแนน Problem List ครั้งที่ 1'),
-                            ),
-                          ),
-                          DataColumn(
-                            label: Expanded(
-                              child: Text('คะแนน Differential Diagnosis'),
-                            ),
-                          ),
-                          DataColumn(
-                            label: Expanded(
-                              child: Text('คะแนน Examination'),
-                            ),
-                          ),
-                          DataColumn(
-                            label: Expanded(
-                              child: Text('คะแนน Problem List ครั้งที่ 2'),
-                            ),
-                          ),
-                          DataColumn(
-                            label: Expanded(
-                              child:
-                                  Text('คะแนน Definitive/Tentative Diagnosis'),
-                            ),
-                          ),
-                          DataColumn(
-                            label: Expanded(
-                              child: Text('คะแนน Treatment'),
-                            ),
-                          ),
-                          DataColumn(
-                            label: Expanded(
-                              child: Text('วันที่ทำโจทย์'),
-                            ),
-                          ),
-                          DataColumn(
-                            label: Expanded(
-                              child: Text('เวลา'),
-                            ),
-                          ),
-                          DataColumn(
-                            label: Expanded(
-                              child: Text('เวอร์ชันโจทย์'),
-                            ),
-                          ),
-                        ],
+                        columns: (extraQues != null && extraQues != "")
+                            ? tableNameList
+                            : tableNameNoQuesList,
                         rows: List.generate(statList.length, (index) {
                           splitProblems = groupBy(statList[index].problems,
                               (e) => e.round.toString());
@@ -140,161 +488,166 @@ class ShowStatDetail extends StatelessWidget {
                               "${hour.length == 2 ? hour : "0$hour"}:${time.substring(3, 5)}";
                           DateTime dateInType = DateTime.parse(date);
                           return DataRow(
-                            color: MaterialStateColor.resolveWith(
-                                (states) => const Color(0xFFE7F9FF)),
-                            cells: <DataCell>[
-                              DataCell(
-                                Center(child: Text(statList[index].userName)),
-                              ),
-                              DataCell(
-                                Center(
-                                  child: Text(findTotalPoint(statList[index])
-                                      .toStringAsFixed(2)),
-                                ),
-                              ),
-                              DataCell(
-                                Center(
-                                  child: Text(findTotalCost(statList[index])
-                                      .toString()),
-                                ),
-                              ),
-                              DataCell(
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      statList[index]
-                                          .problem1Score
-                                          .toStringAsFixed(2),
-                                    ),
-                                    IconButton(
-                                        onPressed: () {
-                                          probDiagTreatmentModal(
-                                              context,
-                                              "Problem List ครั้งที่ 1",
-                                              splitProblems['1'] ?? []);
-                                        },
-                                        icon: const Icon(Icons.search)),
-                                  ],
-                                ),
-                              ),
-                              DataCell(
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      statList[index]
-                                          .diffDiagScore
-                                          .toStringAsFixed(2),
-                                    ),
-                                    IconButton(
-                                        onPressed: () {
-                                          probDiagTreatmentModal(
-                                              context,
-                                              "Differential Diagnosis",
-                                              splitDiag['differential'] ?? []);
-                                        },
-                                        icon: const Icon(Icons.search)),
-                                  ],
-                                ),
-                              ),
-                              DataCell(
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      statList[index]
-                                          .examinationScore
-                                          .toStringAsFixed(2),
-                                    ),
-                                    IconButton(
-                                        onPressed: () {
-                                          examModal(
-                                              context,
-                                              statList[index].examinations ??
-                                                  []);
-                                        },
-                                        icon: const Icon(Icons.search))
-                                  ],
-                                ),
-                              ),
-                              DataCell(
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      statList[index]
-                                          .problem2Score
-                                          .toStringAsFixed(2),
-                                    ),
-                                    IconButton(
-                                        onPressed: () {
-                                          probDiagTreatmentModal(
-                                              context,
-                                              "Problem List ครั้งที่ 2",
-                                              splitProblems['2'] ?? []);
-                                        },
-                                        icon: const Icon(Icons.search)),
-                                  ],
-                                ),
-                              ),
-                              DataCell(
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      statList[index]
-                                          .tenDiagScore
-                                          .toStringAsFixed(2),
-                                    ),
-                                    IconButton(
-                                        onPressed: () {
-                                          probDiagTreatmentModal(
-                                              context,
-                                              "Definitive/Tentative Diagnosis",
-                                              splitDiag['tentative'] ?? []);
-                                        },
-                                        icon: const Icon(Icons.search)),
-                                  ],
-                                ),
-                              ),
-                              DataCell(
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      statList[index]
-                                          .treatmentScore
-                                          .toStringAsFixed(2),
-                                    ),
-                                    IconButton(
-                                        onPressed: () {
-                                          probDiagTreatmentModal(
-                                              context,
-                                              "Treatment",
-                                              statList[index].treatments ?? []);
-                                        },
-                                        icon: const Icon(Icons.search))
-                                  ],
-                                ),
-                              ),
-                              DataCell(
-                                Center(
-                                  child: Text(
-                                    DateFormat('dd/MM/yyyy').format(dateInType),
-                                  ),
-                                ),
-                              ),
-                              DataCell(
-                                Center(child: Text(time)),
-                              ),
-                              DataCell(
-                                Center(
-                                    child: Text(
-                                        'V. ${statList[index].quesVersion}')),
-                              ),
-                            ],
-                          );
+                              color: MaterialStateColor.resolveWith(
+                                  (states) => const Color(0xFFE7F9FF)),
+                              cells: (extraQues != null && extraQues != "")
+                                  ? tableContent(index, splitProblems,
+                                      splitDiag, time, dateInType)
+                                  : tableContentNoQues(index, splitProblems,
+                                      splitDiag, time, dateInType)
+                              // <DataCell>[
+                              //   DataCell(
+                              //     Center(child: Text(statList[index].userName)),
+                              //   ),
+                              //   DataCell(
+                              //     Center(
+                              //       child: Text(findTotalPoint(statList[index])
+                              //           .toStringAsFixed(2)),
+                              //     ),
+                              //   ),
+                              //   DataCell(
+                              //     Center(
+                              //       child: Text(findTotalCost(statList[index])
+                              //           .toString()),
+                              //     ),
+                              //   ),
+                              //   DataCell(
+                              //     Row(
+                              //       mainAxisAlignment: MainAxisAlignment.center,
+                              //       children: [
+                              //         Text(
+                              //           statList[index]
+                              //               .problem1Score
+                              //               .toStringAsFixed(2),
+                              //         ),
+                              //         IconButton(
+                              //             onPressed: () {
+                              //               probDiagTreatmentModal(
+                              //                   context,
+                              //                   "Problem List ครั้งที่ 1",
+                              //                   splitProblems['1'] ?? []);
+                              //             },
+                              //             icon: const Icon(Icons.search)),
+                              //       ],
+                              //     ),
+                              //   ),
+                              //   DataCell(
+                              //     Row(
+                              //       mainAxisAlignment: MainAxisAlignment.center,
+                              //       children: [
+                              //         Text(
+                              //           statList[index]
+                              //               .diffDiagScore
+                              //               .toStringAsFixed(2),
+                              //         ),
+                              //         IconButton(
+                              //             onPressed: () {
+                              //               probDiagTreatmentModal(
+                              //                   context,
+                              //                   "Differential Diagnosis",
+                              //                   splitDiag['differential'] ?? []);
+                              //             },
+                              //             icon: const Icon(Icons.search)),
+                              //       ],
+                              //     ),
+                              //   ),
+                              //   DataCell(
+                              //     Row(
+                              //       mainAxisAlignment: MainAxisAlignment.center,
+                              //       children: [
+                              //         Text(
+                              //           statList[index]
+                              //               .examinationScore
+                              //               .toStringAsFixed(2),
+                              //         ),
+                              //         IconButton(
+                              //             onPressed: () {
+                              //               examModal(
+                              //                   context,
+                              //                   statList[index].examinations ??
+                              //                       []);
+                              //             },
+                              //             icon: const Icon(Icons.search))
+                              //       ],
+                              //     ),
+                              //   ),
+                              //   DataCell(
+                              //     Row(
+                              //       mainAxisAlignment: MainAxisAlignment.center,
+                              //       children: [
+                              //         Text(
+                              //           statList[index]
+                              //               .problem2Score
+                              //               .toStringAsFixed(2),
+                              //         ),
+                              //         IconButton(
+                              //             onPressed: () {
+                              //               probDiagTreatmentModal(
+                              //                   context,
+                              //                   "Problem List ครั้งที่ 2",
+                              //                   splitProblems['2'] ?? []);
+                              //             },
+                              //             icon: const Icon(Icons.search)),
+                              //       ],
+                              //     ),
+                              //   ),
+                              //   DataCell(
+                              //     Row(
+                              //       mainAxisAlignment: MainAxisAlignment.center,
+                              //       children: [
+                              //         Text(
+                              //           statList[index]
+                              //               .tenDiagScore
+                              //               .toStringAsFixed(2),
+                              //         ),
+                              //         IconButton(
+                              //             onPressed: () {
+                              //               probDiagTreatmentModal(
+                              //                   context,
+                              //                   "Definitive/Tentative Diagnosis",
+                              //                   splitDiag['tentative'] ?? []);
+                              //             },
+                              //             icon: const Icon(Icons.search)),
+                              //       ],
+                              //     ),
+                              //   ),
+                              //   DataCell(
+                              //     Row(
+                              //       mainAxisAlignment: MainAxisAlignment.center,
+                              //       children: [
+                              //         Text(
+                              //           statList[index]
+                              //               .treatmentScore
+                              //               .toStringAsFixed(2),
+                              //         ),
+                              //         IconButton(
+                              //             onPressed: () {
+                              //               probDiagTreatmentModal(
+                              //                   context,
+                              //                   "Treatment",
+                              //                   statList[index].treatments ?? []);
+                              //             },
+                              //             icon: const Icon(Icons.search))
+                              //       ],
+                              //     ),
+                              //   ),
+                              //   DataCell(
+                              //     Center(
+                              //       child: Text(
+                              //         DateFormat('dd/MM/yyyy').format(dateInType),
+                              //       ),
+                              //     ),
+                              //   ),
+                              //   DataCell(
+                              //     Center(child: Text(time)),
+                              //   ),
+                              //   DataCell(
+                              //     Center(
+                              //         child: Text(
+                              //             'V. ${statList[index].quesVersion}')),
+                              //   ),
+                              // ],
+                              );
                         }),
                       ),
                     ),

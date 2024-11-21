@@ -90,9 +90,11 @@ class _ShowStatOverallState extends State<ShowStatOverall> {
   }
 
   void findAvgCost() {
+    averageCostExam = 0;
+    averageCostTreatment = 0;
     int totalCostExam = 0;
     int totalCostTreatment = 0;
-    for (var item in statList) {
+    for (var item in showList) {
       int costE = 0;
       int costT = 0;
       for (var exam in item.examinations) {
@@ -104,8 +106,8 @@ class _ShowStatOverallState extends State<ShowStatOverall> {
       totalCostExam += costE;
       totalCostTreatment += costT;
     }
-    averageCostExam = totalCostExam / statList.length;
-    averageCostTreatment = totalCostTreatment / statList.length;
+    averageCostExam = totalCostExam / showList.length;
+    averageCostTreatment = totalCostTreatment / showList.length;
   }
 
   @override
@@ -165,8 +167,10 @@ class _ShowStatOverallState extends State<ShowStatOverall> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) =>
-                                        ShowStatDetail(statList: statList),
+                                    builder: (context) => ShowStatDetail(
+                                      statList: statList,
+                                      extraQues: questionObj!.extraQues,
+                                    ),
                                   ),
                                 );
                               },
@@ -225,6 +229,7 @@ class _ShowStatOverallState extends State<ShowStatOverall> {
                                             _loadData = true;
                                             showList = groupedVer[value]!;
                                             assignStatList();
+                                            findAvgCost();
                                             _loadData = false;
                                           });
                                         },

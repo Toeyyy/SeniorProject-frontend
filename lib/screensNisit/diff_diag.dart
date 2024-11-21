@@ -106,6 +106,7 @@ class _RightPartDiffDiagState extends State<RightPartDiffDiag> {
                               _selectedList.add(_displayList[index]);
                               _searchController.clear();
                               setState(() {
+                                _fullList.remove(_displayList[index]);
                                 _displayList.remove(_displayList[index]);
                                 _isListViewVisible = false;
                               });
@@ -126,6 +127,7 @@ class _RightPartDiffDiagState extends State<RightPartDiffDiag> {
                             icon: const Icon(Icons.remove),
                             onPressed: () {
                               setState(() {
+                                _fullList.add(_selectedList[index]);
                                 _displayList.add(_selectedList[index]);
                                 _selectedList.remove(_selectedList[index]);
                               });
